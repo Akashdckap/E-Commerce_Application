@@ -17,5 +17,17 @@
 } */
 
 body {
-  background-color: rgb(167, 207, 247);
+  background-color: rgb(208 231 255);
+}
+
+.imageContainer {
+  padding: 1px 18px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 12px auto;
+  border: 1px dotted grey;
+  height: 100px;
+  width: 38%;
+  border-radius: 8px;
 }
