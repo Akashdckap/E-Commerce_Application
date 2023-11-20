@@ -1,33 +1,26 @@
 import React, { useEffect, useState } from 'react'
 import { useMutation } from '@apollo/client'
-import { CREATE_USER } from '../../Grahpql/mutation'
+import { CREATE_ADMIN } from '../../Grahpql/mutation';
 import { useRouter } from 'next/router';
+
 export default function login() {
     const [formData, setFormData] = useState({
-        name: '',
         email: '',
         password: '',
     });
     const [errors, setErrors] = useState({
-        name: '',
         email: '',
         password: '',
     });
-    const [createUser, { data, loading, error }] = useMutation(CREATE_USER)
+    const [createAdmin, { data, loading, error }] = useMutation(CREATE_ADMIN)
     const router = useRouter()
     const validate = () => {
         let newErrors = { ...errors };
         let isVaild = true;
 
-        if (formData.name.trim() === "" && formData.password.trim() === "" && formData.email.trim() === "") {
-            newErrors.name = 'Username is required';
+        if (formData.password.trim() === "" && formData.email.trim() === "") {
             newErrors.password = 'password is required';
             newErrors.email = 'Email is required';
-            isVaild = false;
-        }
-
-        if (formData.name.length < 4 && formData.name.trim() !== "") {
-            newErrors.name = 'Username must be at least 5 characters long';
             isVaild = false;
         }
         if (formData.email.length < 10 && formData.email.trim() !== "") {
@@ -55,7 +48,8 @@ export default function login() {
         e.preventDefault()
         if (validate()) {
             try {
-                const { data, loading, errors } = await (createUser({ variables: { input: formData } }))
+                const { data, loading, errors } = await (createAdmin({ variables: { input: formData } }))
+                console.log(data);
                 router.push('/adminStore')
             }
             catch (error) {
@@ -64,6 +58,7 @@ export default function login() {
         }
     }
 
+    console.log(formData);
     return (
         <>
             <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8 w-1/2 m-auto mt-10 bg-blue-300 rounded-2xl">
@@ -79,7 +74,7 @@ export default function login() {
                 </div>
                 <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
                     <form className="space-y-6" onSubmit={handleSubmit} >
-                        <div>
+                        {/* <div>
                             <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
                                 Name
                             </label>
@@ -94,7 +89,7 @@ export default function login() {
                                 />
                             </div>
                             {errors.name ? <span className="text-red-600">{errors.name}</span> : ""}
-                        </div>
+                        </div> */}
                         <div>
                             <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
                                 Email address
