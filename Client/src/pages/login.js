@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { useMutation } from '@apollo/client'
+import { ApolloError, useMutation } from '@apollo/client'
+
 import { CREATE_ADMINS } from '../../Grahpql/mutation'
 import { useRouter } from 'next/router';
+import { notification } from 'antd';
 export default function login() {
 
     const [formData, setFormData] = useState({
@@ -34,7 +36,6 @@ export default function login() {
         setErrors(newErrors);
         return isVaild;
     }
-
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({
@@ -43,18 +44,22 @@ export default function login() {
         });
         delete errors[name]
     };
+    const [createAdmins, { data, loading, error }] = useMutation(CREATE_ADMINS)
     const handleSubmit = async (e) => {
         e.preventDefault()
         if (validate()) {
             try {
-                const [createAdmins, { data, loading, error }] = useMutation(CREATE_ADMINS)
                 await (createAdmins({ variables: { input: formData } }))
-                // console.log(data)
-                router.push('/adminStore')
             }
             catch (error) {
-                console.log(error.message);
-                console.error('Error creating users:', error);
+                if (error.message == "successfully") {
+                    notification.success({ description: "successfully logged" })
+                    router.push("/adminStore")
+                }
+                else {
+                    notification.error({ description: "Invalid Email" })
+                    router.push("/login")
+                }
             }
         }
     }
@@ -73,6 +78,7 @@ export default function login() {
                     </h2>
                 </div>
                 <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+                    {error && <p>Error: {error.message}</p>}
                     <form className="space-y-6" onSubmit={handleSubmit} >
                         <div>
                             <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">

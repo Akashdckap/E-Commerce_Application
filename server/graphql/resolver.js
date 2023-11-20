@@ -1,11 +1,10 @@
-const admins = require('../model/login');
-const order = require('../model/order');
-const product = require('../model/product');
+
+const { ApolloError } = require('apollo-server-fastify');
+const admins = require('../model/adminSchema');
+// const order = require('../model/order');
+// const product = require('../model/product');
 const mongoose = require("mongoose");
 const ObjectId = mongoose.Types.ObjectId;
-// const { graphqlError } = require('graphql')
-const { ApolloError } = require('@apollo/server');
-
 const resolvers = {
     Query: {
         getAllAdmins: async () => {
@@ -24,21 +23,41 @@ const resolvers = {
                 email: email,
                 password: password
             })
-            // console.log(newUsers.email)
-            // async (req, res) => {
-            const adminList = await admins.find({ email: newUsers.email });
-            if (adminList.length > 0) {
-                return {
-                    ...adminList._doc
-                }
+            const emailList = await admins.find({})
+            const verifyEmail = emailList.some((emails) => { return emails.email === newUsers.email })
+            if (verifyEmail) {
+                throw new ApolloError("successfully")
             }
             else {
-                throw new ApolloError(message, {
-                    extensions: { code: 'not exists' },
-                });
+                throw new ApolloError("Invalid Email")
             }
+            // })
+            // if(verifyEmail.find())
+            // emailList.find((email) => console.log(email))
+            // console.log(verifyEmail);
+            // if (verifyEmail()) {
+            //     throw new ApolloError("Succefully logged")
             // }
+            // else {
+            //     throw new ApolloError("Invalid email")
+            // }
+            // console.log(emailList.find((email) => email.email === newUsers.email))
+            // console.log(list);
 
+            // if (verifyEmail) {
+            //     // const res = await newUsers.save();
+            //     throw new ApolloError("Succefully logged")
+            //     // console.log("Succefully logged")
+            // }
+            // else {
+            //     // console.log("Invalid email")
+            //     throw new ApolloError("Invalid email")
+            // }
+            // console.log(getAdminEmail);
+
+            // return {
+            //     ...res._doc
+            // }
         },
 
         async createOrders(_, { newOrders: { productId, quantity, name, email, phoneNo, address, district, state, pincode } }) {

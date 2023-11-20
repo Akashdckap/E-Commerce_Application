@@ -2,9 +2,10 @@ const gql = require('graphql-tag');
 
 const typeDefs = gql` #graphql
     type admins{
-        _id: ID,
-        email: String,
-        password: String,
+
+        _id: ID!,
+        email: String!,
+        password: String!,
     }
     
     type orders{
@@ -32,8 +33,8 @@ const typeDefs = gql` #graphql
     }
 
     input adminsInput{
-        email:String,
-        password:String
+        email:String!,
+        password:String!
     }
 
     input ordersInput{
@@ -65,9 +66,9 @@ const typeDefs = gql` #graphql
     }
 
     type Mutation{
-        createAdmins(adminsInput:adminsInput):admins!
-        createOrders(newOrders:ordersInput):orders!
-        createProducts(newProducts:productsInput):products!
+        createAdmins(adminsInput: adminsInput): [admins]
+        createOrders(newOrders: ordersInput): orders!
+        createProducts(newProducts: productsInput): products!
     }
 `
 // const typeDefsPart2 = gql`

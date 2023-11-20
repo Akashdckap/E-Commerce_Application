@@ -8,9 +8,3 @@ export const CREATE_ADMINS = gql`
     }
   }
 `;
-
-// export const CREATE_PRODUCTS = gql`#graphql
-//     mutation CreateProducts()
-// `
-
-
