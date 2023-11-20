@@ -1,5 +1,5 @@
-const userSchema = require("../model/userSchema");
-const usersTasks = require("../model/userTask");
+const userSchema = require("../model/login");
+// const usersTasks = require("../model/order");
 
 const Routes = (fastify, options, done) => {
     fastify.get('/', async (request, reply) => {
@@ -7,20 +7,20 @@ const Routes = (fastify, options, done) => {
         // console.log(users);
         reply.send({ users: users })
     })
-    fastify.get('/usersTasks', async (req, res) => {
-        const tasks = await usersTasks.find({});
-        res.send({ tasks: tasks })
-    })
-    fastify.post('/userRegister',async(request,response)=>{
-        let formData = {
-            name:request.body.name,
-            email:request.body.email,
-            password:request.body.password
-        };
-        const getUser = new userSchema(formData);
-        const success = await getUser.save();
-        response.send({Status:"Success"});
-    })
+    // fastify.get('/usersTasks', async (req, res) => {
+    //     const tasks = await usersTasks.find({});
+    //     res.send({ tasks: tasks })
+    // })
+    // fastify.post('/userRegister',async(request,response)=>{
+    //     let formData = {
+    //         name:request.body.name,
+    //         email:request.body.email,
+    //         password:request.body.password
+    //     };
+    //     const getUser = new userSchema(formData);
+    //     const success = await getUser.save();
+    //     response.send({Status:"Success"});
+    // })
     done();
 }
 

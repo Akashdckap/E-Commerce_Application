@@ -1,64 +1,73 @@
 const gql = require('graphql-tag');
 
 const typeDefs = gql` #graphql
-    type users{
+    type admins{
         _id: ID,
-        name: String,
         email: String,
         password: String,
     }
     
-    type usertasks{
+    type orders{
         _id: ID,
-        taskName: String,
-        description: String,
-        status: String,
-        userId: ID,
-        addedBy: ID
-    }
-
-    type adminOrManagers{
-        _id: ID,
+        productId: ID,
+        quantity: String,
         name: String,
-        role: String,
         email: String,
-        password: String,
-        userId: [String]
+        phoneNo: Int,
+        address: String,
+        district: String,
+        state: String,
+        pincode: Int
     }
 
-    input usersInput{
+    type products{
+        _id: ID,
         name: String,
+        brand: String,
+        color: String,
+        size: Int,
+        weight: Int,
+        price: Int,
+        description: String
+    }
+
+    input adminsInput{
         email:String,
         password:String
     }
 
-    input usertasksInput{
-        taskName: String,
-        description: String,
-        status: String,
-        userId: ID,
-        addedBy: ID
+    input ordersInput{
+        productId: ID,
+        quantity: Int,
+        name: String,
+        email: String,
+        phoneNo: Int,
+        address: String,
+        district: String,
+        state: String,
+        pincode: Int
     }
 
-    input adminOrManagersInput{
+    input productsInput{
         name: String,
-        role: String,
-        email: String,
-        password: String,
-        userId: [String]
+        brand: String,
+        color: String,
+        size: Int,
+        weight: Int,
+        price: Int,
+        description: String
     }
 
     type Query{
-
-        getAllUsers:[users]
-        getUserTasks:[usertasks]
-        getAdminOrManagers:[adminOrManagers]
+        getAllAdmins:[admins]
+        getAllOrders:[orders]
+        getAllProducts:[products]
     }
 
     type Mutation{
-        createUsers(usersInput:usersInput):users!
-        createTasks(newTasks:usertasksInput):usertasks!
-        createAdminOrManagers(newEmployee:adminOrManagersInput):adminOrManagers!
+        createAdmins(adminsInput:adminsInput):admins!
+        createOrders(newOrders:ordersInput):orders!
+        createProducts(newProducts:productsInput):products!
     }
 `
 // const typeDefsPart2 = gql`

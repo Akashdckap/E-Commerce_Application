@@ -1,44 +1,61 @@
 import React, { useEffect, useState } from 'react'
 import { useMutation } from '@apollo/client'
-import { CREATE_USER } from '../../Grahpql/mutation'
+import { CREATE_ADMINS } from '../../Grahpql/mutation'
+import { useRouter } from 'next/router';
 export default function login() {
-    // const [name, setName] = useState('')
-    // const [email, setEmail] = useState('')
-    // const [password, setPassword] = useState('')
-    // const [createUsers, { data, loading, error }] = useMutation(CREATE_USER)
-    // console.log(data);
-    // console.log(error);
-    const [users, setUsers] = useState({
-        name: '',
+
+    const [formData, setFormData] = useState({
         email: '',
-        password: ''
-    })
-    const [addUser] = useMutation(CREATE_USER)
-    const handleSubmit = (e) => {
-        e.preventDefault()
-        addUser({ variables: { name: users.name, email: users.email, password: users.password } })
-        console.log(users);
-        // console.log("email---------", email);
-        // console.log("password--------", password);
+        password: '',
+    });
+    const [errors, setErrors] = useState({
+        email: '',
+        password: '',
+    });
+    const [createAdmins, { data, loading, error }] = useMutation(CREATE_ADMINS)
+    const router = useRouter()
+    const validate = () => {
+        let newErrors = { ...errors };
+        let isVaild = true;
+
+        if (formData.password.trim() === "" && formData.email.trim() === "") {
+            newErrors.password = 'password is required';
+            newErrors.email = 'Email is required';
+            isVaild = false;
+        }
+        if (formData.email.length < 10 && formData.email.trim() !== "") {
+            newErrors.email = 'Email must be at least 8 characters long';
+            isVaild = false;
+        }
+
+        if (formData.password.length < 7 && formData.password.trim() !== "") {
+            newErrors.password = 'Password must be at least 8 characters long';
+            isVaild = false;
+        }
+        setErrors(newErrors);
+        return isVaild;
     }
-    // useEffect(() => {
-    //     console.log(name);
-    //     console.log(email);
-    //     console.log(password);
-    // }, [])
 
-    // const handleSubmit = async (e) => {
-    //     e.preventDefault()
-    //     try {
-    //         const { data } = await (createUser({ variables: { name: name, email: email, password: password } }))
-    //         // console.log("user created", data.createUser);
-    //     }
-    //     catch (error) {
-    //         console.error('Error creating users:', error);
-    //         console.error('GraphQL Error Details:', error.message, error.graphQLErrors, error.networkError);
-    //     }
-    // }
-
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData({
+            ...formData,
+            [name]: value,
+        });
+        delete errors[name]
+    };
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+        if (validate()) {
+            try {
+                const { data, loading, errors } = await (createAdmins({ variables: { input: formData } }))
+                router.push('/adminStore')
+            }
+            catch (error) {
+                console.error('Error creating users:', error);
+            }
+        }
+    }
 
     return (
         <>
@@ -57,22 +74,6 @@ export default function login() {
                     <form className="space-y-6" onSubmit={handleSubmit} >
                         <div>
                             <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
-                                Name
-                            </label>
-                            <div className="mt-2">
-                                <input
-                                    id="name"
-                                    name="name"
-                                    type="text"
-                                    autoComplete="name"
-                                    required
-                                    value={name} placeholder='Enter a name' onChange={(e) => setName(e.target.value)}
-                                    className="block pl-3 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                />
-                            </div>
-                        </div>
-                        <div>
-                            <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
                                 Email address
                             </label>
                             <div className="mt-2">
@@ -81,11 +82,12 @@ export default function login() {
                                     name="email"
                                     type="email"
                                     autoComplete="email"
-                                    required
-                                    value={email} placeholder='Enter a email' onChange={(e) => setEmail(e.target.value)}
+                                    value={formData.email} placeholder='Enter a email' onChange={handleChange}
                                     className="block pl-3 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                 />
                             </div>
+                            {errors.email && <span className="text-red-600">{errors.email}</span>}
+
                         </div>
                         <div>
                             <div className="flex items-center justify-between">
@@ -99,11 +101,11 @@ export default function login() {
                                     name="password"
                                     type="password"
                                     autoComplete="current-password"
-                                    required
-                                    value={password} placeholder='Enter a password' onChange={(e) => setPassword(e.target.value)}
+                                    value={formData.password} placeholder='Enter a password' onChange={handleChange}
                                     className="block pl-3 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                 />
                             </div>
+                            {errors.password && <span className="text-red-600">{errors.password}</span>}
                         </div>
                         <div>
                             <button type="submit" className="flex justify-center w-1/2 m-auto rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
