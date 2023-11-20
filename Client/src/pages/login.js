@@ -3,6 +3,7 @@ import { useMutation } from '@apollo/client'
 import { CREATE_USER } from '../../Grahpql/mutation'
 import { useRouter } from 'next/router';
 export default function login() {
+
     const [formData, setFormData] = useState({
         name: '',
         email: '',

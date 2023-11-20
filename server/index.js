@@ -37,3 +37,4 @@ app.register(server);
 mongoose.connect('mongodb://localhost:27017/adminusers').then(() => { console.log("Connected with MongoDB") }).catch((err) => { console.log("Not connected") });
 
 app.listen({ port: PORT }).then(() => console.log(`Your port running on the ${PORT}`)).catch(() => console.log("Your connection is not okay"));
+
