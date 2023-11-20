@@ -12,7 +12,6 @@ export default function login() {
         email: '',
         password: '',
     });
-    const [createAdmins, { data, loading, error }] = useMutation(CREATE_ADMINS)
     const router = useRouter()
     const validate = () => {
         let newErrors = { ...errors };
@@ -48,10 +47,13 @@ export default function login() {
         e.preventDefault()
         if (validate()) {
             try {
-                const { data, loading, errors } = await (createAdmins({ variables: { input: formData } }))
+                const [createAdmins, { data, loading, error }] = useMutation(CREATE_ADMINS)
+                await (createAdmins({ variables: { input: formData } }))
+                // console.log(data)
                 router.push('/adminStore')
             }
             catch (error) {
+                console.log(error.message);
                 console.error('Error creating users:', error);
             }
         }
