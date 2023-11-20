@@ -1,34 +1,26 @@
 import React, { useEffect, useState } from 'react'
 import { useMutation } from '@apollo/client'
-import { CREATE_USER } from '../../Grahpql/mutation'
+import { CREATE_ADMINS } from '../../Grahpql/mutation'
 import { useRouter } from 'next/router';
 export default function login() {
 
     const [formData, setFormData] = useState({
-        name: '',
         email: '',
         password: '',
     });
     const [errors, setErrors] = useState({
-        name: '',
         email: '',
         password: '',
     });
-    const [createUser, { data, loading, error }] = useMutation(CREATE_USER)
+    const [createAdmins, { data, loading, error }] = useMutation(CREATE_ADMINS)
     const router = useRouter()
     const validate = () => {
         let newErrors = { ...errors };
         let isVaild = true;
 
-        if (formData.name.trim() === "" && formData.password.trim() === "" && formData.email.trim() === "") {
-            newErrors.name = 'Username is required';
+        if (formData.password.trim() === "" && formData.email.trim() === "") {
             newErrors.password = 'password is required';
             newErrors.email = 'Email is required';
-            isVaild = false;
-        }
-
-        if (formData.name.length < 4 && formData.name.trim() !== "") {
-            newErrors.name = 'Username must be at least 5 characters long';
             isVaild = false;
         }
         if (formData.email.length < 10 && formData.email.trim() !== "") {
@@ -56,7 +48,7 @@ export default function login() {
         e.preventDefault()
         if (validate()) {
             try {
-                const { data, loading, errors } = await (createUser({ variables: { input: formData } }))
+                const { data, loading, errors } = await (createAdmins({ variables: { input: formData } }))
                 router.push('/adminStore')
             }
             catch (error) {
@@ -80,22 +72,6 @@ export default function login() {
                 </div>
                 <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
                     <form className="space-y-6" onSubmit={handleSubmit} >
-                        <div>
-                            <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
-                                Name
-                            </label>
-                            <div className="mt-2">
-                                <input
-                                    id="name"
-                                    name="name"
-                                    type="text"
-                                    autoComplete="name"
-                                    value={formData.name} placeholder='Enter a name' onChange={handleChange}
-                                    className="block pl-3 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                />
-                            </div>
-                            {errors.name ? <span className="text-red-600">{errors.name}</span> : ""}
-                        </div>
                         <div>
                             <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
                                 Email address

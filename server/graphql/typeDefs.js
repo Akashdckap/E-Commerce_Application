@@ -13,11 +13,11 @@ const typeDefs = gql` #graphql
         quantity: String,
         name: String,
         email: String,
-        phoneNo: Number,
+        phoneNo: Int,
         address: String,
         district: String,
         state: String,
-        pincode: Number
+        pincode: Int
     }
 
     type products{
@@ -25,9 +25,9 @@ const typeDefs = gql` #graphql
         name: String,
         brand: String,
         color: String,
-        size: Number,
-        weight: Number,
-        price: Number,
+        size: Int,
+        weight: Int,
+        price: Int,
         description: String
     }
 
@@ -38,23 +38,23 @@ const typeDefs = gql` #graphql
 
     input ordersInput{
         productId: ID,
-        quantity: Number,
+        quantity: Int,
         name: String,
         email: String,
-        phoneNo: Number,
+        phoneNo: Int,
         address: String,
         district: String,
         state: String,
-        pincode: Number
+        pincode: Int
     }
 
     input productsInput{
         name: String,
         brand: String,
         color: String,
-        size: Number,
-        weight: Number,
-        price: Number,
+        size: Int,
+        weight: Int,
+        price: Int,
         description: String
     }
 
@@ -65,9 +65,9 @@ const typeDefs = gql` #graphql
     }
 
     type Mutation{
-        createadmins(adminsInput:adminsInput):admins!
-        createorders(newOrders:ordersInput):orders!
-        createproducts(newProducts:productsInput):products!
+        createAdmins(adminsInput:adminsInput):admins!
+        createOrders(newOrders:ordersInput):orders!
+        createProducts(newProducts:productsInput):products!
     }
 `
 // const typeDefsPart2 = gql`

@@ -17,45 +17,47 @@ const resolvers = {
     },
     Mutation: {
         async createAdmins(_, { adminsInput: { email, password } }) {
-            const newUsers = new order({
+            const newUsers = new admins({
                 email: email,
                 password: password
             })
             const res = await newUsers.save();
 
-            return{
+            return {
                 ...res._doc
             }
         },
 
-        async createOrders(_,{newOrders:{productId,quantity,name,email,phoneNo,address,district,state,pincode}}){
+        async createOrders(_, { newOrders: { productId, quantity, name, email, phoneNo, address, district, state, pincode } }) {
             const newOne = new order({
-                productId:ObjectId(productId),
-                quantity:quantity,
-                name:name,
-                email:email,
-                phoneNo:phoneNo,
-                address:address,
-                district:district,
-                state:state,
-                pincode:pincode
+                productId: ObjectId(productId),
+                quantity: quantity,
+                name: name,
+                email: email,
+                phoneNo: phoneNo,
+                address: address,
+                district: district,
+                state: state,
+                pincode: pincode
             })
             const res = await newOne.save();
-            return{
+            return {
                 ...res._doc
             }
         },
 
-        async createProducts(_,{newProdusts:{name,brand,color,size,weight,price,description}}){
+        async createProducts(_, { newProducts: { name, brand, color, size, weight, price, description } }) {
             const newProduct = new product({
-                name:name,
-                role:role,
-                email:email,
-                password:password,
-                userId:userId
+                name: name,
+                brand: brand,
+                color: color,
+                size: size,
+                weight: weight,
+                price: price,
+                description: description
             })
             const res = await newProduct.save();
-            return{
+            return {
                 ...res._doc
             }
         }
