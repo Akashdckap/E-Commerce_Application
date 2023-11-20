@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 
 export default function adminStore() {
     const [formOpen, setFormOpen] = useState(false)
+    // const [productData, setProductData] = useState
     const handleProductForm = (e) => {
         e.preventDefault()
         setFormOpen(false)
@@ -21,7 +22,6 @@ export default function adminStore() {
                                 file:text-sm file:font-semibold
                                 file:bg-violet-50 file:text-blue-400
                                 hover:file:bg-violet-100"  />
-                        {/* <input type='file' className='flex m-auto items-center justify-center'/> */}
                     </div>
                     <div className='flex items-center justify-evenly p-2'>
                         <div>
@@ -58,25 +58,19 @@ export default function adminStore() {
                     </div>
                     <div className='flex items-center justify-evenly p-2'>
                         <div>
-                            <label>Quantity</label>
-                            <input type='number' placeholder="Enter the quantity name..." name='quantity' className='w-80 mt-2 placeholder:text-slate-400 block bg-white border border-slate-300 rounded-md py-2 pl-4 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm' />
-                        </div>
-                        <div>
-                            <label>Type</label>
-                            <input type='text' placeholder="Enter the type name..." name='type' className='w-80 mt-2 placeholder:text-slate-400 block bg-white border border-slate-300 rounded-md py-2 pl-4 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm' />
-                        </div>
-                    </div>
-                    <div className='flex items-center justify-evenly p-2'>
-                        <div className='grid w-80 pr-16 mr-40'>
                             <label>Description</label>
-                            <textarea className='w-80 mt-2 mr-10 placeholder:text-slate-400 block bg-white border border-slate-300 rounded-md py-2 pl-4 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm' placeholder='Write something......'>
+                            <textarea className='w-80 mt-2 placeholder:text-slate-400 block bg-white border border-slate-300 rounded-md py-2 pl-4 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm' placeholder='Write something......'>
 
                             </textarea>
                         </div>
-                        <div className='flex justify-center gap-5'>
-                            <button className='rounded bg-cyan-50 py-2 px-4 border border-red-700 text-rose-500' onClick={() => setFormOpen(false)}>cancel</button>
-                            <button className="rounded bg-blue-300 text-white-600 py-2 px-4 border border-green-700" type='submit'>save</button>
+                        <div>
+                            <label>Color</label>
+                            <input type='text' placeholder="Enter the Color name..." name='color' className='w-80 mt-2 placeholder:text-slate-400 block bg-white border border-slate-300 rounded-md py-2 pl-4 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm' />
                         </div>
+                    </div>
+                    <div className='flex justify-center gap-5 mt-7'>
+                        <button className='rounded bg-cyan-50 py-2 px-4 border border-red-700 text-rose-500' onClick={() => setFormOpen(false)}>cancel</button>
+                        <button className="rounded bg-blue-300 text-white-600 py-2 px-4 border border-green-700" type='submit'>save</button>
                     </div>
                 </form>
             </div>
