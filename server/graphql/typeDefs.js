@@ -2,6 +2,7 @@ const gql = require('graphql-tag');
 
 const typeDefs = gql` #graphql
     type admins{
+
         _id: ID!,
         email: String!,
         password: String!,
