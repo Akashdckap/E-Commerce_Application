@@ -8,4 +8,4 @@ const adminSchema = mongoose.Schema({
 }, {
     timestamps: true
 });
-module.exports = mongoose.model('adminLogin', adminSchema);
+module.exports = mongoose.model('admins', adminSchema);

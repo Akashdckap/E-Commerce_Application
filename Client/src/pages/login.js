@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { useMutation } from '@apollo/client'
-import { CREATE_ADMIN } from '../../Grahpql/mutation';
+import { ApolloError, useMutation } from '@apollo/client'
+import { CREATE_ADMINS } from '../../Grahpql/mutation'
 import { useRouter } from 'next/router';
-
+import { notification } from 'antd';
 export default function login() {
     const [formData, setFormData] = useState({
         email: '',
@@ -12,7 +12,6 @@ export default function login() {
         email: '',
         password: '',
     });
-    const [createAdmin, { data, loading, error }] = useMutation(CREATE_ADMIN)
     const router = useRouter()
     const validate = () => {
         let newErrors = { ...errors };
@@ -35,7 +34,6 @@ export default function login() {
         setErrors(newErrors);
         return isVaild;
     }
-
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({
@@ -44,21 +42,26 @@ export default function login() {
         });
         delete errors[name]
     };
+    const [createAdmins, { data, loading, error }] = useMutation(CREATE_ADMINS)
     const handleSubmit = async (e) => {
         e.preventDefault()
         if (validate()) {
             try {
-                const { data, loading, errors } = await (createAdmin({ variables: { input: formData } }))
-                console.log(data);
-                router.push('/adminStore')
+                await (createAdmins({ variables: { input: formData } }))
             }
             catch (error) {
-                console.error('Error creating users:', error);
+                if (error.message == "successfully") {
+                    notification.success({ description: "successfully logged" })
+                    router.push("/adminStore")
+                }
+                else {
+                    notification.error({ description: "Invalid Email" })
+                    router.push("/login")
+                }
             }
         }
     }
 
-    console.log(formData);
     return (
         <>
             <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8 w-1/2 m-auto mt-10 bg-blue-300 rounded-2xl">
@@ -73,23 +76,8 @@ export default function login() {
                     </h2>
                 </div>
                 <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+                    {error && <p>Error: {error.message}</p>}
                     <form className="space-y-6" onSubmit={handleSubmit} >
-                        {/* <div>
-                            <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
-                                Name
-                            </label>
-                            <div className="mt-2">
-                                <input
-                                    id="name"
-                                    name="name"
-                                    type="text"
-                                    autoComplete="name"
-                                    value={formData.name} placeholder='Enter a name' onChange={handleChange}
-                                    className="block pl-3 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                />
-                            </div>
-                            {errors.name ? <span className="text-red-600">{errors.name}</span> : ""}
-                        </div> */}
                         <div>
                             <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
                                 Email address

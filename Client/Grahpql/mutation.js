@@ -1,12 +1,10 @@
 import { useQuery, gql, useMutation } from "@apollo/client";
 
-export const CREATE_ADMIN = gql`
-  mutation createAdmin($input: adminsInput!) {
-    createAdmin(adminsInput: $input) {
+export const CREATE_ADMINS = gql`
+  mutation createAdmins($input: adminsInput!) {
+    createAdmins(adminsInput: $input) {
       email
       password
     }
   }
 `;
-
-
