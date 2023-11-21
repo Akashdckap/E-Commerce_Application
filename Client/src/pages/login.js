@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { ApolloError, useMutation } from '@apollo/client'
+import { useMutation } from '@apollo/client'
 
 import { CREATE_ADMINS } from '../../Grahpql/mutation'
 import { useRouter } from 'next/router';
@@ -52,7 +52,7 @@ export default function login() {
                 await (createAdmins({ variables: { input: formData } }))
             }
             catch (error) {
-                if (error.message == "successfully") {
+                if (error.message == "Successfully") {
                     notification.success({ description: "successfully logged" })
                     router.push("/adminStore")
                 }

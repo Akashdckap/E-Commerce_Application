@@ -7,4 +7,20 @@ export const CREATE_ADMINS = gql`
       password
     }
   }
+
+`;
+
+export const CREATE_PRODUCTS = gql`
+  mutation createProducts($input: productsInput!){
+    createProducts(productsInput: $input){
+      image,
+      productName,
+      category,
+      brand,
+      price,
+      weight,
+      description,
+      color
+    }
+  }
 `;

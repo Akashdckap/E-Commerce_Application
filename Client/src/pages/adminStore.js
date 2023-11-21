@@ -1,9 +1,14 @@
 import React, { useState } from 'react'
 import { notification } from 'antd';
+import { useMutation } from '@apollo/client'
 import Link from 'next/link';
+import { CREATE_PRODUCTS } from '../../Grahpql/mutation';
+
+
 export default function adminStore() {
     const [formOpen, setFormOpen] = useState(false);
     const [productData, setProductData] = useState({
+        image: '',
         productName: "",
         category: "",
         brand: "",
@@ -42,11 +47,32 @@ export default function adminStore() {
         });
         delete productErrors[name]
     };
+    const [createProducts, { data, loading, error }] = useMutation(CREATE_PRODUCTS);
 
-    const handleProductForm = (e) => {
+    const handleProductForm = async (e) => {
         e.preventDefault()
         setFormOpen(false)
+        if (validate()) {
+            try {
+                await (createProducts({ variables: { input: productData } }))
+                console.log(error);
+            }
+            catch (error) {
+                if (error.message == "Successfully") {
+                    notification.success({ description: "successfully added" })
+                    router.push("/adminStore")
+                }
+                else {
+                    notification.error({ description: "Not added" })
+                    router.push("/adminStore")
+                }
+            }
+        }
+        else {
+
+        }
     }
+    // console.log("--------------productData", productData)
     return (
         <>
             <div className='flex justify-between p-10'>
@@ -73,7 +99,7 @@ export default function adminStore() {
                         </div>
                         <div>
                             <label>Category</label>
-                            <select name="Category" value={productData.category} onChange={handleChange} id='Category' className="mt-2 placeholder:text-slate-400 block bg-white w-80 border border-slate-300 rounded-md py-2 pl-5 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm">
+                            <select name="category" value={productData.category} onChange={handleChange} id='Category' className="mt-2 placeholder:text-slate-400 block bg-white w-80 border border-slate-300 rounded-md py-2 pl-5 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm">
                                 <option value='Select a categroy'>Select a categroy</option>
                                 <option value='Cameras & Optics'>Cameras & Optics</option>
                                 <option value='Hardware'>Hardware</option>
