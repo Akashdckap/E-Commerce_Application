@@ -1,8 +1,9 @@
 
-const { ApolloError } = require('apollo-server-fastify');
+// const { ApolloError } = require('@apollo/server');
 const admins = require('../model/adminSchema');
-// const order = require('../model/order');
-// const product = require('../model/product');
+// const { ApolloError } = require('')
+const order = require('../model/order');
+const product = require('../model/product');
 const mongoose = require("mongoose");
 const ObjectId = mongoose.Types.ObjectId;
 const resolvers = {
@@ -23,75 +24,64 @@ const resolvers = {
                 email: email,
                 password: password
             })
-            const emailList = await admins.find({})
-            const verifyEmail = emailList.some((emails) => { return emails.email === newUsers.email })
-            if (verifyEmail) {
-                throw new ApolloError("successfully")
+            const emailList = await admins.find({ email: newUsers.email });
+            if (emailList) {
+                if (emailList[0].password == newUsers.password) {
+                    throw new Error("Successfully")
+                }
+                else {
+                    throw new Error("Incorrect Password")
+                }
             }
             else {
-                throw new ApolloError("Invalid Email")
+                throw new Error("Email Id not exists");
             }
-            // })
-            // if(verifyEmail.find())
-            // emailList.find((email) => console.log(email))
-            // console.log(verifyEmail);
-            // if (verifyEmail()) {
-            //     throw new ApolloError("Succefully logged")
-            // }
-            // else {
-            //     throw new ApolloError("Invalid email")
-            // }
-            // console.log(emailList.find((email) => email.email === newUsers.email))
-            // console.log(list);
 
-            // if (verifyEmail) {
-            //     // const res = await newUsers.save();
-            //     throw new ApolloError("Succefully logged")
-            //     // console.log("Succefully logged")
-            // }
-            // else {
-            //     // console.log("Invalid email")
-            //     throw new ApolloError("Invalid email")
-            // }
-            // console.log(getAdminEmail);
+        },
 
+        // async createOrders(_, { newOrders: { productId, quantity, name, email, phoneNo, address, district, state, pincode } }) {
+        //     const newOne = new order({
+        //         productId: ObjectId(productId),
+        //         quantity: quantity,
+        //         name: name,
+        //         email: email,
+        //         phoneNo: phoneNo,
+        //         address: address,
+        //         district: district,
+        //         state: state,
+        //         pincode: pincode
+        //     })
+        //     const res = await newOne.save();
+        //     return {
+        //         ...res._doc
+        //     }
+        // },
+
+        async createProducts(_, { newProducts: { image, productName, category, brand, price, weight, description, color } }) {
+            const newProduct = new product({
+                image: image,
+                productName: productName,
+                category: category,
+                brand: brand,
+                price: price,
+                weight: weight,
+                description: description,
+                color: color,
+            })
+
+            console.log(newProduct);
+            if (newProduct) {
+                const res = await newProduct.save();
+                throw new Error("Successfully");
+            }
+            else {
+                throw new Error("Not added");
+            }
+            // console.log(res);
             // return {
             //     ...res._doc
             // }
-        },
 
-        async createOrders(_, { newOrders: { productId, quantity, name, email, phoneNo, address, district, state, pincode } }) {
-            const newOne = new order({
-                productId: ObjectId(productId),
-                quantity: quantity,
-                name: name,
-                email: email,
-                phoneNo: phoneNo,
-                address: address,
-                district: district,
-                state: state,
-                pincode: pincode
-            })
-            const res = await newOne.save();
-            return {
-                ...res._doc
-            }
-        },
-
-        async createProducts(_, { newProducts: { name, brand, color, size, weight, price, description } }) {
-            const newProduct = new product({
-                name: name,
-                brand: brand,
-                color: color,
-                size: size,
-                weight: weight,
-                price: price,
-                description: description
-            })
-            const res = await newProduct.save();
-            return {
-                ...res._doc
-            }
         }
     }
 }

@@ -2,7 +2,6 @@ const gql = require('graphql-tag');
 
 const typeDefs = gql` #graphql
     type admins{
-
         _id: ID!,
         email: String!,
         password: String!,
@@ -23,13 +22,14 @@ const typeDefs = gql` #graphql
 
     type products{
         _id: ID,
-        name: String,
+        image: String,
+        productName: String,
+        category:String,
         brand: String,
-        color: String,
-        size: Int,
-        weight: Int,
         price: Int,
+        weight: Int,
         description: String
+        color: String,
     }
 
     input adminsInput{
@@ -50,13 +50,14 @@ const typeDefs = gql` #graphql
     }
 
     input productsInput{
-        name: String,
+        image: String,
+        productName: String,
+        category:String,
         brand: String,
-        color: String,
-        size: Int,
-        weight: Int,
         price: Int,
+        weight: Int,
         description: String
+        color: String,
     }
 
     type Query{
