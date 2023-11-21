@@ -50,6 +50,7 @@ const typeDefs = gql` #graphql
     }
 
     input productsInput{
+        # image: Object,
         productName: String,
         category:String,
         brand: String,
