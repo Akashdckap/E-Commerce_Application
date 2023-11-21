@@ -1,5 +1,9 @@
+
 import React, { useEffect, useState } from 'react'
-import { useMutation } from '@apollo/client'
+// import { useMutation } from '@apollo/client'
+
+// import React, { StrictMode, useEffect, useState } from 'react'
+import { ApolloError, useMutation } from '@apollo/client'
 
 import { CREATE_ADMINS } from '../../Grahpql/mutation'
 import { useRouter } from 'next/router';
@@ -123,6 +127,7 @@ export default function login() {
                     </form>
                 </div>
             </div>
+            {/* </> */}
         </>
     )
 }

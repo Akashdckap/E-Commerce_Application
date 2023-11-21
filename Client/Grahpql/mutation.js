@@ -10,17 +10,17 @@ export const CREATE_ADMINS = gql`
 
 `;
 
-export const CREATE_PRODUCTS = gql`
-  mutation createProducts($input: productsInput!){
-    createProducts(productsInput: $input){
-      image,
-      productName,
-      category,
-      brand,
-      price,
-      weight,
-      description,
-      color
+export const { CREATE_PRODUCTS, UPLOAD_IMAGE } = gql`
+ mutation createProducts($productDatas: productsInput!){
+    createProducts(newProducts: $productDatas){
+        image
+        productName
+        category
+        brand
+        price
+        weight
+        color
+        description
     }
-  }
-`;
+ }
+`

@@ -1,8 +1,7 @@
 
 // const { ApolloError } = require('@apollo/server');
-const admins = require('../model/adminSchema');
-// const { ApolloError } = require('')
-const order = require('../model/order');
+const admins = require('../model/login');
+// const order = require('../model/order');
 const product = require('../model/product');
 const mongoose = require("mongoose");
 const ObjectId = mongoose.Types.ObjectId;
@@ -15,7 +14,9 @@ const resolvers = {
             return await (order.find({}));
         },
         getAllProducts: async () => {
-            return await (product.find({}));
+            return await (productDeatails.find({}));
+            // return productList
+            // console.log(productList);
         }
     },
     Mutation: {
@@ -57,7 +58,7 @@ const resolvers = {
         //     }
         // },
 
-        async createProducts(_, { newProducts: { image, productName, category, brand, price, weight, description, color } }) {
+        async createProducts(_, { newProducts: { image, productName,category, brand, price, weight, description, color } }) {
             const newProduct = new product({
                 image: image,
                 productName: productName,
@@ -65,11 +66,11 @@ const resolvers = {
                 brand: brand,
                 price: price,
                 weight: weight,
-                description: description,
                 color: color,
+                description: description
             })
 
-            console.log(newProduct);
+            // console.log(newProduct);
             if (newProduct) {
                 const res = await newProduct.save();
                 throw new Error("Successfully");

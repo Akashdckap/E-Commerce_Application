@@ -35,5 +35,5 @@ app.register(server);
 
 mongoose.connect('mongodb://localhost:27017/E-commerce').then(() => { console.log("Connected with MongoDB") }).catch((err) => { console.log("Not connected") });
 
-app.listen({ port: PORT }).then(() => console.log(`Your port running on the ${PORT}`)).catch((error) => console.log("Your connection is not okay",error));
+app.listen({ port: PORT }).then(() => console.log(`Your port running on the ${PORT}`)).catch((error) => console.log("Your connection is not okay", error));
 

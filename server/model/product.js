@@ -7,8 +7,8 @@ const newProduct = mongoose.Schema({
     brand: String,
     price: Number,
     weight: Number,
-    description: String,
     color: String,
+    description: String
 }, {
     timestamps: true
 });
