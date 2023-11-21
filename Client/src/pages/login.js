@@ -1,3 +1,7 @@
+
+import React, { useEffect, useState } from 'react'
+import { useMutation } from '@apollo/client'
+
 import React, { StrictMode, useEffect, useState } from 'react'
 import { ApolloError, useMutation } from '@apollo/client'
 
@@ -52,7 +56,7 @@ export default function login() {
                 await (createAdmins({ variables: { input: formData } }))
             }
             catch (error) {
-                if (error.message == "successfully") {
+                if (error.message == "Successfully") {
                     notification.success({ description: "successfully logged" })
                     router.push("/adminStore")
                 }
