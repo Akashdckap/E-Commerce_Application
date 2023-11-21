@@ -3,11 +3,12 @@ const ObjectId = mongoose.Types.ObjectId;
 
 const productSchema = mongoose.Schema({
     id: ObjectId,
+    // image: Object,
     productName: String,
     category: String,
     brand: String,
-    price: String,
-    weight: String,
+    price: Number,
+    weight: Number,
     color: String,
     description: String
 }, {
