@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import { notification } from 'antd';
+import { useMutation } from '@apollo/client'
 import Link from 'next/link';
 import { CREATE_PRODUCTS } from '../../Grahpql/mutation';
 // import { getProductList } from '../../Grahpql/queries';
 import { GET_ALL_PRODUCTS } from '../../Grahpql/queries';
 import { useMutation, useQuery } from '@apollo/client';
+
 export default function adminStore() {
     const [formOpen, setFormOpen] = useState(false);
     const [image, setImage] = useState('')
 
     const [productData, setProductData] = useState({
+        image: '',
         productName: "",
         category: "",
         brand: "",
@@ -49,6 +52,7 @@ export default function adminStore() {
         });
         delete productErrors[name]
     };
+    const [createProducts, { data, loading, error }] = useMutation(CREATE_PRODUCTS);
 
     // useEffect(() => {
     //     console.log(data);
@@ -95,9 +99,10 @@ export default function adminStore() {
     }
     else {
         console.log(getDataError);
+
     }
     const productList = getDataError.getAllProducts
-    // console.log(productList[0].brand);
+  
     return (
         <>
             <div className='flex justify-between p-10'>

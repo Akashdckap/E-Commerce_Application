@@ -1,6 +1,8 @@
 
+
 const adminSchema = require('../model/adminSchema')
 const Routes = (fastify, options, done) => {
+
     fastify.post('/adminLogin', async (request, response) => {
         let formData = {
             email: request.body.email,
