@@ -18,3 +18,26 @@ export const useUserList = () => {
         loading
     }
 }
+
+export const GET_ALL_PRODUCTS = gql`
+    query {
+        getAllProducts {
+            _id
+            productName
+            category
+            brand
+            price
+            weight
+            color
+            description
+        }
+    }
+`
+// export const getProductList = () => {
+//     const { data, error, loading } = useQuery(GET_ALL_PRODUCTS)
+//     return {
+//         data,
+//         error,
+//         loading
+//     }
+// }

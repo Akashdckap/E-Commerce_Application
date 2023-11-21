@@ -22,12 +22,12 @@ const typeDefs = gql` #graphql
 
     type products{
         _id: ID,
-        name: String,
+        productName: String,
+        category:String,
         brand: String,
-        color: String,
-        size: Int,
+        price:Int,
         weight: Int,
-        price: Int,
+        color: String,
         description: String
     }
 
@@ -49,25 +49,25 @@ const typeDefs = gql` #graphql
     }
 
     input productsInput{
-        name: String,
+        productName: String,
+        category:String,
         brand: String,
+        price: String,
+        weight: String,
         color: String,
-        size: Int,
-        weight: Int,
-        price: Int,
         description: String
     }
 
     type Query{
         getAllAdmins:[admins]
         getAllOrders:[orders]
-        getAllProducts:[products]
+        getAllProducts: [products]
     }
 
     type Mutation{
         createAdmins(adminsInput: adminsInput): [admins]
+        createProducts(newProducts: productsInput): [products]
         createOrders(newOrders: ordersInput): orders!
-        createProducts(newProducts: productsInput): products!
     }
 `
 // const typeDefsPart2 = gql`

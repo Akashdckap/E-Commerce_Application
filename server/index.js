@@ -7,7 +7,7 @@ const { ApolloServer } = require('@apollo/server');
 
 const { default: fastifyApollo, fastifyApolloDrainPlugin } = require('@as-integrations/fastify');
 const app = fastify();
-const PORT = 5000;
+const PORT = 4000;
 // app.register(fastifySensible);
 
 const router = require('./controller/router');

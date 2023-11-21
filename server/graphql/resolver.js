@@ -1,5 +1,7 @@
+
 const { ApolloError } = require('apollo-server-fastify');
 const admins = require('../model/adminSchema');
+const productDeatails = require('../model/productSchema')
 // const order = require('../model/order');
 // const product = require('../model/product');
 const mongoose = require("mongoose");
@@ -13,7 +15,9 @@ const resolvers = {
             return await (order.find({}));
         },
         getAllProducts: async () => {
-            return await (product.find({}));
+            return await (productDeatails.find({}));
+            // return productList
+            // console.log(productList);
         }
     },
     Mutation: {
@@ -77,14 +81,14 @@ const resolvers = {
             }
         },
 
-        async createProducts(_, { newProducts: { name, brand, color, size, weight, price, description } }) {
-            const newProduct = new product({
-                name: name,
+        async createProducts(_, { newProducts: { productName, category, brand, price, weight, color, description } }) {
+            const newProduct = new productDeatails({
+                productName: productName,
+                category: category,
                 brand: brand,
-                color: color,
-                size: size,
-                weight: weight,
                 price: price,
+                weight: weight,
+                color: color,
                 description: description
             })
             const res = await newProduct.save();
