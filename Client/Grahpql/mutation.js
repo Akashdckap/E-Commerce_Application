@@ -12,7 +12,6 @@ export const CREATE_ADMINS = gql`
 export const CREATE_PRODUCTS = gql`
  mutation createProducts($productDatas: productsInput!){
     createProducts(newProducts: $productDatas){
-        image
         productName
         category
         brand
@@ -22,4 +21,11 @@ export const CREATE_PRODUCTS = gql`
         description
     }
  }
+`
+export const UPLOAD_FILE = gql`
+  mutation uploadFile($file: uploadImage!){
+    uploadFile(file: $file){
+      url
+    }
+  }
 `

@@ -2,11 +2,20 @@
 const { ApolloError } = require('apollo-server-fastify');
 const admins = require('../model/adminSchema');
 const productDeatails = require('../model/productSchema')
+
 // const order = require('../model/order');
 // const product = require('../model/product');
+// const { GraphQLUpload} = require('graphql-upload')
+const path = require('path')
+const fs = require('fs')
 const mongoose = require("mongoose");
+// const { GraphQLUpload, processRequest } = require('graphql-upload')
+// const { GraphQLUpload } = require('graphql-upload')
+// const { GraphQLUpload } = require('graphql-upload')
+// const {GraphQL}
 const ObjectId = mongoose.Types.ObjectId;
 const resolvers = {
+    // Upload: GraphQLUpload,
     Query: {
         getAllAdmins: async () => {
             return await (admins.find({}));
@@ -18,7 +27,11 @@ const resolvers = {
             return await (productDeatails.find({}));
             // return productList
             // console.log(productList);
-        }
+        },
+        // uploads:async ()=>{
+
+        // }
+        hello: () => "Hello world from bala"
     },
     Mutation: {
         async createAdmins(_, { adminsInput: { email, password } }) {
@@ -96,6 +109,18 @@ const resolvers = {
             const res = await newProduct.save();
             return {
                 ...res._doc
+            }
+        },
+        uploadFile: async (parent, { file }) => {
+            console.log(file);
+            const { createReadStream, filename, mimetype, encoding } = await file
+            const stream = createReadStream()
+            const pathName = path.join(__dirname, `/public/Images/${filename}`)
+            await stream.pipe(fs.createWriteStream(pathName))
+            // console.log(url);
+            // console.log(filename);
+            return {
+                url: `http://localhost:4000/Images/${filename}`
             }
         }
     }
