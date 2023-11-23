@@ -26,7 +26,6 @@ const typeDefs = gql` #graphql
 
     type products{
         _id: ID,
-        image:String,
         productName: String,
         category: String,
         brand: String,
@@ -54,7 +53,6 @@ const typeDefs = gql` #graphql
     }
 
     input productsInput{
-        image:String,
         productName: String,
         category:String,
         brand: String,

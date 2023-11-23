@@ -99,17 +99,15 @@ const resolvers = {
 
         // }
 
-        createProducts: async (_, { file }) => {
-            const { newProducts, filename } = await file;
-            const stream = newProducts();
-            const uploadPath = path.join(__dirname,'../../Client/public/images',filename);
+        // createProducts: async (_, { file }) => {
+        //     const { newProducts, filename } = await file;
+        //     const stream = newProducts();
+        //     const uploadPath = path.join(__dirname, '../../Client/public/images', filename);
+        //     await new Promise((resolve, reject) => {
 
-            await new Promise((resolve,reject)=>{
-
-            })
+        //     })
         async createProducts(_, { newProducts: { productName, category, brand, price, weight, color, description } }) {
             const newProduct = new productDeatails({
-                image: image,
                 productName: productName,
                 category: category,
                 brand: brand,
@@ -124,7 +122,8 @@ const resolvers = {
                 ...res._doc
             }
         },
-        uploadFile: async (parent, { file }) => {
+ 
+        async uploadFile(parent, { file }) {
             console.log(file);
             const { createReadStream, filename, mimetype, encoding } = await file
             const stream = createReadStream()
@@ -137,6 +136,7 @@ const resolvers = {
             }
 
         }
+        // }
     }
 }
 module.exports = resolvers;
