@@ -2,8 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Upload, notification } from 'antd';
 // import { useMutation } from '@apollo /client'
 import Link from 'next/link';
-import { CREATE_PRODUCTS } from '../../Grahpql/mutation';
-import { UPLOAD_IMAGE } from '../../Grahpql/mutation'
+import { CREATE_PRODUCTS, UPLOAD_FILE } from '../../Grahpql/mutation';
 // import { getProductList } from '../../Grahpql/queries';
 import { GET_ALL_PRODUCTS } from '../../Grahpql/queries';
 import { useMutation, useQuery } from '@apollo/client';
@@ -66,26 +65,38 @@ export default function adminStore() {
     // }, [])
     // console.log(error);  
 
-    const handleUploadImage = (e) => {
+    // const handleUploadImage = (e) => {
+    //     const file = e.target.files[0]
+    //     setImage(file)
+    //     // console.log(file);
+    // }
+    // productData.append('image', file)
+    // console.log(productData);
+
+    const [uploadFile] = useMutation(UPLOAD_FILE, {
+        onCompleted: data => console.log(data)
+    })
+    const handleSingleImage = (e) => {
         const file = e.target.files[0]
-        setImage(file)
         console.log(file);
+        if (!file) return
+        uploadFile({ variables: file })
     }
     const [createProducts, { data, loading, error }] = useMutation(CREATE_PRODUCTS)
+    console.log(error);
     const handleProductForm = async (e) => {
         e.preventDefault()
         // setFormOpen(false)
         if (validate()) {
             try {
-                await (createProducts({ variables: { productDatas: { ...productData, ...image } } }))
-
+                await (createProducts({ variables: { productDatas: productData } }))
             }
             catch (error) {
                 console.log(error);
             }
             // alert("okay")
         }
-        setFormOpen(false)
+        // setFormOpen(false)
         // else {
         //     alert("not okay")
         // }
@@ -94,7 +105,7 @@ export default function adminStore() {
 
     const { data: getDataError, error: getError, loading: getLoading } = useQuery(GET_ALL_PRODUCTS);
     useEffect(() => {
-        console.log(typeof getDataError);
+        // console.log(typeof getDataError);
     }, [getDataError])
 
     if (getLoading) {
@@ -105,7 +116,6 @@ export default function adminStore() {
         console.log("getting data error-----------------------------", getError);
     }
     else {
-        console.log(getDataError);
 
     }
     const productList = getDataError.getAllProducts
@@ -115,14 +125,24 @@ export default function adminStore() {
             <div className='flex justify-between p-10'>
                 <h1>Welcome to our site Balamurugan</h1>
                 <div className='flex justify-center gap-10'>
-                    <Link href='/login'><button className='bg-green-500 hover:bg-grey-700 text-white font-bold py-2 px-4 border border-white-700 rounded'>Login</button></Link>
-                    <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded' onClick={() => setFormOpen(true)}>Add Product</button>
+                    <Link href='/login'><button className='bg-red-400 hover:bg-grey-700 text-white font-bold py-2 px-4 border border-white-700 rounded'>Log Out</button></Link>
+                    <Link href="/users" className="inline-flex items-center justify-center px-5 py-3 text-base font-medium text-center text-white bg-blue-600 rounded-lg hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900">
+                        View Products
+                        <svg className="w-3.5 h-3.5 ms-2 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M1 5h12m0 0L9 1m4 4L9 9" />
+                        </svg>
+                    </Link>
+                    <button className='bg-blue-400 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded' onClick={() => setFormOpen(true)}>Add Product</button>
                 </div>
             </div>
             <div>
+                <div>
+                    <h1>upload File</h1>
+                    <input type='file' onChange={handleSingleImage} />
+                </div>
                 <form onSubmit={handleProductForm} style={{ display: formOpen ? 'block' : 'none' }} className='z-10 absolute bottom-25 ml-20 left-10 w-9/12 bg-emerald-100 p-4 m-auto h-full rounded'>
                     <div className="imageContainer">
-                        <input onChange={handleUploadImage} type="file" className="block w-full text-red-500
+                        <input type="file" className="block w-full text-red-500
                                 file:mr-4 file:py-2 file:px-4
                                 file:rounded-full file:border-0
                                 file:text-sm file:font-semibold
@@ -231,6 +251,60 @@ export default function adminStore() {
                         </div>
                     )
                 }
+            </div>
+            <div className="p-10 overflow-x-auto rounded-md">
+                <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                    <thead className="text-xs text-white-400 uppercase bg-gray-50 dark:bg-gray-700 white:text-gray-400">
+                        <tr>
+                            <th scope="col" className="px-6 py-3">
+                                Product name
+                            </th>
+                            <th scope="col" className="px-6 py-3">
+                                Color
+                            </th>
+                            <th scope="col" className="px-6 py-3">
+                                Category
+                            </th>
+                            <th scope="col" className="px-6 py-3">
+                                Price
+                            </th>
+                            <th scope="col" className="px-6 py-3">
+                                Brand
+                            </th>
+                            <th scope="col" className="px-6 py-3">
+                                Price
+                            </th>
+                            <th scope="col" className="px-6 py-3">
+                                Brand
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr className="bg-white border-b white:bg-gray-800 dark:border-gray-700">
+                            <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap white:text-white">
+                                Apple MacBook Pro 17"
+                            </th>
+                            <td className="px-6 py-4 text-blue-500">
+                                Silver
+                            </td>
+                            <td className="px-6 py-4 text-blue-500">
+                                Laptop
+                            </td>
+                            <td className="px-6 py-4 text-blue-500">
+                                ₹2999
+                            </td>
+                            <td className="px-6 py-4 text-blue-500">
+                                Apple
+                            </td>
+                            <td className="px-6 py-4 text-blue-500">
+                                ₹2999
+                            </td>
+                            <td className="px-6 py-4 text-blue-500">
+                                Apple
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </>
     )

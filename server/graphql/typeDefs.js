@@ -2,8 +2,9 @@ const gql = require('graphql-tag');
 
 const typeDefs = gql` #graphql
 
-    scalar upload
-
+    # scalar Upload 
+    scalar uploadImage
+    
     type admins{
         _id: ID!,
         email: String!,
@@ -67,12 +68,21 @@ const typeDefs = gql` #graphql
         getAllAdmins:[admins]
         getAllOrders:[orders]
         getAllProducts: [products]
+        # uploads: [File]
+        hello: String!
     }
 
+    type File {
+        url: String!
+    }
+    # input Image {
+    #     image: String
+    # }
     type Mutation{
         createAdmins(adminsInput: adminsInput): admins!
         createProducts(newProducts: productsInput): products!
         createOrders(newOrders: ordersInput): orders!
+        uploadFile(file: uploadImage!): File
     }
 `
 // const typeDefsPart2 = gql`
