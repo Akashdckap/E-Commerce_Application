@@ -1,4 +1,8 @@
-import React, { StrictMode, useEffect, useState } from 'react'
+
+import React, { useEffect, useState } from 'react'
+// import { useMutation } from '@apollo/client'
+
+// import React, { StrictMode, useEffect, useState } from 'react'
 import { ApolloError, useMutation } from '@apollo/client'
 
 import { CREATE_ADMINS } from '../../Grahpql/mutation'
@@ -52,7 +56,7 @@ export default function login() {
                 await (createAdmins({ variables: { input: formData } }))
             }
             catch (error) {
-                if (error.message == "successfully") {
+                if (error.message == "Successfully") {
                     notification.success({ description: "successfully logged" })
                     router.push("/adminStore")
                 }
@@ -65,7 +69,7 @@ export default function login() {
     }
 
     return (
-        <StrictMode>
+        <>
             <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8 w-1/2 m-auto mt-10 bg-blue-300 rounded-2xl">
                 <div className="sm:mx-auto sm:w-full sm:max-w-sm">
                     <img
@@ -124,6 +128,6 @@ export default function login() {
                 </div>
             </div>
             {/* </> */}
-        </StrictMode>
+        </>
     )
 }

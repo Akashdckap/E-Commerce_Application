@@ -1,5 +1,5 @@
 
-const { ApolloError } = require('apollo-server-fastify');
+// const { ApolloError } = require('@apollo/server');
 const admins = require('../model/adminSchema');
 const productDeatails = require('../model/productSchema')
 
@@ -39,64 +39,77 @@ const resolvers = {
                 email: email,
                 password: password
             })
-            const emailList = await admins.find({})
-            const verifyEmail = emailList.some((emails) => { return emails.email === newUsers.email })
-            if (verifyEmail) {
-                throw new ApolloError("successfully")
+            const emailList = await admins.find({ email: newUsers.email });
+            if (emailList) {
+                if (emailList[0].password == newUsers.password) {
+                    throw new Error("Successfully")
+                }
+                else {
+                    throw new Error("Incorrect Password")
+                }
             }
             else {
-                throw new ApolloError("Invalid Email")
+                throw new Error("Email Id not exists");
             }
-            // })
-            // if(verifyEmail.find())
-            // emailList.find((email) => console.log(email))
-            // console.log(verifyEmail);
-            // if (verifyEmail()) {
-            //     throw new ApolloError("Succefully logged")
-            // }
-            // else {
-            //     throw new ApolloError("Invalid email")
-            // }
-            // console.log(emailList.find((email) => email.email === newUsers.email))
-            // console.log(list);
 
-            // if (verifyEmail) {
-            //     // const res = await newUsers.save();
-            //     throw new ApolloError("Succefully logged")
-            //     // console.log("Succefully logged")
-            // }
-            // else {
-            //     // console.log("Invalid email")
-            //     throw new ApolloError("Invalid email")
-            // }
-            // console.log(getAdminEmail);
-
-            // return {
-            //     ...res._doc
-            // }
         },
 
-        async createOrders(_, { newOrders: { productId, quantity, name, email, phoneNo, address, district, state, pincode } }) {
-            const newOne = new order({
-                productId: ObjectId(productId),
-                quantity: quantity,
-                name: name,
-                email: email,
-                phoneNo: phoneNo,
-                address: address,
-                district: district,
-                state: state,
-                pincode: pincode
+        // async createOrders(_, { newOrders: { productId, quantity, name, email, phoneNo, address, district, state, pincode } }) {
+        //     const newOne = new order({
+        //         productId: ObjectId(productId),
+        //         quantity: quantity,
+        //         name: name,
+        //         email: email,
+        //         phoneNo: phoneNo,
+        //         address: address,
+        //         district: district,
+        //         state: state,
+        //         pincode: pincode
+        //     })
+        //     const res = await newOne.save();
+        //     return {
+        //         ...res._doc
+        //     }
+        // },
+
+        // async createProducts(_, { newProducts: { productName, category, brand, price, weight, description, color } }) {
+
+        //     const newProduct = new product({
+        //         productName: productName,
+        //         category: category,
+        //         brand: brand,
+        //         price: price,
+        //         weight: weight,
+        //         color: color,
+        //         description: description
+        //     })
+
+        //     // console.log(newProduct);
+        //     if (newProduct) {
+        //         const res = await newProduct.save();
+        //         throw new Error("Successfully");
+        //     }
+        //     else {
+        //         throw new Error("Not added");
+        //     }
+        //     // console.log(res);
+        //     // return {
+        //     //     ...res._doc
+        //     // }
+
+        // }
+
+        createProducts: async (_, { file }) => {
+            const { newProducts, filename } = await file;
+            const stream = newProducts();
+            const uploadPath = path.join(__dirname,'../../Client/public/images',filename);
+
+            await new Promise((resolve,reject)=>{
+
             })
-            const res = await newOne.save();
-            return {
-                ...res._doc
-            }
-        },
-
         async createProducts(_, { newProducts: { productName, category, brand, price, weight, color, description } }) {
             const newProduct = new productDeatails({
-                // image: image,
+                image: image,
                 productName: productName,
                 category: category,
                 brand: brand,
@@ -122,6 +135,7 @@ const resolvers = {
             return {
                 url: `http://localhost:4000/Images/${filename}`
             }
+
         }
     }
 }

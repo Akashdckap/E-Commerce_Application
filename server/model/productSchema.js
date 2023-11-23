@@ -1,9 +1,7 @@
-const mongoose = require("mongoose");
-const ObjectId = mongoose.Types.ObjectId;
+const mongoose = require('mongoose');
 
-const productSchema = mongoose.Schema({
-    id: ObjectId,
-    // image: Object,
+const newProduct = mongoose.Schema({
+    image: String,
     productName: String,
     category: String,
     brand: String,
@@ -14,5 +12,5 @@ const productSchema = mongoose.Schema({
 }, {
     timestamps: true
 });
-// module.exports = mongoose.model('admins', adminSchema);
-module.exports = mongoose.model('products', productSchema)
+
+module.exports = mongoose.model('products', newProduct);

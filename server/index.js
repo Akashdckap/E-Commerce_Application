@@ -7,7 +7,7 @@ const { ApolloServer } = require('@apollo/server');
 
 const { default: fastifyApollo, fastifyApolloDrainPlugin } = require('@as-integrations/fastify');
 const app = fastify();
-const PORT = 4000;
+const PORT = 5000;
 // app.register(fastifySensible);
 
 const router = require('./controller/router');
@@ -33,7 +33,7 @@ async function server(app1) {
 app.register(server);
 // app.register(apolloServer.createHandler());
 
-
 mongoose.connect('mongodb://localhost:27017/E-commerce').then(() => { console.log("Connected with MongoDB") }).catch((err) => { console.log("Not connected") });
 
-app.listen({ port: PORT }).then(() => console.log(`Your port running on the ${PORT}`)).catch((error) => console.log("Your connection is not okay",error));
+app.listen({ port: PORT }).then(() => console.log(`Your port running on the ${PORT}`)).catch((error) => console.log("Your connection is not okay", error));
+

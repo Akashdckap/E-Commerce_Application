@@ -7,6 +7,7 @@ export const CREATE_ADMINS = gql`
       password
     }
   }
+
 `;
 
 export const CREATE_PRODUCTS = gql`
@@ -22,6 +23,7 @@ export const CREATE_PRODUCTS = gql`
     }
  }
 `
+
 export const UPLOAD_FILE = gql`
   mutation uploadFile($file: uploadImage!){
     uploadFile(file: $file){
@@ -29,3 +31,4 @@ export const UPLOAD_FILE = gql`
     }
   }
 `
+

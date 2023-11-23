@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { notification } from 'antd';
+import { Upload, notification } from 'antd';
+// import { useMutation } from '@apollo /client'
 import Link from 'next/link';
 import { CREATE_PRODUCTS, UPLOAD_FILE } from '../../Grahpql/mutation';
 // import { getProductList } from '../../Grahpql/queries';
 import { GET_ALL_PRODUCTS } from '../../Grahpql/queries';
 import { useMutation, useQuery } from '@apollo/client';
+
 export default function adminStore() {
     const [formOpen, setFormOpen] = useState(false);
     const [image, setImage] = useState('')
@@ -15,18 +17,20 @@ export default function adminStore() {
         brand: "",
         price: "",
         weight: "",
-        description: "",
-        color: ""
+        color: "",
+        description: ""
     });
     const [productErrors, setProductErrors] = useState({
+        image: "",
         productName: "",
         category: "",
         brand: "",
         price: "",
         weight: "",
-        description: "",
-        color: ""
+        color: "",
+        description: ""
     });
+    const [createProducts, { data, loading, error }] = useMutation(CREATE_PRODUCTS)
 
     const validate = () => {
         let newErrors = { ...productErrors };
@@ -49,6 +53,11 @@ export default function adminStore() {
         });
         delete productErrors[name]
     };
+
+    const handleChangeFile = (e) => {
+        const file = e.target.files[0];
+
+    }
 
     // useEffect(() => {
     //     console.log(data);
@@ -92,6 +101,7 @@ export default function adminStore() {
         //     alert("not okay")
         // }
     }
+    // console.log("-----------------------",productData)
 
     const { data: getDataError, error: getError, loading: getLoading } = useQuery(GET_ALL_PRODUCTS);
     useEffect(() => {
@@ -106,10 +116,10 @@ export default function adminStore() {
         console.log("getting data error-----------------------------", getError);
     }
     else {
-        // console.log(getDataError);
+
     }
     const productList = getDataError.getAllProducts
-    // console.log(productList[0].brand);
+
     return (
         <>
             <div className='flex justify-between p-10'>
@@ -137,7 +147,7 @@ export default function adminStore() {
                                 file:rounded-full file:border-0
                                 file:text-sm file:font-semibold
                                 file:bg-violet-50 file:text-blue-400
-                                hover:file:bg-violet-100"  />
+                                hover:file:bg-violet-100" value={setImage.image} onChange={handleChangeFile} name='image'/>
                     </div>
                     <div className='flex items-center justify-evenly p-2'>
                         <div>
@@ -173,7 +183,7 @@ export default function adminStore() {
                         </div>
                         <div>
                             <label>Price</label>
-                            <input type='text' value={productData.price} onChange={handleChange} placeholder="Enter the price name..." name='price' className='w-80 mt-2 placeholder:text-slate-400 block bg-white border border-slate-300 rounded-md py-2 pl-4 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm' />
+                            <input type='number' value={productData.price} onChange={handleChange} placeholder="Enter the price name..." name='price' className='w-80 mt-2 placeholder:text-slate-400 block bg-white border border-slate-300 rounded-md py-2 pl-4 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm' />
                         </div>
                         {productErrors.price && <span className="text-red-600">{productErrors.price}</span>}
 
@@ -181,7 +191,7 @@ export default function adminStore() {
                     <div className='flex items-center justify-evenly p-2'>
                         <div>
                             <label>Weight</label>
-                            <input type='text' value={productData.weight} onChange={handleChange} placeholder="Enter the weight..." name='weight' className='w-80 mt-2 placeholder:text-slate-400 block bg-white border border-slate-300 rounded-md py-2 pl-4 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm' />
+                            <input type='number' value={productData.weight} onChange={handleChange} placeholder="Enter the weight..." name='weight' className='w-80 mt-2 placeholder:text-slate-400 block bg-white border border-slate-300 rounded-md py-2 pl-4 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm' />
                         </div>
                         <div>
                             <label>Color</label>
