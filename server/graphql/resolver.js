@@ -118,24 +118,26 @@ const resolvers = {
                 ...res._doc
             }
         },
-        // uploadFile: async (parent, { file }) => {
-        //     console.log(file);
-        //     const { createReadStream, filename, mimetype, encoding } = await file
-        //     const stream = createReadStream()
-        //     const pathName = path.join(__dirname, `/public/Images/${filename}`)
-        //     await stream.pipe(fs.createWriteStream(pathName))
-        //     // console.log(url);
-        //     // console.log(filename);
-        //     return {
-        //         url: `http://localhost:4000/Images/${filename}`
-        //     }
-
-        // }
-
-        singleUpload: async (_, { file }) => {
-            if (!file || typeof file.createReadStream !== 'function') {
-                throw new Error('Invalid file provided');
-
+        async deleteProduct(parent, { id }) {
+            try {
+                const result = await productDeatails.deleteOne({ _id: new ObjectId(id) });
+                return result.deleteCount > 0;
+            }
+            catch (error) {
+                console.error(error);
+                return false;
+            }
+        },
+        async uploadFile(parent, { file }) {
+            console.log(file);
+            const { createReadStream, filename, mimetype, encoding } = await file
+            const stream = createReadStream()
+            const pathName = path.join(__dirname, `/public/Images/${filename}`)
+            await stream.pipe(fs.createWriteStream(pathName))
+            // console.log(url);
+            // console.log(filename);
+            return {
+                url: `http://localhost:4000/Images/${filename}`
             }
             const { filename, createReadStream, mimetype } = await file;
 
