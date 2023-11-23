@@ -1,6 +1,6 @@
 
 
-const adminSchema = require('../model/login')
+const adminSchema = require('../model/adminSchema')
 const Routes = (fastify, options, done) => {
 
     fastify.post('/adminLogin', async (request, response) => {

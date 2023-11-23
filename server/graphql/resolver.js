@@ -1,11 +1,15 @@
 
 // const { ApolloError } = require('@apollo/server');
-const admins = require('../model/login');
+const admins = require('../model/adminSchema');
 // const order = require('../model/order');
-const product = require('../model/product');
+const product = require('../model/productSchema');
 const mongoose = require("mongoose");
+const fs = require('fs');
+const path = require('path');
+const { graphqlUpload } = require('graphql-upload');
 const ObjectId = mongoose.Types.ObjectId;
 const resolvers = {
+    upload: graphqlUpload,
     Query: {
         getAllAdmins: async () => {
             return await (admins.find({}));
@@ -58,31 +62,41 @@ const resolvers = {
         //     }
         // },
 
-        async createProducts(_, { newProducts: { image, productName,category, brand, price, weight, description, color } }) {
-            const newProduct = new product({
-                image: image,
-                productName: productName,
-                category: category,
-                brand: brand,
-                price: price,
-                weight: weight,
-                color: color,
-                description: description
+        // async createProducts(_, { newProducts: { productName, category, brand, price, weight, description, color } }) {
+
+        //     const newProduct = new product({
+        //         productName: productName,
+        //         category: category,
+        //         brand: brand,
+        //         price: price,
+        //         weight: weight,
+        //         color: color,
+        //         description: description
+        //     })
+
+        //     // console.log(newProduct);
+        //     if (newProduct) {
+        //         const res = await newProduct.save();
+        //         throw new Error("Successfully");
+        //     }
+        //     else {
+        //         throw new Error("Not added");
+        //     }
+        //     // console.log(res);
+        //     // return {
+        //     //     ...res._doc
+        //     // }
+
+        // }
+
+        createProducts: async (_, { file }) => {
+            const { newProducts, filename } = await file;
+            const stream = newProducts();
+            const uploadPath = path.join(__dirname,'../../Client/public/images',filename);
+
+            await new Promise((resolve,reject)=>{
+
             })
-
-            // console.log(newProduct);
-            if (newProduct) {
-                const res = await newProduct.save();
-                throw new Error("Successfully");
-            }
-            else {
-                throw new Error("Not added");
-            }
-            // console.log(res);
-            // return {
-            //     ...res._doc
-            // }
-
         }
     }
 }

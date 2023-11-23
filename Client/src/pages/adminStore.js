@@ -30,6 +30,7 @@ export default function adminStore() {
         color: "",
         description: ""
     });
+    const [createProducts, { data, loading, error }] = useMutation(CREATE_PRODUCTS)
 
     const validate = () => {
         let newErrors = { ...productErrors };
@@ -64,7 +65,6 @@ export default function adminStore() {
     // }, [])
     // console.log(error);  
 
-    const [createProducts, { data, loading, error }] = useMutation(CREATE_PRODUCTS)
     const handleProductForm = async (e) => {
         e.preventDefault()
         // setFormOpen(false)
@@ -113,7 +113,7 @@ export default function adminStore() {
                                 file:rounded-full file:border-0
                                 file:text-sm file:font-semibold
                                 file:bg-violet-50 file:text-blue-400
-                                hover:file:bg-violet-100" value={setImage.image} onChange={handleChangeFile} />
+                                hover:file:bg-violet-100" value={setImage.image} onChange={handleChangeFile} name='image'/>
                     </div>
                     <div className='flex items-center justify-evenly p-2'>
                         <div>
