@@ -30,7 +30,6 @@ export default function adminStore() {
         color: "",
         description: ""
     });
-    const [createProducts, { data, loading, error }] = useMutation(CREATE_PRODUCTS)
 
     const validate = () => {
         let newErrors = { ...productErrors };
