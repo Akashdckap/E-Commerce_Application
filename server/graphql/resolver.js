@@ -100,10 +100,10 @@ const resolvers = {
 
         //     await new Promise((resolve,reject)=>{
 
+
         //     })
         async createProducts(_, { newProducts: { productName, category, brand, price, weight, color, description } }) {
             const newProduct = new productDeatails({
-                image: image,
                 productName: productName,
                 category: category,
                 brand: brand,
@@ -135,6 +135,7 @@ const resolvers = {
         singleUpload: async (_, { file }) => {
             if (!file || typeof file.createReadStream !== 'function') {
                 throw new Error('Invalid file provided');
+
             }
             const { filename, createReadStream } = await file;
 
@@ -155,6 +156,7 @@ const resolvers = {
                 throw new Error('Error handling file upload');
             }
         }
+        // }
     }
 }
 module.exports = resolvers;
