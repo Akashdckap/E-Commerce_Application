@@ -116,13 +116,22 @@ const resolvers = {
                 color: color,
                 description: description
             })
-            console.log(newProduct);
+            // console.log(newProduct);
             const res = await newProduct.save();
             return {
                 ...res._doc
             }
         },
- 
+        async deleteProduct(parent, { id }) {
+            try {
+                const result = await productDeatails.deleteOne({ _id: new ObjectId(id) });
+                return result.deleteCount > 0;
+            }
+            catch (error) {
+                console.error(error);
+                return false;
+            }
+        },
         async uploadFile(parent, { file }) {
             console.log(file);
             const { createReadStream, filename, mimetype, encoding } = await file

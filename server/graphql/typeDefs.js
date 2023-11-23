@@ -80,6 +80,7 @@ const typeDefs = gql` #graphql
         createAdmins(adminsInput: adminsInput): admins!
         createProducts(newProducts: productsInput): products!
         createOrders(newOrders: ordersInput): orders!
+        deleteProduct(id: ID!) : Boolean!
         uploadFile(file: uploadImage!): File
     }
 `

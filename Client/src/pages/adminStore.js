@@ -125,15 +125,8 @@ export default function adminStore() {
     const productList = getDataError.getAllProducts
     const handleDeleteProduct = async (id) => {
         try {
-            const { data } = await deleteProduct({
-                variables: { id },
-            });
-            if (data && data.deleteProduct) {
-                console.log('Item deleted successfully');
-                // Perform any additional actions as needed
-            } else {
-                console.error('Failed to delete item');
-            }
+            await deleteProduct({ variables: { id } })
+            notification.error({ description: "product successfully deleted" })
         }
         catch (error) {
             console.error('Error deleting item:', error);
