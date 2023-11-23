@@ -139,7 +139,7 @@ const resolvers = {
             return {
                 url: `http://localhost:4000/Images/${filename}`
             }
-            const { filename, createReadStream } = await file;
+            const { filename, createReadStream, mimetype } = await file;
 
             try {
                 const stream = createReadStream();
@@ -154,11 +154,10 @@ const resolvers = {
 
                 return `File uploaded Successfully to ${path}`
             }
-            catch(error){
+            catch (error) {
                 throw new Error('Error handling file upload');
             }
         }
-        // }
     }
 }
 module.exports = resolvers;
