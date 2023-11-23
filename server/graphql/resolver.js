@@ -112,7 +112,7 @@ const resolvers = {
                 color: color,
                 description: description
             })
-            console.log(newProduct);
+            // console.log(newProduct);
             const res = await newProduct.save();
             return {
                 ...res._doc
@@ -137,7 +137,7 @@ const resolvers = {
                 throw new Error('Invalid file provided');
 
             }
-            const { filename, createReadStream } = await file;
+            const { filename, createReadStream, mimetype } = await file;
 
             try {
                 const stream = createReadStream();
@@ -152,11 +152,10 @@ const resolvers = {
 
                 return `File uploaded Successfully to ${path}`
             }
-            catch(error){
+            catch (error) {
                 throw new Error('Error handling file upload');
             }
         }
-        // }
     }
 }
 module.exports = resolvers;

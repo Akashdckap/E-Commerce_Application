@@ -67,20 +67,19 @@ const typeDefs = gql` #graphql
         getAllOrders:[orders]
         getAllProducts: [products]
         # uploads: [File]
-        hello: String!
+        # hello: String!
     }
 
-    # type File {
-    #     url: String!
-    # }
+    input File{
+        url: String!
+    }
 
 
     type Mutation{
         createAdmins(adminsInput: adminsInput): admins!
         createProducts(newProducts: productsInput): products!
         createOrders(newOrders: ordersInput): orders!
-        singleUpload(file: Upload!): String!
-
+        singleUpload(file: File): Upload!
     }
 `
 // const typeDefsPart2 = gql`
