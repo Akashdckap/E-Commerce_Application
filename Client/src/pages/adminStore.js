@@ -2,10 +2,12 @@ import React, { useEffect, useState } from 'react'
 import { Upload, notification } from 'antd';
 // import { useMutation } from '@apollo /client'
 import Link from 'next/link';
-import { CREATE_PRODUCTS, UPLOAD_FILE } from '../../Grahpql/mutation';
+import { CREATE_PRODUCTS, DELETE_PRODUCT, UPLOAD_FILE } from '../../Grahpql/mutation';
 // import { getProductList } from '../../Grahpql/queries';
 import { GET_ALL_PRODUCTS } from '../../Grahpql/queries';
 import { useMutation, useQuery } from '@apollo/client';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEdit, faEye, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 export default function adminStore() {
     const [formOpen, setFormOpen] = useState(false);
@@ -21,7 +23,6 @@ export default function adminStore() {
         description: ""
     });
     const [productErrors, setProductErrors] = useState({
-        image: "",
         productName: "",
         category: "",
         brand: "",
@@ -30,7 +31,6 @@ export default function adminStore() {
         color: "",
         description: ""
     });
-    const [createProducts, { data, loading, error }] = useMutation(CREATE_PRODUCTS)
 
     const validate = () => {
         let newErrors = { ...productErrors };
@@ -83,13 +83,17 @@ export default function adminStore() {
         uploadFile({ variables: file })
     }
     const [createProducts, { data, loading, error }] = useMutation(CREATE_PRODUCTS)
+    const [deleteProduct] = useMutation(DELETE_PRODUCT)
     console.log(error);
     const handleProductForm = async (e) => {
         e.preventDefault()
         // setFormOpen(false)
         if (validate()) {
             try {
-                await (createProducts({ variables: { productDatas: productData } }))
+                await (createProducts({ variables: { productDatas: productData } }));
+                // window.location.reload();
+                notification.success({ description: "product successfully added" })
+                setFormOpen(false)
             }
             catch (error) {
                 console.log(error);
@@ -104,9 +108,9 @@ export default function adminStore() {
     // console.log("-----------------------",productData)
 
     const { data: getDataError, error: getError, loading: getLoading } = useQuery(GET_ALL_PRODUCTS);
-    useEffect(() => {
-        // console.log(typeof getDataError);
-    }, [getDataError])
+    // useEffect(() => {
+    //     // console.log(typeof getDataError);
+    // }, [getDataError])
 
     if (getLoading) {
         return <div>loading.......</div>
@@ -116,17 +120,32 @@ export default function adminStore() {
         console.log("getting data error-----------------------------", getError);
     }
     else {
-
+        // console.log(getDataError);
     }
     const productList = getDataError.getAllProducts
-
+    const handleDeleteProduct = async (id) => {
+        try {
+            const { data } = await deleteProduct({
+                variables: { id },
+            });
+            if (data && data.deleteProduct) {
+                console.log('Item deleted successfully');
+                // Perform any additional actions as needed
+            } else {
+                console.error('Failed to delete item');
+            }
+        }
+        catch (error) {
+            console.error('Error deleting item:', error);
+        }
+    }
     return (
         <>
             <div className='flex justify-between p-10'>
-                <h1>Welcome to our site Balamurugan</h1>
+                <h1 className=''>Welcome to our site Balamurugan</h1>
                 <div className='flex justify-center gap-10'>
                     <Link href='/login'><button className='bg-red-400 hover:bg-grey-700 text-white font-bold py-2 px-4 border border-white-700 rounded'>Log Out</button></Link>
-                    <Link href="/users" className="inline-flex items-center justify-center px-5 py-3 text-base font-medium text-center text-white bg-blue-600 rounded-lg hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900">
+                    <Link href="/productList" className="inline-flex items-center justify-center px-5 py-3 text-base font-medium text-center text-white bg-blue-600 rounded-lg hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900">
                         View Products
                         <svg className="w-3.5 h-3.5 ms-2 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
                             <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M1 5h12m0 0L9 1m4 4L9 9" />
@@ -147,7 +166,7 @@ export default function adminStore() {
                                 file:rounded-full file:border-0
                                 file:text-sm file:font-semibold
                                 file:bg-violet-50 file:text-blue-400
-                                hover:file:bg-violet-100" value={setImage.image} onChange={handleChangeFile} name='image'/>
+                                hover:file:bg-violet-100" value={setImage.image} onChange={handleChangeFile} name='image' />
                     </div>
                     <div className='flex items-center justify-evenly p-2'>
                         <div>
@@ -213,49 +232,16 @@ export default function adminStore() {
                     </div>
                 </form>
             </div>
-            <div className='z-0 flex w-full justify-between flex-wrap flex-row gap-30'>
-                {
-                    productList.map((item, index) =>
-                        <div key={index} className="relative m-10 w-full max-w-xs overflow-hidden rounded-lg bg-white shadow-md">
-                            <a>
-                                <img className="h-60 rounded-t-lg object-cover" src="https://images.unsplash.com/flagged/photo-1556637640-2c80d3201be8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8c25lYWtlcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60" alt="product image" />
-                            </a>
-                            <span className="absolute top-0 left-0 w-28 translate-y-4 -translate-x-6 -rotate-45 bg-black text-center text-sm text-white">Sale</span>
-                            <div className="mt-4 px-5 pb-5">
-                                <a>
-                                    <h5 className="text-xl font-semibold tracking-tight text-slate-900">{item.productName}</h5>
-                                </a>
-                                <div className="flex items-center gap-6">
-                                    <label className='text-blue-400'>Brand:</label>
-                                    <span>{item.brand}</span>
-                                </div>
-                                <div className='flex items-center gap-6'>
-                                    <label className='text-blue-400'>Description</label>
-                                    <p>{item.description}.....</p>
-                                </div>
-                                <div className='flex items-center gap-6'>
-                                    <label className='text-blue-400'>Colors</label>
-                                    <p>{item.color}.....</p>
-                                </div>
-                                <div className="flex items-center justify-between">
-                                    <p>
-                                        <span className="text-3xl font-bold text-slate-900">₹{item.price}</span>
-                                    </p>
-                                    <a className="flex items-center rounded-md bg-slate-900 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-blue-300">
-                                        <svg xmlns="http://www.w3.org/2000/svg" className="mr-2 h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                                            <path strokeLinecap="round" strokeLinejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                                        </svg>
-                                        Add to cart</a>
-                                </div>
-                            </div>
-                        </div>
-                    )
-                }
-            </div>
             <div className="p-10 overflow-x-auto rounded-md">
-                <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                    <thead className="text-xs text-white-400 uppercase bg-gray-50 dark:bg-gray-700 white:text-gray-400">
+                <table className="w-full text-sm text-left rtl:text-right text-white-700 dark:text-white-700">
+                    <thead className="text-xs text-white-900 uppercase bg-gray-400">
                         <tr>
+                            <th scope="col" className="px-6 py-3">
+                                S:NO
+                            </th>
+                            <th scope="col" className="px-6 py-3">
+                                Image
+                            </th>
                             <th scope="col" className="px-6 py-3">
                                 Product name
                             </th>
@@ -272,40 +258,53 @@ export default function adminStore() {
                                 Brand
                             </th>
                             <th scope="col" className="px-6 py-3">
-                                Price
+                                Actions
                             </th>
                             <th scope="col" className="px-6 py-3">
-                                Brand
+                                View
                             </th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr className="bg-white border-b white:bg-gray-800 dark:border-gray-700">
-                            <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap white:text-white">
-                                Apple MacBook Pro 17"
-                            </th>
-                            <td className="px-6 py-4 text-blue-500">
-                                Silver
-                            </td>
-                            <td className="px-6 py-4 text-blue-500">
-                                Laptop
-                            </td>
-                            <td className="px-6 py-4 text-blue-500">
-                                ₹2999
-                            </td>
-                            <td className="px-6 py-4 text-blue-500">
-                                Apple
-                            </td>
-                            <td className="px-6 py-4 text-blue-500">
-                                ₹2999
-                            </td>
-                            <td className="px-6 py-4 text-blue-500">
-                                Apple
-                            </td>
-                        </tr>
-                    </tbody>
+                    {
+                        productList.map((item, index) => {
+                            return (
+                                <tbody key={index}>
+                                    <tr key={index} className="bg-white border-b border-stone-300 white:bg-gray-800">
+                                        <th className='text-base px-6 py-4 text-blue-500'>
+                                            {index + 1}
+                                        </th>
+                                        <th>
+                                            <img className="h-20 p-1 object-cover" src="https://images.unsplash.com/flagged/photo-1556637640-2c80d3201be8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8c25lYWtlcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60" alt="product image" />
+                                        </th>
+                                        <th scope="row" className="px-6 py-4 font-medium text-lg text-gray-900 whitespace-nowrap white:text-white">
+                                            {item.productName}
+                                        </th>
+                                        <td className="text-base px-6 py-4 text-blue-500">
+                                            {item.color}
+                                        </td>
+                                        <td className="text-base px-6 py-4 text-blue-500">
+                                            {item.category}
+                                        </td>
+                                        <td className="text-base px-6 py-4 text-blue-500">
+                                            {item.price}
+                                        </td>
+                                        <td className="text-base px-6 py-4 text-blue-500">
+                                            {item.brand}
+                                        </td>
+                                        <td className="text-base px-6 py-9 text-blue-500 flex items-center justify-items-center gap-4">
+                                            <FontAwesomeIcon icon={faTrash} className='text-base text-red-400 cursor-pointer' onClick={() => handleDeleteProduct(item._id)} id={item._id} />
+                                            <FontAwesomeIcon icon={faEdit} className='text-base text-green-400 cursor-pointer' onClick={() => alert("Hi")} id={item._id} />
+                                        </td>
+                                        <td className="px-6 py-4 text-base text-blue-500">
+                                            <FontAwesomeIcon icon={faEye} className='text-base text-blue-700 cursor-pointer' onClick={() => alert("Hi")} id={item._id} />
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            )
+                        })
+                    }
                 </table>
-            </div>
+            </div >
         </>
     )
 }
