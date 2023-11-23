@@ -97,6 +97,23 @@ const resolvers = {
             await new Promise((resolve,reject)=>{
 
             })
+        async createProducts(_, { newProducts: { productName, category, brand, price, weight, color, description } }) {
+            const newProduct = new productDeatails({
+                image: image,
+                productName: productName,
+                category: category,
+                brand: brand,
+                price: price,
+                weight: weight,
+                color: color,
+                description: description
+            })
+            console.log(newProduct);
+            const res = await newProduct.save();
+            return {
+                ...res._doc
+            }
+
         }
     }
 }
