@@ -61,11 +61,21 @@ const typeDefs = gql` #graphql
         color: String,
         description: String
     }
+    input updateProductInput{
+        productName: String,
+        category:String,
+        brand: String,
+        price: String,
+        weight: String,
+        color: String,
+        description: String
+    }
 
     type Query{
         getAllAdmins:[admins]
         getAllOrders:[orders]
         getAllProducts: [products]
+        getEditProductData(id: ID!): products
         # uploads: [File]
         # hello: String!
     }
@@ -82,26 +92,8 @@ const typeDefs = gql` #graphql
 
         singleUpload(file: File): Upload!
         deleteProduct(id: ID!) : Boolean!
+        updateProduct(id: ID!, input: updateProductInput): products!
         uploadFile(file: uploadImage!): File
     }
 `
-// const typeDefsPart2 = gql`
-//     type usertasks{
-//         _id : ID,
-//         taskName : String,
-//         description : String,
-//         status : String,
-//     }
-
-//     type Query{
-//         getUsersTasks:[usersTasks]
-//     }
-// `
-
-// const typeDefs = gql`
-//     ${typeDefsPart1}
-//     ${typeDefsPart2}
-// `
-
-
 module.exports = typeDefs;
