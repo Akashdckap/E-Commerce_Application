@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { GET_ALL_PRODUCTS } from '../../Grahpql/queries';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
+import Link from 'next/link';
 export default function users() {
     const [searchText, setSearchText] = useState('')
     const { data: getDataError, error: getError, loading: getLoading } = useQuery(GET_ALL_PRODUCTS);
@@ -32,11 +33,14 @@ export default function users() {
         <div>
             <div className='flex justify-between item-center mt-10 pl-10 pr-20'>
                 <h1>Product list</h1>
-                <div className='flex justify-center gap-6 item-center'>
-                    <input type='search' onChange={(e) => setSearchText(e.target.value)} placeholder='Search product' className='border-none focus:border-teal-300 pl-5 mt-3 rounded' />
-                    <div className='grid'>
-                        <span className='relative left-4 top-2 text-yellow-500 text-lg font-semibold'>0</span>
-                        <FontAwesomeIcon icon={faShoppingCart} />
+                <div className='flex justify-center item-center'>
+                    <div className='flex justify-center item-center gap-10'>
+                        <input type="text" nChange={(e) => setSearchText(e.target.value)} class="h-10 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-200 focus:border-blue-200 block w-full ps-5 dark:bg-white-700 dark:border-gray-600 dark:placeholder-gray-400" placeholder="Search products..." />
+                        <Link href="adminStore"><button type="button" className="h-10 w-40 py-2.5 px-5 me-2 mb-2 mr-10 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-full border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Go to Store</button></Link>
+                    </div>
+                    <div className='relative bottom-4'>
+                        <p className='relative left-5 top-2 text-yellow-500 text-lg font-semibold'>0</p>
+                        <FontAwesomeIcon icon={faShoppingCart} className='text-white-400  mb-10 text-2xl'/>
                     </div>
                 </div>
             </div>
