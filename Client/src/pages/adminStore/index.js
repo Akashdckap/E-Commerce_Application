@@ -145,7 +145,7 @@ export default function adminStore() {
                     <h1>upload File</h1>
                     <input type='file' onChange={handleSingleImage} />
                 </div>
-                <form onSubmit={handleProductForm} style={{ display: formOpen ? 'block' : 'none' }} className='z-10 absolute bottom-25 ml-20 left-10 w-9/12 bg-emerald-100 p-4 m-auto h-full rounded'>
+                <form onSubmit={handleProductForm} style={{ display: formOpen ? 'block' : 'none' }} className='z-10 absolute bottom-25 ml-20 left-10 w-9/12 bg-emerald-100 p-4 m-auto h-screen rounded'>
                     <div className="imageContainer">
                         <input type="file" className="block w-full text-red-500
                                 file:mr-4 file:py-2 file:px-4
@@ -212,7 +212,7 @@ export default function adminStore() {
                         </div>
                         <div className='flex justify-center gap-5 mt-7'>
                             <button className='rounded bg-cyan-50 py-2 px-4 border border-red-700 text-rose-500' onClick={() => setFormOpen(false)}>cancel</button>
-                            <button className="rounded bg-blue-300 text-white-600 py-2 px-4 border border-green-700" type='submit'>save</button>
+                            <button className="rounded bg-blue-300 text-white-600 py-2 px-4 border border-green-700">save</button>
                         </div>
                     </div>
                 </form>

@@ -30,12 +30,8 @@ const resolvers = {
             return await productDeatails.findOne({ _id: new ObjectId(id) })
         },
         hello: () => "Hello world from bala"
+
     },
-    // products: {
-    //     async getEditProductData(parent) {
-    //         console.log(parent.productId);
-    //     }
-    // },
     Mutation: {
         async createAdmins(_, { adminsInput: { email, password } }) {
             const newUsers = new admins({
@@ -54,61 +50,8 @@ const resolvers = {
             else {
                 throw new Error("Email Id not exists");
             }
-
         },
 
-        // async createOrders(_, { newOrders: { productId, quantity, name, email, phoneNo, address, district, state, pincode } }) {
-        //     const newOne = new order({
-        //         productId: ObjectId(productId),
-        //         quantity: quantity,
-        //         name: name,
-        //         email: email,
-        //         phoneNo: phoneNo,
-        //         address: address,
-        //         district: district,
-        //         state: state,
-        //         pincode: pincode
-        //     })
-        //     const res = await newOne.save();
-        //     return {
-        //         ...res._doc
-        //     }
-        // },
-
-        // async createProducts(_, { newProducts: { productName, category, brand, price, weight, description, color } }) {
-
-        //     const newProduct = new product({
-        //         productName: productName,
-        //         category: category,
-        //         brand: brand,
-        //         price: price,
-        //         weight: weight,
-        //         color: color,
-        //         description: description
-        //     })
-
-        //     // console.log(newProduct);
-        //     if (newProduct) {
-        //         const res = await newProduct.save();
-        //         throw new Error("Successfully");
-        //     }
-        //     else {
-        //         throw new Error("Not added");
-        //     }
-        //     // console.log(res);
-        //     // return {
-        //     //     ...res._doc
-        //     // }
-
-        // }
-
-        // createProducts: async (_, { file }) => {
-        //     const { newProducts, filename } = await file;
-        //     const stream = newProducts();
-        //     const uploadPath = path.join(__dirname, '../../Client/public/images', filename);
-        //     await new Promise((resolve, reject) => {
-
-        //     })
         async createProducts(_, { newProducts: { productName, category, brand, price, weight, color, description } }) {
             const newProduct = new productDeatails({
                 productName: productName,
@@ -151,19 +94,6 @@ const resolvers = {
                 throw new Error('Failed to update product');
             }
         },
-        // async updateProduct(parent, args) {
-        //     const { id } = args.id
-        //     const { productName, category, brand, price, weight,
-        //         color, description } = args.edits
-        //     const updateProductData = await productDeatails.findByIdAndUpdate(id,
-        //         {
-        //             productName, category, brand, price, weight,
-        //             color, description
-        //         },
-        //         { new: true }
-        //     )
-        //     return updateProductData
-        // },
         async uploadFile(parent, { file }) {
             console.log(file);
             const { createReadStream, filename, mimetype, encoding } = await file
@@ -177,7 +107,6 @@ const resolvers = {
             }
 
         }
-        // }
     }
 }
 module.exports = resolvers;
