@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const fastifyCORS = require('@fastify/cors');
 // const bodyParser = require('body-parser');
 // const fastifySensible = require('fastify-sensible');
+// const { graphqlUploadFastify } = require('graphql-upload');
 const { ApolloServer } = require('@apollo/server');
 
 const { default: fastifyApollo, fastifyApolloDrainPlugin } = require('@as-integrations/fastify');
@@ -28,6 +29,7 @@ async function server(app1) {
     methods: ["POST", "GET"],
     credentials: true,
   })
+  // app1.register(graphqlUploadFastify())
 }
 
 app.register(server);
