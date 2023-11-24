@@ -42,6 +42,11 @@ export const UPDATE_PRODUCT = gql`
   }
 `
 
+export const EDIT_PRODUCT = gql`
+mutation editProduct($id: ID!){
+  editProduct(id: $id)
+}`
+
 export const UPLOAD_FILE = gql`
   mutation uploadFile($file: uploadImage!){
     uploadFile(file: $file){

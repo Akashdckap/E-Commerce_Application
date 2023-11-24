@@ -174,25 +174,39 @@ const resolvers = {
             return {
                 url: `http://localhost:4000/Images/${filename}`
             }
-            const { filename, createReadStream, mimetype } = await file;
 
-            try {
-                const stream = createReadStream();
-                const path = `../../Client/public/images/${filename}`;
-
-                await new Promise((resolve, reject) => {
-                    stream
-                        .pipe(fs.createWriteStream())
-                        .on('error', (error) => reject(error))
-                        .on('finish', () => resolve(path));
-                });
-
-                return `File uploaded Successfully to ${path}`
-            }
-            catch (error) {
-                throw new Error('Error handling file upload');
-            }
+      
         }
+        // async uploadFile(parent, { file }) {
+        //     console.log(file);
+        //     const { createReadStream, filename, mimetype, encoding } = await file
+        //     const stream = createReadStream()
+        //     const pathName = path.join(__dirname, `/public/Images/${filename}`)
+        //     await stream.pipe(fs.createWriteStream(pathName))
+        //     // console.log(url);
+        //     // console.log(filename);
+        //     return {
+        //         url: `http://localhost:4000/Images/${filename}`
+        //     }
+        //     // const { filename, createReadStream, mimetype } = await file;
+
+        //     try {
+        //         const stream = createReadStream();
+        //         const path = `../../Client/public/images/${filename}`;
+
+        //         await new Promise((resolve, reject) => {
+        //             stream
+        //                 .pipe(fs.createWriteStream())
+        //                 .on('error', (error) => reject(error))
+        //                 .on('finish', () => resolve(path));
+        //         });
+
+        //         return `File uploaded Successfully to ${path}`
+        //     }
+        //     catch (error) {
+        //         throw new Error('Error handling file upload');
+        //     }
+        // }
     }
 }
 module.exports = resolvers;
