@@ -33,11 +33,17 @@ export const GET_ALL_PRODUCTS = gql`
         }
     }
 `
-// export const getProductList = () => {
-//     const { data, error, loading } = useQuery(GET_ALL_PRODUCTS)
-//     return {
-//         data,
-//         error,
-//         loading
-//     }
-// }
+export const GET_EDIT_PRODUCT_DATA = gql`
+    query GetEditProductData ($id: ID!){
+        getEditProductData (id : $id) {
+        _id
+        productName
+        category
+        brand
+        price
+        weight
+        color
+        description
+    }
+    }
+`

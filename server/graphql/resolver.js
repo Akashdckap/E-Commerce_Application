@@ -25,14 +25,17 @@ const resolvers = {
         },
         getAllProducts: async () => {
             return await (productDeatails.find({}));
-            // return productList
-            // console.log(productList);
         },
-        // uploads:async ()=>{
-
-        // }
+        getEditProductData: async (_, { id }) => {
+            return await productDeatails.findOne({ _id: new ObjectId(id) })
+        },
         hello: () => "Hello world from bala"
     },
+    // products: {
+    //     async getEditProductData(parent) {
+    //         console.log(parent.productId);
+    //     }
+    // },
     Mutation: {
         async createAdmins(_, { adminsInput: { email, password } }) {
             const newUsers = new admins({
@@ -116,7 +119,6 @@ const resolvers = {
                 color: color,
                 description: description
             })
-            // console.log(newProduct);
             const res = await newProduct.save();
             return {
                 ...res._doc
@@ -132,6 +134,36 @@ const resolvers = {
                 return false;
             }
         },
+        async updateProduct(_, { id, input }) {
+            try {
+                const updatedProduct = await productDeatails.findByIdAndUpdate(
+                    id,
+                    input,
+                    { new: true }
+                )
+                if (!updatedProduct) {
+                    throw new Error('Product not found');
+                }
+                return updatedProduct
+            }
+            catch (error) {
+                console.error('Error updating product:', error);
+                throw new Error('Failed to update product');
+            }
+        },
+        // async updateProduct(parent, args) {
+        //     const { id } = args.id
+        //     const { productName, category, brand, price, weight,
+        //         color, description } = args.edits
+        //     const updateProductData = await productDeatails.findByIdAndUpdate(id,
+        //         {
+        //             productName, category, brand, price, weight,
+        //             color, description
+        //         },
+        //         { new: true }
+        //     )
+        //     return updateProductData
+        // },
         async uploadFile(parent, { file }) {
             console.log(file);
             const { createReadStream, filename, mimetype, encoding } = await file

@@ -47,7 +47,6 @@ export default function users() {
                                 <div className="flex items-center gap-2">
                                     <label className='text-blue-400'>Name :</label>
                                     <h5 className='text-xl font-semibold tracking-tight text-slate-900'>{item.productName}</h5>
-                                    {/* <h5 className="text-xl font-semibold tracking-tight text-slate-900">{item.productName}</h5> */}
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <label className='text-blue-400'>Brand :</label>

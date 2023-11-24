@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { Upload, notification } from 'antd';
-// import { useMutation } from '@apollo /client'
+import { notification } from 'antd';
 import Link from 'next/link';
-import { CREATE_PRODUCTS, DELETE_PRODUCT, UPLOAD_FILE } from '../../Grahpql/mutation';
-// import { getProductList } from '../../Grahpql/queries';
-import { GET_ALL_PRODUCTS } from '../../Grahpql/queries';
+import { CREATE_PRODUCTS, DELETE_PRODUCT, UPLOAD_FILE } from '../../../Grahpql/mutation';
+import { GET_ALL_PRODUCTS } from '../../../Grahpql/queries';
 import { useMutation, useQuery } from '@apollo/client';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faEye, faTrash } from '@fortawesome/free-solid-svg-icons';
@@ -59,20 +57,6 @@ export default function adminStore() {
 
     }
 
-    // useEffect(() => {
-    //     console.log(data);
-    //     console.log(error);
-    // }, [])
-    // console.log(error);  
-
-    // const handleUploadImage = (e) => {
-    //     const file = e.target.files[0]
-    //     setImage(file)
-    //     // console.log(file);
-    // }
-    // productData.append('image', file)
-    // console.log(productData);
-
     const [uploadFile] = useMutation(UPLOAD_FILE, {
         onCompleted: data => console.log(data)
     })
@@ -83,11 +67,11 @@ export default function adminStore() {
         uploadFile({ variables: file })
     }
     const [createProducts, { data, loading, error }] = useMutation(CREATE_PRODUCTS)
+
     const [deleteProduct] = useMutation(DELETE_PRODUCT)
-    console.log(error);
+
     const handleProductForm = async (e) => {
         e.preventDefault()
-        // setFormOpen(false)
         if (validate()) {
             try {
                 await (createProducts({ variables: { productDatas: productData } }));
@@ -105,8 +89,6 @@ export default function adminStore() {
         //     alert("not okay")
         // }
     }
-    // console.log("-----------------------",productData)
-
     const { data: getDataError, error: getError, loading: getLoading } = useQuery(GET_ALL_PRODUCTS);
     // useEffect(() => {
     //     // console.log(typeof getDataError);
@@ -123,6 +105,7 @@ export default function adminStore() {
         // console.log(getDataError);
     }
     const productList = getDataError.getAllProducts
+
     const handleDeleteProduct = async (id) => {
         try {
             await deleteProduct({ variables: { id } })
@@ -132,6 +115,16 @@ export default function adminStore() {
             console.error('Error deleting item:', error);
         }
     }
+
+    // const [updateProduct] = useMutation(UPDATE_PRODUCT)
+    // const handleEditProduct = async (id, input) => {
+    //     try {
+    //         await updateProduct({ variables: { id, input } })
+    //     }
+    //     catch (error) {
+    //         console.error(error);
+    //     }
+    // }
     return (
         <>
             <div className='flex justify-between p-10'>
@@ -185,7 +178,6 @@ export default function adminStore() {
                                 <option value='Health & Beauty'>Health & Beauty</option>
                             </select>
                             {productErrors.category && <span className="text-red-600">{productErrors.category}</span>}
-
                         </div>
                     </div>
                     <div className='flex items-center justify-evenly p-2'>
@@ -286,7 +278,7 @@ export default function adminStore() {
                                         </td>
                                         <td className="text-base px-6 py-9 text-blue-500 flex items-center justify-items-center gap-4">
                                             <FontAwesomeIcon icon={faTrash} className='text-base text-red-400 cursor-pointer' onClick={() => handleDeleteProduct(item._id)} id={item._id} />
-                                            <FontAwesomeIcon icon={faEdit} className='text-base text-green-400 cursor-pointer' onClick={() => alert("Hi")} id={item._id} />
+                                            <Link href={`/adminStore/editProduct/${item._id}`}><FontAwesomeIcon icon={faEdit} className='text-base text-green-400 cursor-pointer' id={item._id} /></Link>
                                         </td>
                                         <td className="px-6 py-4 text-base text-blue-500">
                                             <FontAwesomeIcon icon={faEye} className='text-base text-blue-700 cursor-pointer' onClick={() => alert("Hi")} id={item._id} />

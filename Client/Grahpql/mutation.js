@@ -28,6 +28,19 @@ mutation DeleteProduct($id: ID!) {
   deleteProduct(id: $id)
 }
 `
+export const UPDATE_PRODUCT = gql`
+  mutation updateProduct($id:ID!, $input: updateProductInput!){
+    updateProduct(id: $id, input: $input){
+        productName
+        category
+        brand
+        price
+        weight
+        color
+        description
+    }
+  }
+`
 
 export const UPLOAD_FILE = gql`
   mutation uploadFile($file: uploadImage!){
