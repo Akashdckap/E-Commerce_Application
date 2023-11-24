@@ -132,6 +132,15 @@ export default function adminStore() {
             console.error('Error deleting item:', error);
         }
     }
+
+    // const handleEditProduct = async(id) =>{
+    //     try{
+    //         await edi
+    //     }
+    //     catch(error){
+
+    //     }
+    // }
     return (
         <>
             <div className='flex justify-between p-10'>
@@ -286,7 +295,7 @@ export default function adminStore() {
                                         </td>
                                         <td className="text-base px-6 py-9 text-blue-500 flex items-center justify-items-center gap-4">
                                             <FontAwesomeIcon icon={faTrash} className='text-base text-red-400 cursor-pointer' onClick={() => handleDeleteProduct(item._id)} id={item._id} />
-                                            <FontAwesomeIcon icon={faEdit} className='text-base text-green-400 cursor-pointer' onClick={() => alert("Hi")} id={item._id} />
+                                            <FontAwesomeIcon icon={faEdit} className='text-base text-green-400 cursor-pointer' onClick={() => handleEditProduct(item._id)} id={item._id} />
                                         </td>
                                         <td className="px-6 py-4 text-base text-blue-500">
                                             <FontAwesomeIcon icon={faEye} className='text-base text-blue-700 cursor-pointer' onClick={() => alert("Hi")} id={item._id} />

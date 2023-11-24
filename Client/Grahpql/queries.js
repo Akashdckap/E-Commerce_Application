@@ -33,6 +33,13 @@ export const GET_ALL_PRODUCTS = gql`
         }
     }
 `
+
+// export const GET_EDIT_PRODUCT = gql`
+//     query{
+        
+//     }
+
+// `_
 // export const getProductList = () => {
 //     const { data, error, loading } = useQuery(GET_ALL_PRODUCTS)
 //     return {

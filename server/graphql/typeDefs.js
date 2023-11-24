@@ -82,7 +82,8 @@ const typeDefs = gql` #graphql
 
         singleUpload(file: File): Upload!
         deleteProduct(id: ID!) : Boolean!
-        uploadFile(file: uploadImage!): File
+        editProduct(id: ID!,newProducts: productsInput) : Boolean
+        uploadFile(file: Upload!): String!
     }
 `
 // const typeDefsPart2 = gql`
