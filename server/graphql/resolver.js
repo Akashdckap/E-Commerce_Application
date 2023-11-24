@@ -2,17 +2,15 @@
 // const { ApolloError } = require('@apollo/server');
 const admins = require('../model/adminSchema');
 const productDeatails = require('../model/productSchema')
-
 // const order = require('../model/order');
 // const product = require('../model/product');
-// const { GraphQLUpload} = require('graphql-upload')
+// const { GraphQLUpload } = require('graphql-upload');
+// const { finished } = require('stream/promises')
 const path = require('path')
 const fs = require('fs')
 const mongoose = require("mongoose");
-// const { GraphQLUpload, processRequest } = require('graphql-upload')
-// const { GraphQLUpload } = require('graphql-upload')
-// const { GraphQLUpload } = require('graphql-upload')
-// const {GraphQL}
+// const { promises } = require('dns');
+
 const ObjectId = mongoose.Types.ObjectId;
 const resolvers = {
     // Upload: GraphQLUpload,
@@ -29,7 +27,6 @@ const resolvers = {
         getEditProductData: async (_, { id }) => {
             return await productDeatails.findOne({ _id: new ObjectId(id) })
         },
-        hello: () => "Hello world from bala"
     },
     // products: {
     //     async getEditProductData(parent) {
@@ -105,8 +102,10 @@ const resolvers = {
         // createProducts: async (_, { file }) => {
         //     const { newProducts, filename } = await file;
         //     const stream = newProducts();
-        //     const uploadPath = path.join(__dirname, '../../Client/public/images', filename);
-        //     await new Promise((resolve, reject) => {
+        //     const uploadPath = path.join(__dirname,'../../Client/public/images',filename);
+
+        //     await new Promise((resolve,reject)=>{
+
 
         //     })
         async createProducts(_, { newProducts: { productName, category, brand, price, weight, color, description } }) {
@@ -175,9 +174,25 @@ const resolvers = {
             return {
                 url: `http://localhost:4000/Images/${filename}`
             }
+            const { filename, createReadStream, mimetype } = await file;
 
+            try {
+                const stream = createReadStream();
+                const path = `../../Client/public/images/${filename}`;
+
+                await new Promise((resolve, reject) => {
+                    stream
+                        .pipe(fs.createWriteStream())
+                        .on('error', (error) => reject(error))
+                        .on('finish', () => resolve(path));
+                });
+
+                return `File uploaded Successfully to ${path}`
+            }
+            catch (error) {
+                throw new Error('Error handling file upload');
+            }
         }
-        // }
     }
 }
 module.exports = resolvers;
