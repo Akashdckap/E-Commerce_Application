@@ -26,8 +26,7 @@ const resolvers = {
         },
         getEditProductData: async (_, { id }) => {
             return await productDeatails.findOne({ _id: new ObjectId(id) })
-        },
-        hello: () => "Hello world from bala"
+        }
     },
     Mutation: {
         async createAdmins(_, { adminsInput: { email, password } }) {
@@ -102,7 +101,7 @@ const resolvers = {
                 url: `http://localhost:4000/Images/${filename}`
             }
 
-      
+
         }
     }
 }
