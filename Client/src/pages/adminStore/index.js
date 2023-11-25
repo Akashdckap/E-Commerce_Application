@@ -6,11 +6,15 @@ import { GET_ALL_PRODUCTS } from '../../../Grahpql/queries';
 import { useMutation, useQuery } from '@apollo/client';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faEye, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { useRouter } from 'next/router';
 
 export default function adminStore() {
     const [formOpen, setFormOpen] = useState(false);
-    const [image, setImage] = useState('')
-
+    const [image, setImage] = useState('');
+    const router = useRouter();
+    const { page = 1 } = router.query;
+    const [currentPage, setCurrentPage] = useState(1)
+    // const [totalPages,setTotalPages] = useState(1)
     const [productData, setProductData] = useState({
         productName: "",
         category: "",
@@ -54,7 +58,6 @@ export default function adminStore() {
 
     const handleChangeFile = (e) => {
         const file = e.target.files[0];
-
     }
 
     const [uploadFile] = useMutation(UPLOAD_FILE, {
@@ -89,7 +92,10 @@ export default function adminStore() {
         //     alert("not okay")
         // }
     }
-    const { data: getDataError, error: getError, loading: getLoading } = useQuery(GET_ALL_PRODUCTS);
+    const { data: getDataError, error: getError, loading: getLoading } = useQuery(GET_ALL_PRODUCTS, {
+        variables: { page: 1, limit: 5 },
+    });
+    // console.log(getDataError.getAllProducts)
     // useEffect(() => {
     //     // console.log(typeof getDataError);
     // }, [getDataError])
@@ -105,6 +111,25 @@ export default function adminStore() {
         // console.log(getDataError);
     }
     const productList = getDataError.getAllProducts
+    console.log("productList-----------", productList)
+
+    // const nextPage = () => {
+    //     fetchMore({
+    //         variables: {
+    //             page: productList.getAllProducts.pageInfo.currentPage + 1 || 1,
+    //             limit: 5,
+    //         },
+    //     });
+    // };
+
+    // const prevPage = () => {
+    //     fetchMore({
+    //         variables: {
+    //             page: productList.getAllProducts.pageInfo.currentPage - 1 || 1,
+    //             limit: 5,
+    //         },
+    //     });
+    // };
 
     const handleDeleteProduct = async (id) => {
         try {
@@ -282,7 +307,6 @@ export default function adminStore() {
                                         </td>
                                         <td className="px-6 py-4 text-base text-blue-500">
                                             <Link href={`/adminStore/viewProduct/${item._id}`}><FontAwesomeIcon icon={faEye} className='text-base text-blue-700 cursor-pointer' id={item._id} /></Link>
-
                                         </td>
                                     </tr>
                                 </tbody>
@@ -290,6 +314,34 @@ export default function adminStore() {
                         })
                     }
                 </table>
+                <div>
+                    <Link href={`adminStore?page=${parseInt(page) - 1}`}><button>Previous</button></Link>
+                    <span>{page}</span>
+                    <Link href={`adminStore?page=${parseInt(page) + 1}`}><button>Next</button></Link>
+                </div>
+                {/* <button onClick={nextPage}>Next</button> */}
+                {/* <div>
+                    <button onClick={prevPage} disabled={productList.getAllProducts.pageInfo}>Previous</button>
+                    <span>Page:{productList.getAllProducts.pageInfo}</span>
+                    <button onClick={nextPage} disabled={productList.getAllProducts.pageInfo}>Next</button>
+                </div> */}
+                {/* <div>
+                    <div className='paginationContainer'>
+                        <button className='paginatedPreBtn'
+                            onClick={() => setCurrentPage(prevPage => prevPage - 1)}
+                            disabled={currentPage === 1}
+                        >
+                            <i className="fa-solid fa-angle-left"></i>
+                        </button>
+                        <span className='pageNo'>{currentPage}</span>
+                        <button className='paginatedNxtBtn'
+                            onClick={() => setCurrentPage(prevPage => prevPage + 1)}
+                            // disabled={currentPage === totalPages}
+                        >
+                            <i className="fa-solid fa-angle-right"></i>
+                        </button>
+                    </div>
+                </div> */}
             </div >
         </>
     )
