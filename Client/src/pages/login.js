@@ -8,7 +8,7 @@ import { ApolloError, useMutation } from '@apollo/client'
 import { CREATE_ADMINS } from '../../Grahpql/mutation'
 import { useRouter } from 'next/router';
 import { notification } from 'antd';
-export default function login() {
+export default function Login() {
 
     const [formData, setFormData] = useState({
         email: '',
