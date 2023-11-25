@@ -73,13 +73,14 @@ export default function EditProduct() {
 
     return (
         <>
-            <div>
-                <h1>Edit product page</h1>
+            <div className='flex justify-evenly items-center p-3 gap-80'>
+                <h4 class="mb-4 text-4xl font-normal p-4 flex justify-center items-center text-gray-900 dark:text-cyan-600">Edit product page</h4>
+                <button className='bg-blue-300 text-purple-700 h-10 w-40 p-4 flex justify-center items-center rounded-sm hover:border-gray-700' onClick={() => router.push('/adminStore')}>Backt to product</button>
             </div>
             <div>
-                <form onSubmit={handleUpdateProductForm} className='z-10 absolute bottom-25 ml-20 left-10 w-9/12 bg-emerald-100 p-4 m-auto h-full rounded'>
+                <form onSubmit={handleUpdateProductForm} className='m-auto mt-5 w-9/12 bg-emerald-200 p-10 h-full rounded'>
                     <div>
-                        <h1 className='flex justify-center'>Edit product</h1>
+                        <h1 className='flex justify-center items-center'>Edit product</h1>
                     </div>
                     {/* <div className="imageContainer">
                     <input type="file" className="block w-full text-red-500

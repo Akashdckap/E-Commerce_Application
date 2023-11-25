@@ -29,6 +29,9 @@ const resolvers = {
         },
         getProductDetails: async (_, { id }) => {
             return await productDetails.findOne({ _id: new ObjectId(id) })
+        },
+        getAddToCart_Single_ProductData: async (_, { id }) => {
+            return await productDetails.findOne({ _id: new ObjectId(id) })
         }
     },
     Mutation: {
@@ -178,6 +181,6 @@ const resolvers = {
         //         const stream = createReadStream();
         //         const path = `../../Client/public/images/${filename}`;
 
-        }
     }
+}
 module.exports = resolvers;
