@@ -5,16 +5,21 @@ import { CREATE_PRODUCTS, DELETE_PRODUCT, UPLOAD_FILE } from '../../../Grahpql/m
 import { GET_ALL_PRODUCTS } from '../../../Grahpql/queries';
 import { useMutation, useQuery } from '@apollo/client';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faEye, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faEye, faL, faSlash, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { useRouter } from 'next/router';
 
-export default function adminStore() {
+export default function AdminStore() {
+    const router = useRouter()
     const [formOpen, setFormOpen] = useState(false);
     const [image, setImage] = useState('');
     const router = useRouter();
     const { page = 1 } = router.query;
     const [currentPage, setCurrentPage] = useState(1)
     // const [totalPages,setTotalPages] = useState(1)
+
+    const [deletePopUpOpen, setdeletePopUpOpen] = useState(false);
+    const [image, setImage] = useState('')
+
     const [productData, setProductData] = useState({
         productName: "",
         category: "",
@@ -34,14 +39,17 @@ export default function adminStore() {
         description: ""
     });
 
-    const validate = () => {
+    function validate() {
         let newErrors = { ...productErrors };
         let isVaild = true;
-        if (productData.productName.trim() === "" && productData.category.trim() === "" && productData.description.trim() === "" && productData.price.trim === "") {
+        if (productData.productName === "" && productData.category === "" && productData.brand === "" && productData.price === "" && productData.weight === "" && productData.color === "" && productData.description === "") {
             newErrors.productName = 'product name is required';
             newErrors.category = 'category is required';
-            newErrors.description = 'description is required';
+            newErrors.brand = 'brand is required';
             newErrors.price = 'price is required';
+            newErrors.weight = 'weight is required';
+            newErrors.color = 'color is required';
+            newErrors.description = 'description is required';
             isVaild = false;
         }
         setProductErrors(newErrors)
@@ -63,12 +71,14 @@ export default function adminStore() {
     const [uploadFile] = useMutation(UPLOAD_FILE, {
         onCompleted: data => console.log(data)
     })
+
     const handleSingleImage = (e) => {
         const file = e.target.files[0]
         console.log(file);
         if (!file) return
         uploadFile({ variables: file })
     }
+
     const [createProducts, { data, loading, error }] = useMutation(CREATE_PRODUCTS)
 
     const [deleteProduct] = useMutation(DELETE_PRODUCT)
@@ -83,9 +93,8 @@ export default function adminStore() {
                 setFormOpen(false)
             }
             catch (error) {
-                console.log(error);
+                console.error("product creation error :", error);
             }
-            // alert("okay")
         }
         // setFormOpen(false)
         // else {
@@ -131,7 +140,9 @@ export default function adminStore() {
     //     });
     // };
 
-    const handleDeleteProduct = async (id) => {
+    const handleDeleteProduct = async (e) => {
+        e.preventDefault()
+        const id = router.query.deleteId
         try {
             await deleteProduct({ variables: { id } })
             notification.error({ description: "product successfully deleted" })
@@ -139,21 +150,17 @@ export default function adminStore() {
         catch (error) {
             console.error('Error deleting item:', error);
         }
+        setdeletePopUpOpen(false)
+        router.push("/adminStore")
     }
-
-    // const [updateProduct] = useMutation(UPDATE_PRODUCT)
-    // const handleEditProduct = async (id, input) => {
-    //     try {
-    //         await updateProduct({ variables: { id, input } })
-    //     }
-    //     catch (error) {
-    //         console.error(error);
-    //     }
-    // }
+    const closeDeletePopUp = () => {
+        router.push("/adminStore");
+        setdeletePopUpOpen(false)
+    }
     return (
         <>
             <div className='flex justify-between p-10'>
-                <h1 className=''>Welcome to our site Balamurugan</h1>
+                <h1>Welcome to our site Balamurugan</h1>
                 <div className='flex justify-center gap-10'>
                     <Link href='/login'><button className='bg-red-400 hover:bg-grey-700 text-white font-bold py-2 px-4 border border-white-700 rounded'>Log Out</button></Link>
                     <Link href="/productList" className="inline-flex items-center justify-center px-5 py-3 text-base font-medium text-center text-white bg-blue-600 rounded-lg hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900">
@@ -170,7 +177,7 @@ export default function adminStore() {
                     <h1>upload File</h1>
                     <input type='file' onChange={handleSingleImage} />
                 </div>
-                <form onSubmit={handleProductForm} style={{ display: formOpen ? 'block' : 'none' }} className='z-10 absolute bottom-25 ml-20 left-10 w-9/12 bg-emerald-100 p-4 m-auto h-full rounded'>
+                <form onSubmit={handleProductForm} style={{ display: formOpen ? 'block' : 'none' }} className='z-10 absolute bottom-25 ml-20 left-10 w-9/12 bg-emerald-100 p-4 m-auto h-screen rounded'>
                     <div className="imageContainer">
                         <input type="file" className="block w-full text-red-500
                                 file:mr-4 file:py-2 file:px-4
@@ -183,9 +190,8 @@ export default function adminStore() {
                         <div>
                             <label>Product name</label>
                             <input type='text' value={productData.productName} onChange={handleChange} placeholder="Enter the product name..." name='productName' className="mt-2 placeholder:text-slate-400 block bg-white w-80 border border-slate-300 rounded-md py-2 pl-4 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm" />
+                            {productErrors.productName ? <span className="text-red-600">{productErrors.productName}</span> : ""}
                         </div>
-                        {productErrors.productName && <span className="text-red-600">{productErrors.productName}</span>}
-
                         <div>
                             <label>Category</label>
                             <select name="category" value={productData.category} onChange={handleChange} id='Category' className="mt-2 placeholder:text-slate-400 block bg-white w-80 border border-slate-300 rounded-md py-2 pl-5 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm">
@@ -202,29 +208,32 @@ export default function adminStore() {
                                 <option value='Gift Cards'>Gift Cards</option>
                                 <option value='Health & Beauty'>Health & Beauty</option>
                             </select>
-                            {productErrors.category && <span className="text-red-600">{productErrors.category}</span>}
+                            {productErrors.category ? <span className="text-red-600">{productErrors.category}</span> : ""}
                         </div>
                     </div>
                     <div className='flex items-center justify-evenly p-2'>
                         <div>
                             <label>Brand</label>
                             <input type='text' value={productData.brand} onChange={handleChange} placeholder="Enter the brand name..." name='brand' className='w-80 mt-2 placeholder:text-slate-400 block bg-white border border-slate-300 rounded-md py-2 pl-4 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm' />
+                            {productErrors.brand ? <span className="text-red-600">{productErrors.brand}</span> : ""}
                         </div>
                         <div>
                             <label>Price</label>
                             <input type='number' value={productData.price} onChange={handleChange} placeholder="Enter the price name..." name='price' className='w-80 mt-2 placeholder:text-slate-400 block bg-white border border-slate-300 rounded-md py-2 pl-4 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm' />
+                            {productErrors.price ? <span className="text-red-600">{productErrors.price}</span> : ""}
                         </div>
-                        {productErrors.price && <span className="text-red-600">{productErrors.price}</span>}
 
                     </div>
                     <div className='flex items-center justify-evenly p-2'>
                         <div>
                             <label>Weight</label>
                             <input type='number' value={productData.weight} onChange={handleChange} placeholder="Enter the weight..." name='weight' className='w-80 mt-2 placeholder:text-slate-400 block bg-white border border-slate-300 rounded-md py-2 pl-4 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm' />
+                            {productErrors.weight ? <span className="text-red-600">{productErrors.weight}</span> : ""}
                         </div>
                         <div>
                             <label>Color</label>
                             <input type='text' value={productData.color} onChange={handleChange} placeholder="Enter the Color name..." name='color' className='w-80 mt-2 placeholder:text-slate-400 block bg-white border border-slate-300 rounded-md py-2 pl-4 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm' />
+                            {productErrors.color ? <span className="text-red-600">{productErrors.color}</span> : ""}
                         </div>
                     </div>
                     <div className='flex items-center justify-evenly p-2'>
@@ -233,10 +242,10 @@ export default function adminStore() {
                             <textarea value={productData.description} onChange={handleChange} name='description' className='w-80 mt-2 placeholder:text-slate-400 block bg-white border border-slate-300 rounded-md py-2 pl-4 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm' placeholder='Write something......'>
 
                             </textarea>
-                            {productErrors.description && <span className="text-red-600">{productErrors.description}</span>}
+                            {productErrors.description ? <span className="text-red-600">{productErrors.description}</span> : ""}
                         </div>
                         <div className='flex justify-center gap-5 mt-7'>
-                            <button className='rounded bg-cyan-50 py-2 px-4 border border-red-700 text-rose-500' onClick={() => setFormOpen(false)}>cancel</button>
+                            <span className='rounded bg-cyan-50 py-2 px-4 border border-red-700 text-rose-500 cursor-pointer' onClick={() => setFormOpen(false)}>cancel</span>
                             <button className="rounded bg-blue-300 text-white-600 py-2 px-4 border border-green-700" type='submit'>save</button>
                         </div>
                     </div>
@@ -302,7 +311,11 @@ export default function adminStore() {
                                             {item.brand}
                                         </td>
                                         <td className="text-base px-6 py-9 text-blue-500 flex items-center justify-items-center gap-4">
-                                            <FontAwesomeIcon icon={faTrash} className='text-base text-red-400 cursor-pointer' onClick={() => handleDeleteProduct(item._id)} id={item._id} />
+                                            <Link href={`/adminStore/${item._id}`}>
+                                                <FontAwesomeIcon icon={faTrash} onClick={() => setdeletePopUpOpen(true)} className='text-base text-red-400 cursor-pointer' id={item._id} />
+                                            </Link>
+                                            {/* <FontAwesomeIcon icon={faTrash} data-ripple-light="true"
+                                                data-dialog-target="animated-dialog" className='text-base text-red-400 cursor-pointer' /> */}
                                             <Link href={`/adminStore/editProduct/${item._id}`}><FontAwesomeIcon icon={faEdit} className='text-base text-green-400 cursor-pointer' id={item._id} /></Link>
                                         </td>
                                         <td className="px-6 py-4 text-base text-blue-500">
@@ -314,6 +327,7 @@ export default function adminStore() {
                         })
                     }
                 </table>
+
                 <div>
                     <Link href={`adminStore?page=${parseInt(page) - 1}`}><button>Previous</button></Link>
                     <span>{page}</span>
@@ -343,6 +357,21 @@ export default function adminStore() {
                     </div>
                 </div> */}
             </div >
+            </div>
+            <form onSubmit={handleDeleteProduct}>
+                <div className='absolute inset-0 flex mt-20 items-center justify-center m-auto w-2/6 px-4 py-5 rounded' style={{ display: deletePopUpOpen ? "block" : "none" }}>
+                    <div className='bg-blue-200 p-8 shadow-lg rounded-lg grid gap-4'>
+                        <div>
+                            <h3 className='text-red-400'>Delete product</h3>
+                            <p className=''>Are you sure to delete this product</p>
+                        </div>
+                        <div className="flex justify-last">
+                            <button type="submit" onClick={closeDeletePopUp} className="mt-3 inline-flex justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0">Cancel</button>
+                            <button type="submit" className="inline-flex justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3">Delete</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
         </>
     )
 }

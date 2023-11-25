@@ -76,7 +76,8 @@ const typeDefs = gql` #graphql
         getAllOrders:[orders]
         getAllProducts: [products]
         getEditProductData(id: ID!): products
-        getProductDetails(id:ID!):products
+        getProductDetails(id: ID!):products
+        getAddToCart_Single_ProductData(id: ID!): products
         # uploads: [File]
         # hello: String!
     }
@@ -90,7 +91,6 @@ const typeDefs = gql` #graphql
         createAdmins(adminsInput: adminsInput): admins!
         createProducts(newProducts: productsInput): products!
         createOrders(newOrders: ordersInput): orders!
-
         singleUpload(file: File): Upload!
         deleteProduct(id: ID!) : Boolean!
         updateProduct(id: ID!, input: updateProductInput): products!
