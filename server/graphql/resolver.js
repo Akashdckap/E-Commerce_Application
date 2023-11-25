@@ -30,9 +30,17 @@ const resolvers = {
         getProductDetails: async (_, { id }) => {
             return await productDetails.findOne({ _id: new ObjectId(id) })
         },
+
+        // getAllProducts: async (_, { page = 1, limit = 5 }) => {
+        //     const offset = (page-1) * limit;
+        //     const products = await (productDetails.find({}));
+        //     return products
+        // },
+
         getAddToCart_Single_ProductData: async (_, { id }) => {
             return await productDetails.findOne({ _id: new ObjectId(id) })
         }
+
     },
     Mutation: {
         async createAdmins(_, { adminsInput: { email, password } }) {
@@ -110,7 +118,7 @@ const resolvers = {
         //     })
 
         async createProducts(_, { newProducts: { productName, category, brand, price, weight, color, description } }) {
-            const newProduct = new productDeatails({
+            const newProduct = new productDetails({
                 productName: productName,
                 category: category,
                 brand: brand,

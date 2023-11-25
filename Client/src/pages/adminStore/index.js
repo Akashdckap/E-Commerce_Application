@@ -11,6 +11,12 @@ import { useRouter } from 'next/router';
 export default function AdminStore() {
     const router = useRouter()
     const [formOpen, setFormOpen] = useState(false);
+    const [image, setImage] = useState('');
+    const router = useRouter();
+    const { page = 1 } = router.query;
+    const [currentPage, setCurrentPage] = useState(1)
+    // const [totalPages,setTotalPages] = useState(1)
+
     const [deletePopUpOpen, setdeletePopUpOpen] = useState(false);
     const [image, setImage] = useState('')
 
@@ -95,7 +101,10 @@ export default function AdminStore() {
         //     alert("not okay")
         // }
     }
-    const { data: getDataError, error: getError, loading: getLoading } = useQuery(GET_ALL_PRODUCTS);
+    const { data: getDataError, error: getError, loading: getLoading } = useQuery(GET_ALL_PRODUCTS, {
+        variables: { page: 1, limit: 5 },
+    });
+    // console.log(getDataError.getAllProducts)
     // useEffect(() => {
     //     // console.log(typeof getDataError);
     // }, [getDataError])
@@ -111,6 +120,25 @@ export default function AdminStore() {
         // console.log(getDataError);
     }
     const productList = getDataError.getAllProducts
+    console.log("productList-----------", productList)
+
+    // const nextPage = () => {
+    //     fetchMore({
+    //         variables: {
+    //             page: productList.getAllProducts.pageInfo.currentPage + 1 || 1,
+    //             limit: 5,
+    //         },
+    //     });
+    // };
+
+    // const prevPage = () => {
+    //     fetchMore({
+    //         variables: {
+    //             page: productList.getAllProducts.pageInfo.currentPage - 1 || 1,
+    //             limit: 5,
+    //         },
+    //     });
+    // };
 
     const handleDeleteProduct = async (e) => {
         e.preventDefault()
@@ -292,7 +320,6 @@ export default function AdminStore() {
                                         </td>
                                         <td className="px-6 py-4 text-base text-blue-500">
                                             <Link href={`/adminStore/viewProduct/${item._id}`}><FontAwesomeIcon icon={faEye} className='text-base text-blue-700 cursor-pointer' id={item._id} /></Link>
-
                                         </td>
                                     </tr>
                                 </tbody>
@@ -300,6 +327,36 @@ export default function AdminStore() {
                         })
                     }
                 </table>
+
+                <div>
+                    <Link href={`adminStore?page=${parseInt(page) - 1}`}><button>Previous</button></Link>
+                    <span>{page}</span>
+                    <Link href={`adminStore?page=${parseInt(page) + 1}`}><button>Next</button></Link>
+                </div>
+                {/* <button onClick={nextPage}>Next</button> */}
+                {/* <div>
+                    <button onClick={prevPage} disabled={productList.getAllProducts.pageInfo}>Previous</button>
+                    <span>Page:{productList.getAllProducts.pageInfo}</span>
+                    <button onClick={nextPage} disabled={productList.getAllProducts.pageInfo}>Next</button>
+                </div> */}
+                {/* <div>
+                    <div className='paginationContainer'>
+                        <button className='paginatedPreBtn'
+                            onClick={() => setCurrentPage(prevPage => prevPage - 1)}
+                            disabled={currentPage === 1}
+                        >
+                            <i className="fa-solid fa-angle-left"></i>
+                        </button>
+                        <span className='pageNo'>{currentPage}</span>
+                        <button className='paginatedNxtBtn'
+                            onClick={() => setCurrentPage(prevPage => prevPage + 1)}
+                            // disabled={currentPage === totalPages}
+                        >
+                            <i className="fa-solid fa-angle-right"></i>
+                        </button>
+                    </div>
+                </div> */}
+            </div >
             </div>
             <form onSubmit={handleDeleteProduct}>
                 <div className='absolute inset-0 flex mt-20 items-center justify-center m-auto w-2/6 px-4 py-5 rounded' style={{ display: deletePopUpOpen ? "block" : "none" }}>
