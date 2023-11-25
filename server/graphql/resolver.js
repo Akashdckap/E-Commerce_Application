@@ -31,11 +31,6 @@ const resolvers = {
             return await productDetails.findOne({ _id: new ObjectId(id) })
         }
     },
-    // products: {
-    //     async getEditProductData(parent) {
-    //         console.log(parent.productId);
-    //     }
-    // },
     Mutation: {
         async createAdmins(_, { adminsInput: { email, password } }) {
             const newUsers = new admins({
@@ -54,7 +49,6 @@ const resolvers = {
             else {
                 throw new Error("Email Id not exists");
             }
-
         },
 
         // async createOrders(_, { newOrders: { productId, quantity, name, email, phoneNo, address, district, state, pincode } }) {
@@ -111,6 +105,7 @@ const resolvers = {
 
 
         //     })
+
         async createProducts(_, { newProducts: { productName, category, brand, price, weight, color, description } }) {
             const newProduct = new productDeatails({
                 productName: productName,
@@ -153,19 +148,6 @@ const resolvers = {
                 throw new Error('Failed to update product');
             }
         },
-        // async updateProduct(parent, args) {
-        //     const { id } = args.id
-        //     const { productName, category, brand, price, weight,
-        //         color, description } = args.edits
-        //     const updateProductData = await productDeatails.findByIdAndUpdate(id,
-        //         {
-        //             productName, category, brand, price, weight,
-        //             color, description
-        //         },
-        //         { new: true }
-        //     )
-        //     return updateProductData
-        // },
         async uploadFile(parent, { file }) {
             console.log(file);
             const { createReadStream, filename, mimetype, encoding } = await file
@@ -177,7 +159,6 @@ const resolvers = {
             return {
                 url: `http://localhost:4000/Images/${filename}`
             }
-
 
         }
         // async uploadFile(parent, { file }) {
@@ -197,19 +178,7 @@ const resolvers = {
         //         const stream = createReadStream();
         //         const path = `../../Client/public/images/${filename}`;
 
-        //         await new Promise((resolve, reject) => {
-        //             stream
-        //                 .pipe(fs.createWriteStream())
-        //                 .on('error', (error) => reject(error))
-        //                 .on('finish', () => resolve(path));
-        //         });
-
-        //         return `File uploaded Successfully to ${path}`
-        //     }
-        //     catch (error) {
-        //         throw new Error('Error handling file upload');
-        //     }
-        // }
+        }
     }
 }
 module.exports = resolvers;
