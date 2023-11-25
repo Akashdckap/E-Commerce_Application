@@ -76,6 +76,7 @@ const typeDefs = gql` #graphql
         getAllOrders:[orders]
         getAllProducts: [products]
         getEditProductData(id: ID!): products
+        getProductDetails(id:ID!):products
         # uploads: [File]
         # hello: String!
     }

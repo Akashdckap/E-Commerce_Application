@@ -1,7 +1,7 @@
 
 // const { ApolloError } = require('@apollo/server');
 const admins = require('../model/adminSchema');
-const productDeatails = require('../model/productSchema')
+const productDetails = require('../model/productSchema')
 // const order = require('../model/order');
 // const product = require('../model/product');
 // const { GraphQLUpload } = require('graphql-upload');
@@ -22,10 +22,13 @@ const resolvers = {
             return await (order.find({}));
         },
         getAllProducts: async () => {
-            return await (productDeatails.find({}));
+            return await (productDetails.find({}));
         },
         getEditProductData: async (_, { id }) => {
-            return await productDeatails.findOne({ _id: new ObjectId(id) })
+            return await productDetails.findOne({ _id: new ObjectId(id) })
+        },
+        getProductDetails: async (_, { id }) => {
+            return await productDetails.findOne({ _id: new ObjectId(id) })
         }
     },
     Mutation: {
@@ -47,6 +50,62 @@ const resolvers = {
                 throw new Error("Email Id not exists");
             }
         },
+
+        // async createOrders(_, { newOrders: { productId, quantity, name, email, phoneNo, address, district, state, pincode } }) {
+        //     const newOne = new order({
+        //         productId: ObjectId(productId),
+        //         quantity: quantity,
+        //         name: name,
+        //         email: email,
+        //         phoneNo: phoneNo,
+        //         address: address,
+        //         district: district,
+        //         state: state,
+        //         pincode: pincode
+        //     })
+        //     const res = await newOne.save();
+        //     return {
+        //         ...res._doc
+        //     }
+        // },
+
+        // async createProducts(_, { newProducts: { productName, category, brand, price, weight, description, color } }) {
+
+        //     const newProduct = new product({
+        //         productName: productName,
+        //         category: category,
+        //         brand: brand,
+        //         price: price,
+        //         weight: weight,
+        //         color: color,
+        //         description: description
+        //     })
+
+        //     // console.log(newProduct);
+        //     if (newProduct) {
+        //         const res = await newProduct.save();
+        //         throw new Error("Successfully");
+        //     }
+        //     else {
+        //         throw new Error("Not added");
+        //     }
+        //     // console.log(res);
+        //     // return {
+        //     //     ...res.uploadImage_doc
+        //     // }
+
+        // }
+
+        // createProducts: async (_, { file }) => {
+        //     const { newProducts, filename } = await file;
+        //     const stream = newProducts();
+        //     const uploadPath = path.join(__dirname,'../../Client/public/images',filename);
+
+        //     await new Promise((resolve,reject)=>{
+
+
+        //     })
+
         async createProducts(_, { newProducts: { productName, category, brand, price, weight, color, description } }) {
             const newProduct = new productDeatails({
                 productName: productName,
@@ -101,6 +160,23 @@ const resolvers = {
                 url: `http://localhost:4000/Images/${filename}`
             }
 
+        }
+        // async uploadFile(parent, { file }) {
+        //     console.log(file);
+        //     const { createReadStream, filename, mimetype, encoding } = await file
+        //     const stream = createReadStream()
+        //     const pathName = path.join(__dirname, `/public/Images/${filename}`)
+        //     await stream.pipe(fs.createWriteStream(pathName))
+        //     // console.log(url);
+        //     // console.log(filename);
+        //     return {
+        //         url: `http://localhost:4000/Images/${filename}`
+        //     }
+        //     // const { filename, createReadStream, mimetype } = await file;
+
+        //     try {
+        //         const stream = createReadStream();
+        //         const path = `../../Client/public/images/${filename}`;
 
         }
     }

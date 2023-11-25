@@ -276,7 +276,8 @@ export default function adminStore() {
                                             <Link href={`/adminStore/editProduct/${item._id}`}><FontAwesomeIcon icon={faEdit} className='text-base text-green-400 cursor-pointer' id={item._id} /></Link>
                                         </td>
                                         <td className="px-6 py-4 text-base text-blue-500">
-                                            <FontAwesomeIcon icon={faEye} className='text-base text-blue-700 cursor-pointer' onClick={() => alert("Hi")} id={item._id} />
+                                            <Link href={`/adminStore/viewProduct/${item._id}`}><FontAwesomeIcon icon={faEye} className='text-base text-blue-700 cursor-pointer' id={item._id} /></Link>
+
                                         </td>
                                     </tr>
                                 </tbody>

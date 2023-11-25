@@ -30,6 +30,7 @@ export default function EditProduct() {
             setDescription(getData.getEditProductData.description)
         }
     }, [getData])
+    // console.log(getData)
     const [updateProduct] = useMutation(UPDATE_PRODUCT)
 
     const handleUpdateProductForm = async (e) => {
@@ -121,7 +122,7 @@ export default function EditProduct() {
                         </div>
                         <div>
                             <label>Price</label>
-                            <input type='number' value={price} onChange={(e) => setPrice(e.target.value)} placeholder="Enter the price name..." name='price' className='w-80 mt-2 placeholder:text-slate-400 block bg-white border border-slate-300 rounded-md py-2 pl-4 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm' />
+                            <input type='text' value={price} onChange={(e) => setPrice(e.target.value)} placeholder="Enter the price name..." name='price' className='w-80 mt-2 placeholder:text-slate-400 block bg-white border border-slate-300 rounded-md py-2 pl-4 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm' />
                         </div>
                         {/* {productErrors.price && <span className="text-red-600">{productErrors.price}</span>} */}
 
@@ -129,7 +130,7 @@ export default function EditProduct() {
                     <div className='flex items-center justify-evenly p-2'>
                         <div>
                             <label>Weight</label>
-                            <input type='number' value={weight} onChange={(e) => setWeight(e.target.value)} placeholder="Enter the weight..." name='weight' className='w-80 mt-2 placeholder:text-slate-400 block bg-white border border-slate-300 rounded-md py-2 pl-4 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm' />
+                            <input type='text' value={weight} onChange={(e) => setWeight(e.target.value)} placeholder="Enter the weight..." name='weight' className='w-80 mt-2 placeholder:text-slate-400 block bg-white border border-slate-300 rounded-md py-2 pl-4 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm' />
                         </div>
                         <div>
                             <label>Color</label>

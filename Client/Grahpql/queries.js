@@ -47,3 +47,18 @@ export const GET_EDIT_PRODUCT_DATA = gql`
     }
     }
 `
+
+export const GET_PRODUCT_DETAILS = gql`
+    query GetProductDetails ($id:ID!){
+        getProductDetails(id : $id){
+            _id
+            productName
+            category
+            brand
+            price
+            weight
+            color
+            description
+        }
+    }
+`
