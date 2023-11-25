@@ -33,7 +33,6 @@ export const GET_ALL_PRODUCTS = gql`
         }
     }
 `
-<<<<<<< HEAD
 export const GET_EDIT_PRODUCT_DATA = gql`
     query GetEditProductData ($id: ID!){
         getEditProductData (id : $id) {
@@ -48,20 +47,18 @@ export const GET_EDIT_PRODUCT_DATA = gql`
     }
     }
 `
-=======
 
-// export const GET_EDIT_PRODUCT = gql`
-//     query{
-        
-//     }
-
-// `_
-// export const getProductList = () => {
-//     const { data, error, loading } = useQuery(GET_ALL_PRODUCTS)
-//     return {
-//         data,
-//         error,
-//         loading
-//     }
-// }
->>>>>>> origin/server
+export const GET_PRODUCT_DETAILS = gql`
+    query GetProductDetails ($id:ID!){
+        getProductDetails(id : $id){
+            _id
+            productName
+            category
+            brand
+            price
+            weight
+            color
+            description
+        }
+    }
+`

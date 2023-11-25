@@ -76,6 +76,7 @@ const typeDefs = gql` #graphql
         getAllOrders:[orders]
         getAllProducts: [products]
         getEditProductData(id: ID!): products
+        getProductDetails(id:ID!):products
         # uploads: [File]
         # hello: String!
     }
@@ -93,7 +94,7 @@ const typeDefs = gql` #graphql
         singleUpload(file: File): Upload!
         deleteProduct(id: ID!) : Boolean!
         updateProduct(id: ID!, input: updateProductInput): products!
-        uploadFile(file: uploadImage!): File
+        uploadFile(file: Upload!): String!
     }
 `
 module.exports = typeDefs;

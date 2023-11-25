@@ -1,7 +1,7 @@
 
 // const { ApolloError } = require('@apollo/server');
 const admins = require('../model/adminSchema');
-const productDeatails = require('../model/productSchema')
+const productDetails = require('../model/productSchema')
 // const order = require('../model/order');
 // const product = require('../model/product');
 // const { GraphQLUpload } = require('graphql-upload');
@@ -22,11 +22,14 @@ const resolvers = {
             return await (order.find({}));
         },
         getAllProducts: async () => {
-            return await (productDeatails.find({}));
+            return await (productDetails.find({}));
         },
         getEditProductData: async (_, { id }) => {
-            return await productDeatails.findOne({ _id: new ObjectId(id) })
+            return await productDetails.findOne({ _id: new ObjectId(id) })
         },
+        getProductDetails: async (_, { id }) => {
+            return await productDetails.findOne({ _id: new ObjectId(id) })
+        }
     },
     // products: {
     //     async getEditProductData(parent) {
@@ -94,7 +97,7 @@ const resolvers = {
         //     }
         //     // console.log(res);
         //     // return {
-        //     //     ...res._doc
+        //     //     ...res.uploadImage_doc
         //     // }
 
         // }
@@ -175,7 +178,7 @@ const resolvers = {
                 url: `http://localhost:4000/Images/${filename}`
             }
 
-      
+
         }
         // async uploadFile(parent, { file }) {
         //     console.log(file);
