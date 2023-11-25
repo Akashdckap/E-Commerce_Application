@@ -5,10 +5,13 @@ import { CREATE_PRODUCTS, DELETE_PRODUCT, UPLOAD_FILE } from '../../../Grahpql/m
 import { GET_ALL_PRODUCTS } from '../../../Grahpql/queries';
 import { useMutation, useQuery } from '@apollo/client';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faEye, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faEye, faL, faSlash, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { useRouter } from 'next/router';
 
-export default function adminStore() {
+export default function AdminStore() {
+    const router = useRouter()
     const [formOpen, setFormOpen] = useState(false);
+    const [deletePopUpOpen, setdeletePopUpOpen] = useState(false);
     const [image, setImage] = useState('')
 
     const [productData, setProductData] = useState({
@@ -109,7 +112,9 @@ export default function adminStore() {
     }
     const productList = getDataError.getAllProducts
 
-    const handleDeleteProduct = async (id) => {
+    const handleDeleteProduct = async (e) => {
+        e.preventDefault()
+        const id = router.query.deleteId
         try {
             await deleteProduct({ variables: { id } })
             notification.error({ description: "product successfully deleted" })
@@ -117,6 +122,12 @@ export default function adminStore() {
         catch (error) {
             console.error('Error deleting item:', error);
         }
+        setdeletePopUpOpen(false)
+        router.push("/adminStore")
+    }
+    const closeDeletePopUp = () => {
+        router.push("/adminStore");
+        setdeletePopUpOpen(false)
     }
     return (
         <>
@@ -272,7 +283,11 @@ export default function adminStore() {
                                             {item.brand}
                                         </td>
                                         <td className="text-base px-6 py-9 text-blue-500 flex items-center justify-items-center gap-4">
-                                            <FontAwesomeIcon icon={faTrash} className='text-base text-red-400 cursor-pointer' onClick={() => handleDeleteProduct(item._id)} id={item._id} />
+                                            <Link href={`/adminStore/${item._id}`}>
+                                                <FontAwesomeIcon icon={faTrash} onClick={() => setdeletePopUpOpen(true)} className='text-base text-red-400 cursor-pointer' id={item._id} />
+                                            </Link>
+                                            {/* <FontAwesomeIcon icon={faTrash} data-ripple-light="true"
+                                                data-dialog-target="animated-dialog" className='text-base text-red-400 cursor-pointer' /> */}
                                             <Link href={`/adminStore/editProduct/${item._id}`}><FontAwesomeIcon icon={faEdit} className='text-base text-green-400 cursor-pointer' id={item._id} /></Link>
                                         </td>
                                         <td className="px-6 py-4 text-base text-blue-500">
@@ -285,7 +300,21 @@ export default function adminStore() {
                         })
                     }
                 </table>
-            </div >
+            </div>
+            <form onSubmit={handleDeleteProduct}>
+                <div className='absolute inset-0 flex mt-20 items-center justify-center m-auto w-2/6 px-4 py-5 rounded' style={{ display: deletePopUpOpen ? "block" : "none" }}>
+                    <div className='bg-blue-200 p-8 shadow-lg rounded-lg grid gap-4'>
+                        <div>
+                            <h3 className='text-red-400'>Delete product</h3>
+                            <p className=''>Are you sure to delete this product</p>
+                        </div>
+                        <div className="flex justify-last">
+                            <button type="submit" onClick={closeDeletePopUp} className="mt-3 inline-flex justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0">Cancel</button>
+                            <button type="submit" className="inline-flex justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3">Delete</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
         </>
     )
 }
