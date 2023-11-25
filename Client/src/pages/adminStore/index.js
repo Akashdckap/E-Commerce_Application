@@ -132,7 +132,7 @@ export default function AdminStore() {
     return (
         <>
             <div className='flex justify-between p-10'>
-                <h1 className=''>Welcome to our site Balamurugan</h1>
+                <h1>Welcome to our site Balamurugan</h1>
                 <div className='flex justify-center gap-10'>
                     <Link href='/login'><button className='bg-red-400 hover:bg-grey-700 text-white font-bold py-2 px-4 border border-white-700 rounded'>Log Out</button></Link>
                     <Link href="/productList" className="inline-flex items-center justify-center px-5 py-3 text-base font-medium text-center text-white bg-blue-600 rounded-lg hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900">
