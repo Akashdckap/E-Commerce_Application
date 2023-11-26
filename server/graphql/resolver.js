@@ -134,7 +134,7 @@ const resolvers = {
         },
         async deleteProduct(parent, { id }) {
             try {
-                const result = await productDeatails.deleteOne({ _id: new ObjectId(id) });
+                const result = await productDetails.deleteOne({ _id: new ObjectId(id) });
                 return result.deleteCount > 0;
             }
             catch (error) {
@@ -144,7 +144,7 @@ const resolvers = {
         },
         async updateProduct(_, { id, input }) {
             try {
-                const updatedProduct = await productDeatails.findByIdAndUpdate(
+                const updatedProduct = await productDetails.findByIdAndUpdate(
                     id,
                     input,
                     { new: true }

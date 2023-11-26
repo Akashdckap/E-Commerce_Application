@@ -5,7 +5,6 @@ const GET_USERS = gql`
         getAllUsers {
         _id
         email
-        name
         password
     }
 }
