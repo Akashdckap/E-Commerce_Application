@@ -5,7 +5,6 @@ const GET_USERS = gql`
         getAllUsers {
         _id
         email
-        name
         password
     }
 }
@@ -50,7 +49,7 @@ export const GET_EDIT_PRODUCT_DATA = gql`
 
 export const GET_PRODUCT_DETAILS = gql`
     query GetProductDetails ($id:ID!){
-        getProductDetails(id : $id){
+        getProductDetails(id : $id){        name
             _id
             productName
             category
