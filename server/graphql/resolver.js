@@ -21,17 +21,6 @@ const resolvers = {
         getAllOrders: async () => {
             return await (order.find({}));
         },
-
-        // getAllProducts: async () => {
-        //     return await (productDetails.find({}));
-        // },
-
-        getAllProducts: async (_, { page = 1, pageSize = 10 }) => {
-            const skip = (page - 1) * pageSize;
-            const items = await productDetails.find({}).skip(skip).limit(pageSize);
-            return items;
-        },
-
         getEditProductData: async (_, { id }) => {
             return await productDetails.findOne({ _id: new ObjectId(id) })
         },
@@ -39,11 +28,11 @@ const resolvers = {
             return await productDetails.findOne({ _id: new ObjectId(id) })
         },
 
-        // getAllProducts: async (_, { page = 1, limit = 5 }) => {
-        //     const offset = (page-1) * limit;
-        //     const products = await (productDetails.find({}));
-        //     return products
-        // },
+        getAllProducts: async (_, { page, pageSize }) => {
+            const skip = (page - 1) * pageSize;
+            const products = await (productDetails.find({}).skip(skip).limit(pageSize));
+            return products
+        },
 
         getAddToCart_Single_ProductData: async (_, { id }) => {
             return await productDetails.findOne({ _id: new ObjectId(id) })
@@ -143,7 +132,8 @@ const resolvers = {
         async deleteProduct(parent, { id }) {
             try {
                 const result = await productDetails.deleteOne({ _id: new ObjectId(id) });
-                return result.deleteCount > 0;
+                // return result.deleteCount > 0;
+                return result
             }
             catch (error) {
                 console.error(error);

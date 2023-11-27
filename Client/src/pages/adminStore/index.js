@@ -11,15 +11,11 @@ import PaginationControls from '../../../Components/PaginationControls';
 
 
 export default function AdminStore() {
-    const router = useRouter()
     const [formOpen, setFormOpen] = useState(false);
-    const [getProductData, setgetProductData] = useState([])
-    const pageSize = 5
-    // const { page = 1 } = router.query;
+    const router = useRouter();
     const [currentPage, setCurrentPage] = useState(1)
-    // const [totalPages, setTotalPages] = useState(getProductData.length / 10)
-    // const [totalPages,setTotalPages] = useState(1)
-    // console.log(Math.ceil(getProductData.length / 10));
+    const [getProductData, setgetProductData] = useState([])
+    const pageSize = 5;
     const [deletePopUpOpen, setdeletePopUpOpen] = useState(false);
     const [image, setImage] = useState('')
 
@@ -99,8 +95,8 @@ export default function AdminStore() {
             }
         }
     }
-    const { data: getDataError, error: getError, loading: getLoading, refetch } = useQuery(GET_ALL_PRODUCTS, {
-        variables: { page: currentPage, pageSize: pageSize }
+    const { data: getDataError, error: getError, loading: getLoading, refetch: getRefetch } = useQuery(GET_ALL_PRODUCTS, {
+        variables: { page: currentPage, pageSize },
     });
 
     useEffect(() => {
@@ -113,14 +109,17 @@ export default function AdminStore() {
         if (getError) {
             console.error('Error fetching data:', getError);
         }
-    }, [getError, getDataError, refetch, getLoading])
+        getRefetch({ page: currentPage, pageSize });
+    }, [getError, currentPage, getDataError, getRefetch, getLoading, pageSize])
 
-    const handlePageChange = (newPage) => {
-        setCurrentPage(newPage)
-        refetch({
-            variables: { page: newPage, pageSize: pageSize }
-        });
-    }
+    const nextPage = () => {
+        setCurrentPage(currentPage + 1);
+    };
+    const prevPage = () => {
+        if (currentPage > 1) {
+            setCurrentPage(currentPage - 1)
+        }
+    };
 
     const handleDeleteProduct = async (e) => {
         e.preventDefault()
@@ -139,7 +138,6 @@ export default function AdminStore() {
         router.push("/adminStore");
         setdeletePopUpOpen(false)
     }
-
     return (
         <>
             <div className='flex justify-between p-10'>
@@ -306,54 +304,11 @@ export default function AdminStore() {
                         })
                     }
                 </table>
-                <PaginationControls
-                    currentPage={currentPage}  // Pass the actual current page
-                    // totalPages={Math.ceil(getProductData.length / 10)}  // Adjust based on your page size
-                    onPageChange={handlePageChange}
-                />
-                {/* <div>
-                    <button onClick={handlePageChange} disabled={currentPage === 1}>Previous</button>
-                    <span>{`Page ${currentPage} of ${totalPages}`}</span>
-                    <button onClick={handlePageChange} disabled={currentPage === totalPages}>Next</button>
-                </div> */}
-                {/* <PaginationControls
-                    currentPage={1}
-                    totalPages={Math.ceil(getDataError.getAllProducts.length / 10)}
-                    onPageChange={handlePageChange}
-                /> */}
-
-                {/* <div className='flex justify-between'>
-                    <button onClick={() => setCurrentPage(-1)}>Pre</button>
-                    <button onClick={() => setCurrentPage(+1)}>Next</button>
-                </div> */}
-                {/* <div>
-                    <Link href={`adminStore?page=${parseInt(page) - 1}`}><button>Previous</button></Link>
-                    <span>{page}</span>
-                    <Link href={`adminStore?page=${parseInt(page) + 1}`}><button>Next</button></Link>
-                </div> */}
-                {/* <button onClick={nextPage}>Next</button> */}
-                {/* <div>
-                    <button onClick={prevPage} disabled={productList.getAllProducts.pageInfo}>Previous</button>
-                    <span>Page:{productList.getAllProducts.pageInfo}</span>
-                    <button onClick={nextPage} disabled={productList.getAllProducts.pageInfo}>Next</button>
-                </div> */}
-                {/* <div>
-                    <div className='paginationContainer'>
-                        <button className='paginatedPreBtn'
-                            onClick={() => setCurrentPage(prevPage => prevPage - 1)}
-                            disabled={currentPage === 1}
-                        >
-                            <i className="fa-solid fa-angle-left"></i>
-                        </button>
-                        <span className='pageNo'>{currentPage}</span>
-                        <button className='paginatedNxtBtn'
-                            onClick={() => setCurrentPage(prevPage => prevPage + 1)}
-                            // disabled={currentPage === totalPages}
-                        >
-                            <i className="fa-solid fa-angle-right"></i>
-                        </button>
-                    </div>
-                </div> */}
+                <div>
+                    <button onClick={prevPage} disabled={currentPage === 1}>Previous Page</button>
+                    <span>Page {currentPage}</span>
+                    <button onClick={nextPage} disabled={currentPage === getProductData.length / 10}>Next Page</button>
+                </div>
             </div >
             <form onSubmit={handleDeleteProduct}>
                 <div className='absolute inset-0 flex mt-20 items-center justify-center m-auto w-2/6 px-4 py-5 rounded' style={{ display: deletePopUpOpen ? "block" : "none" }}>
@@ -372,3 +327,4 @@ export default function AdminStore() {
         </>
     )
 }
+
