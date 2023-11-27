@@ -21,9 +21,6 @@ const resolvers = {
         getAllOrders: async () => {
             return await (order.find({}));
         },
-        // getAllProducts: async () => {
-        //     return await (productDetails.find({}));
-        // },
         getEditProductData: async (_, { id }) => {
             return await productDetails.findOne({ _id: new ObjectId(id) })
         },

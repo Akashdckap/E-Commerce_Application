@@ -7,7 +7,6 @@ export const CREATE_ADMINS = gql`
       password
     }
   }
-
 `;
 
 export const CREATE_PRODUCTS = gql`
