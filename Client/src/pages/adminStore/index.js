@@ -121,23 +121,6 @@ export default function AdminStore() {
             variables: { page: newPage, pageSize: pageSize }
         });
     }
-    // const nextPage = () => {
-    //     fetchMore({
-    //         variables: {
-    //             page: productList.getAllProducts.pageInfo.currentPage + 1 || 1,
-    //             limit: 5,
-    //         },
-    //     });
-    // };
-
-    // const prevPage = () => {
-    //     fetchMore({
-    //         variables: {
-    //             page: productList.getAllProducts.pageInfo.currentPage - 1 || 1,
-    //             limit: 5,
-    //         },
-    //     });
-    // };
 
     const handleDeleteProduct = async (e) => {
         e.preventDefault()
@@ -156,29 +139,6 @@ export default function AdminStore() {
         router.push("/adminStore");
         setdeletePopUpOpen(false)
     }
-    // Here are the pagination code  -------------------------------------
-
-    // useEffect(() => {
-    //     const { data: getDataError, loading: getLoading, error: getError } = useQuery(GET_ALL_PRODUCTS, {
-    //         variables: { page: 1, pageSize: 5 }
-    //     });
-
-    // }, [productList])
-
-    // const { data: getDataError, loading: getLoading, error: getError, refetch } = useQuery(GET_ALL_PRODUCTS, {
-    //     variables: { page: 1, pageSize: 5 }
-    // });
-    // useEffect(() => {
-    //     // console.log(typeof getDataError);
-    // }, [getDataError])
-
-    // console.log("productList-----------", productList)
-    // const handlePageChange = (newpage) => {
-    //     fetchMore({
-    //         variables: { page: newpage }
-    //     })
-    // }
-
 
     return (
         <>
