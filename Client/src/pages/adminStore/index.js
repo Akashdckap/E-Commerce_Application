@@ -7,8 +7,6 @@ import { useMutation, useQuery } from '@apollo/client';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faEye, faL, faSlash, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { useRouter } from 'next/router';
-import PaginationControls from '../../../Components/PaginationControls';
-
 
 export default function AdminStore() {
     const [formOpen, setFormOpen] = useState(false);
@@ -16,6 +14,13 @@ export default function AdminStore() {
     const [currentPage, setCurrentPage] = useState(1)
     const [getProductData, setgetProductData] = useState([])
     const pageSize = 5;
+    const [totalPages, setTotalPages] = useState(null);
+    console.log("totalpages-------", totalPages);
+    console.log("currentPage-----------", currentPage);
+    // const totalPages = Math.ceil(getProductData.length / pageSize)
+    console.log("totalPages------------", totalPages);
+
+    console.log("length-------", getProductData.length);
     const [deletePopUpOpen, setdeletePopUpOpen] = useState(false);
     const [image, setImage] = useState('')
 
@@ -101,7 +106,8 @@ export default function AdminStore() {
 
     useEffect(() => {
         if (getDataError && !getLoading) {
-            setgetProductData(getDataError.getAllProducts)
+            setgetProductData(getDataError.getAllProducts);
+            setTotalPages(Math.ceil(getProductData.length / pageSize))
         }
         if (getLoading) {
             console.log('Loading...');
@@ -110,7 +116,7 @@ export default function AdminStore() {
             console.error('Error fetching data:', getError);
         }
         getRefetch({ page: currentPage, pageSize });
-    }, [getError, currentPage, getDataError, getRefetch, getLoading, pageSize])
+    }, [getError, currentPage, getDataError, getRefetch, getLoading, getProductData, pageSize, totalPages])
 
     const nextPage = () => {
         setCurrentPage(currentPage + 1);
@@ -119,6 +125,10 @@ export default function AdminStore() {
         if (currentPage > 1) {
             setCurrentPage(currentPage - 1)
         }
+    };
+
+    const calculateSI = (index) => {
+        return (currentPage - 1) * pageSize + index + 1;
     };
 
     const handleDeleteProduct = async (e) => {
@@ -267,11 +277,12 @@ export default function AdminStore() {
                     </thead>
                     {
                         getProductData.map((item, index) => {
+                            // console.log("index--------------------", index);
                             return (
                                 <tbody key={index}>
-                                    <tr key={index} className="bg-white border-b border-stone-300 white:bg-gray-800">
+                                    <tr key={item._id} className="bg-white border-b border-stone-300 white:bg-gray-800">
                                         <th className='text-base px-6 py-4 text-blue-500'>
-                                            {index + 1}
+                                            {calculateSI(index)}
                                         </th>
                                         <th>
                                             <img className="h-20 p-1 object-cover" src="https://images.unsplash.com/flagged/photo-1556637640-2c80d3201be8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8c25lYWtlcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60" alt="product image" />
@@ -307,7 +318,7 @@ export default function AdminStore() {
                 <div>
                     <button onClick={prevPage} disabled={currentPage === 1}>Previous Page</button>
                     <span>Page {currentPage}</span>
-                    <button onClick={nextPage} disabled={currentPage === getProductData.length / 10}>Next Page</button>
+                    <button onClick={nextPage} disabled={currentPage === totalPages}>Next Page</button>
                 </div>
             </div >
             <form onSubmit={handleDeleteProduct}>

@@ -27,7 +27,6 @@ const resolvers = {
         getProductDetails: async (_, { id }) => {
             return await productDetails.findOne({ _id: new ObjectId(id) })
         },
-
         getAllProducts: async (_, { page, pageSize }) => {
             const skip = (page - 1) * pageSize;
             const products = await (productDetails.find({}).skip(skip).limit(pageSize));
