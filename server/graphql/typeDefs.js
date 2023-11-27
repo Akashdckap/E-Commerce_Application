@@ -74,7 +74,8 @@ const typeDefs = gql` #graphql
     type Query{
         getAllAdmins:[admins]
         getAllOrders:[orders]
-        getAllProducts: [products]
+        # getAllProducts: [products]
+        getAllProducts(page:Int!,pageSize:Int!):[products!]!
         getEditProductData(id: ID!): products
         getProductDetails(id: ID!):products
         getAddToCart_Single_ProductData(id: ID!): products

@@ -9,13 +9,15 @@ import { faEdit, faEye, faL, faSlash, faTrash } from '@fortawesome/free-solid-sv
 import { useRouter } from 'next/router';
 
 export default function AdminStore() {
-    const router = useRouter()
+    // const router = useRouter()
     const [formOpen, setFormOpen] = useState(false);
-    const [image, setImage] = useState('');
+
+    // const [image, setImage] = useState('');
     const router = useRouter();
     const { page = 1 } = router.query;
     const [currentPage, setCurrentPage] = useState(1)
     // const [totalPages,setTotalPages] = useState(1)
+    const pageSize = 5;
 
     const [deletePopUpOpen, setdeletePopUpOpen] = useState(false);
     const [image, setImage] = useState('')
@@ -101,13 +103,25 @@ export default function AdminStore() {
         //     alert("not okay")
         // }
     }
-    const { data: getDataError, error: getError, loading: getLoading } = useQuery(GET_ALL_PRODUCTS, {
-        variables: { page: 1, limit: 5 },
+    const { data: getDataError, error: getError, loading: getLoading, refetch: getRefetch } = useQuery(GET_ALL_PRODUCTS, {
+        variables: { page: currentPage, pageSize },
     });
+
+
     // console.log(getDataError.getAllProducts)
-    // useEffect(() => {
-    //     // console.log(typeof getDataError);
-    // }, [getDataError])
+    useEffect(() => {
+        // console.log(typeof getDataError);
+        // if (getDataError && !getLoading) {
+        //     setgetProductData(getDataError.getAllProducts)
+        // }
+        // if (getLoading) {
+        //     console.log('Loading...');
+        // }
+        // if (getError) {
+        //     console.error('Error fetching data:', getError);
+        // }
+        getRefetch({ page: currentPage, pageSize });
+    }, [currentPage, getRefetch, pageSize]);
 
     if (getLoading) {
         return <div>loading.......</div>
@@ -122,23 +136,28 @@ export default function AdminStore() {
     const productList = getDataError.getAllProducts
     console.log("productList-----------", productList)
 
-    // const nextPage = () => {
-    //     fetchMore({
-    //         variables: {
-    //             page: productList.getAllProducts.pageInfo.currentPage + 1 || 1,
-    //             limit: 5,
-    //         },
-    //     });
-    // };
+    const nextPage = () => {
+        // fetchMore({
+        //     variables: {
+        //         page: productList.getAllProducts.pageInfo.currentPage + 1 || 1,
+        //         limit: 5,
+        //     },
+        // });
+        setCurrentPage(currentPage + 1);
+    };
 
-    // const prevPage = () => {
-    //     fetchMore({
-    //         variables: {
-    //             page: productList.getAllProducts.pageInfo.currentPage - 1 || 1,
-    //             limit: 5,
-    //         },
-    //     });
-    // };
+    const prevPage = () => {
+        // fetchMore({
+        //     variables: {
+        //         page: productList.getAllProducts.pageInfo.currentPage - 1 || 1,
+        //         limit: 5,
+        //     },
+        // });
+        if (currentPage > 1) {
+            setCurrentPage(currentPage - 1)
+        }
+
+    };
 
     const handleDeleteProduct = async (e) => {
         e.preventDefault()
@@ -328,11 +347,17 @@ export default function AdminStore() {
                     }
                 </table>
 
+
                 <div>
+                    <button onClick={prevPage} disabled={currentPage === 1}>Previous Page</button>
+                    <span>Page {currentPage}</span>
+                    <button onClick={nextPage} disabled={currentPage === getDataError.getAllProducts.length / 10}>Next Page</button>
+                </div>
+                {/* <div>
                     <Link href={`adminStore?page=${parseInt(page) - 1}`}><button>Previous</button></Link>
                     <span>{page}</span>
                     <Link href={`adminStore?page=${parseInt(page) + 1}`}><button>Next</button></Link>
-                </div>
+                </div> */}
                 {/* <button onClick={nextPage}>Next</button> */}
                 {/* <div>
                     <button onClick={prevPage} disabled={productList.getAllProducts.pageInfo}>Previous</button>
@@ -357,7 +382,6 @@ export default function AdminStore() {
                     </div>
                 </div> */}
             </div >
-            </div>
             <form onSubmit={handleDeleteProduct}>
                 <div className='absolute inset-0 flex mt-20 items-center justify-center m-auto w-2/6 px-4 py-5 rounded' style={{ display: deletePopUpOpen ? "block" : "none" }}>
                     <div className='bg-blue-200 p-8 shadow-lg rounded-lg grid gap-4'>
@@ -375,3 +399,4 @@ export default function AdminStore() {
         </>
     )
 }
+
