@@ -7,16 +7,19 @@ import { useMutation, useQuery } from '@apollo/client';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faEye, faL, faSlash, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { useRouter } from 'next/router';
+import PaginationControls from '../../../Components/PaginationControls';
+
 
 export default function AdminStore() {
     const router = useRouter()
     const [formOpen, setFormOpen] = useState(false);
-    const [image, setImage] = useState('');
-    const router = useRouter();
-    const { page = 1 } = router.query;
+    const [getProductData, setgetProductData] = useState([])
+    const pageSize = 5
+    // const { page = 1 } = router.query;
     const [currentPage, setCurrentPage] = useState(1)
+    // const [totalPages, setTotalPages] = useState(getProductData.length / 10)
     // const [totalPages,setTotalPages] = useState(1)
-
+    // console.log(Math.ceil(getProductData.length / 10));
     const [deletePopUpOpen, setdeletePopUpOpen] = useState(false);
     const [image, setImage] = useState('')
 
@@ -88,7 +91,6 @@ export default function AdminStore() {
         if (validate()) {
             try {
                 await (createProducts({ variables: { productDatas: productData } }));
-                // window.location.reload();
                 notification.success({ description: "product successfully added" })
                 setFormOpen(false)
             }
@@ -96,32 +98,29 @@ export default function AdminStore() {
                 console.error("product creation error :", error);
             }
         }
-        // setFormOpen(false)
-        // else {
-        //     alert("not okay")
-        // }
     }
-    const { data: getDataError, error: getError, loading: getLoading } = useQuery(GET_ALL_PRODUCTS, {
-        variables: { page: 1, limit: 5 },
+    const { data: getDataError, error: getError, loading: getLoading, refetch } = useQuery(GET_ALL_PRODUCTS, {
+        variables: { page: currentPage, pageSize: pageSize }
     });
-    // console.log(getDataError.getAllProducts)
-    // useEffect(() => {
-    //     // console.log(typeof getDataError);
-    // }, [getDataError])
 
-    if (getLoading) {
-        return <div>loading.......</div>
-    }
-    if (getError) {
-        // return <div>error</div>
-        console.log("getting data error-----------------------------", getError);
-    }
-    else {
-        // console.log(getDataError);
-    }
-    const productList = getDataError.getAllProducts
-    console.log("productList-----------", productList)
+    useEffect(() => {
+        if (getDataError && !getLoading) {
+            setgetProductData(getDataError.getAllProducts)
+        }
+        if (getLoading) {
+            console.log('Loading...');
+        }
+        if (getError) {
+            console.error('Error fetching data:', getError);
+        }
+    }, [getError, getDataError, refetch, getLoading])
 
+    const handlePageChange = (newPage) => {
+        setCurrentPage(newPage)
+        refetch({
+            variables: { page: newPage, pageSize: pageSize }
+        });
+    }
     // const nextPage = () => {
     //     fetchMore({
     //         variables: {
@@ -157,6 +156,30 @@ export default function AdminStore() {
         router.push("/adminStore");
         setdeletePopUpOpen(false)
     }
+    // Here are the pagination code  -------------------------------------
+
+    // useEffect(() => {
+    //     const { data: getDataError, loading: getLoading, error: getError } = useQuery(GET_ALL_PRODUCTS, {
+    //         variables: { page: 1, pageSize: 5 }
+    //     });
+
+    // }, [productList])
+
+    // const { data: getDataError, loading: getLoading, error: getError, refetch } = useQuery(GET_ALL_PRODUCTS, {
+    //     variables: { page: 1, pageSize: 5 }
+    // });
+    // useEffect(() => {
+    //     // console.log(typeof getDataError);
+    // }, [getDataError])
+
+    // console.log("productList-----------", productList)
+    // const handlePageChange = (newpage) => {
+    //     fetchMore({
+    //         variables: { page: newpage }
+    //     })
+    // }
+
+
     return (
         <>
             <div className='flex justify-between p-10'>
@@ -188,12 +211,12 @@ export default function AdminStore() {
                     </div>
                     <div className='flex items-center justify-evenly p-2'>
                         <div>
-                            <label>Product name</label>
+                            <label>Product name <span className='text-red-500'>*</span></label>
                             <input type='text' value={productData.productName} onChange={handleChange} placeholder="Enter the product name..." name='productName' className="mt-2 placeholder:text-slate-400 block bg-white w-80 border border-slate-300 rounded-md py-2 pl-4 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm" />
                             {productErrors.productName ? <span className="text-red-600">{productErrors.productName}</span> : ""}
                         </div>
                         <div>
-                            <label>Category</label>
+                            <label>Category <span className='text-red-500'>*</span></label>
                             <select name="category" value={productData.category} onChange={handleChange} id='Category' className="mt-2 placeholder:text-slate-400 block bg-white w-80 border border-slate-300 rounded-md py-2 pl-5 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm">
                                 <option value='Select a categroy'>Select a categroy</option>
                                 <option value='Cameras & Optics'>Cameras & Optics</option>
@@ -213,12 +236,12 @@ export default function AdminStore() {
                     </div>
                     <div className='flex items-center justify-evenly p-2'>
                         <div>
-                            <label>Brand</label>
+                            <label>Brand <span className='text-red-500'>*</span></label>
                             <input type='text' value={productData.brand} onChange={handleChange} placeholder="Enter the brand name..." name='brand' className='w-80 mt-2 placeholder:text-slate-400 block bg-white border border-slate-300 rounded-md py-2 pl-4 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm' />
                             {productErrors.brand ? <span className="text-red-600">{productErrors.brand}</span> : ""}
                         </div>
                         <div>
-                            <label>Price</label>
+                            <label>Price <span className='text-red-500'>*</span></label>
                             <input type='number' value={productData.price} onChange={handleChange} placeholder="Enter the price name..." name='price' className='w-80 mt-2 placeholder:text-slate-400 block bg-white border border-slate-300 rounded-md py-2 pl-4 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm' />
                             {productErrors.price ? <span className="text-red-600">{productErrors.price}</span> : ""}
                         </div>
@@ -226,19 +249,19 @@ export default function AdminStore() {
                     </div>
                     <div className='flex items-center justify-evenly p-2'>
                         <div>
-                            <label>Weight</label>
+                            <label>Weight <span className='text-red-500'>*</span></label>
                             <input type='number' value={productData.weight} onChange={handleChange} placeholder="Enter the weight..." name='weight' className='w-80 mt-2 placeholder:text-slate-400 block bg-white border border-slate-300 rounded-md py-2 pl-4 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm' />
                             {productErrors.weight ? <span className="text-red-600">{productErrors.weight}</span> : ""}
                         </div>
                         <div>
-                            <label>Color</label>
+                            <label>Color <span className='text-red-500'>*</span></label>
                             <input type='text' value={productData.color} onChange={handleChange} placeholder="Enter the Color name..." name='color' className='w-80 mt-2 placeholder:text-slate-400 block bg-white border border-slate-300 rounded-md py-2 pl-4 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm' />
                             {productErrors.color ? <span className="text-red-600">{productErrors.color}</span> : ""}
                         </div>
                     </div>
                     <div className='flex items-center justify-evenly p-2'>
                         <div>
-                            <label>Description</label>
+                            <label>Description <span className='text-red-500'>*</span></label>
                             <textarea value={productData.description} onChange={handleChange} name='description' className='w-80 mt-2 placeholder:text-slate-400 block bg-white border border-slate-300 rounded-md py-2 pl-4 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm' placeholder='Write something......'>
 
                             </textarea>
@@ -285,7 +308,7 @@ export default function AdminStore() {
                         </tr>
                     </thead>
                     {
-                        productList.map((item, index) => {
+                        getProductData.map((item, index) => {
                             return (
                                 <tbody key={index}>
                                     <tr key={index} className="bg-white border-b border-stone-300 white:bg-gray-800">
@@ -311,11 +334,7 @@ export default function AdminStore() {
                                             {item.brand}
                                         </td>
                                         <td className="text-base px-6 py-9 text-blue-500 flex items-center justify-items-center gap-4">
-                                            <Link href={`/adminStore/${item._id}`}>
-                                                <FontAwesomeIcon icon={faTrash} onClick={() => setdeletePopUpOpen(true)} className='text-base text-red-400 cursor-pointer' id={item._id} />
-                                            </Link>
-                                            {/* <FontAwesomeIcon icon={faTrash} data-ripple-light="true"
-                                                data-dialog-target="animated-dialog" className='text-base text-red-400 cursor-pointer' /> */}
+                                            <Link href={`/adminStore/${item._id}`}><FontAwesomeIcon icon={faTrash} onClick={() => setdeletePopUpOpen(true)} className='text-base text-red-400 cursor-pointer' id={item._id} /></Link>
                                             <Link href={`/adminStore/editProduct/${item._id}`}><FontAwesomeIcon icon={faEdit} className='text-base text-green-400 cursor-pointer' id={item._id} /></Link>
                                         </td>
                                         <td className="px-6 py-4 text-base text-blue-500">
@@ -327,12 +346,31 @@ export default function AdminStore() {
                         })
                     }
                 </table>
+                <PaginationControls
+                    currentPage={currentPage}  // Pass the actual current page
+                    // totalPages={Math.ceil(getProductData.length / 10)}  // Adjust based on your page size
+                    onPageChange={handlePageChange}
+                />
+                {/* <div>
+                    <button onClick={handlePageChange} disabled={currentPage === 1}>Previous</button>
+                    <span>{`Page ${currentPage} of ${totalPages}`}</span>
+                    <button onClick={handlePageChange} disabled={currentPage === totalPages}>Next</button>
+                </div> */}
+                {/* <PaginationControls
+                    currentPage={1}
+                    totalPages={Math.ceil(getDataError.getAllProducts.length / 10)}
+                    onPageChange={handlePageChange}
+                /> */}
 
-                <div>
+                {/* <div className='flex justify-between'>
+                    <button onClick={() => setCurrentPage(-1)}>Pre</button>
+                    <button onClick={() => setCurrentPage(+1)}>Next</button>
+                </div> */}
+                {/* <div>
                     <Link href={`adminStore?page=${parseInt(page) - 1}`}><button>Previous</button></Link>
                     <span>{page}</span>
                     <Link href={`adminStore?page=${parseInt(page) + 1}`}><button>Next</button></Link>
-                </div>
+                </div> */}
                 {/* <button onClick={nextPage}>Next</button> */}
                 {/* <div>
                     <button onClick={prevPage} disabled={productList.getAllProducts.pageInfo}>Previous</button>
@@ -357,7 +395,6 @@ export default function AdminStore() {
                     </div>
                 </div> */}
             </div >
-            </div>
             <form onSubmit={handleDeleteProduct}>
                 <div className='absolute inset-0 flex mt-20 items-center justify-center m-auto w-2/6 px-4 py-5 rounded' style={{ display: deletePopUpOpen ? "block" : "none" }}>
                     <div className='bg-blue-200 p-8 shadow-lg rounded-lg grid gap-4'>

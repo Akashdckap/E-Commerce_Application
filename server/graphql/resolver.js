@@ -21,9 +21,17 @@ const resolvers = {
         getAllOrders: async () => {
             return await (order.find({}));
         },
-        getAllProducts: async () => {
-            return await (productDetails.find({}));
+
+        // getAllProducts: async () => {
+        //     return await (productDetails.find({}));
+        // },
+
+        getAllProducts: async (_, { page = 1, pageSize = 10 }) => {
+            const skip = (page - 1) * pageSize;
+            const items = await productDetails.find({}).skip(skip).limit(pageSize);
+            return items;
         },
+
         getEditProductData: async (_, { id }) => {
             return await productDetails.findOne({ _id: new ObjectId(id) })
         },
