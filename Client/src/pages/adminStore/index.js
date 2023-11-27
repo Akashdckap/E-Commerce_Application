@@ -11,15 +11,14 @@ import PaginationControls from '../../../Components/PaginationControls';
 
 
 export default function AdminStore() {
-    const router = useRouter()
+    // const router = useRouter()
     const [formOpen, setFormOpen] = useState(false);
-    const [getProductData, setgetProductData] = useState([])
-    const pageSize = 5
-    // const { page = 1 } = router.query;
+    // const [image, setImage] = useState('');
+    const router = useRouter();
     const [currentPage, setCurrentPage] = useState(1)
     // const [totalPages, setTotalPages] = useState(getProductData.length / 10)
     // const [totalPages,setTotalPages] = useState(1)
-    // console.log(Math.ceil(getProductData.length / 10));
+    const pageSize = 5;
     const [deletePopUpOpen, setdeletePopUpOpen] = useState(false);
     const [image, setImage] = useState('')
 
@@ -99,9 +98,25 @@ export default function AdminStore() {
             }
         }
     }
-    const { data: getDataError, error: getError, loading: getLoading, refetch } = useQuery(GET_ALL_PRODUCTS, {
-        variables: { page: currentPage, pageSize: pageSize }
+    const { data: getDataError, error: getError, loading: getLoading, refetch: getRefetch } = useQuery(GET_ALL_PRODUCTS, {
+        variables: { page: currentPage, pageSize },
     });
+
+
+    // console.log(getDataError.getAllProducts)
+    useEffect(() => {
+        // console.log(typeof getDataError);
+        // if (getDataError && !getLoading) {
+        //     setgetProductData(getDataError.getAllProducts)
+        // }
+        // if (getLoading) {
+        //     console.log('Loading...');
+        // }
+        // if (getError) {
+        //     console.error('Error fetching data:', getError);
+        // }
+        getRefetch({ page: currentPage, pageSize });
+    }, [currentPage, getRefetch, pageSize]);
 
     useEffect(() => {
         if (getDataError && !getLoading) {
@@ -114,30 +129,28 @@ export default function AdminStore() {
             console.error('Error fetching data:', getError);
         }
     }, [getError, getDataError, refetch, getLoading])
+  
+    const nextPage = () => {
+        // fetchMore({
+        //     variables: {
+        //         page: productList.getAllProducts.pageInfo.currentPage + 1 || 1,
+        //         limit: 5,
+        //     },
+        // });
+        setCurrentPage(currentPage + 1);
+    };
+    const prevPage = () => {
+        // fetchMore({
+        //     variables: {
+        //         page: productList.getAllProducts.pageInfo.currentPage - 1 || 1,
+        //         limit: 5,
+        //     },
+        // });
+        if (currentPage > 1) {
+            setCurrentPage(currentPage - 1)
+        }
 
-    const handlePageChange = (newPage) => {
-        setCurrentPage(newPage)
-        refetch({
-            variables: { page: newPage, pageSize: pageSize }
-        });
-    }
-    // const nextPage = () => {
-    //     fetchMore({
-    //         variables: {
-    //             page: productList.getAllProducts.pageInfo.currentPage + 1 || 1,
-    //             limit: 5,
-    //         },
-    //     });
-    // };
-
-    // const prevPage = () => {
-    //     fetchMore({
-    //         variables: {
-    //             page: productList.getAllProducts.pageInfo.currentPage - 1 || 1,
-    //             limit: 5,
-    //         },
-    //     });
-    // };
+    };
 
     const handleDeleteProduct = async (e) => {
         e.preventDefault()
@@ -362,10 +375,11 @@ export default function AdminStore() {
                     onPageChange={handlePageChange}
                 /> */}
 
-                {/* <div className='flex justify-between'>
-                    <button onClick={() => setCurrentPage(-1)}>Pre</button>
-                    <button onClick={() => setCurrentPage(+1)}>Next</button>
-                </div> */}
+                <div>
+                    <button onClick={prevPage} disabled={currentPage === 1}>Previous Page</button>
+                    <span>Page {currentPage}</span>
+                    <button onClick={nextPage} disabled={currentPage === getDataError.getAllProducts.length / 10}>Next Page</button>
+                </div>
                 {/* <div>
                     <Link href={`adminStore?page=${parseInt(page) - 1}`}><button>Previous</button></Link>
                     <span>{page}</span>
@@ -412,3 +426,4 @@ export default function AdminStore() {
         </>
     )
 }
+
