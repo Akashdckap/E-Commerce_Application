@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { notification } from 'antd';
 import Link from 'next/link';
 import { CREATE_PRODUCTS, DELETE_PRODUCT, UPLOAD_FILE } from '../../../Grahpql/mutation';
-import { GET_ALL_PRODUCTS, GET_ALL_PRODUCTS_DATA } from '../../../Grahpql/queries';
+import { GET_ALL_PRODUCTS } from '../../../Grahpql/queries';
 import { useMutation, useQuery } from '@apollo/client';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faEye, faGreaterThan, faL, faLessThan, faSlash, faTrash } from '@fortawesome/free-solid-svg-icons';
@@ -13,12 +13,10 @@ export default function AdminStore() {
     const router = useRouter();
     const [currentPage, setCurrentPage] = useState(1)
     const [getProductData, setgetProductData] = useState([])
-    const [getAllProductdata, getAllProductData] = useState([])
 
     const pageSize = 5;
     const [totalPages, setTotalPages] = useState(null);
     const [entries,setTotalEntries] = useState(null)
-
     const [deletePopUpOpen, setdeletePopUpOpen] = useState(false);
     const [image, setImage] = useState('');
 
@@ -57,6 +55,7 @@ export default function AdminStore() {
         setProductErrors(newErrors)
         return isVaild
     }
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setProductData({
@@ -101,13 +100,10 @@ export default function AdminStore() {
     const { data: getData, error: getError, loading: getLoading, refetch: getRefetch } = useQuery(GET_ALL_PRODUCTS, {
         variables: { page: currentPage, pageSize },
     });
-    const { data: getAllData, error: getAllError, loading: getAllLoading } = useQuery(GET_ALL_PRODUCTS_DATA);
 
     useEffect(() => {
-
-        if (getData && !getLoading && getAllData && !getAllLoading) {
-            getAllProductData(getAllData.getAllProductsData);
-            setgetProductData(getData.getAllProducts);
+        if (getData && !getLoading) {
+            setgetProductData(getData.getAllProducts)
             setTotalPages(Math.ceil(getProductData.length / pageSize))
             setTotalEntries(Math.ceil(getProductData.length / pageSize))
         }
@@ -117,8 +113,8 @@ export default function AdminStore() {
         if (getError) {
             console.error('Error fetching data:', getError);
         }
+    }, [getError, currentPage, getRefetch, getLoading, getProductData, pageSize, totalPages])
 
-    }, [getError, currentPage, getData, getRefetch, getLoading, getProductData, pageSize, totalPages, getAllData])
 
     const nextPage = () => {
         // e.preventDefault()
@@ -281,7 +277,7 @@ export default function AdminStore() {
                     </thead>
                     {
                         getProductData.map((item, index) => {
-                            console.log(index);
+                            // console.log(getProductData.length);
                             return (
                                 <tbody key={index}>
                                     <tr key={item._id} className="bg-white border-b border-stone-300 white:bg-gray-800">
