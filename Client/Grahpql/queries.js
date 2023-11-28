@@ -45,7 +45,12 @@ export const GET_ALL_PRODUCTS = gql`
              color
              description
         }
-        # totalCount
+    }
+`
+
+export const GET_TOTAL_PRODUCT_COUNT = gql`
+    query GetTotalProductCount{
+        getTotalProductCount
     }
 `
 
