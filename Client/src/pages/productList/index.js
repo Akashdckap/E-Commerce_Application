@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useMutation, useQuery } from '@apollo/client';
 import { useEffect } from 'react';
-import { GET_ADD_TO_CART_SINGLE_PRODUCT_DATA, GET_ALL_PRODUCTS } from '../../../Grahpql/queries';
+import { GET_ADD_TO_CART_SINGLE_PRODUCT_DATA, GET_ALL_PRODUCTS_DATA } from '../../../Grahpql/queries';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClose, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
@@ -12,6 +12,7 @@ import { addToCartProductData } from '@/Reducer/productReducer';
 export default function ProductList() {
     // const dispatch = useDispatch()
     const [openCart, setCart] = useState(false)
+    const [getProductData, setgetProductData] = useState([])
     const router = useRouter()
     const { addToCartId } = router.query
     console.log("addToCartId------------", addToCartId);
@@ -20,28 +21,22 @@ export default function ProductList() {
     const { data, error, loading } = useQuery(GET_ADD_TO_CART_SINGLE_PRODUCT_DATA, {
         variables: { id: addToCartId }
     })
-    console.log("addto cart data from DB--------------", data);
-    // dispatch(addToCartProductData(data))
 
-    const { data: getDataError, error: getError, loading: getLoading } = useQuery(GET_ALL_PRODUCTS);
+    const { data: getDataError, error: getError, loading: getLoading } = useQuery(GET_ALL_PRODUCTS_DATA);
+
     useEffect(() => {
-        // console.log(typeof getDataError);
-    }, [getDataError])
+        if (getDataError && !getLoading) {
+            setgetProductData(getDataError.getAllProductsData);
+        }
+        if (getLoading) {
+            console.log('Loading...');
+        }
+        if (getError) {
+            console.error('Error fetching data:', getError);
+        }
+    }, [getError, getDataError, getLoading])
 
-    if (getLoading) {
-        return <div>loading.......</div>
-    }
-    if (getError) {
-        // return <div>error</div>
-        console.log("getting data error-----------------------------", getError);
-    }
-    else {
-        // console.log(getDataError);
-    }
-
-    const productList = getDataError.getAllProducts
-    const filteredList = productList.filter((item) => {
-        // console.log(item.productName);
+    const filteredList = getProductData.filter((item) => {
         return item.productName.toLowerCase().includes(searchText.toLowerCase());
     });
 
