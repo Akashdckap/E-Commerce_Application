@@ -2,7 +2,9 @@ import React, { useEffect, useState } from 'react'
 import { notification } from 'antd';
 import Link from 'next/link';
 import { CREATE_PRODUCTS, DELETE_PRODUCT, UPLOAD_FILE } from '../../../Grahpql/mutation';
+
 import { GET_ALL_PRODUCTS, GET_ALL_PRODUCTS_DATA, GET_TOTAL_PRODUCT_COUNT } from '../../../Grahpql/queries';
+
 import { useMutation, useQuery } from '@apollo/client';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faEye, faGreaterThan, faL, faLessThan, faSlash, faTrash } from '@fortawesome/free-solid-svg-icons';
@@ -13,12 +15,12 @@ export default function AdminStore() {
     const router = useRouter();
     const [currentPage, setCurrentPage] = useState(1)
     const [getProductData, setgetProductData] = useState([])
+
     const [getAllProductdata, getAllProductData] = useState([])
     const [countProductData, getCountProductData] = useState()
     const pageSize = 5;
     const [totalPages, setTotalPages] = useState(null);
     const [entries, setTotalEntries] = useState(null)
-
     const [deletePopUpOpen, setdeletePopUpOpen] = useState(false);
     const [image, setImage] = useState('');
 
@@ -57,6 +59,7 @@ export default function AdminStore() {
         setProductErrors(newErrors)
         return isVaild
     }
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setProductData({
@@ -113,7 +116,6 @@ export default function AdminStore() {
             setTotalPages(Math.ceil(getProductData.length / pageSize));
             setTotalEntries(Math.ceil(getProductData.length / pageSize));
             getCountProductData(getCountData.getTotalProductCount);
-
         }
         if (getLoading || getCountLoading) {
             console.log('Loading...');
@@ -124,12 +126,11 @@ export default function AdminStore() {
 
     }, [getError, currentPage, getData, getRefetch, getLoading, getProductData, pageSize, totalPages, getCountData])
 
+
     const nextPage = () => {
-        // e.preventDefault()
         setCurrentPage(currentPage + 1);
     };
     const prevPage = () => {
-        // e.preventDefault()
         if (currentPage > 1) {
             setCurrentPage(currentPage - 1)
         }
@@ -165,6 +166,7 @@ export default function AdminStore() {
         router.push("/adminStore");
         setdeletePopUpOpen(false)
     }
+    // console.log(currentPage != totalPages ? 'tur');
     return (
         <>
             <div className='flex justify-between p-10'>
@@ -294,7 +296,6 @@ export default function AdminStore() {
                     </thead>
                     {
                         getProductData.map((item, index) => {
-                            // console.log(index);
                             return (
                                 <tbody key={index}>
                                     <tr key={item._id} className="bg-white border-b border-stone-300 white:bg-gray-800">
@@ -332,12 +333,15 @@ export default function AdminStore() {
                         })
                     }
                 </table>
+
                 <p>Showing {startItem} to {endItem}</p>
                 <p>TotalEntries : {countProductData}</p>
-                <div className='flex justify-end items-center pr-5 pt-5'>
-                    <button onClick={prevPage} disabled={currentPage === 1} className='bg-blue-400 hover:bg-blue-700 text-white font-bold mr-2 w-10 rounded'><FontAwesomeIcon icon={faLessThan} /></button>
-                    <span className='mr-2'>Page {currentPage}</span>
-                    <button onClick={nextPage} disabled={currentPage !== totalPages} className='bg-blue-400 hover:bg-blue-700 text-white font-bold w-10 rounded'><FontAwesomeIcon icon={faGreaterThan} /></button>
+               
+                <div className='flex justify-end gap-6 items-center pr-5 pt-5'>
+                    <button className='border-solid' onClick={prevPage} disabled={currentPage === 1}><FontAwesomeIcon icon={faLessThan} className='hover:text-white border border-gray-300 focus:outline-none focus:ring-4 focus:ring-gray-200 font-semibold rounded-lg text-sm px-2.5 py-1.5 dark:bg-transparent dark:text-blue-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700' style={{ cursor: currentPage <= 1 ? 'not-allowed' : 'pointer' }} /></button>
+                    <span className='bg-transparent border border-teal-500 hover:bg-blue-300 text-green-900 font-bold py-2 px-4 rounded-full'>{currentPage}</span>
+                    <button className='' onClick={nextPage} disabled={currentPage != totalPages}><FontAwesomeIcon icon={faGreaterThan} className='hover:text-white border border-gray-300 focus:outline-none focus:ring-4 focus:ring-gray-200 font-semibold rounded-lg text-sm px-2.5 py-1.5 dark:bg-transparent dark:text-blue-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700' style={{ cursor: currentPage != totalPages ? 'not-allowed' : 'pointer' }} /></button>
+
                 </div>
             </div>
             <form onSubmit={handleDeleteProduct}>
