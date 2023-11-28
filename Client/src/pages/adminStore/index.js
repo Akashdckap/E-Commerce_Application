@@ -14,7 +14,7 @@ export default function AdminStore() {
     const [currentPage, setCurrentPage] = useState(1)
     const [getProductData, setgetProductData] = useState([])
 
-    const pageSize = 5;
+    const pageSize = 6;
     const [totalPages, setTotalPages] = useState([]);
     // console.log("totalPages----------------------", totalPages);
     // const totalEntries = push()
@@ -107,7 +107,7 @@ export default function AdminStore() {
     useEffect(() => {
         if (getData && !getLoading) {
             setgetProductData(getData.getAllProducts)
-            setTotalPages(Math.ceil(getProductData.length / pageSize))
+            setTotalPages(getProductData.length / pageSize)
         }
         if (getLoading) {
             console.log('Loading...');
@@ -121,6 +121,7 @@ export default function AdminStore() {
     const nextPage = () => {
         setCurrentPage(currentPage + 1);
     };
+
     const prevPage = () => {
         if (currentPage > 1) {
             setCurrentPage(currentPage - 1)
@@ -148,6 +149,10 @@ export default function AdminStore() {
         router.push("/adminStore");
         setdeletePopUpOpen(false)
     }
+    console.log(currentPage == totalPages);
+    console.log("currentPage---------", currentPage);
+    console.log("totalPages---------", totalPages);
+    console.log("getProductData.length---------", getProductData.length);
     // console.log(currentPage != totalPages ? 'tur');
     return (
         <>
@@ -319,7 +324,8 @@ export default function AdminStore() {
                 <div className='flex justify-end gap-6 items-center pr-5 pt-5'>
                     <button className='border-solid' onClick={prevPage} disabled={currentPage === 1}><FontAwesomeIcon icon={faLessThan} className='hover:text-white border border-gray-300 focus:outline-none focus:ring-4 focus:ring-gray-200 font-semibold rounded-lg text-sm px-2.5 py-1.5 dark:bg-transparent dark:text-blue-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700' style={{ cursor: currentPage <= 1 ? 'not-allowed' : 'pointer' }} /></button>
                     <span className='bg-transparent border border-teal-500 hover:bg-blue-300 text-green-900 font-bold py-2 px-4 rounded-full'>{currentPage}</span>
-                    <button className='' onClick={nextPage} disabled={currentPage != totalPages}><FontAwesomeIcon icon={faGreaterThan} className='hover:text-white border border-gray-300 focus:outline-none focus:ring-4 focus:ring-gray-200 font-semibold rounded-lg text-sm px-2.5 py-1.5 dark:bg-transparent dark:text-blue-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700' style={{ cursor: currentPage != totalPages ? 'not-allowed' : 'pointer' }} /></button>
+                    {/* {console.log("currentPage---------------", currentPage)} */}
+                    <FontAwesomeIcon onClick={nextPage} icon={faGreaterThan} disabled={currentPage != totalPages} className='hover:text-white border border-gray-300 focus:outline-none focus:ring-4 focus:ring-gray-200 font-semibold rounded-lg text-sm px-2.5 py-1.5 dark:bg-transparent dark:text-blue-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700' style={{ cursor: currentPage != totalPages ? 'not-allowed' : 'pointer' }} />
                 </div>
             </div>
             <form onSubmit={handleDeleteProduct}>
