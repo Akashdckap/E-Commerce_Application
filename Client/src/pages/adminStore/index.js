@@ -5,7 +5,7 @@ import { CREATE_PRODUCTS, DELETE_PRODUCT, UPLOAD_FILE } from '../../../Grahpql/m
 import { GET_ALL_PRODUCTS, GET_ALL_PRODUCTS_DATA } from '../../../Grahpql/queries';
 import { useMutation, useQuery } from '@apollo/client';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faEye, faL, faLessThan, faSlash, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faEye, faGreaterThan, faL, faLessThan, faSlash, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { useRouter } from 'next/router';
 
 export default function AdminStore() {
@@ -17,6 +17,7 @@ export default function AdminStore() {
 
     const pageSize = 5;
     const [totalPages, setTotalPages] = useState(null);
+    const [entries,setTotalEntries] = useState(null)
 
     const [deletePopUpOpen, setdeletePopUpOpen] = useState(false);
     const [image, setImage] = useState('');
@@ -104,10 +105,11 @@ export default function AdminStore() {
 
     useEffect(() => {
 
-        if (getDataError && !getLoading && getAllData && !getAllLoading) {
+        if (getData && !getLoading && getAllData && !getAllLoading) {
             getAllProductData(getAllData.getAllProductsData);
-            setgetProductData(getDataError.getAllProducts);
+            setgetProductData(getData.getAllProducts);
             setTotalPages(Math.ceil(getProductData.length / pageSize))
+            setTotalEntries(Math.ceil(getProductData.length / pageSize))
         }
         if (getLoading) {
             console.log('Loading...');
@@ -116,12 +118,14 @@ export default function AdminStore() {
             console.error('Error fetching data:', getError);
         }
 
-    }, [getError, currentPage, getDataError, getRefetch, getLoading, getProductData, pageSize, totalPages, getAllData])
+    }, [getError, currentPage, getData, getRefetch, getLoading, getProductData, pageSize, totalPages, getAllData])
 
     const nextPage = () => {
+        // e.preventDefault()
         setCurrentPage(currentPage + 1);
     };
     const prevPage = () => {
+        // e.preventDefault()
         if (currentPage > 1) {
             setCurrentPage(currentPage - 1)
         }
@@ -315,14 +319,11 @@ export default function AdminStore() {
                         })
                     }
                 </table>
-                <div>
-                    <div>
-                        <p>Showing {currentPage} to {getProductData.length} of {getAllProductdata.length} results</p>
-                    </div>
-                    <button onClick={prevPage} disabled={currentPage === 1}>Previous Page</button>
-                    <span>Page {currentPage}</span>
-                    <button onClick={nextPage} disabled={currentPage != totalPages}>Next Page</button>
-               </div>
+                <div className='flex justify-end items-center pr-5 pt-5'>
+                    <button onClick={prevPage} disabled={currentPage === 1} className='bg-blue-400 hover:bg-blue-700 text-white font-bold mr-2 w-10 rounded'><FontAwesomeIcon icon={faLessThan} /></button>
+                    <span className='mr-2'>Page {currentPage}</span>
+                    <button onClick={nextPage} disabled={currentPage != totalPages} className='bg-blue-400 hover:bg-blue-700 text-white font-bold w-10 rounded'><FontAwesomeIcon icon={faGreaterThan} /></button>
+                </div>
             </div>
             <form onSubmit={handleDeleteProduct}>
                 <div className='absolute inset-0 flex mt-20 items-center justify-center m-auto w-2/6 px-4 py-5 rounded' style={{ display: deletePopUpOpen ? "block" : "none" }}>
