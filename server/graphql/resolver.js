@@ -33,8 +33,14 @@ const resolvers = {
         getAllProducts: async (_, { page, pageSize }) => {
             const skip = (page - 1) * pageSize;
             const products = await (productDetails.find({}).skip(skip).limit(pageSize));
-            return products
+            // const totalCount = await (productDetails.countDocuments())
+            return products;
         },
+        getTotalProductCount:async () =>{
+            const totalCount = await productDetails.countDocuments();
+            return totalCount;
+        },
+
         getAddToCart_Single_ProductData: async (_, { id }) => {
             return await productDetails.findOne({ _id: new ObjectId(id) })
         }

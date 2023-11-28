@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { notification } from 'antd';
 import Link from 'next/link';
 import { CREATE_PRODUCTS, DELETE_PRODUCT, UPLOAD_FILE } from '../../../Grahpql/mutation';
-import { GET_ALL_PRODUCTS, GET_ALL_PRODUCTS_DATA } from '../../../Grahpql/queries';
+import { GET_ALL_PRODUCTS, GET_ALL_PRODUCTS_DATA, GET_TOTAL_PRODUCT_COUNT } from '../../../Grahpql/queries';
 import { useMutation, useQuery } from '@apollo/client';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faEye, faGreaterThan, faL, faLessThan, faSlash, faTrash } from '@fortawesome/free-solid-svg-icons';
@@ -14,10 +14,10 @@ export default function AdminStore() {
     const [currentPage, setCurrentPage] = useState(1)
     const [getProductData, setgetProductData] = useState([])
     const [getAllProductdata, getAllProductData] = useState([])
-
+    const [countProductData, getCountProductData] = useState()
     const pageSize = 5;
     const [totalPages, setTotalPages] = useState(null);
-    const [entries,setTotalEntries] = useState(null)
+    const [entries, setTotalEntries] = useState(null)
 
     const [deletePopUpOpen, setdeletePopUpOpen] = useState(false);
     const [image, setImage] = useState('');
@@ -102,23 +102,27 @@ export default function AdminStore() {
         variables: { page: currentPage, pageSize },
     });
     const { data: getAllData, error: getAllError, loading: getAllLoading } = useQuery(GET_ALL_PRODUCTS_DATA);
+    const { loading: getCountLoading, error: getCountError, data: getCountData } = useQuery(GET_TOTAL_PRODUCT_COUNT);
+    // console.log(getCountData)
 
     useEffect(() => {
 
-        if (getData && !getLoading && getAllData && !getAllLoading) {
+        if (getData && !getLoading && getAllData && !getAllLoading && getCountData) {
             getAllProductData(getAllData.getAllProductsData);
             setgetProductData(getData.getAllProducts);
-            setTotalPages(Math.ceil(getProductData.length / pageSize))
-            setTotalEntries(Math.ceil(getProductData.length / pageSize))
+            setTotalPages(Math.ceil(getProductData.length / pageSize));
+            setTotalEntries(Math.ceil(getProductData.length / pageSize));
+            getCountProductData(getCountData.getTotalProductCount);
+
         }
-        if (getLoading) {
+        if (getLoading || getCountLoading) {
             console.log('Loading...');
         }
-        if (getError) {
+        if (getError || getCountError) {
             console.error('Error fetching data:', getError);
         }
 
-    }, [getError, currentPage, getData, getRefetch, getLoading, getProductData, pageSize, totalPages, getAllData])
+    }, [getError, currentPage, getData, getRefetch, getLoading, getProductData, pageSize, totalPages, getCountData])
 
     const nextPage = () => {
         // e.preventDefault()
@@ -134,7 +138,16 @@ export default function AdminStore() {
     const calculateSI = (index) => {
         return (currentPage - 1) * pageSize + index + 1;
     };
+    // console.log("totalPages----------------", totalPages);
+    // console.log("currentPage----------------", currentPage);
+    // console.log(currentPage != totalPages);
+    // const totalCount = getCountData;
+    // console.log("countProductData----------",countProductData)
 
+    const startItem = (currentPage - 1) * pageSize + 1;
+    const endItem = Math.min(currentPage * pageSize, countProductData);
+    // console.log(startItem)
+    // const endItem = Math.min(currentPage * pageSize, getData.totalCount)
     const handleDeleteProduct = async (e) => {
         e.preventDefault()
         const id = router.query.deleteId
@@ -281,7 +294,7 @@ export default function AdminStore() {
                     </thead>
                     {
                         getProductData.map((item, index) => {
-                            console.log(index);
+                            // console.log(index);
                             return (
                                 <tbody key={index}>
                                     <tr key={item._id} className="bg-white border-b border-stone-300 white:bg-gray-800">
@@ -319,10 +332,12 @@ export default function AdminStore() {
                         })
                     }
                 </table>
+                <p>Showing {startItem} to {endItem}</p>
+                <p>TotalEntries : {countProductData}</p>
                 <div className='flex justify-end items-center pr-5 pt-5'>
                     <button onClick={prevPage} disabled={currentPage === 1} className='bg-blue-400 hover:bg-blue-700 text-white font-bold mr-2 w-10 rounded'><FontAwesomeIcon icon={faLessThan} /></button>
                     <span className='mr-2'>Page {currentPage}</span>
-                    <button onClick={nextPage} disabled={currentPage != totalPages} className='bg-blue-400 hover:bg-blue-700 text-white font-bold w-10 rounded'><FontAwesomeIcon icon={faGreaterThan} /></button>
+                    <button onClick={nextPage} disabled={currentPage !== totalPages} className='bg-blue-400 hover:bg-blue-700 text-white font-bold w-10 rounded'><FontAwesomeIcon icon={faGreaterThan} /></button>
                 </div>
             </div>
             <form onSubmit={handleDeleteProduct}>
