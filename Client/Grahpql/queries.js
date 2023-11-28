@@ -45,6 +45,7 @@ export const GET_ALL_PRODUCTS = gql`
              color
              description
         }
+        # totalCount
     }
 `
 
