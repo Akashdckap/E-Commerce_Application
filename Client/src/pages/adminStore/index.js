@@ -15,11 +15,8 @@ export default function AdminStore() {
     const [getProductData, setgetProductData] = useState([])
 
     const pageSize = 5;
-    const [totalPages, setTotalPages] = useState([]);
-    // console.log("totalPages----------------------", totalPages);
-    // const totalEntries = push()
-    // console.log("totalEntries-----------------", totalEntries);
-    // totalPages.map(item => console.log(item.length))
+    const [totalPages, setTotalPages] = useState(null);
+    const [entries,setTotalEntries] = useState(null)
     const [deletePopUpOpen, setdeletePopUpOpen] = useState(false);
     const [image, setImage] = useState('');
 
@@ -108,6 +105,7 @@ export default function AdminStore() {
         if (getData && !getLoading) {
             setgetProductData(getData.getAllProducts)
             setTotalPages(Math.ceil(getProductData.length / pageSize))
+            setTotalEntries(Math.ceil(getProductData.length / pageSize))
         }
         if (getLoading) {
             console.log('Loading...');
@@ -115,13 +113,15 @@ export default function AdminStore() {
         if (getError) {
             console.error('Error fetching data:', getError);
         }
-
     }, [getError, currentPage, getRefetch, getLoading, getProductData, pageSize, totalPages])
 
+
     const nextPage = () => {
+        // e.preventDefault()
         setCurrentPage(currentPage + 1);
     };
     const prevPage = () => {
+        // e.preventDefault()
         if (currentPage > 1) {
             setCurrentPage(currentPage - 1)
         }
@@ -315,10 +315,10 @@ export default function AdminStore() {
                         })
                     }
                 </table>
-                <div className='flex justify-end gap-10 items-center pr-5 pt-5'>
-                    <button className='border-dotted' onClick={prevPage} disabled={currentPage === 1}><FontAwesomeIcon icon={faLessThan} /></button>
-                    <span>{currentPage}</span>
-                    <button onClick={nextPage} disabled={currentPage != totalPages}><FontAwesomeIcon icon={faGreaterThan} /></button>
+                <div className='flex justify-end items-center pr-5 pt-5'>
+                    <button onClick={prevPage} disabled={currentPage === 1} className='bg-blue-400 hover:bg-blue-700 text-white font-bold mr-2 w-10 rounded'><FontAwesomeIcon icon={faLessThan} /></button>
+                    <span className='mr-2'>Page {currentPage}</span>
+                    <button onClick={nextPage} disabled={currentPage != totalPages} className='bg-blue-400 hover:bg-blue-700 text-white font-bold w-10 rounded'><FontAwesomeIcon icon={faGreaterThan} /></button>
                 </div>
             </div>
             <form onSubmit={handleDeleteProduct}>
