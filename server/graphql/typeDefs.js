@@ -70,12 +70,16 @@ const typeDefs = gql` #graphql
         color: String,
         description: String
     }
-
+    type productPageNation{
+        products: [products!]!,
+        totalCount:Int!
+    }
     type Query{
         getAllAdmins:[admins]
         getAllOrders:[orders]
         getAllProductsData: [products]
         getAllProducts(page:Int!,pageSize:Int!):[products!]!
+        getTotalProductCount:Int!
         getEditProductData(id: ID!): products
         getProductDetails(id: ID!):products
         getAddToCart_Single_ProductData(id: ID!): products
