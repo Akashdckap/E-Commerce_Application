@@ -2,20 +2,22 @@ import React, { useEffect, useState } from 'react'
 import { notification } from 'antd';
 import Link from 'next/link';
 import { CREATE_PRODUCTS, DELETE_PRODUCT, UPLOAD_FILE } from '../../../Grahpql/mutation';
-import { GET_ALL_PRODUCTS } from '../../../Grahpql/queries';
+import { GET_ALL_PRODUCTS, GET_ALL_PRODUCTS_DATA } from '../../../Grahpql/queries';
 import { useMutation, useQuery } from '@apollo/client';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faEye, faL, faLessThan, faSlash, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { useRouter } from 'next/router';
 
-
 export default function AdminStore() {
     const [formOpen, setFormOpen] = useState(false);
     const router = useRouter();
-    const [currentPage, setCurrentPage] = useState(1);
-    const [totalCount, setTotalCount] = useState(0);
-    const [getProductData, setgetProductData] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1)
+    const [getProductData, setgetProductData] = useState([])
+    const [getAllProductdata, getAllProductData] = useState([])
+
     const pageSize = 5;
+    const [totalPages, setTotalPages] = useState(null);
+
     const [deletePopUpOpen, setdeletePopUpOpen] = useState(false);
     const [image, setImage] = useState('');
 
@@ -98,11 +100,14 @@ export default function AdminStore() {
     const { data: getData, error: getError, loading: getLoading, refetch: getRefetch } = useQuery(GET_ALL_PRODUCTS, {
         variables: { page: currentPage, pageSize },
     });
+    const { data: getAllData, error: getAllError, loading: getAllLoading } = useQuery(GET_ALL_PRODUCTS_DATA);
 
     useEffect(() => {
-        if (getData && !getLoading) {
-            setgetProductData(getData.getAllProducts)
-            // setTotalCount(getData.totalCount);
+
+        if (getDataError && !getLoading && getAllData && !getAllLoading) {
+            getAllProductData(getAllData.getAllProductsData);
+            setgetProductData(getDataError.getAllProducts);
+            setTotalPages(Math.ceil(getProductData.length / pageSize))
         }
         if (getLoading) {
             console.log('Loading...');
@@ -110,8 +115,8 @@ export default function AdminStore() {
         if (getError) {
             console.error('Error fetching data:', getError);
         }
-        getRefetch({ page: currentPage, pageSize });
-    }, [getError, currentPage, getData, getRefetch, getLoading, pageSize])
+
+    }, [getError, currentPage, getDataError, getRefetch, getLoading, getProductData, pageSize, totalPages, getAllData])
 
     const nextPage = () => {
         setCurrentPage(currentPage + 1);
@@ -120,6 +125,10 @@ export default function AdminStore() {
         if (currentPage > 1) {
             setCurrentPage(currentPage - 1)
         }
+    };
+
+    const calculateSI = (index) => {
+        return (currentPage - 1) * pageSize + index + 1;
     };
 
     const handleDeleteProduct = async (e) => {
@@ -268,11 +277,12 @@ export default function AdminStore() {
                     </thead>
                     {
                         getProductData.map((item, index) => {
+                            console.log(index);
                             return (
                                 <tbody key={index}>
-                                    <tr key={index} className="bg-white border-b border-stone-300 white:bg-gray-800">
+                                    <tr key={item._id} className="bg-white border-b border-stone-300 white:bg-gray-800">
                                         <th className='text-base px-6 py-4 text-blue-500'>
-                                            {index + 1}
+                                            {calculateSI(index)}
                                         </th>
                                         <th>
                                             <img className="h-20 p-1 object-cover" src="https://images.unsplash.com/flagged/photo-1556637640-2c80d3201be8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8c25lYWtlcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60" alt="product image" />
@@ -306,11 +316,14 @@ export default function AdminStore() {
                     }
                 </table>
                 <div>
-                    <button onClick={prevPage} className='bg-blue-400 hover:bg-blue-700 text-white rounded my-2'><FontAwesomeIcon icon={faLessThan} /></button>
+                    <div>
+                        <p>Showing {currentPage} to {getProductData.length} of {getAllProductdata.length} results</p>
+                    </div>
+                    <button onClick={prevPage} disabled={currentPage === 1}>Previous Page</button>
                     <span>Page {currentPage}</span>
-                    <button onClick={nextPage} className='bg-blue-400 hover:bg-blue-700 text-white rounded my-2'><FontAwesomeIcon icon={faGreaterThan} /></button>
-                </div>
-            </div >
+                    <button onClick={nextPage} disabled={currentPage != totalPages}>Next Page</button>
+               </div>
+            </div>
             <form onSubmit={handleDeleteProduct}>
                 <div className='absolute inset-0 flex mt-20 items-center justify-center m-auto w-2/6 px-4 py-5 rounded' style={{ display: deletePopUpOpen ? "block" : "none" }}>
                     <div className='bg-blue-200 p-8 shadow-lg rounded-lg grid gap-4'>

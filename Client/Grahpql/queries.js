@@ -18,20 +18,20 @@ export const useUserList = () => {
     }
 }
 
-// export const GET_ALL_PRODUCTS = gql`
-//     query {
-//         getAllProducts {
-//             _id
-//             productName
-//             category
-//             brand
-//             price
-//             weight
-//             color
-//             description
-//         }
-//     }
-// `
+export const GET_ALL_PRODUCTS_DATA = gql`
+    query {
+        getAllProductsData {
+            _id
+            productName
+            category
+            brand
+            price
+            weight
+            color
+            description
+        }
+    }
+`
 
 export const GET_ALL_PRODUCTS = gql`
     query getAllProducts($page:Int!, $pageSize:Int!){

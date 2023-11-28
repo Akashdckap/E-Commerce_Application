@@ -27,17 +27,17 @@ const resolvers = {
         getProductDetails: async (_, { id }) => {
             return await productDetails.findOne({ _id: new ObjectId(id) })
         },
-
+        getAllProductsData: async () => {
+            return await (productDetails.find({}));
+        },
         getAllProducts: async (_, { page, pageSize }) => {
             const skip = (page - 1) * pageSize;
             const products = await (productDetails.find({}).skip(skip).limit(pageSize));
             return products
         },
-
         getAddToCart_Single_ProductData: async (_, { id }) => {
             return await productDetails.findOne({ _id: new ObjectId(id) })
         }
-
     },
     Mutation: {
         async createAdmins(_, { adminsInput: { email, password } }) {
