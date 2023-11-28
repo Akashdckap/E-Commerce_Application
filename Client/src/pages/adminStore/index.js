@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react'
 import { notification } from 'antd';
 import Link from 'next/link';
 import { CREATE_PRODUCTS, DELETE_PRODUCT, UPLOAD_FILE } from '../../../Grahpql/mutation';
-import { GET_ALL_PRODUCTS, GET_ALL_PRODUCTS_DATA } from '../../../Grahpql/queries';
+import { GET_ALL_PRODUCTS } from '../../../Grahpql/queries';
 import { useMutation, useQuery } from '@apollo/client';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faEye, faL, faLessThan, faSlash, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faEye, faGreaterThan, faL, faLessThan, faSlash, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { useRouter } from 'next/router';
 
 export default function AdminStore() {
@@ -13,11 +13,13 @@ export default function AdminStore() {
     const router = useRouter();
     const [currentPage, setCurrentPage] = useState(1)
     const [getProductData, setgetProductData] = useState([])
-    const [getAllProductdata, getAllProductData] = useState([])
 
     const pageSize = 5;
-    const [totalPages, setTotalPages] = useState(null);
-
+    const [totalPages, setTotalPages] = useState([]);
+    // console.log("totalPages----------------------", totalPages);
+    // const totalEntries = push()
+    // console.log("totalEntries-----------------", totalEntries);
+    // totalPages.map(item => console.log(item.length))
     const [deletePopUpOpen, setdeletePopUpOpen] = useState(false);
     const [image, setImage] = useState('');
 
@@ -56,6 +58,7 @@ export default function AdminStore() {
         setProductErrors(newErrors)
         return isVaild
     }
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setProductData({
@@ -100,13 +103,10 @@ export default function AdminStore() {
     const { data: getData, error: getError, loading: getLoading, refetch: getRefetch } = useQuery(GET_ALL_PRODUCTS, {
         variables: { page: currentPage, pageSize },
     });
-    const { data: getAllData, error: getAllError, loading: getAllLoading } = useQuery(GET_ALL_PRODUCTS_DATA);
 
     useEffect(() => {
-
-        if (getDataError && !getLoading && getAllData && !getAllLoading) {
-            getAllProductData(getAllData.getAllProductsData);
-            setgetProductData(getDataError.getAllProducts);
+        if (getData && !getLoading) {
+            setgetProductData(getData.getAllProducts)
             setTotalPages(Math.ceil(getProductData.length / pageSize))
         }
         if (getLoading) {
@@ -116,7 +116,7 @@ export default function AdminStore() {
             console.error('Error fetching data:', getError);
         }
 
-    }, [getError, currentPage, getDataError, getRefetch, getLoading, getProductData, pageSize, totalPages, getAllData])
+    }, [getError, currentPage, getRefetch, getLoading, getProductData, pageSize, totalPages])
 
     const nextPage = () => {
         setCurrentPage(currentPage + 1);
@@ -277,7 +277,7 @@ export default function AdminStore() {
                     </thead>
                     {
                         getProductData.map((item, index) => {
-                            console.log(index);
+                            // console.log(getProductData.length);
                             return (
                                 <tbody key={index}>
                                     <tr key={item._id} className="bg-white border-b border-stone-300 white:bg-gray-800">
@@ -315,14 +315,11 @@ export default function AdminStore() {
                         })
                     }
                 </table>
-                <div>
-                    <div>
-                        <p>Showing {currentPage} to {getProductData.length} of {getAllProductdata.length} results</p>
-                    </div>
-                    <button onClick={prevPage} disabled={currentPage === 1}>Previous Page</button>
-                    <span>Page {currentPage}</span>
-                    <button onClick={nextPage} disabled={currentPage != totalPages}>Next Page</button>
-               </div>
+                <div className='flex justify-end gap-10 items-center pr-5 pt-5'>
+                    <button className='border-dotted' onClick={prevPage} disabled={currentPage === 1}><FontAwesomeIcon icon={faLessThan} /></button>
+                    <span>{currentPage}</span>
+                    <button onClick={nextPage} disabled={currentPage != totalPages}><FontAwesomeIcon icon={faGreaterThan} /></button>
+                </div>
             </div>
             <form onSubmit={handleDeleteProduct}>
                 <div className='absolute inset-0 flex mt-20 items-center justify-center m-auto w-2/6 px-4 py-5 rounded' style={{ display: deletePopUpOpen ? "block" : "none" }}>
