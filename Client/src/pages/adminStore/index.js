@@ -5,19 +5,19 @@ import { CREATE_PRODUCTS, DELETE_PRODUCT, UPLOAD_FILE } from '../../../Grahpql/m
 import { GET_ALL_PRODUCTS } from '../../../Grahpql/queries';
 import { useMutation, useQuery } from '@apollo/client';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faEye, faL, faSlash, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faEye, faL, faLessThan, faSlash, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { useRouter } from 'next/router';
-import PaginationControls from '../../../Components/PaginationControls';
 
 
 export default function AdminStore() {
     const [formOpen, setFormOpen] = useState(false);
     const router = useRouter();
-    const [currentPage, setCurrentPage] = useState(1)
-    const [getProductData, setgetProductData] = useState([])
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalCount, setTotalCount] = useState(0);
+    const [getProductData, setgetProductData] = useState([]);
     const pageSize = 5;
     const [deletePopUpOpen, setdeletePopUpOpen] = useState(false);
-    const [image, setImage] = useState('')
+    const [image, setImage] = useState('');
 
     const [productData, setProductData] = useState({
         productName: "",
@@ -95,13 +95,14 @@ export default function AdminStore() {
             }
         }
     }
-    const { data: getDataError, error: getError, loading: getLoading, refetch: getRefetch } = useQuery(GET_ALL_PRODUCTS, {
+    const { data: getData, error: getError, loading: getLoading, refetch: getRefetch } = useQuery(GET_ALL_PRODUCTS, {
         variables: { page: currentPage, pageSize },
     });
 
     useEffect(() => {
-        if (getDataError && !getLoading) {
-            setgetProductData(getDataError.getAllProducts)
+        if (getData && !getLoading) {
+            setgetProductData(getData.getAllProducts)
+            // setTotalCount(getData.totalCount);
         }
         if (getLoading) {
             console.log('Loading...');
@@ -110,7 +111,7 @@ export default function AdminStore() {
             console.error('Error fetching data:', getError);
         }
         getRefetch({ page: currentPage, pageSize });
-    }, [getError, currentPage, getDataError, getRefetch, getLoading, pageSize])
+    }, [getError, currentPage, getData, getRefetch, getLoading, pageSize])
 
     const nextPage = () => {
         setCurrentPage(currentPage + 1);
@@ -305,9 +306,9 @@ export default function AdminStore() {
                     }
                 </table>
                 <div>
-                    <button onClick={prevPage} disabled={currentPage === 1}>Previous Page</button>
+                    <button onClick={prevPage} className='bg-blue-400 hover:bg-blue-700 text-white rounded my-2'><FontAwesomeIcon icon={faLessThan} /></button>
                     <span>Page {currentPage}</span>
-                    <button onClick={nextPage} disabled={currentPage === getProductData.length / 10}>Next Page</button>
+                    <button onClick={nextPage} className='bg-blue-400 hover:bg-blue-700 text-white rounded my-2'><FontAwesomeIcon icon={faGreaterThan} /></button>
                 </div>
             </div >
             <form onSubmit={handleDeleteProduct}>
