@@ -5,7 +5,7 @@ import { Provider } from 'react-redux'
 import { productSlice } from '@/Reducer/productReducer'
 import { localStorageMiddleware } from '@/MiddleWare/Middelware'
 import { combineReducers } from '@reduxjs/toolkit'
-import { configureStore } from '@reduxjs/toolkit'
+import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit'
 
 // import { createUploadLink } from 'apollo-upload-client'
 // const client = new ApolloClient({
@@ -30,17 +30,21 @@ const client = new ApolloClient({
 
 // export const preloadState = () => { return JSON.parse(localStorage.getItem("productData")) || {} }
 
-export function preloadState() {
-  if (typeof localStorage == 'undefined') {
-    return undefined
-  }
-  return JSON.parse(localStorage.getItem("productData"));
-}
+// export function preloadState() {
+//   if (typeof localStorage == 'undefined') {
+//     return undefined
+//   }
+//   return JSON.parse(localStorage.getItem("productData"));
+// }
 // const reducer = combineReducers(productSlice)
+// // console.log(reducer);
 
 // const store = configureStore({
-//   reducer: reducer,
-//   middleware: ((getData) => {
+//   reducer: {
+//     productDetails: productSlice
+//   },
+//   middleware: (getData => {
+//     console.log(getData());
 //     return getData().concat(localStorageMiddleware)
 //   }),
 //   preloadedState: preloadState(),
@@ -50,7 +54,7 @@ export default function App({ Component, pageProps }) {
   return <>
     <ApolloProvider client={client}>
       {/* <Provider store={store}> */}
-      <Component {...pageProps} />
+        <Component {...pageProps} />
       {/* </Provider> */}
     </ApolloProvider>
   </>

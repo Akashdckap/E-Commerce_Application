@@ -53,8 +53,6 @@ export const GET_TOTAL_PRODUCT_COUNT = gql`
         getTotalProductCount
     }
 `
-
-
 export const GET_EDIT_PRODUCT_DATA = gql`
     query GetEditProductData ($id: ID!){
         getEditProductData (id : $id) {

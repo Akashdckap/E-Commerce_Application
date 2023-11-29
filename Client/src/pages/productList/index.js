@@ -6,21 +6,24 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClose, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addToCartProductData } from '@/Reducer/productReducer';
 
 export default function ProductList() {
     // const dispatch = useDispatch()
+    // const productAllList = useSelector((state) => state)
+    // console.log(productAllList);
     const [openCart, setCart] = useState(false)
     const [getProductData, setgetProductData] = useState([])
+    const [getAddToCartData, setAddToCartData] = useState([])
     const router = useRouter()
-    const { addToCartId } = router.query
-    console.log("addToCartId------------", addToCartId);
+    const { addToCartId } = router.query    // console.log("addToCartId------------", addToCartId);
     const [searchText, setSearchText] = useState('')
 
-    const { data, error, loading } = useQuery(GET_ADD_TO_CART_SINGLE_PRODUCT_DATA, {
+    const { data: getSingleData, error: getSingleError, loading: getSingleLoading } = useQuery(GET_ADD_TO_CART_SINGLE_PRODUCT_DATA, {
         variables: { id: addToCartId }
     })
+    console.log("getSingleData------------------", getSingleData);
 
     const { data: getDataError, error: getError, loading: getLoading } = useQuery(GET_ALL_PRODUCTS_DATA);
 
@@ -28,13 +31,16 @@ export default function ProductList() {
         if (getDataError && !getLoading) {
             setgetProductData(getDataError.getAllProductsData);
         }
-        if (getLoading) {
-            console.log('Loading...');
+        if (getSingleData && !getSingleLoading) {
+            setAddToCartData(getSingleData.addToCartProductData)
         }
-        if (getError) {
-            console.error('Error fetching data:', getError);
-        }
-    }, [getError, getDataError, getLoading])
+        if (getLoading) return console.log('Loading...');
+        if (getSingleData) return console.log('Loading...');
+        if (getSingleError) return console.error('Error fetching data:', getSingleError);
+        if (getError) return console.error('Error fetching data:', getSingleError);
+    }, [getError, getSingleData, getDataError])
+
+    // dispatch(addToCartProductData(getSingleData))
 
     const filteredList = getProductData.filter((item) => {
         return item.productName.toLowerCase().includes(searchText.toLowerCase());

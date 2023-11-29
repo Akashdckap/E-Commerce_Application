@@ -2,7 +2,6 @@ const gql = require('graphql-tag');
 
 const typeDefs = gql` #graphql
 
-    # scalar Upload 
     scalar Upload
     
     type admins{
@@ -73,7 +72,7 @@ const typeDefs = gql` #graphql
     type productPageNation{
         products: [products!]!,
         totalCount:Int!
-    }
+    }   
     type Query{
         getAllAdmins:[admins]
         getAllOrders:[orders]
@@ -83,20 +82,16 @@ const typeDefs = gql` #graphql
         getEditProductData(id: ID!): products
         getProductDetails(id: ID!):products
         getAddToCart_Single_ProductData(id: ID!): products
-        # uploads: [File]
-        # hello: String!
     }
 
     input File{
         url: String!
     }
 
-
     type Mutation{
         createAdmins(adminsInput: adminsInput): admins!
         createProducts(newProducts: productsInput): products!
         createOrders(newOrders: ordersInput): orders!
-        singleUpload(file: File): Upload!
         deleteProduct(id: ID!) : Boolean!
         updateProduct(id: ID!, input: updateProductInput): products!
         uploadFile(file: Upload!): String!

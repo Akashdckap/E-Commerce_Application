@@ -26,8 +26,8 @@ export default function EditProduct() {
             setProductName(getData.getEditProductData.productName)
             setCategory(getData.getEditProductData.category)
             setBrand(getData.getEditProductData.brand)
-            setPrice(getData.getEditProductData.price)
-            setWeight(getData.getEditProductData.weight)
+            setPrice(String(getData.getEditProductData.price))
+            setWeight(String(getData.getEditProductData.weight))
             setColor(getData.getEditProductData.color)
             setDescription(getData.getEditProductData.description)
         }
@@ -55,7 +55,8 @@ export default function EditProduct() {
             console.error('Error updating product:', error.message);
         }
     }
-
+    console.log("price--------", price);
+    console.log("weight--------", weight);
     // data.getEditProductData.map((item, index) => {
     //     console.log(item);
     // })
@@ -125,7 +126,7 @@ export default function EditProduct() {
                         </div>
                         <div>
                             <label>Price</label>
-                            <input type='text' value={price} onChange={(e) => setPrice(e.target.value)} placeholder="Enter the price name..." name='price' className='w-80 mt-2 placeholder:text-slate-400 block bg-white border border-slate-300 rounded-md py-2 pl-4 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm' />
+                            <input type='number' value={price} onChange={(e) => setPrice(e.target.value)} placeholder="Enter the price name..." name='price' className='w-80 mt-2 placeholder:text-slate-400 block bg-white border border-slate-300 rounded-md py-2 pl-4 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm' />
                         </div>
                         {/* {productErrors.price && <span className="text-red-600">{productErrors.price}</span>} */}
 
@@ -133,7 +134,7 @@ export default function EditProduct() {
                     <div className='flex items-center justify-evenly p-2'>
                         <div>
                             <label>Weight</label>
-                            <input type='text' value={weight} onChange={(e) => setWeight(e.target.value)} placeholder="Enter the weight..." name='weight' className='w-80 mt-2 placeholder:text-slate-400 block bg-white border border-slate-300 rounded-md py-2 pl-4 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm' />
+                            <input type='number' value={weight} onChange={(e) => setWeight(e.target.value)} placeholder="Enter the weight..." name='weight' className='w-80 mt-2 placeholder:text-slate-400 block bg-white border border-slate-300 rounded-md py-2 pl-4 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm' />
                         </div>
                         <div>
                             <label>Color</label>
