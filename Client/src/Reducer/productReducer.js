@@ -5,6 +5,7 @@ export const productSlice = createSlice({
     initialState: {},
     reducers: {
         addToCartProductData: (state, action) => {
+            // console.log(action);
             state.initialState = action.payload
             // console.log(action.payload);
         }
