@@ -1,4 +1,5 @@
-const mongoose = require('mongoose');
+// const mongoose = require('mongoose');
+import mongoose from "mongoose"
 
 const userRegistration = mongoose.Schema({
     email:String,
@@ -7,4 +8,7 @@ const userRegistration = mongoose.Schema({
     timestamps:true
 })
 
-module.exports = mongoose.model('admins',userRegistration)
+// module.exports = mongoose.model('admins',userRegistration)
+const admins = mongoose.model('admins',userRegistration);
+
+export default admins;
