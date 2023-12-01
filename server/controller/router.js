@@ -1,6 +1,7 @@
 
 
-const adminSchema = require('../model/adminSchema')
+// const adminSchema = require('../model/adminSchema')
+import adminSchema from '../model/adminSchema.js'
 const Routes = (fastify, options, done) => {
 
     fastify.post('/adminLogin', async (request, response) => {
@@ -14,5 +15,5 @@ const Routes = (fastify, options, done) => {
     })
     done();
 }
-
-module.exports = Routes;
+// const routes = Routes;
+export default Routes;

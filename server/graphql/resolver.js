@@ -1,13 +1,24 @@
+// const admins = require('../model/adminSchema');
+// const productDetails = require('../model/productSchema')
+// const { default: GraphQLUpload } = require('graphql-upload/GraphQLUpload.js');
+// const Upload = import('graphql-upload/Upload.mjs');
+// const path = require('path')
+// const fs = require('fs')
+// const mongoose = require("mongoose");
+import admins from '../model/adminSchema.js';
+import productDetails from '../model/productSchema.js';
+// import Upload from 'graphql-upload/Upload.mjs';
+import GraphQLUpload from "graphql-upload/GraphQLUpload.js";
+import path, { resolve } from 'path';
 
-const admins = require('../model/adminSchema');
-const productDetails = require('../model/productSchema')
-// const GraphQLUpload = require('graphql-upload/GraphQLUpload.mjs');
-const path = require('path')
-const fs = require('fs')
-const mongoose = require("mongoose");
+import fs, { createWriteStream } from 'fs';
+import mongoose from 'mongoose';
+import { promises } from 'dns';
+
+
 const ObjectId = mongoose.Types.ObjectId;
 const resolvers = {
-    // Upload: GraphQLUpload,
+    Upload: GraphQLUpload,
     Query: {
         getAllAdmins: async () => {
             return await (admins.find({}));
@@ -100,14 +111,23 @@ const resolvers = {
         },
         async uploadFile(_, { file }) {
             console.log(file);
-            const { createReadStream, filename, mimetype, encoding } = await file
-            const stream = createReadStream()
-            const pathName = path.join(__dirname, `/public/Images/${filename}`)
-            await stream.pipe(fs.createWriteStream(pathName))
-            return {
-                url: `http://localhost:4000/Images/${filename}`
-            }
+            const { createReadStream, filename } = await file;
+            const stream = createReadStream();
+            const pathName = `../../Client/public/Images${filename}`;
+            // await stream.pipe(fs.createWriteStream(pathName))
+            // return {
+            //     url: `http://localhost:4000/Images/${filename}`
+            // }
+            await new Promise((resolve,reject)=>{
+                stream
+                .pipe(fs.createWriteStream(pathName))
+                .on('finish',resolve)
+                .on('error',reject);
+            })
+            return `file ${filename} uploaded Successfully`
+
         }
     }
 }
-module.exports = resolvers;
+// module.exports = resolvers;
+export default resolvers;
