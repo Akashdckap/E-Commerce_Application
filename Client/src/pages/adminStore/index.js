@@ -72,15 +72,30 @@ export default function AdminStore() {
         const file = e.target.files[0];
     }
 
-    const [uploadFile] = useMutation(UPLOAD_FILE, {
-        onCompleted: data => console.log(data)
-    })
+    const [file, setFile] = useState(null);
+    const [uploadFile] = useMutation(UPLOAD_FILE)
 
-    const handleSingleImage = (e) => {
-        const file = e.target.files[0]
-        console.log(file);
-        if (!file) return
-        uploadFile({ variables: file })
+    const handleSingleImage = async (e) => {
+        const selectedFile = e.target.files[0];
+        // console.log("targeted-----------",selectedFile);
+        setFile(selectedFile);
+    }
+    // console.log("checking file----------------",file.name,file.type);
+    const handleUpload = async () => {
+        // console.log("upload--------",file)
+        try {
+
+            if(!file){
+                console.log("No file is here")
+            }
+            const result = await uploadFile({
+                variables: { File: file },
+            })
+            // console.log("variables------",result.data.uploadFile.message)
+        }
+        catch (error) {
+            console.log('Error in uploading Image', error)
+        }
     }
 
     const [createProducts, { data, loading, error }] = useMutation(CREATE_PRODUCTS)
@@ -158,10 +173,10 @@ export default function AdminStore() {
         router.push("/adminStore");
         setdeletePopUpOpen(false)
     }
-    console.log("condition checking------------", currentPage == totalPages);
-    console.log("currentPage---------", currentPage);
-    console.log("totalPages---------", totalPages);
-    console.log("getProductData.length---------", getProductData.length);
+    // console.log("condition checking------------", currentPage == totalPages);
+    // console.log("currentPage---------", currentPage);
+    // console.log("totalPages---------", totalPages);
+    // console.log("getProductData.length---------", getProductData.length);
     return (
         <>
             <div className='flex justify-between p-10'>
@@ -180,7 +195,8 @@ export default function AdminStore() {
             <div>
                 <div>
                     <h1>upload File</h1>
-                    <input type='file' onChange={handleSingleImage} />
+                    <input type='file' onChange={handleSingleImage} value={setFile.filename} name='image'/>
+                    <button onClick={handleUpload} type='submit' className="rounded bg-blue-300 text-white-600 py-2 px-4 border border-green-700">Upload</button>
                 </div>
                 <form onSubmit={handleProductForm} style={{ display: formOpen ? 'block' : 'none' }} className='z-10 absolute bottom-25 ml-20 left-10 w-9/12 bg-emerald-100 p-4 m-auto h-screen rounded'>
                     <div className="imageContainer">
@@ -189,7 +205,7 @@ export default function AdminStore() {
                                 file:rounded-full file:border-0
                                 file:text-sm file:font-semibold
                                 file:bg-violet-50 file:text-blue-400
-                                hover:file:bg-violet-100" value={setImage.image} onChange={handleChangeFile} name='image' />
+                                // hover:file:bg-violet-100" value={setImage.image} onChange={handleChangeFile} name='image' />
                     </div>
                     <div className='flex items-center justify-evenly p-2'>
                         <div>

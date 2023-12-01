@@ -48,9 +48,9 @@ mutation editProduct($id: ID!){
 }`
 
 export const UPLOAD_FILE = gql`
-  mutation uploadFile($file: uploadImage!){
+  mutation uploadFile($file: Upload!){
     uploadFile(file: $file){
-      url
+      success
     }
   }
 `
