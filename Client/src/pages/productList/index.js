@@ -43,7 +43,7 @@ export default function ProductList() {
     // dispatch(addToCartProductData(getSingleData))
 
     const filteredList = getProductData.filter((item) => {
-        return item.productName.toLowerCase().includes(searchText.toLowerCase());
+        return item.productName;
     });
 
     return (

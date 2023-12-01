@@ -9,9 +9,9 @@ import admins from '../model/adminSchema.js';
 import productDetails from '../model/productSchema.js';
 // import Upload from 'graphql-upload/Upload.mjs';
 import GraphQLUpload from "graphql-upload/GraphQLUpload.js";
-import path, { resolve } from 'path';
-
-import fs, { createWriteStream } from 'fs';
+import path from 'path';
+import fileSchema from '../model/fileSchema.js';
+import fs, { createReadStream, createWriteStream } from 'fs';
 import mongoose from 'mongoose';
 import { promises } from 'dns';
 
@@ -110,24 +110,45 @@ const resolvers = {
             }
         },
         async uploadFile(_, { file }) {
-            console.log(file);
-            const { createReadStream, filename } = await file;
-            const stream = createReadStream();
-            const pathName = `../../Client/public/Images${filename}`;
-            // await stream.pipe(fs.createWriteStream(pathName))
-            // return {
-            //     url: `http://localhost:4000/Images/${filename}`
-            // }
-            await new Promise((resolve,reject)=>{
-                stream
-                .pipe(fs.createWriteStream(pathName))
-                .on('finish',resolve)
-                .on('error',reject);
-            })
-            return `file ${filename} uploaded Successfully`
+            // console.log(file);
+            try {
+                const { createReadStream, filename } = await file;
+                const stream = createReadStream();
+                const __dirname = path.dirname(new URL(import.meta.url).pathname)
+                const pathName = path.join(__dirname, `../../Client/public/Images`, filename);
+                // await stream.pipe(fs.createWriteStream(pathName))
+                // return {
+                //     url: `http://localhost:4000/Images/${filename}`
+                // }
+                const writeStream = fs.createWriteStream(pathName);
+                await new Promise((resolve, reject) => {
+                    stream
+                        .pipe(writeStream)
+                        .on('finish', resolve)
+                        .on('error', reject);
+                });
 
-        }
+                const buffer = fs.readFileSync(pathName);
+
+                const fileDocument = new fileSchema({ filename, data:buffer});
+                await fileDocument.save();
+
+                fs.unlinkSync(pathName);
+
+                return (success,`file ${filename} uploaded Successfully`)
+                // return { success:true, message: `Image upload successfully`};
+            }
+            catch (error) {
+                console.log("catch error----------------", error);
+                throw new Error('Failed to upload File');
+                // return {success:false, message: 'Failed to upload image'}
+            }
+
+        },
+
     }
 }
+
 // module.exports = resolvers;
+// const hello = require('../../Client/public/Images')
 export default resolvers;
