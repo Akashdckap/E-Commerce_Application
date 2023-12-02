@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { notification } from 'antd';
+import { Upload, notification } from 'antd';
 import Link from 'next/link';
 import { CREATE_PRODUCTS, DELETE_PRODUCT, UPLOAD_FILE } from '../../../Grahpql/mutation';
 
@@ -80,20 +80,23 @@ export default function AdminStore() {
         // console.log("targeted-----------",selectedFile);
         setFile(selectedFile);
     }
-    // console.log("checking file----------------",file.name,file.type);
+    console.log("checking file----------------", file);
     const handleUpload = async () => {
         // console.log("upload--------",file)
         try {
-
-            if(!file){
+            if (!file) {
                 console.log("No file is here")
             }
-            const result = await uploadFile({
-                variables: { File: file },
-            })
-            // console.log("variables------",result.data.uploadFile.message)
+            else {
+                const result = await uploadFile({
+                    variables: { file: file },
+                })
+                console.log("variables------", result.data.uploadFile.message)
+            }
+
         }
         catch (error) {
+            console.log("upload file----------------", file);
             console.log('Error in uploading Image', error)
         }
     }
@@ -195,7 +198,7 @@ export default function AdminStore() {
             <div>
                 <div>
                     <h1>upload File</h1>
-                    <input type='file' onChange={handleSingleImage} value={setFile.filename} name='image'/>
+                    <input type='file' onChange={handleSingleImage} value={setFile.filename} name='image' />
                     <button onClick={handleUpload} type='submit' className="rounded bg-blue-300 text-white-600 py-2 px-4 border border-green-700">Upload</button>
                 </div>
                 <form onSubmit={handleProductForm} style={{ display: formOpen ? 'block' : 'none' }} className='z-10 absolute bottom-25 ml-20 left-10 w-9/12 bg-emerald-100 p-4 m-auto h-screen rounded'>

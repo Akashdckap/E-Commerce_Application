@@ -31,13 +31,18 @@ const typeDefs = gql` #graphql
         brand: String,
         price: Int
         weight: Int,
-        description: String
+        description: String,
         color: String,
+    }
+
+    type images{
+        filename: String,
+        data: String,
     }
 
     input adminsInput{
         email:String!,
-        password:String!
+        password:String!,
     }
 
     input ordersInput{
@@ -59,7 +64,7 @@ const typeDefs = gql` #graphql
         price: String,
         weight: String,
         color: String,
-        description: String
+        description: String,
     }
     input updateProductInput{
         productName: String,
@@ -68,12 +73,17 @@ const typeDefs = gql` #graphql
         price: String,
         weight: String,
         color: String,
-        description: String
+        description: String,
     }
     type productPageNation{
         products: [products!]!,
         totalCount:Int!
-    }   
+    }  
+
+    input File{
+        url: String!
+    }
+
     type Query{
         getAllAdmins:[admins]
         getAllOrders:[orders]
@@ -83,10 +93,7 @@ const typeDefs = gql` #graphql
         getEditProductData(id: ID!): products
         getProductDetails(id: ID!):products
         getAddToCart_Single_ProductData(id: ID!): products
-    }
-
-    input File{
-        url: String!
+        # getImages:[images]
     }
 
     type Mutation{

@@ -127,7 +127,7 @@ const resolvers = {
                         .on('finish', resolve)
                         .on('error', reject);
                 });
-
+                console.log(pathName)
                 const buffer = fs.readFileSync(pathName);
 
                 const fileDocument = new fileSchema({ filename, data:buffer});
@@ -135,7 +135,7 @@ const resolvers = {
 
                 fs.unlinkSync(pathName);
 
-                return (success,`file ${filename} uploaded Successfully`)
+                return (`file ${filename} uploaded Successfully`)
                 // return { success:true, message: `Image upload successfully`};
             }
             catch (error) {
