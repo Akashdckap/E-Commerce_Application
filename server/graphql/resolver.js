@@ -8,17 +8,17 @@
 import admins from '../model/adminSchema.js';
 import productDetails from '../model/productSchema.js';
 // import Upload from 'graphql-upload/Upload.mjs';
-import GraphQLUpload from "graphql-upload/GraphQLUpload.js";
+// import GraphQLUpload from "graphql-upload/GraphQLUpload.js";
+// const {GraphQLUpload}  = require('graphql-upload/GraphQLUpload.js')
 import path from 'path';
-import fileSchema from '../model/fileSchema.js';
+import fileSchema from '../model/fileSchema.js'
 import fs, { createReadStream, createWriteStream } from 'fs';
 import mongoose from 'mongoose';
 import { promises } from 'dns';
 
-
 const ObjectId = mongoose.Types.ObjectId;
 const resolvers = {
-    Upload: GraphQLUpload,
+    // Upload: GraphQLUpload,
     Query: {
         getAllAdmins: async () => {
             return await (admins.find({}));
@@ -110,7 +110,6 @@ const resolvers = {
             }
         },
         async uploadFile(_, { file }) {
-            // console.log(file);
             try {
                 const { createReadStream, filename } = await file;
                 const stream = createReadStream();
@@ -127,10 +126,10 @@ const resolvers = {
                         .on('finish', resolve)
                         .on('error', reject);
                 });
-                console.log(pathName)
+                // console.log(pathName)
                 const buffer = fs.readFileSync(pathName);
 
-                const fileDocument = new fileSchema({ filename, data:buffer});
+                const fileDocument = new fileSchema({ filename, data: buffer });
                 await fileDocument.save();
 
                 fs.unlinkSync(pathName);

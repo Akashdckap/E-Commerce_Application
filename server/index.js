@@ -14,11 +14,8 @@ import fastifyCORS from '@fastify/cors';
 // import processRequest from 'graphql-upload/processRequest.mjs';
 import { ApolloServer } from '@apollo/server';
 import fastifyApollo, { fastifyApolloDrainPlugin } from '@as-integrations/fastify';
-
-// import
-
-import processRequest from "graphql-upload/processRequest.js";
-
+// const { processRequest } = require('graphql-upload/processRequest.js')
+// import processRequest from "graphql-upload/processRequest.js";
 
 const app = fastify();
 const PORT = 5000;
@@ -40,7 +37,7 @@ app.addContentTypeParser("multipart", (request, payload, done) => {
 // Format the request body to follow graphql-upload's
 app.addHook("preValidation", async function (request, reply) {
   if (!request.isMultipart) {
-      return;
+    return;
   }
 
   request.body = await processRequest(request.raw, reply.raw);
