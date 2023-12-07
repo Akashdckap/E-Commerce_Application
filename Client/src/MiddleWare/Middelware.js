@@ -11,7 +11,9 @@ const localStorageMiddleware = ({ getState }) => {
     try {
         return (next) => (action) => {
             const result = next(action)
-            localStorage.setItem("productData", JSON.stringify(getState()));
+            if (typeof localStorage != 'undefined') {
+                localStorage.setItem("productData", JSON.stringify(getState()));
+            }
             return result
         }
     }

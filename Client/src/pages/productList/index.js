@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addToCartProductData } from '@/Reducer/productReducer';
 
 export default function ProductList() {
-    // const dispatch = useDispatch()
+    const dispatch = useDispatch()
     // const productAllList = useSelector((state) => state)
     // console.log(productAllList);
     const [openCart, setCart] = useState(false)
@@ -40,7 +40,7 @@ export default function ProductList() {
         if (getError) return console.error('Error fetching data:', getSingleError);
     }, [getError, getSingleData, getDataError])
 
-    // dispatch(addToCartProductData(getSingleData))
+    dispatch(addToCartProductData(getSingleData));
 
     const filteredList = getProductData.filter((item) => {
         return item.productName;
