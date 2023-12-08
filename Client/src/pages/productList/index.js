@@ -7,45 +7,58 @@ import { faClose, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
-import { addToCartProductData } from '@/Reducer/productReducer';
+import { addToCartProductData, removeCartdata } from '@/Reducer/productReducer';
 
 export default function ProductList() {
     const dispatch = useDispatch()
-    // const productAllList = useSelector((state) => state)
-    // console.log(productAllList);
     const [openCart, setCart] = useState(false)
     const [getProductData, setgetProductData] = useState([])
     const [getAddToCartData, setAddToCartData] = useState([])
+    const [allAddToCartId, setAddToCartId] = useState([]);
+    const [cartCount, setCartCount] = useState(0)
     const router = useRouter()
-    const { addToCartId } = router.query    // console.log("addToCartId------------", addToCartId);
+    const { addToCartId } = router.query
     const [searchText, setSearchText] = useState('')
 
     const { data: getSingleData, error: getSingleError, loading: getSingleLoading } = useQuery(GET_ADD_TO_CART_SINGLE_PRODUCT_DATA, {
         variables: { id: addToCartId }
     })
-    console.log("getSingleData------------------", getSingleData);
-
     const { data: getDataError, error: getError, loading: getLoading } = useQuery(GET_ALL_PRODUCTS_DATA);
 
+    const getDataFromLocalStorage = () => {
+        const getLocalData = JSON.parse(localStorage.getItem('productData'));
+        if (getLocalData) {
+            setCartCount(getLocalData.productDetails.cartData.length)
+            setAddToCartData(getLocalData.productDetails.cartData)
+        }
+    };
+    // const handleAddtoCartBtn = (getId) => {
+    //     if (getId) {
+    //         allAddToCartId.push(getId)
+    //     }
+    //     console.log("allAddToCartId-------------", allAddToCartId);
+    // }
+
     useEffect(() => {
+        getDataFromLocalStorage()
+        // handleAddtoCartBtn()
         if (getDataError && !getLoading) {
             setgetProductData(getDataError.getAllProductsData);
         }
-        if (getSingleData && !getSingleLoading) {
-            setAddToCartData(getSingleData.addToCartProductData)
+        if (getSingleData) {
+            dispatch(addToCartProductData(getSingleData.getAddToCart_Single_ProductData));
         }
         if (getLoading) return console.log('Loading...');
         if (getSingleData) return console.log('Loading...');
         if (getSingleError) return console.error('Error fetching data:', getSingleError);
         if (getError) return console.error('Error fetching data:', getSingleError);
-    }, [getError, getSingleData, getDataError])
-
-    dispatch(addToCartProductData(getSingleData));
+    }, [getError, getDataError, getSingleData, cartCount])
 
     const filteredList = getProductData.filter((item) => {
         return item.productName;
     });
-
+    // console.log(allAddToCartId);
+    // console.log("getSingleData-----------",getAddToCartData);
     return (
         <>
             <div>
@@ -57,7 +70,7 @@ export default function ProductList() {
                             <Link href="adminStore"><button type="button" className="h-10 w-40 py-2.5 px-5 me-2 mb-2 mr-10 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-full border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Go to Store</button></Link>
                         </div>
                         <div className='relative bottom-4'>
-                            <p className='relative left-5 top-2 text-yellow-500 text-lg font-semibold'>0</p>
+                            <p className='relative left-5 top-2 text-yellow-500 text-lg font-semibold'>{cartCount}</p>
                             <FontAwesomeIcon onClick={() => setCart(true)} icon={faShoppingCart} className='text-white-400  mb-10 text-2xl cursor-pointer' />
                         </div>
                     </div>
@@ -98,6 +111,11 @@ export default function ProductList() {
                                                         <path strokeLinecap="round" strokeLinejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                                                     </svg>
                                                     Add to cart</Link>
+                                                {/* <button onClick={() => handleAddtoCartBtn(item._id)} id={item._id} className="cursor-pointer flex items-center rounded-md bg-slate-900 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-blue-300">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" className="mr-2 h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                                                    </svg>
+                                                    Add to cart</button> */}
                                             </div>
                                         </div>
                                     </div>
@@ -116,59 +134,38 @@ export default function ProductList() {
                                 <h1 className='text-yellow-500'>SHOPPING CART</h1>
                                 <FontAwesomeIcon onClick={() => setCart(false)} icon={faClose} className='text-xl cursor-pointer hover:text-red-400' />
                             </div>
-                            <div className="px-4 py-6 sm:px-8 sm:py-10">
-                                <div className="flow-root">
-                                    <ul className="-my-8">
-                                        <li className="flex flex-col space-y-3 py-6 text-left sm:flex-row sm:space-x-5 sm:space-y-0">
-                                            <div className="shrink-0 relative">
-                                                <img className="h-24 w-24 max-w-full rounded-lg object-cover" src="https://images.unsplash.com/photo-1588484628369-dd7a85bfdc38?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTh8fHNuZWFrZXJ8ZW58MHx8MHx8&auto=format&fit=crop&w=150&q=60" alt="" />
+                            <div className="px-4 py-6 sm:px-8 sm:py-10 overflow-y-scroll max-h-96">
+                                {
+                                    getAddToCartData.map((listCartData, index) => {
+                                        return (
+                                            <div className="flow-root" key={index}>
+                                                <ul className="-my-8">
+                                                    <li className="flex flex-col space-y-3 py-9 text-left sm:flex-row sm:space-x-5 sm:space-y-0">
+                                                        <div className="shrink-0 relative">
+                                                            <img className="h-24 w-24 max-w-full rounded-lg object-cover" src="https://images.unsplash.com/flagged/photo-1556637640-2c80d3201be8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8c25lYWtlcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60" alt="" />
+                                                        </div>
+                                                        <div className="relative flex flex-1 flex-col justify-between">
+                                                            <div className="sm:col-gap-5 sm:grid sm:grid-cols-2">
+                                                                <div className="pr-8 sm:pr-5">
+                                                                    <p className="text-base font-semibold text-gray-900">{listCartData.productName}</p>
+                                                                    <p className="mx-0 mt-1 mb-0 text-sm text-gray-400">{listCartData.category}</p>
+                                                                </div>
+                                                                <div className="mt-4 flex items-end justify-between sm:mt-0 sm:items-start sm:justify-end">
+                                                                    <p className="shrink-0 w-20 text-base font-semibold text-gray-900 sm:order-2 sm:ml-8 sm:text-right">₹{listCartData.price}</p>
+                                                                </div>
+                                                            </div>
+                                                            <div className="absolute top-0 right-0 flex sm:bottom-0 sm:top-auto">
+                                                                <button type="button" className="flex rounded p-2 text-center text-gray-950 transition-all duration-200 ease-in-out focus:shadow hover:text-red-500">
+                                                                    Remove
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                </ul>
                                             </div>
-                                            <div className="relative flex flex-1 flex-col justify-between">
-                                                <div className="sm:col-gap-5 sm:grid sm:grid-cols-2">
-                                                    <div className="pr-8 sm:pr-5">
-                                                        <p className="text-base font-semibold text-gray-900">Nike Air Max 2019</p>
-                                                        <p className="mx-0 mt-1 mb-0 text-sm text-gray-400">36EU - 4US</p>
-                                                    </div>
-                                                    <div className="mt-4 flex items-end justify-between sm:mt-0 sm:items-start sm:justify-end">
-                                                        <p className="shrink-0 w-20 text-base font-semibold text-gray-900 sm:order-2 sm:ml-8 sm:text-right">₹1259.00</p>
-                                                    </div>
-                                                </div>
-                                                <div className="absolute top-0 right-0 flex sm:bottom-0 sm:top-auto">
-                                                    <button type="button" className="flex rounded p-2 text-center text-gray-950 transition-all duration-200 ease-in-out focus:shadow hover:text-red-500">
-                                                        Remove
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </li>
-                                        <li className="flex flex-col space-y-3 py-6 text-left sm:flex-row sm:space-x-5 sm:space-y-0">
-                                            <div className="shrink-0 relative">
-                                                <img className="h-24 w-24 max-w-full rounded-lg object-cover" src="https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8OHx8c25lYWtlcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=150&q=60" alt="" />
-                                            </div>
-                                            <div className="relative flex flex-1 flex-col justify-between">
-                                                <div className="sm:col-gap-5 sm:grid sm:grid-cols-2">
-                                                    <div className="pr-8 sm:pr-5">
-                                                        <p className="text-base font-semibold text-gray-900">Nike Air Max 2019</p>
-                                                        <p className="mx-0 mt-1 mb-0 text-sm text-gray-400">36EU - 4US</p>
-                                                    </div>
-                                                    <div className="mt-4 flex items-end justify-between sm:mt-0 sm:items-start sm:justify-end">
-                                                        <p className="shrink-0 w-20 text-base font-semibold text-gray-900 sm:order-2 sm:ml-8 sm:text-right">₹1259.00</p>
-                                                    </div>
-                                                </div>
-                                                <div className="absolute top-0 right-0 flex sm:bottom-0 sm:top-auto">
-                                                    <div className="absolute top-0 right-0 flex sm:bottom-0 sm:top-auto">
-                                                        <button type="button" className="flex rounded p-2 text-center text-gray-950 transition-all duration-200 ease-in-out focus:shadow hover:text-red-500">
-                                                            Remove
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div className="mt-6 flex items-center justify-between">
-                                    <p className="text-sm font-medium text-gray-900">Total</p>
-                                    <p className="text-2xl font-semibold text-gray-900"><span className="text-xs font-normal text-gray-400">Rs</span> 2499.00</p>
-                                </div>
+                                        )
+                                    })
+                                }
                                 <div className="flex justify-center place-items-center gap-2">
                                     <div className='flex justify-center items-center pt-5'>
                                         <button type='button' className='bg-transparent  text-blue-700 font-semibold py-2 px-4 border border-blue-500 rounded hover:text-cyan-600 hover:border-cyan-600'>Continue Shopping</button>
@@ -184,8 +181,6 @@ export default function ProductList() {
                     </div>
                 </div>
             </section>
-
-
         </>
     )
 }

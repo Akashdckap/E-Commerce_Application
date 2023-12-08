@@ -40,14 +40,15 @@ export function preloadState() {
   }
   return data
 }
-// const reducer = combineReducers(productSlice)
-// // console.log(reducer);
+const rootReducer = combineReducers({
+  productDetails: productSlice
+})
 
 const store = configureStore({
-  // reducer: reducer,
-  reducer: {
-    productDetails: productSlice
-  },
+  reducer: rootReducer,
+  // reducer: {
+  //   productDetails: productSlice.reducer
+  // },
   middleware: (getData) => {
     // console.log(getData());
     return getData().concat(localStorageMiddleware)

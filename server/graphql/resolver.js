@@ -33,9 +33,12 @@ const resolvers = {
             return await productDetails.findOne({ _id: new ObjectId(id) })
         },
         getAllProductsData: async () => {
-            return await (productDetails.find({}));
+            // const da = await (productDetails.find({}));
+            // console.log(da);
+            return await (productDetails.find({}))
         },
         getAllProducts: async (_, { page, pageSize }) => {
+
             const skip = (page - 1) * pageSize;
             const products = await (productDetails.find({}).skip(skip).limit(pageSize));
             return products;
@@ -46,6 +49,10 @@ const resolvers = {
         },
         getAddToCart_Single_ProductData: async (_, { id }) => {
             return await productDetails.findOne({ _id: new ObjectId(id) })
+            // console.log(ids);
+            // const getIds = ids.map(id => new ObjectId(id));
+            // const items = await collection.find({ _id: { $in: getIds } })
+            // return items
         }
     },
     Mutation: {
