@@ -55,10 +55,9 @@ export default function ProductList() {
     }, [getError, getDataError, getSingleData, cartCount])
 
     const filteredList = getProductData.filter((item) => {
-        return item.productName;
+        return item.productName.toLowerCase().includes(searchText.toLowerCase());
     });
-    // console.log(allAddToCartId);
-    // console.log("getSingleData-----------",getAddToCartData);
+    
     return (
         <>
             <div>
