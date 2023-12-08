@@ -1,5 +1,3 @@
-// const admins = require('../model/adminSchema');
-// const productDetails = require('../model/productSchema')
 // const { default: GraphQLUpload } = require('graphql-upload/GraphQLUpload.js');
 // const Upload = import('graphql-upload/Upload.mjs');
 // const path = require('path')
@@ -12,9 +10,7 @@ import productDetails from '../model/productSchema.js';
 // const {GraphQLUpload}  = require('graphql-upload/GraphQLUpload.js')
 import path from 'path';
 import fileSchema from '../model/fileSchema.js'
-import fs, { createReadStream, createWriteStream } from 'fs';
 import mongoose from 'mongoose';
-import { promises } from 'dns';
 
 const ObjectId = mongoose.Types.ObjectId;
 const resolvers = {
