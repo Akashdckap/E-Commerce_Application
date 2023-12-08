@@ -32,6 +32,10 @@ export default function ProductList() {
             setAddToCartData(getLocalData.productDetails.cartData)
         }
     };
+
+    const handleRemoveDataFromLocal = (itemId) => {
+        dispatch(removeCartdata(itemId));
+    }
     // const handleAddtoCartBtn = (getId) => {
     //     if (getId) {
     //         allAddToCartId.push(getId)
@@ -154,7 +158,7 @@ export default function ProductList() {
                                                                 </div>
                                                             </div>
                                                             <div className="absolute top-0 right-0 flex sm:bottom-0 sm:top-auto">
-                                                                <button type="button" className="flex rounded p-2 text-center text-gray-950 transition-all duration-200 ease-in-out focus:shadow hover:text-red-500">
+                                                                <button type="button" onClick={() => handleRemoveDataFromLocal(listCartData._id)} className="flex rounded p-2 text-center text-gray-950 transition-all duration-200 ease-in-out focus:shadow hover:text-red-500">
                                                                     Remove
                                                                 </button>
                                                             </div>
