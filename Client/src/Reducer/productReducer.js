@@ -13,10 +13,25 @@ export const productSlice = createSlice({
             }
         },
         removeCartdata: (state, action) => {
-            state.cartData = state.cartData.filter((cart) => cart._id !== action.payload)
-        }
+            const itemId = action.payload
+            state.cartData = state.cartData.filter(cart => cart._id !== itemId)
+        },
+        incrementProductCount: (state, action) => {
+            console.log(action.payload);
+            console.log(state.cartData);
+            state.cartData[action.payload] = (state.cartData[action.payload] || 0) + 1;
+
+            //    const dataaas =  state.cartData.map(get => get._id === action.payload)
+            //    console.log(dataaas);
+            // state.cartData
+            // const { id } = action.payload
+            // state.cartData[_id] = (state.cartData[_id] || 0) + 1
+        },
+        // decrementProductCount: (state, action) => {
+
+        // }
     },
 })
 
-export const { addToCartProductData,removeCartdata } = productSlice.actions
+export const { addToCartProductData, removeCartdata, incrementProductCount } = productSlice.actions
 export default productSlice.reducer
