@@ -11,6 +11,14 @@ import { addToCartProductData, removeCartdata, incrementProductCount } from '@/R
 import productId from '../adminStore/editProduct/[productId]';
 
 export default function ProductList() {
+    // const [cartId, setCartId] = useState(0)
+    // const count = useSelector(state => state.productDetails)
+    // console.log("counting--------------", count);
+    const productCount = useSelector(state => state.productDetails.cartData);
+    console.log("productCount--------------", productCount);
+    // console.log("cartId---------------", cartId);
+
+
     const dispatch = useDispatch()
     const [openCart, setCart] = useState()
     const [getProductData, setgetProductData] = useState([])
@@ -23,6 +31,7 @@ export default function ProductList() {
     const [productQuantity, setProductQuantity] = useState(0)
     // const [increment, setIncrement] = useState(null)
     // const [decrement, setDecrement] = useState(null)
+
 
     const { data: getSingleData, error: getSingleError, loading: getSingleLoading } = useQuery(GET_ADD_TO_CART_SINGLE_PRODUCT_DATA, {
         variables: { id: addToCartId }
@@ -37,9 +46,6 @@ export default function ProductList() {
         }
     };
 
-    const handleRemoveDataFromLocal = (itemId) => {
-        dispatch(removeCartdata(itemId));
-    }
     // const handleAddtoCartBtn = (getId) => {
     //     if (getId) {
     //         allAddToCartId.push(getId)
@@ -59,7 +65,7 @@ export default function ProductList() {
         if (getSingleData) return console.log('Loading...');
         if (getSingleError) return console.error('Error fetching data:', getSingleError);
         if (getError) return console.error('Error fetching data:', getSingleError);
-    }, [getError, getDataError, getSingleData, cartCount]);
+    }, [getError, getDataError, getSingleData, cartCount, productCount]);
 
     useEffect(() => {
         getDataFromLocalStorage()
@@ -69,19 +75,25 @@ export default function ProductList() {
     const filteredList = getProductData.filter((item) => {
         return item.productName.toLowerCase().includes(searchText.toLowerCase());
     });
-    const handleIncrementCount = (index) => {
-        // console.log(productId)
-        // Incrementing all data at a time
-        // setProductQuantity(prevQuantity => prevQuantity + 1 )
-        setAddToCartData(prevItems =>{
-            console.log("prevItems-----------",prevItems)
-            const updateItems = [...prevItems];
-            updateItems[index] = {
-                ...updateItems[index],
-                productQuantity: updateItems[index].productQuantity+1
-            }
-            return updateItems;
-        });
+
+//     const handleIncrementCount = (index) => {
+//         // console.log(productId)
+//         // Incrementing all data at a time
+//         // setProductQuantity(prevQuantity => prevQuantity + 1 )
+//         setAddToCartData(prevItems =>{
+//             console.log("prevItems-----------",prevItems)
+//             const updateItems = [...prevItems];
+//             updateItems[index] = {
+//                 ...updateItems[index],
+//                 productQuantity: updateItems[index].productQuantity+1
+//             }
+//             return updateItems;
+//         });
+
+
+    const handleIncrementCount = (productId) => {
+        // setCartId(productId)
+        dispatch(incrementProductCount({ productId }))
 
     }
 
@@ -166,18 +178,18 @@ export default function ProductList() {
                                 <h1 className='text-yellow-500'>SHOPPING CART</h1>
                                 <FontAwesomeIcon onClick={() => setCart(false)} icon={faClose} className='text-xl cursor-pointer hover:text-red-400' />
                             </div>
-                            <div className="px-4 py-6 sm:px-8 sm:py-10 overflow-y-scroll max-h-96">
+                            <div className="sm:px-1 sm:py-10 overflow-y-scroll max-h-96 p-2">
                                 {
                                     getAddToCartData.map((listCartData, index) => {
                                         return (
                                             <div className="flow-root" key={index}>
                                                 <ul className="-my-8">
-                                                    <li className="flex flex-col space-y-3 py-9 text-left sm:flex-row sm:space-x-5 sm:space-y-0">
+                                                    <li className="flex flex-col space-y-1 py-10 text-left sm:flex-row sm:space-x-5 sm:space-y-1">
                                                         <div className="shrink-0 relative">
                                                             <img className="h-24 w-24 max-w-full rounded-lg object-cover" src="https://images.unsplash.com/flagged/photo-1556637640-2c80d3201be8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8c25lYWtlcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60" alt="" />
                                                         </div>
                                                         <div className="relative flex flex-1 flex-col justify-between">
-                                                            <div className="sm:col-gap-5 sm:grid sm:grid-cols-2">
+                                                            <div className="sm:col-gap-3 sm:grid sm:grid-cols-2">
                                                                 <div className="pr-8 sm:pr-5">
                                                                     <p className="text-base font-semibold text-gray-900">{listCartData.productName}</p>
                                                                     <p className="mx-0 mt-1 mb-0 text-sm text-gray-400">{listCartData.category}</p>
@@ -188,9 +200,14 @@ export default function ProductList() {
                                                             </div>
                                                             <div className="flex justify-center items-center gap-32">
                                                                 <div className='flex justify-center items-center gap-3'>
-                                                                    <FontAwesomeIcon icon={faMinus} onClick={() => handleDecrementCount(listCartData._id)} className='cursor-pointer' />
-                                                                    <span>{productQuantity}</span>
-                                                                    <FontAwesomeIcon icon={faPlus} onClick={handleIncrementCount} className='cursor-pointer' />
+
+//                                                                     <FontAwesomeIcon icon={faMinus} onClick={() => handleDecrementCount(listCartData._id)} className='cursor-pointer' />
+//                                                                     <span>{productQuantity}</span>
+//                                                                     <FontAwesomeIcon icon={faPlus} onClick={handleIncrementCount} className='cursor-pointer' />
+
+                                                                    <FontAwesomeIcon icon={faMinus} onClick={() => handleDecrementCount(listCartData._id)} className='cursor-pointer border border-solid border-blue-300 font-thin rounded-xl p-1 text-xs' />
+                                                                    <span className='border border-gray-400 w-10 rounded-sm flex justify-center items-center'>{listCartData.count}</span>
+                                                                    <FontAwesomeIcon icon={faPlus} onClick={() => handleIncrementCount(listCartData._id)} className='cursor-pointer border border-solid border-blue-300 font-thin rounded-xl p-1 text-xs' />
                                                                 </div>
                                                                 <button type="submit" onClick={() => handleRemoveDataFromLocal(listCartData._id)} className="flex rounded p-2 text-center text-gray-950 transition-all duration-200 ease-in-out focus:shadow hover:text-red-500">
                                                                     Remove
