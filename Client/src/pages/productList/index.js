@@ -3,15 +3,15 @@ import { useMutation, useQuery } from '@apollo/client';
 import { useEffect } from 'react';
 import { GET_ADD_TO_CART_SINGLE_PRODUCT_DATA, GET_ALL_PRODUCTS_DATA } from '../../../Grahpql/queries';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faClose, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
+import { faClose, faMinus, faPlus, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
-import { addToCartProductData, removeCartdata } from '@/Reducer/productReducer';
+import { addToCartProductData, removeCartdata, incrementProductCount } from '@/Reducer/productReducer';
 
 export default function ProductList() {
     const dispatch = useDispatch()
-    const [openCart, setCart] = useState(false)
+    const [openCart, setCart] = useState()
     const [getProductData, setgetProductData] = useState([])
     const [getAddToCartData, setAddToCartData] = useState([])
     const [allAddToCartId, setAddToCartId] = useState([]);
@@ -19,6 +19,10 @@ export default function ProductList() {
     const router = useRouter()
     const { addToCartId } = router.query
     const [searchText, setSearchText] = useState('')
+
+    const [productQuantity, setProductQuantity] = useState(0)
+    // const [increment, setIncrement] = useState(null)
+    // const [decrement, setDecrement] = useState(null)
 
     const { data: getSingleData, error: getSingleError, loading: getSingleLoading } = useQuery(GET_ADD_TO_CART_SINGLE_PRODUCT_DATA, {
         variables: { id: addToCartId }
@@ -44,12 +48,11 @@ export default function ProductList() {
     // }
 
     useEffect(() => {
-        getDataFromLocalStorage()
         // handleAddtoCartBtn()
         if (getDataError && !getLoading) {
             setgetProductData(getDataError.getAllProductsData);
         }
-        if (getSingleData) {
+        if (getSingleData && !getLoading) {
             dispatch(addToCartProductData(getSingleData.getAddToCart_Single_ProductData));
         }
         if (getLoading) return console.log('Loading...');
@@ -58,10 +61,25 @@ export default function ProductList() {
         if (getError) return console.error('Error fetching data:', getSingleError);
     }, [getError, getDataError, getSingleData, cartCount]);
 
+    const handleRemoveDataFromLocal = (itemId) => {
+        dispatch(removeCartdata(itemId))
+        // setCart(false)
+    }
+    useEffect(() => {
+        getDataFromLocalStorage()
+        handleRemoveDataFromLocal()
+    }, [cartCount])
+
     const filteredList = getProductData.filter((item) => {
         return item.productName.toLowerCase().includes(searchText.toLowerCase());
     });
-    // console.log(filteredList)
+    const handleIncrementCount = (productId) => {
+        dispatch(incrementProductCount(productId))
+    }
+
+    const handleDecrementCount = (productId) => {
+
+    }
     return (
         <>
             <div>
@@ -157,8 +175,13 @@ export default function ProductList() {
                                                                     <p className="shrink-0 w-20 text-base font-semibold text-gray-900 sm:order-2 sm:ml-8 sm:text-right">₹{listCartData.price}</p>
                                                                 </div>
                                                             </div>
-                                                            <div className="absolute top-0 right-0 flex sm:bottom-0 sm:top-auto">
-                                                                <button type="button" onClick={() => handleRemoveDataFromLocal(listCartData._id)} className="flex rounded p-2 text-center text-gray-950 transition-all duration-200 ease-in-out focus:shadow hover:text-red-500">
+                                                            <div className="flex justify-center items-center gap-32">
+                                                                <div className='flex justify-center items-center gap-3'>
+                                                                    <FontAwesomeIcon icon={faMinus} onClick={() => handleDecrementCount(listCartData._id)} className='cursor-pointer'/>
+                                                                    <span>{productQuantity}</span>
+                                                                    <FontAwesomeIcon icon={faPlus} onClick={() => handleIncrementCount(listCartData._id)} className='cursor-pointer'/>
+                                                                </div>
+                                                                <button type="submit" onClick={() => handleRemoveDataFromLocal(listCartData._id)} className="flex rounded p-2 text-center text-gray-950 transition-all duration-200 ease-in-out focus:shadow hover:text-red-500">
                                                                     Remove
                                                                 </button>
                                                             </div>
