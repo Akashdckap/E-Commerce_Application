@@ -68,7 +68,7 @@ async function server(app1) {
 app.register(server);
 // app.register(apolloServer.createHandler());
 
-mongoose.connect('mongodb://localhost:27017/E-commerce').then(() => { console.log("Connected with MongoDB") }).catch((err) => { console.log("Not connected") });
+mongoose.connect('mongodb://localhost:27017/E-commerce').then(() => { console.log("Connected with MongoDB") }).catch((err) => { console.log("Not connected",err) });
 
 app.listen({ port: PORT }).then(() => console.log(`Your port running on the ${PORT}`)).catch((error) => console.log("Your connection is not okay", error));
 
