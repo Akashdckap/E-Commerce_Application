@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import { addToCartProductData, removeCartdata, incrementProductCount } from '@/Reducer/productReducer';
+import productId from '../adminStore/editProduct/[productId]';
 
 export default function ProductList() {
     const dispatch = useDispatch()
@@ -19,7 +20,6 @@ export default function ProductList() {
     const router = useRouter()
     const { addToCartId } = router.query
     const [searchText, setSearchText] = useState('')
-
     const [productQuantity, setProductQuantity] = useState(0)
     // const [increment, setIncrement] = useState(null)
     // const [decrement, setDecrement] = useState(null)
@@ -61,10 +61,6 @@ export default function ProductList() {
         if (getError) return console.error('Error fetching data:', getSingleError);
     }, [getError, getDataError, getSingleData, cartCount]);
 
-    const handleRemoveDataFromLocal = (itemId) => {
-        dispatch(removeCartdata(itemId))
-        // setCart(false)
-    }
     useEffect(() => {
         getDataFromLocalStorage()
         handleRemoveDataFromLocal()
@@ -73,10 +69,25 @@ export default function ProductList() {
     const filteredList = getProductData.filter((item) => {
         return item.productName.toLowerCase().includes(searchText.toLowerCase());
     });
-    const handleIncrementCount = (productId) => {
-        dispatch(incrementProductCount(productId))
+    const handleIncrementCount = (index) => {
+        // console.log(productId)
+        // Incrementing all data at a time
+        // setProductQuantity(prevQuantity => prevQuantity + 1 )
+        setAddToCartData(prevItems =>{
+            console.log("prevItems-----------",prevItems)
+            const updateItems = [...prevItems];
+            updateItems[index] = {
+                ...updateItems[index],
+                productQuantity: updateItems[index].productQuantity+1
+            }
+            return updateItems;
+        });
+
     }
 
+    const getProductQuantity = (productId) => {
+        return productQuantity[productId] || 0
+    }
     const handleDecrementCount = (productId) => {
 
     }
@@ -177,9 +188,9 @@ export default function ProductList() {
                                                             </div>
                                                             <div className="flex justify-center items-center gap-32">
                                                                 <div className='flex justify-center items-center gap-3'>
-                                                                    <FontAwesomeIcon icon={faMinus} onClick={() => handleDecrementCount(listCartData._id)} className='cursor-pointer'/>
+                                                                    <FontAwesomeIcon icon={faMinus} onClick={() => handleDecrementCount(listCartData._id)} className='cursor-pointer' />
                                                                     <span>{productQuantity}</span>
-                                                                    <FontAwesomeIcon icon={faPlus} onClick={() => handleIncrementCount(listCartData._id)} className='cursor-pointer'/>
+                                                                    <FontAwesomeIcon icon={faPlus} onClick={handleIncrementCount} className='cursor-pointer' />
                                                                 </div>
                                                                 <button type="submit" onClick={() => handleRemoveDataFromLocal(listCartData._id)} className="flex rounded p-2 text-center text-gray-950 transition-all duration-200 ease-in-out focus:shadow hover:text-red-500">
                                                                     Remove
