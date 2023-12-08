@@ -22,9 +22,12 @@ export const productSlice = createSlice({
         // },
         incrementProductCount: (state, action) => {
             const { productId } = action.payload
-            state.cartData[productId] = (state.cartData[productId] || 0) + 1;
+            const productIndex = state.cartData.findIndex(product => product._id === productId)
+            if (productIndex !== -1) {
+                state.cartData[productIndex].count = (state.cartData[productIndex].count || 0) + 1;
+            }
         }
-
+        // state.cartData[productId] = (state.cartData[productId] || 0) + 1;
         // incrementProductCount: (state, action) => {
         // console.log(action.payload);
         // console.log(state.cartData);
