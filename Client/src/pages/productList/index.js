@@ -52,12 +52,12 @@ export default function ProductList() {
         if (getSingleData) return console.log('Loading...');
         if (getSingleError) return console.error('Error fetching data:', getSingleError);
         if (getError) return console.error('Error fetching data:', getSingleError);
-    }, [getError, getDataError, getSingleData, cartCount])
+    }, [getError, getDataError, getSingleData, cartCount]);
 
     const filteredList = getProductData.filter((item) => {
         return item.productName.toLowerCase().includes(searchText.toLowerCase());
     });
-    
+    // console.log(filteredList)
     return (
         <>
             <div>
@@ -167,7 +167,7 @@ export default function ProductList() {
                                 }
                                 <div className="flex justify-center place-items-center gap-2">
                                     <div className='flex justify-center items-center pt-5'>
-                                        <button type='button' className='bg-transparent  text-blue-700 font-semibold py-2 px-4 border border-blue-500 rounded hover:text-cyan-600 hover:border-cyan-600'>Continue Shopping</button>
+                                        <button type='button' onClick={() => { setCart(false) }} className='bg-transparent  text-blue-700 font-semibold py-2 px-4 border border-blue-500 rounded hover:text-cyan-600 hover:border-cyan-600'>Continue Shopping</button>
                                     </div>
                                     <div className='flex justify-center items-center pt-5'>
                                         <button type="button" className="items-center justify-center rounded-md bg-orange-500 py-2 px-4 text-sm font-semibold text-white transition-all duration-200 ease-in-out focus:shadow hover:bg-gray-800">
