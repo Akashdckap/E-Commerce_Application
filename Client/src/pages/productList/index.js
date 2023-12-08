@@ -10,8 +10,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addToCartProductData, removeCartdata, incrementProductCount } from '@/Reducer/productReducer';
 
 export default function ProductList() {
-    const count = useSelector(state => state.productDetails.cartData[0])
-    console.log("counting--------------", count);
+    // const [cartId, setCartId] = useState(0)
+    // const count = useSelector(state => state.productDetails)
+    // console.log("counting--------------", count);
+    const productCount = useSelector(state => state.productDetails.cartData);
+    console.log("productCount--------------", productCount);
+    // console.log("cartId---------------", cartId);
+
 
     const dispatch = useDispatch()
     const [openCart, setCart] = useState()
@@ -60,7 +65,7 @@ export default function ProductList() {
         if (getSingleData) return console.log('Loading...');
         if (getSingleError) return console.error('Error fetching data:', getSingleError);
         if (getError) return console.error('Error fetching data:', getSingleError);
-    }, [getError, getDataError, getSingleData, cartCount]);
+    }, [getError, getDataError, getSingleData, cartCount, productCount]);
 
     const handleRemoveDataFromLocal = (itemId) => {
         dispatch(removeCartdata(itemId))
@@ -75,6 +80,7 @@ export default function ProductList() {
         return item.productName.toLowerCase().includes(searchText.toLowerCase());
     });
     const handleIncrementCount = (productId) => {
+        // setCartId(productId)
         dispatch(incrementProductCount({ productId }))
     }
 
@@ -179,7 +185,7 @@ export default function ProductList() {
                                                             <div className="flex justify-center items-center gap-32">
                                                                 <div className='flex justify-center items-center gap-3'>
                                                                     <FontAwesomeIcon icon={faMinus} onClick={() => handleDecrementCount(listCartData._id)} className='cursor-pointer border border-solid border-blue-300 font-thin rounded-xl p-1 text-xs' />
-                                                                    <span className='border border-gray-400 w-10 rounded-sm flex justify-center items-center'>0</span>
+                                                                    <span className='border border-gray-400 w-10 rounded-sm flex justify-center items-center'>{listCartData.count}</span>
                                                                     <FontAwesomeIcon icon={faPlus} onClick={() => handleIncrementCount(listCartData._id)} className='cursor-pointer border border-solid border-blue-300 font-thin rounded-xl p-1 text-xs' />
                                                                 </div>
                                                                 <button type="submit" onClick={() => handleRemoveDataFromLocal(listCartData._id)} className="flex rounded p-2 text-center text-gray-950 transition-all duration-200 ease-in-out focus:shadow hover:text-red-500">
