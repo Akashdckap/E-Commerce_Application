@@ -17,8 +17,6 @@ export default function ProductList() {
     const [getAddToCartData, setAddToCartData] = useState([])
     const [allAddToCartId, setAddToCartId] = useState([]);
     const [cartCount, setCartCount] = useState(0)
-    const router = useRouter()
-    const { addToCartId } = router.query
     const [searchText, setSearchText] = useState('')
     const [productQuantity, setProductQuantity] = useState(0)
     // const [increment, setIncrement] = useState(null)
