@@ -8,14 +8,14 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import { addToCartProductData, removeCartdata, incrementProductCount } from '@/Reducer/productReducer';
-import productId from '../adminStore/editProduct/[productId]';
+// import productId from '../adminStore/editProduct/[productId]';
 
 export default function ProductList() {
     // const [cartId, setCartId] = useState(0)
     // const count = useSelector(state => state.productDetails)
     // console.log("counting--------------", count);
     const productCount = useSelector(state => state.productDetails.cartData);
-    console.log("productCount--------------", productCount);
+    // console.log("productCount--------------", productCount);
     // console.log("cartId---------------", cartId);
 
 
@@ -23,7 +23,7 @@ export default function ProductList() {
     const [openCart, setCart] = useState()
     const [getProductData, setgetProductData] = useState([])
     const [getAddToCartData, setAddToCartData] = useState([])
-    const [allAddToCartId, setAddToCartId] = useState([]);
+    const [allAddToCartId, setAddToCartDataId] = useState([]);
     const [cartCount, setCartCount] = useState(0)
     const router = useRouter()
     const { addToCartId } = router.query
@@ -32,10 +32,6 @@ export default function ProductList() {
     // const [increment, setIncrement] = useState(null)
     // const [decrement, setDecrement] = useState(null)
 
-
-    const { data: getSingleData, error: getSingleError, loading: getSingleLoading } = useQuery(GET_ADD_TO_CART_SINGLE_PRODUCT_DATA, {
-        variables: { id: addToCartId }
-    })
     const { data: getDataError, error: getError, loading: getLoading } = useQuery(GET_ALL_PRODUCTS_DATA);
 
     const getDataFromLocalStorage = () => {
@@ -46,12 +42,19 @@ export default function ProductList() {
         }
     };
 
-    // const handleAddtoCartBtn = (getId) => {
-    //     if (getId) {
-    //         allAddToCartId.push(getId)
-    //     }
-    //     console.log("allAddToCartId-------------", allAddToCartId);
-    // }
+    const handleAddtoCartBtn = (getId) => {
+        // console.log("getId------",getId)
+        if (getId) {
+            setAddToCartDataId([...allAddToCartId, getId])
+        }
+
+    }
+    const { data: getSingleData, error: getSingleError, loading: getSingleLoading } = useQuery(GET_ADD_TO_CART_SINGLE_PRODUCT_DATA, {
+        variables: { ids: allAddToCartId },
+    })
+    console.log("allAddToCartId-------------", getSingleData)
+
+
 
     useEffect(() => {
         // handleAddtoCartBtn()
@@ -59,7 +62,7 @@ export default function ProductList() {
             setgetProductData(getDataError.getAllProductsData);
         }
         if (getSingleData && !getLoading) {
-            dispatch(addToCartProductData(getSingleData.getAddToCart_Single_ProductData));
+            dispatch(addToCartProductData(getSingleData.addToCartProductData));
         }
         if (getLoading) return console.log('Loading...');
         if (getSingleData) return console.log('Loading...');
@@ -67,28 +70,33 @@ export default function ProductList() {
         if (getError) return console.error('Error fetching data:', getSingleError);
     }, [getError, getDataError, getSingleData, cartCount, productCount]);
 
+    const handleRemoveDataFromLocal = (itemId) => {
+        dispatch(removeCartdata(itemId))
+        // setCart(false)
+    }
+
     useEffect(() => {
         getDataFromLocalStorage()
         handleRemoveDataFromLocal()
-    }, [cartCount])
+    }, [cartCount, allAddToCartId])
 
     const filteredList = getProductData.filter((item) => {
         return item.productName.toLowerCase().includes(searchText.toLowerCase());
     });
 
-//     const handleIncrementCount = (index) => {
-//         // console.log(productId)
-//         // Incrementing all data at a time
-//         // setProductQuantity(prevQuantity => prevQuantity + 1 )
-//         setAddToCartData(prevItems =>{
-//             console.log("prevItems-----------",prevItems)
-//             const updateItems = [...prevItems];
-//             updateItems[index] = {
-//                 ...updateItems[index],
-//                 productQuantity: updateItems[index].productQuantity+1
-//             }
-//             return updateItems;
-//         });
+    //     const handleIncrementCount = (index) => {
+    //         // console.log(productId)
+    //         // Incrementing all data at a time
+    //         // setProductQuantity(prevQuantity => prevQuantity + 1 )
+    //         setAddToCartData(prevItems =>{
+    //             console.log("prevItems-----------",prevItems)
+    //             const updateItems = [...prevItems];
+    //             updateItems[index] = {
+    //                 ...updateItems[index],
+    //                 productQuantity: updateItems[index].productQuantity+1
+    //             }
+    //             return updateItems;
+    //         });
 
 
     const handleIncrementCount = (productId) => {
@@ -150,16 +158,17 @@ export default function ProductList() {
                                                 <p>
                                                     <span className="text-3xl font-bold text-slate-900">₹{item.price}</span>
                                                 </p>
-                                                <Link href={`/productList/${item._id}`} className="cursor-pointer flex items-center rounded-md bg-slate-900 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-blue-300">
+                                                {/* <Link href={`/productList/${item._id}`} className="cursor-pointer flex items-center rounded-md bg-slate-900 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-blue-300">
                                                     <svg xmlns="http://www.w3.org/2000/svg" className="mr-2 h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                                                         <path strokeLinecap="round" strokeLinejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                                                     </svg>
-                                                    Add to cart</Link>
-                                                {/* <button onClick={() => handleAddtoCartBtn(item._id)} id={item._id} className="cursor-pointer flex items-center rounded-md bg-slate-900 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-blue-300">
+                                                    Add to cart</Link> */}
+                                                <button onClick={() => handleAddtoCartBtn(item._id)} id={item._id} className="cursor-pointer flex items-center rounded-md bg-slate-900 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-blue-300">
                                                     <svg xmlns="http://www.w3.org/2000/svg" className="mr-2 h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                                                         <path strokeLinecap="round" strokeLinejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                                                     </svg>
-                                                    Add to cart</button> */}
+                                                    Add to cart
+                                                </button>
                                             </div>
                                         </div>
                                     </div>

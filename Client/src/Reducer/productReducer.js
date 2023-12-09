@@ -8,9 +8,10 @@ export const productSlice = createSlice({
     reducers: {
         addToCartProductData: (state, action) => {
             const { payload } = action
-            if (!state.cartData.some(item => item._id === payload._id)) {
-                state.cartData.push(payload)
-            }
+            console.log("tyuiop--------",payload)
+            // if (!state.cartData.some(item => item._id === payload._id)) {
+            //     state.cartData.push(payload)
+            // }
         },
         removeCartdata: (state, action) => {
             const itemId = action.payload
