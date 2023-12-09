@@ -57,6 +57,8 @@ const resolvers = {
             // const getIds = ids.map(id => new ObjectId(id));
             // const items = await collection.find({ _id: { $in: getIds } })
             // return items
+        addToCartProductData: async (_, { ids }) => {
+            return await productDetails.find({ _id: { $in: ids } })
         }
     },
     Mutation: {
@@ -158,7 +160,7 @@ const resolvers = {
 
     }
 }
-
+}
 // module.exports = resolvers;
 // const hello = require('../../Client/public/Images')
 export default resolvers;
