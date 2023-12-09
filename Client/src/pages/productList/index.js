@@ -14,19 +14,36 @@ export default function ProductList() {
     const dispatch = useDispatch()
     const [openCart, setCart] = useState()
     const [getProductData, setgetProductData] = useState([])
+    const [getAddToCartData, setAddToCartData] = useState([])
     const [allAddToCartId, setAddToCartId] = useState([]);
+    const [cartCount, setCartCount] = useState(0)
+    const router = useRouter()
+    const { addToCartId } = router.query
     const [searchText, setSearchText] = useState('')
+    const [productQuantity, setProductQuantity] = useState(0)
+    // const [increment, setIncrement] = useState(null)
+    // const [decrement, setDecrement] = useState(null)
+
 
     const { data: getSingleData, error: getSingleError, loading: getSingleLoading } = useQuery(GET_ADD_TO_CART_SINGLE_PRODUCT_DATA, {
         variables: { ids: allAddToCartId }
     })
     const { data: getDataError, error: getError, loading: getLoading } = useQuery(GET_ALL_PRODUCTS_DATA);
 
+    // const getDataFromLocalStorage = () => {
+    //     const getLocalData = JSON.parse(localStorage.getItem('productData'));
+    //     if (getLocalData) {
+    //         setCartCount(getLocalData.productDetails.cartData.length)
+    //         setAddToCartData(getLocalData.productDetails.cartData)
+    //     }
+    // };
+    // console.log("getSingleData----------------", getSingleData);
     const handleAddtoCartBtn = (getId) => {
         if (getId) {
             setAddToCartId([...allAddToCartId, getId])
         }
     }
+
     useEffect(() => {
         if (getDataError && !getLoading) {
             setgetProductData(getDataError.getAllProductsData);
@@ -38,10 +55,11 @@ export default function ProductList() {
         if (getSingleData) return console.log('Loading...');
         if (getSingleError) return console.error('Error fetching data:', getSingleError);
         if (getError) return console.error('Error fetching data:', getSingleError);
-    }, [getError, getDataError, getSingleData]);
+    }, [getError, getDataError, getSingleData, cartCount]);
 
     const handleRemoveDataFromLocal = (itemId) => {
         dispatch(removeCartdata(itemId))
+        // setCart(false)
     }
     const removeAllCartData = () => {
         dispatch(removeAllCartDatas())
@@ -50,12 +68,30 @@ export default function ProductList() {
         return item.productName.toLowerCase().includes(searchText.toLowerCase());
     });
 
+    //     const handleIncrementCount = (index) => {
+    //         // console.log(productId)
+    //         // Incrementing all data at a time
+    //         // setProductQuantity(prevQuantity => prevQuantity + 1 )
+    //         setAddToCartData(prevItems =>{
+    //             console.log("prevItems-----------",prevItems)
+    //             const updateItems = [...prevItems];
+    //             updateItems[index] = {
+    //                 ...updateItems[index],
+    //                 productQuantity: updateItems[index].productQuantity+1
+    //             }
+    //             return updateItems;
+    //         });
+
+
     const handleIncrementCount = (productId) => {
+        // setCartId(productId)
         dispatch(incrementProductCount({ productId }))
     }
+
     const handleDecrementCount = (productId) => {
         dispatch(decrementProductCount({ productId }))
     }
+    // console.log("allAddToCartId----------------", allAddToCartId);
     return (
         <>
             <div>
@@ -191,9 +227,11 @@ export default function ProductList() {
                                         <button type='button' onClick={() => { setCart(false) }} className='bg-transparent  text-blue-700 font-semibold py-2 px-4 border border-blue-500 rounded hover:text-cyan-600 hover:border-cyan-600'>Continue Shopping</button>
                                     </div>
                                     <div className='flex justify-center items-center pt-5'>
+                                        <Link href="placeOrder">
                                         <button type="button" className="items-center justify-center rounded-md bg-orange-500 py-2 px-4 text-sm font-semibold text-white transition-all duration-200 ease-in-out focus:shadow hover:bg-gray-800">
                                             Place Order
                                         </button>
+                                        </Link>
                                     </div>
                                 </div>
                             </div>

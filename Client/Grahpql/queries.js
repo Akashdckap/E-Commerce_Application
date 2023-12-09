@@ -81,6 +81,7 @@ export const GET_ADD_TO_CART_SINGLE_PRODUCT_DATA = gql`
      }
     }
 `
+
 export const GET_PRODUCT_DETAILS = gql`
     query GetProductDetails ($id:ID!){
         getProductDetails(id : $id){
