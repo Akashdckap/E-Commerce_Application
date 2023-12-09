@@ -44,7 +44,13 @@ const resolvers = {
             return totalCount;
         },
         addToCartProductData: async (_, { ids }) => {
-            return await productDetails.find({ _id: { $in: ids } })
+            try {
+                const data = await productDetails.find({ _id: { $in: ids } })
+                return data
+            }
+            catch (error) {
+                console.log(error, "Error fetching data from mongodb");
+            }
         }
     },
     Mutation: {
