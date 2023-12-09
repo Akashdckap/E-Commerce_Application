@@ -206,9 +206,9 @@ export default function ProductList() {
                                                             </div>
                                                             <div className="flex justify-center items-center gap-32">
                                                                 <div className='flex justify-center items-center gap-3'>
-                                                                    
-                                                                    <FontAwesomeIcon icon={faMinus} onClick={handleIncrementCount} className='cursor-pointer' />
-                                                                    {/* <FontAwesomeIcon icon={faMinus} onClick={() => handleDecrementCount(listCartData._id)} className='cursor-pointer border border-solid border-blue-300 font-thin rounded-xl p-1 text-xs' /> */}
+
+
+                                                                    <FontAwesomeIcon icon={faMinus} onClick={() => handleDecrementCount(listCartData._id)} className='cursor-pointer border border-solid border-blue-300 font-thin rounded-xl p-1 text-xs' />
                                                                     {
                                                                         listCartData.count > 0 ? (
                                                                             <span className='border border-gray-400 w-10 rounded-sm flex justify-center items-center'>{listCartData.count}</span>

@@ -44,7 +44,6 @@ const resolvers = {
             return totalCount;
         },
         addToCartProductData: async (_, { ids }) => {
-            // console.log(ids)
             try {
                 const data = await productDetails.find({ _id: { $in: ids } })
                 return data
@@ -52,13 +51,7 @@ const resolvers = {
             catch (error) {
                 console.log(error, "Error fetching data from mongodb");
             }
-            // return await productDetails.findOne({ _id: new ObjectId(id) })
-            // console.log(ids);
-            // const getIds = ids.map(id => new ObjectId(id));
-            // const items = await collection.find({ _id: { $in: getIds } })
-            // return items
-        addToCartProductData: async (_, { ids }) => {
-            return await productDetails.find({ _id: { $in: ids } })
+
         }
     },
     Mutation: {
