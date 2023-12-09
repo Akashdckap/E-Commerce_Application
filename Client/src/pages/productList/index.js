@@ -7,7 +7,7 @@ import { faClose, faMinus, faPlus, faShoppingCart } from '@fortawesome/free-soli
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
-import { addToCartProductData, removeCartdata, incrementProductCount, decrementProductCount } from '@/Reducer/productReducer';
+import { storeAddToCartProductData, removeCartdata, incrementProductCount, decrementProductCount } from '@/Reducer/productReducer';
 // import { set } from 'mongoose';
 
 export default function ProductList() {
@@ -46,7 +46,7 @@ export default function ProductList() {
     //         setAddToCartData(getLocalData.productDetails.cartData)
     //     }
     // };
-    console.log("getSingleData----------------", getSingleData);
+    // console.log("getSingleData----------------", getSingleData);
     const handleAddtoCartBtn = (getId) => {
         if (getId) {
             setAddToCartId([...allAddToCartId, getId])
@@ -59,7 +59,7 @@ export default function ProductList() {
             setgetProductData(getDataError.getAllProductsData);
         }
         if (getSingleData && !getLoading) {
-            dispatch(addToCartProductData(getSingleData.addToCartProductData));
+            dispatch(storeAddToCartProductData(getSingleData.addToCartProductData));
         }
         if (getLoading) return console.log('Loading...');
         if (getSingleData) return console.log('Loading...');
@@ -76,6 +76,7 @@ export default function ProductList() {
         // getDataFromLocalStorage()
         handleRemoveDataFromLocal()
     }, [cartCount, allAddToCartId])
+    console.log("cart-----------",productCount)
 
     const filteredList = getProductData.filter((item) => {
         return item.productName.toLowerCase().includes(searchText.toLowerCase());
@@ -102,9 +103,6 @@ export default function ProductList() {
 
     }
 
-    const getProductQuantity = (productId) => {
-        return productQuantity[productId] || 0
-    }
     const handleDecrementCount = (productId) => {
         dispatch(decrementProductCount({ productId }))
     }
@@ -212,9 +210,12 @@ export default function ProductList() {
                                                                     }
                                                                     <FontAwesomeIcon icon={faPlus} onClick={() => handleIncrementCount(listCartData._id)} className='cursor-pointer border border-solid border-blue-300 font-thin rounded-xl p-1 text-xs' />
                                                                 </div>
+                                                                {/* <Link> */}
+                                                                
                                                                 <button type="submit" onClick={() => handleRemoveDataFromLocal(listCartData._id)} className="flex rounded p-2 text-center text-gray-950 transition-all duration-200 ease-in-out focus:shadow hover:text-red-500">
                                                                     Remove
                                                                 </button>
+                                                                {/* </Link> */}
                                                             </div>
                                                         </div>
                                                     </li>
@@ -228,9 +229,11 @@ export default function ProductList() {
                                         <button type='button' onClick={() => { setCart(false) }} className='bg-transparent  text-blue-700 font-semibold py-2 px-4 border border-blue-500 rounded hover:text-cyan-600 hover:border-cyan-600'>Continue Shopping</button>
                                     </div>
                                     <div className='flex justify-center items-center pt-5'>
+                                        <Link href="placeOrder">
                                         <button type="button" className="items-center justify-center rounded-md bg-orange-500 py-2 px-4 text-sm font-semibold text-white transition-all duration-200 ease-in-out focus:shadow hover:bg-gray-800">
                                             Place Order
                                         </button>
+                                        </Link>
                                     </div>
                                 </div>
                             </div>
