@@ -6,7 +6,9 @@ const placeOrder = mongoose.Schema({
     productId:{
         type:Array
     },
-    quantity:String,
+    quantity:{
+        type:Array
+    },
     name:String,
     email:String,
     phoneNo:Number,

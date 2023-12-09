@@ -153,6 +153,7 @@ const resolvers = {
 
     }
 }
+
 // module.exports = resolvers;
 // const hello = require('../../Client/public/Images')
 export default resolvers;

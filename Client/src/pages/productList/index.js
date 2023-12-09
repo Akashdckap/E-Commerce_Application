@@ -15,6 +15,7 @@ export default function ProductList() {
     const [openCart, setCart] = useState()
     const [getProductData, setgetProductData] = useState([])
     const [allAddToCartId, setAddToCartId] = useState([]);
+    const [cartCount, setCartCount] = useState(0)
     const [searchText, setSearchText] = useState('')
 
     const { data: getSingleData, error: getSingleError, loading: getSingleLoading } = useQuery(GET_ADD_TO_CART_SINGLE_PRODUCT_DATA, {

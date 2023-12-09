@@ -23,12 +23,12 @@ export default function placeOrder() {
     return (
         <>
             <h1>Good to see you</h1>
-            <div>
-                <div className="border-dashed border-2 border-blue-600 w-2/3 h-auto p-1 m-auto rounded-md">
+            <div className="flex justify-center">
+                <div>
                     {
                         cartProducts.map((listProducts, index) => {
                             return (
-                                <div className="flow-root" key={index}>
+                                <div className="border-dashed border-2 border-blue-600 h-auto my-8 mx-8 rounded-md" key={index}>
                                     <ul className="-my-8">
                                         <li className="flex flex-col space-y-1 py-10 text-left sm:flex-row sm:space-x-5 sm:space-y-1">
                                             <div className="shrink-0 relative">
@@ -40,11 +40,11 @@ export default function placeOrder() {
                                                         <p className="text-base font-semibold text-gray-900">{listProducts.productName}</p>
                                                         <p className="mx-0 mt-1 mb-0 text-sm text-gray-400">{listProducts.category}</p>
                                                     </div>
-                                                    <div className="mt-4 flex items-end justify-between sm:mt-0 sm:items-start sm:justify-end">
-                                                        <p className="shrink-0 w-20 text-base font-semibold text-gray-900 sm:order-2 sm:ml-8 sm:text-right">₹{listProducts.price}</p>
+                                                    <div className="mt-4 flex items-end justify-between sm:mt-0 sm:items-start">
+                                                        <p className="shrink-0 text-base font-semibold text-gray-900 sm:order-2 sm:ml-8 sm:text-right">₹{listProducts.price}</p>
                                                     </div>
                                                 </div>
-                                                <div className="flex justify-center items-center gap-32">
+                                                <div className="flex justify-center items-center gap-x-8">
                                                     <div className='flex justify-center items-center gap-3'>
                                                         <FontAwesomeIcon icon={faMinus} onClick={() => handleDecrementCount(listProducts._id)} className='cursor-pointer border border-solid border-blue-300 font-thin rounded-xl p-1 text-xs' />
                                                         {
@@ -54,7 +54,7 @@ export default function placeOrder() {
                                                         }
                                                         <FontAwesomeIcon icon={faPlus} onClick={() => handleIncrementCount(listProducts._id)} className='cursor-pointer border border-solid border-blue-300 font-thin rounded-xl p-1 text-xs' />
                                                     </div>
-                                                    <button type="submit" onClick={() => handleRemoveDataFromLocal(listProducts._id)} className="flex rounded p-2 text-center text-gray-950 transition-all duration-200 ease-in-out focus:shadow hover:text-red-500">
+                                                    <button type="submit" onClick={() => handleRemoveDataFromLocal(listProducts._id)}>
                                                         Remove
                                                     </button>
                                                 </div>
@@ -66,7 +66,7 @@ export default function placeOrder() {
                         })
                     }
                 </div>
-                <div>
+                <div className="border-dashed border-2 border-blue-600 w-2/3 h-auto p-1 m-auto rounded-md">
                     <form>
                         <div>
                             <label>Name: </label>
