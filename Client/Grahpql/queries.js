@@ -68,8 +68,8 @@ export const GET_EDIT_PRODUCT_DATA = gql`
     }
 `
 export const GET_ADD_TO_CART_SINGLE_PRODUCT_DATA = gql`
-       query GetAddToCart_Single_ProductData ($id: ID!){
-        getAddToCart_Single_ProductData (id : $id) {
+       query addToCartProductData ($ids: [ID!]!){
+        addToCartProductData (ids : $ids) {
         _id
         productName
         category
