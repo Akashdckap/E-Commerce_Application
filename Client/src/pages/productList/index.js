@@ -7,7 +7,8 @@ import { faClose, faMinus, faPlus, faShoppingCart } from '@fortawesome/free-soli
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
-import { addToCartProductData, removeCartdata, incrementProductCount } from '@/Reducer/productReducer';
+import { addToCartProductData, removeCartdata, incrementProductCount, decrementProductCount } from '@/Reducer/productReducer';
+import { set } from 'mongoose';
 
 export default function ProductList() {
     // const [cartId, setCartId] = useState(0)
@@ -16,7 +17,8 @@ export default function ProductList() {
     const productCount = useSelector(state => state.productDetails.cartData);
     console.log("productCount--------------", productCount);
     // console.log("cartId---------------", cartId);
-
+    // const getStoredData = useSelector(state => state.productDetails.cartData)
+    // console.log("getStoredData----------", getStoredData);
 
     const dispatch = useDispatch()
     const [openCart, setCart] = useState()
@@ -34,24 +36,23 @@ export default function ProductList() {
 
 
     const { data: getSingleData, error: getSingleError, loading: getSingleLoading } = useQuery(GET_ADD_TO_CART_SINGLE_PRODUCT_DATA, {
-        variables: { id: addToCartId }
+        variables: { ids: allAddToCartId }
     })
     const { data: getDataError, error: getError, loading: getLoading } = useQuery(GET_ALL_PRODUCTS_DATA);
 
-    const getDataFromLocalStorage = () => {
-        const getLocalData = JSON.parse(localStorage.getItem('productData'));
-        if (getLocalData) {
-            setCartCount(getLocalData.productDetails.cartData.length)
-            setAddToCartData(getLocalData.productDetails.cartData)
-        }
-    };
-
-    // const handleAddtoCartBtn = (getId) => {
-    //     if (getId) {
-    //         allAddToCartId.push(getId)
+    // const getDataFromLocalStorage = () => {
+    //     const getLocalData = JSON.parse(localStorage.getItem('productData'));
+    //     if (getLocalData) {
+    //         setCartCount(getLocalData.productDetails.cartData.length)
+    //         setAddToCartData(getLocalData.productDetails.cartData)
     //     }
-    //     console.log("allAddToCartId-------------", allAddToCartId);
-    // }
+    // };
+    console.log("getSingleData----------------", getSingleData);
+    const handleAddtoCartBtn = (getId) => {
+        if (getId) {
+            setAddToCartId([...allAddToCartId, getId])
+        }
+    }
 
     useEffect(() => {
         // handleAddtoCartBtn()
@@ -65,14 +66,14 @@ export default function ProductList() {
         if (getSingleData) return console.log('Loading...');
         if (getSingleError) return console.error('Error fetching data:', getSingleError);
         if (getError) return console.error('Error fetching data:', getSingleError);
-    }, [getError, getDataError, getSingleData, cartCount, productCount]);
+    }, [getError, getDataError, getSingleData, cartCount]);
 
     const handleRemoveDataFromLocal = (itemId) => {
         dispatch(removeCartdata(itemId))
         // setCart(false)
     }
     useEffect(() => {
-        getDataFromLocalStorage()
+        // getDataFromLocalStorage()
         handleRemoveDataFromLocal()
     }, [cartCount])
 
@@ -85,8 +86,9 @@ export default function ProductList() {
     }
 
     const handleDecrementCount = (productId) => {
-
+        dispatch(decrementProductCount({ productId }))
     }
+    // console.log("allAddToCartId----------------", allAddToCartId);
     return (
         <>
             <div>
@@ -98,7 +100,7 @@ export default function ProductList() {
                             <Link href="adminStore"><button type="button" className="h-10 w-40 py-2.5 px-5 me-2 mb-2 mr-10 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-full border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Go to Store</button></Link>
                         </div>
                         <div className='relative bottom-4'>
-                            <p className='relative left-5 top-2 text-yellow-500 text-lg font-semibold'>{cartCount}</p>
+                            <p className='relative left-5 top-2 text-yellow-500 text-lg font-semibold'>{Number(productCount.length  )}</p>
                             <FontAwesomeIcon onClick={() => setCart(true)} icon={faShoppingCart} className='text-white-400  mb-10 text-2xl cursor-pointer' />
                         </div>
                     </div>
@@ -134,16 +136,16 @@ export default function ProductList() {
                                                 <p>
                                                     <span className="text-3xl font-bold text-slate-900">₹{item.price}</span>
                                                 </p>
-                                                <Link href={`/productList/${item._id}`} className="cursor-pointer flex items-center rounded-md bg-slate-900 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-blue-300">
+                                                {/* <Link href={`/productList/${item._id}`} className="cursor-pointer flex items-center rounded-md bg-slate-900 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-blue-300">
                                                     <svg xmlns="http://www.w3.org/2000/svg" className="mr-2 h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                                                         <path strokeLinecap="round" strokeLinejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                                                     </svg>
-                                                    Add to cart</Link>
-                                                {/* <button onClick={() => handleAddtoCartBtn(item._id)} id={item._id} className="cursor-pointer flex items-center rounded-md bg-slate-900 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-blue-300">
+                                                    Add to cart</Link> */}
+                                                <button onClick={() => handleAddtoCartBtn(item._id)} id={item._id} className="cursor-pointer flex items-center rounded-md bg-slate-900 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-blue-300">
                                                     <svg xmlns="http://www.w3.org/2000/svg" className="mr-2 h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                                                         <path strokeLinecap="round" strokeLinejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                                                     </svg>
-                                                    Add to cart</button> */}
+                                                    Add to cart</button>
                                             </div>
                                         </div>
                                     </div>
@@ -164,7 +166,7 @@ export default function ProductList() {
                             </div>
                             <div className="sm:px-1 sm:py-10 overflow-y-scroll max-h-96 p-2">
                                 {
-                                    getAddToCartData.map((listCartData, index) => {
+                                    productCount.map((listCartData, index) => {
                                         return (
                                             <div className="flow-root" key={index}>
                                                 <ul className="-my-8">
@@ -185,7 +187,12 @@ export default function ProductList() {
                                                             <div className="flex justify-center items-center gap-32">
                                                                 <div className='flex justify-center items-center gap-3'>
                                                                     <FontAwesomeIcon icon={faMinus} onClick={() => handleDecrementCount(listCartData._id)} className='cursor-pointer border border-solid border-blue-300 font-thin rounded-xl p-1 text-xs' />
-                                                                    <span className='border border-gray-400 w-10 rounded-sm flex justify-center items-center'>{listCartData.count}</span>
+                                                                    {
+                                                                        listCartData.count > 0 ? (
+                                                                            <span className='border border-gray-400 w-10 rounded-sm flex justify-center items-center'>{listCartData.count}</span>
+                                                                        ) : <span className='border border-gray-400 w-10 rounded-sm flex justify-center items-center'>0</span>
+
+                                                                    }
                                                                     <FontAwesomeIcon icon={faPlus} onClick={() => handleIncrementCount(listCartData._id)} className='cursor-pointer border border-solid border-blue-300 font-thin rounded-xl p-1 text-xs' />
                                                                 </div>
                                                                 <button type="submit" onClick={() => handleRemoveDataFromLocal(listCartData._id)} className="flex rounded p-2 text-center text-gray-950 transition-all duration-200 ease-in-out focus:shadow hover:text-red-500">
