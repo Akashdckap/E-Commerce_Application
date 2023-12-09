@@ -67,7 +67,6 @@ export const GET_EDIT_PRODUCT_DATA = gql`
     }
     }
 `
-
 export const GET_ADD_TO_CART_SINGLE_PRODUCT_DATA = gql`
        query addToCartProductData ($ids: [ID!]!){
         addToCartProductData (ids : $ids) {
@@ -82,21 +81,6 @@ export const GET_ADD_TO_CART_SINGLE_PRODUCT_DATA = gql`
      }
     }
 `
-
-// export const GET_ADD_TO_CART_SINGLE_PRODUCT_DATA = gql`
-//        query GetAddToCart_Single_ProductData ($id: ID!){
-//         getAddToCart_Single_ProductData (id : $id) {
-//         _id
-//         productName
-//         category
-//         brand
-//         price
-//         weight
-//         color
-//         description
-//      }
-//     }
-// `
 
 export const GET_PRODUCT_DETAILS = gql`
     query GetProductDetails ($id:ID!){
