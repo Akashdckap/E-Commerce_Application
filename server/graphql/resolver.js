@@ -51,6 +51,7 @@ const resolvers = {
             catch (error) {
                 console.log(error, "Error fetching data from mongodb");
             }
+
         }
     },
     Mutation: {
@@ -152,7 +153,7 @@ const resolvers = {
 
     }
 }
-
+}
 // module.exports = resolvers;
 // const hello = require('../../Client/public/Images')
 export default resolvers;

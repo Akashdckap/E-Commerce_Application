@@ -5,56 +5,110 @@ import { GET_ADD_TO_CART_SINGLE_PRODUCT_DATA, GET_ALL_PRODUCTS_DATA } from '../.
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClose, faMinus, faPlus, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
-import { storeAddToCartProductData, removeCartdata, incrementProductCount, decrementProductCount } from '@/Reducer/productReducer';
+import { addToCartProductData, removeCartdata, incrementProductCount, decrementProductCount } from '@/Reducer/productReducer';
+// import { set } from 'mongoose';
 
 export default function ProductList() {
+    // const [cartId, setCartId] = useState(0)
+    // const count = useSelector(state => state.productDetails)
+    // console.log("counting--------------", count);
     const productCount = useSelector(state => state.productDetails.cartData);
+    // console.log("productCount--------------", productCount);
+    // console.log("cartId---------------", cartId);
+    // const getStoredData = useSelector(state => state.productDetails.cartData)
+    // console.log("getStoredData----------", getStoredData);
+
     const dispatch = useDispatch()
     const [openCart, setCart] = useState()
     const [getProductData, setgetProductData] = useState([])
+    const [getAddToCartData, setAddToCartData] = useState([])
     const [allAddToCartId, setAddToCartId] = useState([]);
+    const [cartCount, setCartCount] = useState(0)
+    const router = useRouter()
+    const { addToCartId } = router.query
     const [searchText, setSearchText] = useState('')
+    const [productQuantity, setProductQuantity] = useState(0)
+    // const [increment, setIncrement] = useState(null)
+    // const [decrement, setDecrement] = useState(null)
+
 
     const { data: getSingleData, error: getSingleError, loading: getSingleLoading } = useQuery(GET_ADD_TO_CART_SINGLE_PRODUCT_DATA, {
         variables: { ids: allAddToCartId }
     })
     const { data: getDataError, error: getError, loading: getLoading } = useQuery(GET_ALL_PRODUCTS_DATA);
 
+    // const getDataFromLocalStorage = () => {
+    //     const getLocalData = JSON.parse(localStorage.getItem('productData'));
+    //     if (getLocalData) {
+    //         setCartCount(getLocalData.productDetails.cartData.length)
+    //         setAddToCartData(getLocalData.productDetails.cartData)
+    //     }
+    // };
+    console.log("getSingleData----------------", getSingleData);
     const handleAddtoCartBtn = (getId) => {
         if (getId) {
             setAddToCartId([...allAddToCartId, getId])
         }
     }
+
     useEffect(() => {
-        handleRemoveDataFromLocal()
+        // handleAddtoCartBtn()
         if (getDataError && !getLoading) {
             setgetProductData(getDataError.getAllProductsData);
         }
         if (getSingleData && !getLoading) {
-            dispatch(storeAddToCartProductData(getSingleData.addToCartProductData));
+            dispatch(addToCartProductData(getSingleData.addToCartProductData));
         }
         if (getLoading) return console.log('Loading...');
         if (getSingleData) return console.log('Loading...');
         if (getSingleError) return console.error('Error fetching data:', getSingleError);
         if (getError) return console.error('Error fetching data:', getSingleError);
-    }, [getError, getDataError, getSingleData]);
+    }, [getError, getDataError, getSingleData, cartCount]);
 
     const handleRemoveDataFromLocal = (itemId) => {
         dispatch(removeCartdata(itemId))
+        // setCart(false)
     }
+
+    useEffect(() => {
+        // getDataFromLocalStorage()
+        handleRemoveDataFromLocal()
+    }, [cartCount, allAddToCartId])
 
     const filteredList = getProductData.filter((item) => {
         return item.productName.toLowerCase().includes(searchText.toLowerCase());
     });
 
+    //     const handleIncrementCount = (index) => {
+    //         // console.log(productId)
+    //         // Incrementing all data at a time
+    //         // setProductQuantity(prevQuantity => prevQuantity + 1 )
+    //         setAddToCartData(prevItems =>{
+    //             console.log("prevItems-----------",prevItems)
+    //             const updateItems = [...prevItems];
+    //             updateItems[index] = {
+    //                 ...updateItems[index],
+    //                 productQuantity: updateItems[index].productQuantity+1
+    //             }
+    //             return updateItems;
+    //         });
+
+
     const handleIncrementCount = (productId) => {
+        // setCartId(productId)
         dispatch(incrementProductCount({ productId }))
 
+    }
+
+    const getProductQuantity = (productId) => {
+        return productQuantity[productId] || 0
     }
     const handleDecrementCount = (productId) => {
         dispatch(decrementProductCount({ productId }))
     }
+    // console.log("allAddToCartId----------------", allAddToCartId);
     return (
         <>
             <div>
@@ -152,6 +206,7 @@ export default function ProductList() {
                                                             </div>
                                                             <div className="flex justify-center items-center gap-32">
                                                                 <div className='flex justify-center items-center gap-3'>
+
 
                                                                     <FontAwesomeIcon icon={faMinus} onClick={() => handleDecrementCount(listCartData._id)} className='cursor-pointer border border-solid border-blue-300 font-thin rounded-xl p-1 text-xs' />
                                                                     {
