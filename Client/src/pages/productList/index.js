@@ -15,7 +15,7 @@ export default function ProductList() {
     // const count = useSelector(state => state.productDetails)
     // console.log("counting--------------", count);
     const productCount = useSelector(state => state.productDetails.cartData);
-    console.log("productCount--------------", productCount);
+    // console.log("productCount--------------", productCount);
     // console.log("cartId---------------", cartId);
     // const getStoredData = useSelector(state => state.productDetails.cartData)
     // console.log("getStoredData----------", getStoredData);
@@ -24,12 +24,11 @@ export default function ProductList() {
     const [openCart, setCart] = useState()
     const [getProductData, setgetProductData] = useState([])
     const [getAddToCartData, setAddToCartData] = useState([])
-    const [allAddToCartId, setAddToCartId] = useState([]);
+    const [allAddToCartId, setAddToCartDataId] = useState([]);
     const [cartCount, setCartCount] = useState(0)
     const router = useRouter()
     const { addToCartId } = router.query
     const [searchText, setSearchText] = useState('')
-
     const [productQuantity, setProductQuantity] = useState(0)
     // const [increment, setIncrement] = useState(null)
     // const [decrement, setDecrement] = useState(null)
@@ -60,7 +59,7 @@ export default function ProductList() {
             setgetProductData(getDataError.getAllProductsData);
         }
         if (getSingleData && !getLoading) {
-            dispatch(addToCartProductData(getSingleData.getAddToCart_Single_ProductData));
+            dispatch(addToCartProductData(getSingleData.addToCartProductData));
         }
         if (getLoading) return console.log('Loading...');
         if (getSingleData) return console.log('Loading...');
@@ -72,19 +71,40 @@ export default function ProductList() {
         dispatch(removeCartdata(itemId))
         // setCart(false)
     }
+
     useEffect(() => {
         // getDataFromLocalStorage()
         handleRemoveDataFromLocal()
-    }, [cartCount])
+    }, [cartCount, allAddToCartId])
 
     const filteredList = getProductData.filter((item) => {
         return item.productName.toLowerCase().includes(searchText.toLowerCase());
     });
+
+    //     const handleIncrementCount = (index) => {
+    //         // console.log(productId)
+    //         // Incrementing all data at a time
+    //         // setProductQuantity(prevQuantity => prevQuantity + 1 )
+    //         setAddToCartData(prevItems =>{
+    //             console.log("prevItems-----------",prevItems)
+    //             const updateItems = [...prevItems];
+    //             updateItems[index] = {
+    //                 ...updateItems[index],
+    //                 productQuantity: updateItems[index].productQuantity+1
+    //             }
+    //             return updateItems;
+    //         });
+
+
     const handleIncrementCount = (productId) => {
         // setCartId(productId)
         dispatch(incrementProductCount({ productId }))
+
     }
 
+    const getProductQuantity = (productId) => {
+        return productQuantity[productId] || 0
+    }
     const handleDecrementCount = (productId) => {
         dispatch(decrementProductCount({ productId }))
     }
@@ -186,6 +206,11 @@ export default function ProductList() {
                                                             </div>
                                                             <div className="flex justify-center items-center gap-32">
                                                                 <div className='flex justify-center items-center gap-3'>
+
+//                                                                     <FontAwesomeIcon icon={faMinus} onClick={() => handleDecrementCount(listCartData._id)} className='cursor-pointer' />
+//                                                                     <span>{productQuantity}</span>
+//                                                                     <FontAwesomeIcon icon={faPlus} onClick={handleIncrementCount} className='cursor-pointer' />
+
                                                                     <FontAwesomeIcon icon={faMinus} onClick={() => handleDecrementCount(listCartData._id)} className='cursor-pointer border border-solid border-blue-300 font-thin rounded-xl p-1 text-xs' />
                                                                     {
                                                                         listCartData.count > 0 ? (
