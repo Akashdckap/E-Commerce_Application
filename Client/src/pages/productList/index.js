@@ -8,7 +8,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import { addToCartProductData, removeCartdata, incrementProductCount, decrementProductCount } from '@/Reducer/productReducer';
-import { set } from 'mongoose';
+// import { set } from 'mongoose';
 
 export default function ProductList() {
     // const [cartId, setCartId] = useState(0)
@@ -24,7 +24,7 @@ export default function ProductList() {
     const [openCart, setCart] = useState()
     const [getProductData, setgetProductData] = useState([])
     const [getAddToCartData, setAddToCartData] = useState([])
-    const [allAddToCartId, setAddToCartDataId] = useState([]);
+    const [allAddToCartId, setAddToCartId] = useState([]);
     const [cartCount, setCartCount] = useState(0)
     const router = useRouter()
     const { addToCartId } = router.query
@@ -120,7 +120,7 @@ export default function ProductList() {
                             <Link href="adminStore"><button type="button" className="h-10 w-40 py-2.5 px-5 me-2 mb-2 mr-10 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-full border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Go to Store</button></Link>
                         </div>
                         <div className='relative bottom-4'>
-                            <p className='relative left-5 top-2 text-yellow-500 text-lg font-semibold'>{Number(productCount.length  )}</p>
+                            <p className='relative left-5 top-2 text-yellow-500 text-lg font-semibold'>{Number(productCount.length)}</p>
                             <FontAwesomeIcon onClick={() => setCart(true)} icon={faShoppingCart} className='text-white-400  mb-10 text-2xl cursor-pointer' />
                         </div>
                     </div>
@@ -206,12 +206,9 @@ export default function ProductList() {
                                                             </div>
                                                             <div className="flex justify-center items-center gap-32">
                                                                 <div className='flex justify-center items-center gap-3'>
-
-//                                                                     <FontAwesomeIcon icon={faMinus} onClick={() => handleDecrementCount(listCartData._id)} className='cursor-pointer' />
-//                                                                     <span>{productQuantity}</span>
-//                                                                     <FontAwesomeIcon icon={faPlus} onClick={handleIncrementCount} className='cursor-pointer' />
-
-                                                                    <FontAwesomeIcon icon={faMinus} onClick={() => handleDecrementCount(listCartData._id)} className='cursor-pointer border border-solid border-blue-300 font-thin rounded-xl p-1 text-xs' />
+                                                                    
+                                                                    <FontAwesomeIcon icon={faMinus} onClick={handleIncrementCount} className='cursor-pointer' />
+                                                                    {/* <FontAwesomeIcon icon={faMinus} onClick={() => handleDecrementCount(listCartData._id)} className='cursor-pointer border border-solid border-blue-300 font-thin rounded-xl p-1 text-xs' /> */}
                                                                     {
                                                                         listCartData.count > 0 ? (
                                                                             <span className='border border-gray-400 w-10 rounded-sm flex justify-center items-center'>{listCartData.count}</span>
