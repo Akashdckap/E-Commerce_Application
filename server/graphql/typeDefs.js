@@ -92,8 +92,8 @@ const typeDefs = gql` #graphql
         getTotalProductCount:Int!
         getEditProductData(id: ID!): products
         getProductDetails(id: ID!):products
-        # getAddToCart_Single_ProductData(ids: [ID!]!): [products]!
-        addToCartProductData(ids: [ID!]!): products!
+        getAddToCart_Single_ProductData(ids: [ID!]!): [products]!
+        # getAddToCart_Single_ProductData(id: ID!): products
         # getImages:[images]
     }
 
