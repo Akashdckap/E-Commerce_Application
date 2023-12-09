@@ -5,11 +5,12 @@ import { GET_ADD_TO_CART_SINGLE_PRODUCT_DATA, GET_ALL_PRODUCTS_DATA } from '../.
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClose, faMinus, faPlus, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useDispatch, useSelector } from 'react-redux';
-import { storeAddToCartProductData, removeCartdata, incrementProductCount, decrementProductCount } from '@/Reducer/productReducer';
+import { storeAddToCartProductData, removeCartdata, removeAllCartDatas, incrementProductCount, decrementProductCount } from '@/Reducer/productReducer';
 
 export default function ProductList() {
-    const productCount = useSelector(state => state.productDetails.cartData);
+    const getCartData = useSelector(state => state.productDetails.cartData);
     const dispatch = useDispatch()
     const [openCart, setCart] = useState()
     const [getProductData, setgetProductData] = useState([])
@@ -27,7 +28,6 @@ export default function ProductList() {
         }
     }
     useEffect(() => {
-        handleRemoveDataFromLocal()
         if (getDataError && !getLoading) {
             setgetProductData(getDataError.getAllProductsData);
         }
@@ -43,14 +43,15 @@ export default function ProductList() {
     const handleRemoveDataFromLocal = (itemId) => {
         dispatch(removeCartdata(itemId))
     }
-
+    const removeAllCartData = () => {
+        dispatch(removeAllCartDatas())
+    }
     const filteredList = getProductData.filter((item) => {
         return item.productName.toLowerCase().includes(searchText.toLowerCase());
     });
 
     const handleIncrementCount = (productId) => {
         dispatch(incrementProductCount({ productId }))
-
     }
     const handleDecrementCount = (productId) => {
         dispatch(decrementProductCount({ productId }))
@@ -66,7 +67,7 @@ export default function ProductList() {
                             <Link href="adminStore"><button type="button" className="h-10 w-40 py-2.5 px-5 me-2 mb-2 mr-10 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-full border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Go to Store</button></Link>
                         </div>
                         <div className='relative bottom-4'>
-                            <p className='relative left-5 top-2 text-yellow-500 text-lg font-semibold'>{Number(productCount.length)}</p>
+                            <p className='relative left-5 top-2 text-yellow-500 text-lg font-semibold'>{getCartData.length}</p>
                             <FontAwesomeIcon onClick={() => setCart(true)} icon={faShoppingCart} className='text-white-400  mb-10 text-2xl cursor-pointer' />
                         </div>
                     </div>
@@ -76,6 +77,7 @@ export default function ProductList() {
                         {
                             filteredList.length > 0 ? (
                                 filteredList.map((item, index) =>
+                                    // {console.log("item---",item)},
                                     <div key={index} className="relative m-10 w-full max-w-xs overflow-hidden rounded-lg bg-white shadow-md">
                                         <a>
                                             <img className="h-60 rounded-t-lg object-cover" src="https://images.unsplash.com/flagged/photo-1556637640-2c80d3201be8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8c25lYWtlcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60" alt="product image" />
@@ -127,45 +129,62 @@ export default function ProductList() {
                             </div>
                             <div className="sm:px-1 sm:py-10 overflow-y-scroll max-h-96 p-2">
                                 {
-                                    productCount.map((listCartData, index) => {
-                                        return (
-                                            <div className="flow-root" key={listCartData._id}>
-                                                <ul className="-my-8">
-                                                    <li className="flex flex-col space-y-1 py-10 text-left sm:flex-row sm:space-x-5 sm:space-y-1">
-                                                        <div className="shrink-0 relative">
-                                                            <img className="h-24 w-24 max-w-full rounded-lg object-cover" src="https://images.unsplash.com/flagged/photo-1556637640-2c80d3201be8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8c25lYWtlcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60" alt="" />
-                                                        </div>
-                                                        <div className="relative flex flex-1 flex-col justify-between">
-                                                            <div className="sm:col-gap-3 sm:grid sm:grid-cols-2">
-                                                                <div className="pr-8 sm:pr-5">
-                                                                    <p className="text-base font-semibold text-gray-900">{listCartData.productName}</p>
-                                                                    <p className="mx-0 mt-1 mb-0 text-sm text-gray-400">{listCartData.category}</p>
-                                                                </div>
-                                                                <div className="mt-4 flex items-end justify-between sm:mt-0 sm:items-start sm:justify-end">
-                                                                    <p className="shrink-0 w-20 text-base font-semibold text-gray-900 sm:order-2 sm:ml-8 sm:text-right">₹{listCartData.price}</p>
-                                                                </div>
+                                    getCartData.length > 0 ? (
+                                        getCartData.map((listCartData, index) => {
+                                            return (
+                                                <div className="flow-root" key={listCartData._id}>
+                                                    <ul className="-my-8">
+                                                        <li className="flex flex-col space-y-1 py-10 text-left sm:flex-row sm:space-x-5 sm:space-y-1">
+                                                            <div className="shrink-0 relative">
+                                                                <img className="h-24 w-24 max-w-full rounded-lg object-cover" src="https://images.unsplash.com/flagged/photo-1556637640-2c80d3201be8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8c25lYWtlcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60" alt="" />
                                                             </div>
-                                                            <div className="flex justify-center items-center gap-32">
-                                                                <div className='flex justify-center items-center gap-3'>
-                                                                    <FontAwesomeIcon icon={faMinus} onClick={() => handleDecrementCount(listCartData._id)} className='cursor-pointer border border-solid border-blue-300 font-thin rounded-xl p-1 text-xs' />
-                                                                    {
-                                                                        listCartData.count > 0 ? (
-                                                                            <span className='border border-gray-400 w-10 rounded-sm flex justify-center items-center'>{listCartData.count}</span>
-                                                                        ) : <span className='border border-gray-400 w-10 rounded-sm flex justify-center items-center'>0</span>
+                                                            <div className="relative flex flex-1 flex-col justify-between">
+                                                                <div className="sm:col-gap-3 sm:grid sm:grid-cols-2">
+                                                                    <div className="pr-8 sm:pr-5">
+                                                                        <p className="text-base font-semibold text-gray-900">{listCartData.productName}</p>
+                                                                        <p className="mx-0 mt-1 mb-0 text-sm text-gray-400">{listCartData.category}</p>
+                                                                    </div>
+                                                                    <div className="mt-4 flex items-end justify-between sm:mt-0 sm:items-start sm:justify-end">
+                                                                        <p className="shrink-0 w-20 text-base font-semibold text-gray-900 sm:order-2 sm:ml-8 sm:text-right">₹{listCartData.price}</p>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="flex justify-center items-center gap-32">
+                                                                    <div className='flex justify-center items-center gap-3'>
+                                                                        <FontAwesomeIcon icon={faMinus} onClick={() => handleDecrementCount(listCartData._id)} className='cursor-pointer border border-solid border-blue-300 font-thin rounded-xl p-1 text-xs' />
+                                                                        {
+                                                                            listCartData.count > 0 ? (
+                                                                                <span className='border border-gray-400 w-10 rounded-sm flex justify-center items-center'>{listCartData.count}</span>
+                                                                            ) : <span className='border border-gray-400 w-10 rounded-sm flex justify-center items-center'>0</span>
 
-                                                                    }
-                                                                    <FontAwesomeIcon icon={faPlus} onClick={() => handleIncrementCount(listCartData._id)} className='cursor-pointer border border-solid border-blue-300 font-thin rounded-xl p-1 text-xs' />
+                                                                        }
+                                                                        <FontAwesomeIcon icon={faPlus} onClick={() => handleIncrementCount(listCartData._id)} className='cursor-pointer border border-solid border-blue-300 font-thin rounded-xl p-1 text-xs' />
+                                                                    </div>
+                                                                    <button type="submit" onClick={() => handleRemoveDataFromLocal(listCartData._id)} className="flex rounded p-2 text-center text-gray-950 transition-all duration-200 ease-in-out focus:shadow hover:text-red-500">
+                                                                        Remove
+                                                                    </button>
                                                                 </div>
-                                                                <button type="submit" onClick={() => handleRemoveDataFromLocal(listCartData._id)} className="flex rounded p-2 text-center text-gray-950 transition-all duration-200 ease-in-out focus:shadow hover:text-red-500">
-                                                                    Remove
-                                                                </button>
                                                             </div>
-                                                        </div>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        )
-                                    })
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            )
+                                        })
+                                    ) : <div>
+                                        <Image
+                                            src="/Images/noCart.png"
+                                            alt="No Carts Found Image"
+                                            style={{ paddingTop: '30px', padding: '50px' }}
+                                            width={400}
+                                            height={200}
+                                        />
+                                    </div>
+                                }
+                                {
+                                    getCartData.length > 1 ? (
+                                        <div className='flex justify-end'>
+                                            <span onClick={removeAllCartData} className='cursor-pointer hover:text-red-600'>Remove All</span>
+                                        </div>
+                                    ) : ''
                                 }
                                 <div className="flex justify-center place-items-center gap-2">
                                     <div className='flex justify-center items-center pt-5'>
