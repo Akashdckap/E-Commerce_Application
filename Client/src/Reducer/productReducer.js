@@ -29,9 +29,12 @@ export const productSlice = createSlice({
             const { productId } = action.payload
             const productIndex = state.cartData.findIndex(product => product._id === productId)
             state.cartData[productIndex].count = Math.max((state.cartData[productIndex].count || 0) - 1, 0);
+        },
+        removeAllCartDatas: (state) => {
+            state.cartData = []
         }
     },
 })
 
-export const { storeAddToCartProductData, removeCartdata, incrementProductCount, decrementProductCount } = productSlice.actions
+export const { storeAddToCartProductData, removeCartdata, removeAllCartDatas, incrementProductCount, decrementProductCount } = productSlice.actions
 export default productSlice.reducer
