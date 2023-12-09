@@ -14,28 +14,15 @@ export default function ProductList() {
     const dispatch = useDispatch()
     const [openCart, setCart] = useState()
     const [getProductData, setgetProductData] = useState([])
-    const [getAddToCartData, setAddToCartData] = useState([])
     const [allAddToCartId, setAddToCartId] = useState([]);
     const [cartCount, setCartCount] = useState(0)
     const [searchText, setSearchText] = useState('')
-    const [productQuantity, setProductQuantity] = useState(0)
-    // const [increment, setIncrement] = useState(null)
-    // const [decrement, setDecrement] = useState(null)
-
 
     const { data: getSingleData, error: getSingleError, loading: getSingleLoading } = useQuery(GET_ADD_TO_CART_SINGLE_PRODUCT_DATA, {
         variables: { ids: allAddToCartId }
     })
     const { data: getDataError, error: getError, loading: getLoading } = useQuery(GET_ALL_PRODUCTS_DATA);
 
-    // const getDataFromLocalStorage = () => {
-    //     const getLocalData = JSON.parse(localStorage.getItem('productData'));
-    //     if (getLocalData) {
-    //         setCartCount(getLocalData.productDetails.cartData.length)
-    //         setAddToCartData(getLocalData.productDetails.cartData)
-    //     }
-    // };
-    // console.log("getSingleData----------------", getSingleData);
     const handleAddtoCartBtn = (getId) => {
         if (getId) {
             setAddToCartId([...allAddToCartId, getId])
@@ -53,43 +40,26 @@ export default function ProductList() {
         if (getSingleData) return console.log('Loading...');
         if (getSingleError) return console.error('Error fetching data:', getSingleError);
         if (getError) return console.error('Error fetching data:', getSingleError);
-    }, [getError, getDataError, getSingleData, cartCount]);
+    }, [getError, getDataError, getSingleData]);
 
     const handleRemoveDataFromLocal = (itemId) => {
         dispatch(removeCartdata(itemId))
-        // setCart(false)
     }
     const removeAllCartData = () => {
         dispatch(removeAllCartDatas())
+        setCart(false)
     }
     const filteredList = getProductData.filter((item) => {
         return item.productName.toLowerCase().includes(searchText.toLowerCase());
     });
 
-    //     const handleIncrementCount = (index) => {
-    //         // console.log(productId)
-    //         // Incrementing all data at a time
-    //         // setProductQuantity(prevQuantity => prevQuantity + 1 )
-    //         setAddToCartData(prevItems =>{
-    //             console.log("prevItems-----------",prevItems)
-    //             const updateItems = [...prevItems];
-    //             updateItems[index] = {
-    //                 ...updateItems[index],
-    //                 productQuantity: updateItems[index].productQuantity+1
-    //             }
-    //             return updateItems;
-    //         });
-
-
     const handleIncrementCount = (productId) => {
-        // setCartId(productId)
         dispatch(incrementProductCount({ productId }))
     }
 
     const handleDecrementCount = (productId) => {
         dispatch(decrementProductCount({ productId }))
     }
-    // console.log("allAddToCartId----------------", allAddToCartId);
     return (
         <>
             <div>
@@ -111,7 +81,6 @@ export default function ProductList() {
                         {
                             filteredList.length > 0 ? (
                                 filteredList.map((item, index) =>
-                                    // {console.log("item---",item)},
                                     <div key={index} className="relative m-10 w-full max-w-xs overflow-hidden rounded-lg bg-white shadow-md">
                                         <a>
                                             <img className="h-60 rounded-t-lg object-cover" src="https://images.unsplash.com/flagged/photo-1556637640-2c80d3201be8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8c25lYWtlcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60" alt="product image" />
@@ -226,9 +195,9 @@ export default function ProductList() {
                                     </div>
                                     <div className='flex justify-center items-center pt-5'>
                                         <Link href="placeOrder">
-                                        <button type="button" className="items-center justify-center rounded-md bg-orange-500 py-2 px-4 text-sm font-semibold text-white transition-all duration-200 ease-in-out focus:shadow hover:bg-gray-800">
-                                            Place Order
-                                        </button>
+                                            <button type="button" className="items-center justify-center rounded-md bg-orange-500 py-2 px-4 text-sm font-semibold text-white transition-all duration-200 ease-in-out focus:shadow hover:bg-gray-800">
+                                                Place Order
+                                            </button>
                                         </Link>
                                     </div>
                                 </div>

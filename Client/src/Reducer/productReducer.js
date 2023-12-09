@@ -31,7 +31,7 @@ export const productSlice = createSlice({
             state.cartData[productIndex].count = Math.max((state.cartData[productIndex].count || 0) - 1, 0);
         },
         removeAllCartDatas: (state) => {
-            state.cartData = []
+            state.cartData = state.cartData = []
         }
     },
 })
