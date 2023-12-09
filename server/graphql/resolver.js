@@ -43,7 +43,7 @@ const resolvers = {
             const totalCount = await productDetails.countDocuments();
             return totalCount;
         },
-        getAddToCart_Single_ProductData: async (_, { ids }) => {
+        addToCartProductData: async (_, { ids }) => {
             return await productDetails.find({ _id: { $in: ids } })
         }
     },
