@@ -2,7 +2,7 @@ import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClose, faMinus, faPlus, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
-import { incrementProductCount,decrementProductCount,removeCartdata } from "@/Reducer/productReducer";
+import { incrementProductCount, decrementProductCount, removeCartdata } from "@/Reducer/productReducer";
 
 export default function placeOrder() {
 
@@ -22,7 +22,7 @@ export default function placeOrder() {
     }
     return (
         <>
-            <h1>Good to see you</h1>
+            <h1 className="text-2xl mt-2 ml-10">Good to see you here</h1>
             <div className="flex justify-center">
                 <div>
                     {
@@ -44,7 +44,7 @@ export default function placeOrder() {
                                                         <p className="shrink-0 text-base font-semibold text-gray-900 sm:order-2 sm:ml-8 sm:text-right">₹{listProducts.price}</p>
                                                     </div>
                                                 </div>
-                                                <div className="flex justify-center items-center gap-x-8">
+                                                <div className="flex justify-center items-center gap-x-12">
                                                     <div className='flex justify-center items-center gap-3'>
                                                         <FontAwesomeIcon icon={faMinus} onClick={() => handleDecrementCount(listProducts._id)} className='cursor-pointer border border-solid border-blue-300 font-thin rounded-xl p-1 text-xs' />
                                                         {
@@ -54,7 +54,7 @@ export default function placeOrder() {
                                                         }
                                                         <FontAwesomeIcon icon={faPlus} onClick={() => handleIncrementCount(listProducts._id)} className='cursor-pointer border border-solid border-blue-300 font-thin rounded-xl p-1 text-xs' />
                                                     </div>
-                                                    <button type="submit" onClick={() => handleRemoveDataFromLocal(listProducts._id)}>
+                                                    <button type="submit" onClick={() => handleRemoveDataFromLocal(listProducts._id)} className="pr-4 hover:text-red-700">
                                                         Remove
                                                     </button>
                                                 </div>
@@ -66,35 +66,45 @@ export default function placeOrder() {
                         })
                     }
                 </div>
-                <div className="border-dashed border-2 border-blue-600 w-2/3 h-auto p-1 m-auto rounded-md">
+                <div className="border-dashed border-2 border-blue-600 h-auto p-1 m-auto rounded-md flex justify-center">
                     <form>
                         <div>
-                            <label>Name: </label>
-                            <input type="text" placeholder="Name"></input>
+                            <label className="leading-loose text-2xl ml-6">Name</label>
+                            <span className="ml-20">:</span>
+                            <input type="text" placeholder="Name" className="border-2 border-blue-600 rounded-lg ml-20 mt-6 h-12 pl-2"></input>
                         </div>
                         <div>
-                            <label>Email: </label>
-                            <input type="text" placeholder="Email"></input>
+                            <label className="leading-loose text-2xl ml-6">Email</label>
+                            <span className="mx-20">:</span>
+                            <input type="text" placeholder="Email" className="border-2 border-blue-600 rounded-lg ml-2 mt-4 h-12 pl-2"></input>
                         </div>
                         <div>
-                            <label>PhoneNo: </label>
-                            <input type="Number" placeholder="Phone No..."></input>
+                            <label className="leading-loose text-2xl ml-6">PhoneNo</label>
+                            <span className="mx-10">:</span>
+                            <input type="Number" placeholder="Phone No..." className="border-2 border-blue-600 rounded-lg ml-12 mt-4 h-12 pl-2"></input>
                         </div>
                         <div>
-                            <label>Addres: </label>
-                            <input type="Address" placeholder="Address"></input>
+                            <label className="leading-loose text-2xl ml-6">Address</label>
+                            <span className="mx-14">:</span>
+                            <input type="Address" placeholder="Address" className="border-2 border-blue-600 rounded-lg ml-8 mt-4 h-12 pl-2"></input>
                         </div>
                         <div>
-                            <label>District</label>
-                            <input type="District" placeholder="District"></input>
+                            <label className="leading-loose text-2xl ml-6">District</label>
+                            <span className="mx-16">:</span>
+                            <input type="District" placeholder="District" className="border-2 border-blue-600 rounded-lg ml-6 mt-4 h-12 pl-2"></input>
                         </div>
                         <div>
-                            <label>Pincode</label>
-                            <input type="Pincode" placeholder="District"></input>
+                            <label className="leading-loose text-2xl ml-6">Pincode</label>
+                            <span className="mx-14">:</span>
+                            <input type="Pincode" placeholder="Pincode" className="border-2 border-blue-600 rounded-lg ml-8 mt-4 h-12 pl-2"></input>
                         </div>
                         <div>
-                            <label>State</label>
-                            <input type="State" placeholder="State"></input>
+                            <label className="leading-loose text-2xl ml-6">State</label>
+                            <span className="mx-20">:</span>
+                            <input type="State" placeholder="State" className="border-2 border-blue-600 rounded-lg ml-4 mr-8 mt-4 h-12 pl-2"></input>
+                        </div>
+                        <div>
+                            <button className="border-4 border-blue-600 pl-20 w-60 h-16 mx-auto rounded-xl shadow-lg flex items-center space-x-4 my-4 text-2xl">Submit</button>
                         </div>
                     </form>
                 </div>
