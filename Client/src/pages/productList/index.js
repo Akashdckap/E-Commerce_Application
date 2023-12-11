@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useMutation, useQuery } from '@apollo/client';
+import { notification } from 'antd';
 import { useEffect } from 'react';
 import { GET_ADD_TO_CART_SINGLE_PRODUCT_DATA, GET_ALL_PRODUCTS_DATA } from '../../../Grahpql/queries';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -26,8 +27,8 @@ export default function ProductList() {
         if (getId) {
             setAddToCartId([...allAddToCartId, getId])
         }
+        notification.success({ message: 'Successfully added to cart' })
     }
-
     useEffect(() => {
         if (getDataError && !getLoading) {
             setgetProductData(getDataError.getAllProductsData);
@@ -41,8 +42,9 @@ export default function ProductList() {
         if (getError) return console.error('Error fetching data:', getSingleError);
     }, [getError, getDataError, getSingleData]);
 
-    const handleRemoveDataFromLocal = (itemId) => {
+    const handleRemoveDataFromLocal = (itemId, itemName) => {
         dispatch(removeCartdata(itemId))
+        notification.success({ message: `Successfully removed ${itemName} from your cart` })
     }
     const removeAllCartData = () => {
         dispatch(removeAllCartDatas())
@@ -59,6 +61,8 @@ export default function ProductList() {
     const handleDecrementCount = (productId) => {
         dispatch(decrementProductCount({ productId }))
     }
+    const valuesArray = getCartData.map((total) => total.price)
+    const totalAmount = valuesArray.reduce((accumulator, currentValue) => accumulator + currentValue);
     return (
         <>
             <div>
@@ -129,11 +133,14 @@ export default function ProductList() {
                                 <h1 className='text-yellow-500'>SHOPPING CART</h1>
                                 <FontAwesomeIcon onClick={() => setCart(false)} icon={faClose} className='text-xl cursor-pointer hover:text-red-400' />
                             </div>
-                            <div className="sm:px-1 sm:py-10 overflow-y-scroll max-h-96 p-2">
+                            <div className="overflow-y-scroll scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-gray-300 max-h-96 p-2">
                                 {
                                     getCartData.length > 0 ? (
                                         getCartData.map((listCartData, index) => {
+
+                                            // console.log(listCartData.price.sum());
                                             return (
+                                                // setTotalAmount(listCartData.price),
                                                 <div className="flow-root" key={listCartData._id}>
                                                     <ul className="-my-8">
                                                         <li className="flex flex-col space-y-1 py-10 text-left sm:flex-row sm:space-x-5 sm:space-y-1">
@@ -161,7 +168,7 @@ export default function ProductList() {
                                                                         }
                                                                         <FontAwesomeIcon icon={faPlus} onClick={() => handleIncrementCount(listCartData._id)} className='cursor-pointer border border-solid border-blue-300 font-thin rounded-xl p-1 text-xs' />
                                                                     </div>
-                                                                    <button type="submit" onClick={() => handleRemoveDataFromLocal(listCartData._id)} className="flex rounded p-2 text-center text-gray-950 transition-all duration-200 ease-in-out focus:shadow hover:text-red-500">
+                                                                    <button type="submit" onClick={() => handleRemoveDataFromLocal(listCartData._id, listCartData.productName)} className="flex rounded p-2 text-center text-gray-950 transition-all duration-200 ease-in-out focus:shadow hover:text-red-500">
                                                                         Remove
                                                                     </button>
                                                                 </div>
@@ -188,17 +195,22 @@ export default function ProductList() {
                                         </div>
                                     ) : ''
                                 }
-                                <div className="flex justify-center place-items-center gap-2">
-                                    <div className='flex justify-center items-center pt-5'>
-                                        <button type='button' onClick={() => { setCart(false) }} className='bg-transparent  text-blue-700 font-semibold py-2 px-4 border border-blue-500 rounded hover:text-cyan-600 hover:border-cyan-600'>Continue Shopping</button>
-                                    </div>
-                                    <div className='flex justify-center items-center pt-5'>
-                                        <Link href="placeOrder">
-                                            <button type="button" className="items-center justify-center rounded-md bg-orange-500 py-2 px-4 text-sm font-semibold text-white transition-all duration-200 ease-in-out focus:shadow hover:bg-gray-800">
-                                                Place Order
-                                            </button>
-                                        </Link>
-                                    </div>
+
+                            </div>
+                            <div className='flex justify-around'>
+                                <h5>Total Amount: </h5>
+                                <p>₹{totalAmount}</p>
+                            </div>
+                            <div className="flex justify-center place-items-center gap-2 pb-8">
+                                <div className='flex justify-center items-center pt-5'>
+                                    <button type='button' onClick={() => { setCart(false) }} className='bg-transparent  text-blue-700 font-semibold py-2 px-4 border border-blue-500 rounded hover:text-cyan-600 hover:border-cyan-600'>Continue Shopping</button>
+                                </div>
+                                <div className='flex justify-center items-center pt-5'>
+                                    <Link href="placeOrder">
+                                        <button type="button" className="items-center justify-center rounded-md bg-orange-500 py-2 px-4 text-sm font-semibold text-white transition-all duration-200 ease-in-out focus:shadow hover:bg-gray-800">
+                                            Place Order
+                                        </button>
+                                    </Link>
                                 </div>
                             </div>
                         </div>
