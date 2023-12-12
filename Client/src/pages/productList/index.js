@@ -16,7 +16,6 @@ export default function ProductList() {
     const [openCart, setCart] = useState()
     const [getProductData, setgetProductData] = useState([])
     const [allAddToCartId, setAddToCartId] = useState([]);
-    const [cartCount, setCartCount] = useState(0)
     const [searchText, setSearchText] = useState('')
 
     const { data: getSingleData, error: getSingleError, loading: getSingleLoading } = useQuery(GET_ADD_TO_CART_SINGLE_PRODUCT_DATA, {
@@ -63,7 +62,7 @@ export default function ProductList() {
         dispatch(decrementProductCount({ productId }))
     }
     const valuesArray = getCartData.map((total) => total.price)
-    const totalAmount = valuesArray.reduce((accumulator, currentValue) => accumulator + currentValue);
+    const totalAmount = valuesArray.reduce((accumulator, currentValue) => accumulator + currentValue,0);
     return (
         <>
             <div>
@@ -207,9 +206,9 @@ export default function ProductList() {
                                     <button type='button' onClick={() => { setCart(false) }} className='bg-transparent  text-blue-700 font-semibold py-2 px-4 border border-blue-500 rounded hover:text-cyan-600 hover:border-cyan-600'>Continue Shopping</button>
                                 </div>
                                 <div className='flex justify-center items-center pt-5'>
-                                    <Link href="placeOrder">
+                                    <Link href="cartItems">
                                         <button type="button" className="items-center justify-center rounded-md bg-orange-500 py-2 px-4 text-sm font-semibold text-white transition-all duration-200 ease-in-out focus:shadow hover:bg-gray-800">
-                                            Place Order
+                                            View Cart
                                         </button>
                                     </Link>
                                 </div>
