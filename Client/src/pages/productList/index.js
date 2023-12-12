@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useMutation, useQuery } from '@apollo/client';
+import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
 import { notification } from 'antd';
 import { useEffect } from 'react';
 import { GET_ADD_TO_CART_SINGLE_PRODUCT_DATA, GET_ALL_PRODUCTS_DATA } from '../../../Grahpql/queries';
@@ -18,20 +18,39 @@ export default function ProductList() {
     const [allAddToCartId, setAddToCartId] = useState([]);
     const [searchText, setSearchText] = useState('')
     const { data: getSingleData, error: getSingleError, loading: getSingleLoading } = useQuery(GET_ADD_TO_CART_SINGLE_PRODUCT_DATA, {
+
+
+    // const { data: getSingleData, error: getSingleError, loading: getSingleLoading } = useQuery(GET_ADD_TO_CART_SINGLE_PRODUCT_DATA, {
+    //     variables: { ids: allAddToCartId }
+    // })
+    const [parseIds, { data: getSingleData, error: getSingleError, loading: getSingleLoading }] = useLazyQuery(GET_ADD_TO_CART_SINGLE_PRODUCT_DATA, {
         variables: { ids: allAddToCartId }
     })
     const { data: getDataError, error: getError, loading: getLoading } = useQuery(GET_ALL_PRODUCTS_DATA);
 
-    const handleAddtoCartBtn = (getId) => {
+    const handleAddtoCartBtn = (getId, Qty) => {
+        parseIds()
         if (getId) {
             setAddToCartId([...allAddToCartId, getId])
         }
-        notification.success({ message: 'Successfully added to cart' })
+        notification.success({ message: 'Successfully added to cart' });
+        // const datas = JSON.parse(localStorage.getItem('productData'))
+        // datas.productDetails.cartData.map((list) => {
+        //     if (list._id === getId) {
+        //         if (list.count !== list.count) {
+        //             notification.success({ message: 'Successfully added to cart' })
+        //         }
+        //         else {
+        //             notification.success({ message: `You ve changed ${list.productName} QUANTITY to ${list.count + 1}` })
+        //         }
+        //     }
+        // })
     }
     useEffect(() => {
         if (getDataError && !getLoading) {
             setgetProductData(getDataError.getAllProductsData);
         }
+        console.log("getSingleData-----------", getSingleData);
         if (getSingleData && !getLoading) {
             dispatch(storeAddToCartProductData(getSingleData.addToCartProductData));
         }
@@ -42,11 +61,15 @@ export default function ProductList() {
     }, [getError, getDataError, getSingleData]);
 
     const handleRemoveDataFromLocal = (itemId, itemName) => {
+        const UpdateId = allAddToCartId.filter((removeId) => removeId !== itemId)
         dispatch(removeCartdata(itemId))
+        setAddToCartId(UpdateId)
         notification.success({ message: `Successfully removed ${itemName} from your cart` })
     }
+
     const removeAllCartData = () => {
         dispatch(removeAllCartDatas())
+        setAddToCartId([])
         setCart(false)
     }
     const filteredList = getProductData.filter((item) => {
@@ -61,7 +84,7 @@ export default function ProductList() {
         dispatch(decrementProductCount({ productId }))
     }
     const valuesArray = getCartData.map((total) => total.price)
-    const totalAmount = valuesArray.reduce((accumulator, currentValue) => accumulator + currentValue,0);
+    const totalAmount = valuesArray.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
     return (
         <>
             <div>
@@ -158,7 +181,9 @@ export default function ProductList() {
                                                                 </div>
                                                                 <div className="flex justify-center items-center gap-32">
                                                                     <div className='flex justify-center items-center gap-3'>
-                                                                        <FontAwesomeIcon icon={faMinus} onClick={() => handleDecrementCount(listCartData._id)} className='cursor-pointer border border-solid border-blue-300 font-thin rounded-xl p-1 text-xs' />
+                                                                        <button disabled={listCartData.count == 1} >
+                                                                            <FontAwesomeIcon icon={faMinus} onClick={() => handleDecrementCount(listCartData._id)} className={`${listCartData.count === 1 ? 'cursor-default' : "cursor-pointer"} border border-solid border-blue-300 font-thin rounded-xl p-1 text-xs`} />
+                                                                        </button>
                                                                         {
                                                                             listCartData.count > 0 ? (
                                                                                 <span className='border border-gray-400 w-10 rounded-sm flex justify-center items-center'>{listCartData.count}</span>
