@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useMutation, useQuery } from '@apollo/client';
+import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
 import { notification } from 'antd';
 import { useEffect } from 'react';
 import { GET_ADD_TO_CART_SINGLE_PRODUCT_DATA, GET_ALL_PRODUCTS_DATA } from '../../../Grahpql/queries';
@@ -16,19 +16,22 @@ export default function ProductList() {
     const [openCart, setCart] = useState()
     const [getProductData, setgetProductData] = useState([])
     const [allAddToCartId, setAddToCartId] = useState([]);
-    const [cartCount, setCartCount] = useState(0)
     const [searchText, setSearchText] = useState('')
 
-    const { data: getSingleData, error: getSingleError, loading: getSingleLoading } = useQuery(GET_ADD_TO_CART_SINGLE_PRODUCT_DATA, {
+    // const { data: getSingleData, error: getSingleError, loading: getSingleLoading } = useQuery(GET_ADD_TO_CART_SINGLE_PRODUCT_DATA, {
+    //     variables: { ids: allAddToCartId }
+    // })
+    const [parseIds, { data: getSingleData, error: getSingleError, loading: getSingleLoading }] = useLazyQuery(GET_ADD_TO_CART_SINGLE_PRODUCT_DATA, {
         variables: { ids: allAddToCartId }
     })
     const { data: getDataError, error: getError, loading: getLoading } = useQuery(GET_ALL_PRODUCTS_DATA);
 
     const handleAddtoCartBtn = (getId, Qty) => {
+        parseIds()
         if (getId) {
             setAddToCartId([...allAddToCartId, getId])
         }
-        notification.success({ message: 'Successfully added to cart' })
+        notification.success({ message: 'Successfully added to cart' });
         // const datas = JSON.parse(localStorage.getItem('productData'))
         // datas.productDetails.cartData.map((list) => {
         //     if (list._id === getId) {
@@ -45,6 +48,7 @@ export default function ProductList() {
         if (getDataError && !getLoading) {
             setgetProductData(getDataError.getAllProductsData);
         }
+        console.log("getSingleData-----------", getSingleData);
         if (getSingleData && !getLoading) {
             dispatch(storeAddToCartProductData(getSingleData.addToCartProductData));
         }
@@ -53,19 +57,22 @@ export default function ProductList() {
         if (getSingleError) return console.error('Error fetching data:', getSingleError);
         if (getError) return console.error('Error fetching data:', getSingleError);
     }, [getError, getDataError, getSingleData]);
-    console.log("getSingleData-----------",getSingleData);
+
     const handleRemoveDataFromLocal = (itemId, itemName) => {
+        const UpdateId = allAddToCartId.filter((removeId) => removeId !== itemId)
         dispatch(removeCartdata(itemId))
+        setAddToCartId(UpdateId)
         notification.success({ message: `Successfully removed ${itemName} from your cart` })
     }
+
     const removeAllCartData = () => {
         dispatch(removeAllCartDatas())
+        setAddToCartId([])
         setCart(false)
     }
     const filteredList = getProductData.filter((item) => {
         return item.productName.toLowerCase().includes(searchText.toLowerCase());
     });
-    // console.log("filteredList-----------", filteredList);
 
     const handleIncrementCount = (productId) => {
         dispatch(incrementProductCount({ productId }))
@@ -123,7 +130,7 @@ export default function ProductList() {
                                                 <p>
                                                     <span className="text-3xl font-bold text-slate-900">₹{item.price}</span>
                                                 </p>
-                                                <button onClick={() => handleAddtoCartBtn(item._id, item.count)} id={item._id} className="cursor-pointer flex items-center rounded-md bg-slate-900 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-blue-300">
+                                                <button onClick={() => handleAddtoCartBtn(item._id)} id={item._id} className="cursor-pointer flex items-center rounded-md bg-slate-900 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-blue-300">
                                                     <svg xmlns="http://www.w3.org/2000/svg" className="mr-2 h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                                                         <path strokeLinecap="round" strokeLinejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                                                     </svg>
@@ -172,7 +179,9 @@ export default function ProductList() {
                                                                 </div>
                                                                 <div className="flex justify-center items-center gap-32">
                                                                     <div className='flex justify-center items-center gap-3'>
-                                                                        <FontAwesomeIcon icon={faMinus} onClick={() => handleDecrementCount(listCartData._id)} className='cursor-pointer border border-solid border-blue-300 font-thin rounded-xl p-1 text-xs' />
+                                                                        <button disabled={listCartData.count == 1} >
+                                                                            <FontAwesomeIcon icon={faMinus} onClick={() => handleDecrementCount(listCartData._id)} className={`${listCartData.count === 1 ? 'cursor-default' : "cursor-pointer"} border border-solid border-blue-300 font-thin rounded-xl p-1 text-xs`} />
+                                                                        </button>
                                                                         {
                                                                             listCartData.count > 0 ? (
                                                                                 <span className='border border-gray-400 w-10 rounded-sm flex justify-center items-center'>{listCartData.count}</span>
