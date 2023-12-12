@@ -1,6 +1,12 @@
 import React from "react";
+import { useSelector } from "react-redux";
 
 export default function placeOrder() {
+
+    const cartProducts = useSelector(state => state.productDetails.cartData);
+    const priceGetting = cartProducts.map((total) => total.price);
+    const totalPrice = priceGetting.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+
     return (
         <>
             <div className="flex">
@@ -50,7 +56,7 @@ export default function placeOrder() {
                     <h2 className="ml-16 leading-loose text-3xl">Order Details</h2>
                     <div className="flex border-2 border-dashed border-blue-600 p-3 rounded-md">
                         <ul className="leading-loose text-2xl">
-                            <li>Price (11 - items)</li>
+                            <li>Price ({cartProducts.length > 1 ? `${cartProducts.length} - items` : `${cartProducts.length} - item`})</li>
                             <li>Discount</li>
                             <li>Delivery chagres</li>
                             <li>Total amount</li>
@@ -62,7 +68,7 @@ export default function placeOrder() {
                             <li>:</li>
                         </ul>
                         <ul className="leading-loose text-2xl">
-                            <li>5000</li>
+                            <li>{totalPrice}</li>
                             <li>5</li>
                             <li>55</li>
                             <li>6000</li>
