@@ -40,7 +40,6 @@ export default function cartItems() {
     const handleDecrementCount = (productId) => {
         dispatch(decrementProductCount({ productId }))
     }
-    console.log("cartProducts-----------", cartProducts);
     return (
         <>
             <div className="flex justify-around gap-80 mt-10">
@@ -53,6 +52,7 @@ export default function cartItems() {
                 <div>
                     {
                         cartProducts.map((listProducts, index) => {
+                            // console.log(listProducts.price)
                             return (
                                 <div className="border-dashed border-2 border-blue-600 h-auto w-full  my-8 mx-8 rounded-md" key={index}>
                                     <ul className="-my-8">
@@ -101,7 +101,7 @@ export default function cartItems() {
                     <h2 className="ml-12 leading-loose text-3xl">Order Details</h2>
                     <div className="flex border-2 border-dashed border-blue-600 p-3 rounded-md">
                         <ul className="leading-loose text-xl">
-                            <li>Price (11 - items)</li>
+                            <li>Price ({cartProducts.length > 1 ?`${cartProducts.length} - items`:`${cartProducts.length} - item`})</li>
                             <li>Discount</li>
                             <li>Delivery chagres</li>
                             <li>Total amount</li>
@@ -113,7 +113,7 @@ export default function cartItems() {
                             <li>:</li>
                         </ul>
                         <ul className="leading-loose text-xl">
-                            <li>5000</li>
+                            <li>{totalPrice}</li>
                             <li>5</li>
                             <li>55</li>
                             <li>6000</li>

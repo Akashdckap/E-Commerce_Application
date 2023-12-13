@@ -18,6 +18,7 @@ export default function ProductList() {
     const [searchText, setSearchText] = useState('')
     const { allAddToCartId, addToCartArray, removeIdFromArray, removeAllItems } = useCartIdState();
 
+
     // const { data: getSingleData, error: getSingleError, loading: getSingleLoading } = useQuery(GET_ADD_TO_CART_SINGLE_PRODUCT_DATA, {
     //     variables: { ids: allAddToCartId }
     // })
