@@ -1,19 +1,37 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faClose, faMinus, faPlus, faShoppingCart, faEye } from '@fortawesome/free-solid-svg-icons';
-import { incrementProductCount, decrementProductCount, removeCartdata } from "@/Reducer/productReducer";
+import { faClose, faMinus, faPlus, faShoppingCart, faEye, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { incrementProductCount, decrementProductCount, removeCartdata, removeAllCartDatas } from "@/Reducer/productReducer";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import { notification } from "antd";
+import useCartIdState from "../productList/useAddToCartId";
 
 export default function cartItems() {
-
+    const router = useRouter();
+    const { removeIdFromArray, removeAllItems } = useCartIdState()
     const cartProducts = useSelector(state => state.productDetails.cartData);
     const dispatch = useDispatch()
 
-    const handleRemoveDataFromLocal = (itemId) => {
+    const handleRemoveDataFromLocal = (itemId, itemName) => {
         dispatch(removeCartdata(itemId))
+        removeIdFromArray(itemId)
+        notification.success({ message: `Successfully removed ${itemName} from your cart` })
     }
+    const handleRemoveAllItems = () => {
+        dispatch(removeAllCartDatas())
+        removeAllItems();
+    };
+    // if (cartProducts.length < 1) {
+    //     router.back("/productList")
+    // }
+    // }, [])
+    // const removeAllCartData = () => {
+    //     dispatch(removeAllCartDatas())
+    //     setAddToCartId([])
+    //     setCart(false)
+    // }
 
     const handleIncrementCount = (productId) => {
         dispatch(incrementProductCount({ productId }))
@@ -22,11 +40,16 @@ export default function cartItems() {
     const handleDecrementCount = (productId) => {
         dispatch(decrementProductCount({ productId }))
     }
-
+    console.log("cartProducts-----------", cartProducts);
     return (
         <>
-            <h1 className="text-2xl mt-2 ml-10">Good to see you here</h1>
-            <div className="flex justify-center">
+            <div className="flex justify-around gap-80 mt-10">
+                <h1 className="text-2xl">Your Cart ({cartProducts.length} items)</h1>
+                <button className="bg-slate-600 hover:bg-slate-500 hover:text-orange-400 text-white font-bold py-2 px-4 rounded">
+                    Back
+                </button>
+            </div>
+            {/* <div className="flex justify-center">
                 <div>
                     {
                         cartProducts.map((listProducts, index) => {
@@ -99,7 +122,76 @@ export default function cartItems() {
                     <Link href={'placeOrder'}><button className="border-2 border-blue-600 w-52 h-16 ml-9 rounded-xl shadow-lg space-x-4 my-2 bg-sky-500 hover:bg-sky-700 text-2xl">Place Order</button></Link>
                 </div>
                 <Link href={'productList'} className="border-2 bg-blue-600 rounded-md w-20 h-10 text-xl pt-1 pl-4 mr-4"><button>Back</button></Link>
-            </div >
+            </div > */}
+            <div className="p-3">
+                <div>
+                    <table className="table-auto w-7/12 mt-10 bg-white border border-gray-300 ml-20 border-none rounded">
+                        <thead className="text-center">
+                            <tr>
+                                <th className="py-2 px-4 border-b text-left pl-8 text-indigo-400 font-medium">Item</th>
+                                <th className="py-2 px-4 border-b text-indigo-400 font-medium">Price</th>
+                                <th className="py-2 px-4 border-b text-indigo-400 font-medium">Quantity</th>
+                                <th className="py-2 px-4 border-b text-indigo-400 font-medium">Action</th>
+                            </tr>
+                        </thead>
+                        {
+                            cartProducts.map((cartData, index) => {
+                                return (
+                                    <tbody className="text-center" key={index}>
+                                        <tr className="hover:bg-gray-100 border-t-0">
+                                            <td className="py-2 px-4 border-b">
+                                                <div className="flex justify-start items-center gap-3">
+                                                    <img className="h-24 w-24 max-w-full rounded-lg object-cover" src="https://images.unsplash.com/flagged/photo-1556637640-2c80d3201be8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8c25lYWtlcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60" alt="" />
+                                                    <div>
+                                                        <p className="text-orange-600 text-start">{cartData.productName}</p>
+                                                        <p className="text-start">{cartData.category}</p>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td className="py-2 px-4 border-b border-t-0">₹ {cartData.price}</td>
+                                            <td className="py-2 px-4 border-b border-t-0">
+                                                <div className='flex justify-center items-center gap-3'>
+                                                    <button disabled={cartData.count == 1} >
+                                                        <FontAwesomeIcon icon={faMinus} onClick={() => handleDecrementCount(cartData._id)} className={`${cartData.count === 1 ? 'cursor-default' : "cursor-pointer"} border border-solid border-blue-300 font-thin rounded-xl p-1 text-xs`} />
+                                                    </button>
+                                                    {
+                                                        cartData.count > 0 ? (
+                                                            <span className='border border-gray-400 w-10 rounded-sm flex justify-center items-center'>{cartData.count}</span>
+                                                        ) : <span className='border border-gray-400 w-10 rounded-sm flex justify-center items-center'>0</span>
+
+                                                    }
+                                                    <FontAwesomeIcon icon={faPlus} onClick={() => handleIncrementCount(cartData._id)} className='cursor-pointer border border-solid border-blue-300 font-thin rounded-xl p-1 text-xs' />
+                                                </div>
+                                            </td>
+                                            <td className="py-2 px-4 border-b border-t-0">< FontAwesomeIcon icon={faTrash} onClick={() => handleRemoveDataFromLocal(cartData._id, cartData.productName)} className="hover:text-red-400 cursor-pointer" /></td>
+                                        </tr>
+                                    </tbody>
+                                )
+                            })
+                        }
+                    </table>
+                    {
+                        cartProducts.length > 1 ? <div className="flex justify-center items-center ml-60 mt-4">
+                            <button className="text-red-400 hover:text-red-500 cursor-pointer p-1 h-7 rounded font-normal text-base flex justify-center items-center border border-red-300" onClick={handleRemoveAllItems}>Remove All</button>
+                        </div> : ""
+                    }
+                </div>
+                <div className="grid justify-center gap-3 mt-4 pb-10">
+                    <p className="text-gray-600 border-b border-gray-400 pb-1">PRICE DETAILS</p>
+                    <div className="flex justify-start gap-10">
+                        <label className="">Price ({cartProducts.length} - items) :</label>
+                        <p className="">099</p>
+                    </div>
+                    <div className="flex justify-start gap-20">
+                        <label className="">Discount :</label>
+                        <p className="">-219</p>
+                    </div>
+                    <div className="flex justify-start gap-14 border-b border-dotted border-gray-400 p-1 border-t">
+                        <label className="">Total Amount</label>
+                        <p className="">099</p>
+                    </div>
+                </div>
+            </div>
         </>
     )
 }

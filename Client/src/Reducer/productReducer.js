@@ -6,25 +6,41 @@ export const productSlice = createSlice({
         cartData: [],
     },
     reducers: {
+        storeAddToCartProductData: (state, action) => {
+            const productData = action.payload
+            console.log("productData---------------", productData);
+            if (productData) {
+                productData.forEach(element => {
+                    // console.log("element-------------", element._id);
+                    const productIndex = state.cartData.some((product) => product._id === element._id);
+                    // console.log("productIndex-----------", productIndex);
+                    if (productIndex) {
+                        state.cartData = state.cartData.map((product) =>
+                            product._id === element._id ? { ...product, count: (product.count || 0) + 1 }
+                                : product
+                        );
+                    }
+                    else {
+                        state.cartData.push({ ...element, count: 1 });
+                    }
+                });
+            }
+        },
         // storeAddToCartProductData: (state, action) => {
         //     const productData = action.payload
         //     console.log("productData---------------", productData);
-        //     // console.log(productData);
         //     if (productData) {
         //         productData.forEach(element => {
         //             // if (!state.cartData.some(item => item._id === element._id)) {
         //             //     state.cartData.push(element)
         //             // }
-        //             console.log("element-------------",element._id);
+        //             console.log("element-------------", element._id);
         //             const productIndex = state.cartData.find((product) => product._id === element._id);
         //             console.log("productIndex-----------", productIndex);
         //             // const productIndex = state.cartData.findIndex((product) => product._id === element._id)
-        //             if (productIndex) {
-        //                 state.cartData = state.cartData.map((product) =>
-        //                     product._id === element._id
-        //                         ? { ...product, count: (product.count || 0) + 1 }
-        //                         : product
-        //                 );
+        //             if (state.cartData[productIndex].count === undefined) {
+        //                         state.cartData[productIndex].count =
+        //                             (state.cartData[productIndex].count || 0) + 1;
         //             }
         //             // if (productIndex !== -1) {
         //             //     if (state.cartData[productIndex].count === undefined) {
@@ -32,11 +48,7 @@ export const productSlice = createSlice({
         //             //             (state.cartData[productIndex].count || 0) + 1;
         //             //     }
         //             // }
-        //             else {
-        //                 // if (!state.cartData.some(item => item._id === element._id)) {
-        //                 state.cartData.push({ ...element, count: 1 });
-        //                 // }
-        //             }
+
         //             // if (productIndex !== -1) {
         //             // if (state.cartData.some(item => item._id === element._id)) {
         //             // console.log("productIndex------------------", productIndex);
@@ -53,30 +65,6 @@ export const productSlice = createSlice({
         //         });
         //     }
         // },
-        storeAddToCartProductData: (state, action) => {
-            const productData = action.payload;
-            console.log("productData---------------", productData);
-
-            if (productData && Array.isArray(productData)) {
-                productData.forEach((product) => {
-                    const existingProductIndex = state.cartData.findIndex(
-                        (cartProduct) => cartProduct._id === product._id
-                    );
-
-                    if (existingProductIndex !== -1) {
-                        // Product already exists in the cart
-                        state.cartData = state.cartData.map((cartProduct, index) =>
-                            index === existingProductIndex
-                                ? { ...cartProduct, count: (cartProduct.count || 0) + 1 }
-                                : cartProduct
-                        );
-                    } else {
-                        // Product is not in the cart, add it with count 1
-                        state.cartData.push({ ...product, count: 1 });
-                    }
-                });
-            }
-        },
 
         removeCartdata: (state, action) => {
             const itemId = action.payload
