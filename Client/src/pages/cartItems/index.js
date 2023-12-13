@@ -32,7 +32,7 @@ export default function cartItems() {
     //     setAddToCartId([])
     //     setCart(false)
     // }
-
+    console.log("cartProducts-----------",cartProducts);
     const handleIncrementCount = (productId) => {
         dispatch(incrementProductCount({ productId }))
     }
@@ -44,9 +44,9 @@ export default function cartItems() {
         <>
             <div className="flex justify-around gap-80 mt-10">
                 <h1 className="text-2xl">Your Cart ({cartProducts.length} items)</h1>
-                <button className="bg-slate-600 hover:bg-slate-500 hover:text-orange-400 text-white font-bold py-2 px-4 rounded">
+                <Link href={'/productList'}><button className="bg-slate-600 hover:bg-slate-500 hover:text-orange-400 text-white font-bold py-2 px-4 rounded">
                     Back
-                </button>
+                </button></Link>
             </div>
             {/* <div className="flex justify-center">
                 <div>
@@ -180,15 +180,15 @@ export default function cartItems() {
                     <p className="text-gray-600 border-b border-gray-400 pb-1">PRICE DETAILS</p>
                     <div className="flex justify-start gap-10">
                         <label className="">Price ({cartProducts.length} - items) :</label>
-                        <p className="">099</p>
+                        <p className="">₹099</p>
                     </div>
                     <div className="flex justify-start gap-20">
                         <label className="">Discount :</label>
-                        <p className="">-219</p>
+                        <p className="">₹-219</p>
                     </div>
                     <div className="flex justify-start gap-14 border-b border-dotted border-gray-400 p-1 border-t">
                         <label className="">Total Amount</label>
-                        <p className="">099</p>
+                        <p className="">₹099</p>
                     </div>
                 </div>
             </div>
