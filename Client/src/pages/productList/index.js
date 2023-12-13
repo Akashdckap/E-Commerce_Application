@@ -16,16 +16,14 @@ export default function ProductList() {
     const [openCart, setCart] = useState()
     const [getProductData, setgetProductData] = useState([])
     const [allAddToCartId, setAddToCartId] = useState([]);
-    const [searchText, setSearchText] = useState('')
-    const { data: getSingleData, error: getSingleError, loading: getSingleLoading } = useQuery(GET_ADD_TO_CART_SINGLE_PRODUCT_DATA, {
-
+    const [searchText, setSearchText] = useState('') 
 
     // const { data: getSingleData, error: getSingleError, loading: getSingleLoading } = useQuery(GET_ADD_TO_CART_SINGLE_PRODUCT_DATA, {
     //     variables: { ids: allAddToCartId }
     // })
     const [parseIds, { data: getSingleData, error: getSingleError, loading: getSingleLoading }] = useLazyQuery(GET_ADD_TO_CART_SINGLE_PRODUCT_DATA, {
         variables: { ids: allAddToCartId }
-    })
+    });
     const { data: getDataError, error: getError, loading: getLoading } = useQuery(GET_ALL_PRODUCTS_DATA);
 
     const handleAddtoCartBtn = (getId, Qty) => {
