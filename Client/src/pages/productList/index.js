@@ -15,16 +15,16 @@ export default function ProductList() {
     const dispatch = useDispatch()
     const [openCart, setCart] = useState()
     const [getProductData, setgetProductData] = useState([])
-    const [searchText, setSearchText] = useState('')
+    const [allAddToCartId, setAddToCartId] = useState([]);
+    const [searchText, setSearchText] = useState('') 
     const { allAddToCartId, addToCartArray, removeIdFromArray, removeAllItems } = useCartIdState();
-
 
     // const { data: getSingleData, error: getSingleError, loading: getSingleLoading } = useQuery(GET_ADD_TO_CART_SINGLE_PRODUCT_DATA, {
     //     variables: { ids: allAddToCartId }
     // })
     const [parseIds, { data: getSingleData, error: getSingleError, loading: getSingleLoading }] = useLazyQuery(GET_ADD_TO_CART_SINGLE_PRODUCT_DATA, {
         variables: { ids: allAddToCartId }
-    })
+    });
     const { data: getDataError, error: getError, loading: getLoading } = useQuery(GET_ALL_PRODUCTS_DATA);
 
     console.log("allAddToCartId----------------", allAddToCartId);
