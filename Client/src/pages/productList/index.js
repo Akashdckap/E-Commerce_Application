@@ -9,15 +9,14 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useDispatch, useSelector } from 'react-redux';
 import { storeAddToCartProductData, removeCartdata, removeAllCartDatas, incrementProductCount, decrementProductCount } from '@/Reducer/productReducer';
-
+import useCartIdState from './useAddToCartId';
 export default function ProductList() {
     const getCartData = useSelector(state => state.productDetails.cartData);
     const dispatch = useDispatch()
     const [openCart, setCart] = useState()
     const [getProductData, setgetProductData] = useState([])
-    const [allAddToCartId, setAddToCartId] = useState([]);
     const [searchText, setSearchText] = useState('')
-    const { data: getSingleData, error: getSingleError, loading: getSingleLoading } = useQuery(GET_ADD_TO_CART_SINGLE_PRODUCT_DATA, {
+    const { allAddToCartId, addToCartArray, removeIdFromArray, removeAllItems } = useCartIdState();
 
 
     // const { data: getSingleData, error: getSingleError, loading: getSingleLoading } = useQuery(GET_ADD_TO_CART_SINGLE_PRODUCT_DATA, {
@@ -28,10 +27,12 @@ export default function ProductList() {
     })
     const { data: getDataError, error: getError, loading: getLoading } = useQuery(GET_ALL_PRODUCTS_DATA);
 
+    console.log("allAddToCartId----------------", allAddToCartId);
     const handleAddtoCartBtn = (getId, Qty) => {
         parseIds()
         if (getId) {
-            setAddToCartId([...allAddToCartId, getId])
+            addToCartArray(getId)
+
         }
         notification.success({ message: 'Successfully added to cart' });
         // const datas = JSON.parse(localStorage.getItem('productData'))
@@ -60,16 +61,14 @@ export default function ProductList() {
         if (getError) return console.error('Error fetching data:', getSingleError);
     }, [getError, getDataError, getSingleData]);
 
-    const handleRemoveDataFromLocal = (itemId, itemName) => {
-        const UpdateId = allAddToCartId.filter((removeId) => removeId !== itemId)
+    const handleRemoveDataFromLocal = (itemId) => {
         dispatch(removeCartdata(itemId))
-        setAddToCartId(UpdateId)
-        notification.success({ message: `Successfully removed ${itemName} from your cart` })
+        removeIdFromArray(itemId)
     }
 
     const removeAllCartData = () => {
         dispatch(removeAllCartDatas())
-        setAddToCartId([])
+        removeAllItems();
         setCart(false)
     }
     const filteredList = getProductData.filter((item) => {
@@ -85,6 +84,7 @@ export default function ProductList() {
     }
     const valuesArray = getCartData.map((total) => total.price)
     const totalAmount = valuesArray.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+
     return (
         <>
             <div>
