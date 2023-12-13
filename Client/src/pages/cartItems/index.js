@@ -32,7 +32,10 @@ export default function cartItems() {
     //     setAddToCartId([])
     //     setCart(false)
     // }
-    console.log("cartProducts-----------",cartProducts);
+    const valuesArray = cartProducts.map((total) => total.price)
+    const totalAmount = valuesArray.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+    // console.log("cartProducts-----------",cartProducts);
+    // cartProducts.map((cart)=>console.log("cart-----------",cart.price))
     const handleIncrementCount = (productId) => {
         dispatch(incrementProductCount({ productId }))
     }
@@ -123,9 +126,9 @@ export default function cartItems() {
                 </div>
                 <Link href={'productList'} className="border-2 bg-blue-600 rounded-md w-20 h-10 text-xl pt-1 pl-4 mr-4"><button>Back</button></Link>
             </div > */}
-            <div className="p-3">
+            <div className="pl-4">
                 <div>
-                    <table className="table-auto w-7/12 mt-10 bg-white border border-gray-300 ml-20 border-none rounded">
+                    <table className="table-auto w-7/12 mt-6 bg-white border border-gray-300 ml-20 border-none rounded">
                         <thead className="text-center">
                             <tr>
                                 <th className="py-2 px-4 border-b text-left pl-8 text-indigo-400 font-medium">Item</th>
@@ -172,23 +175,26 @@ export default function cartItems() {
                     </table>
                     {
                         cartProducts.length > 1 ? <div className="flex justify-center items-center ml-60 mt-4">
-                            <button className="text-red-400 hover:text-red-500 cursor-pointer p-1 h-7 rounded font-normal text-base flex justify-center items-center border border-red-300" onClick={handleRemoveAllItems}>Remove All</button>
+                            <button className="text-red-400 hover:text-red-500 cursor-pointer p-1 h-9 rounded w-28 font-normal text-base flex justify-center items-center border border-red-300" onClick={handleRemoveAllItems}>Remove All</button>
                         </div> : ""
                     }
                 </div>
-                <div className="grid justify-center gap-3 mt-4 pb-10">
-                    <p className="text-gray-600 border-b border-gray-400 pb-1">PRICE DETAILS</p>
-                    <div className="flex justify-start gap-10">
-                        <label className="">Price ({cartProducts.length} - items) :</label>
-                        <p className="">₹099</p>
+                <div className="grid justify-center gap-3 mt-4 pb-10 bg-white w-1/2 m-auto rounded pt-5">
+                    <p className="text-green-600 border-b border-gray-400 pb-1">PRICE DETAILS</p>
+                    <div className="flex justify-between gap-10">
+                        <label className="text-gray-500">Price ({cartProducts.length} - items) :</label>
+                        <p className="text-gray-500">₹{totalAmount}</p>
                     </div>
-                    <div className="flex justify-start gap-20">
-                        <label className="">Discount :</label>
-                        <p className="">₹-219</p>
+                    <div className="flex justify-between gap-10">
+                        <label className="text-gray-500">Discount :</label>
+                        <p className="text-gray-500">₹-219</p>
                     </div>
-                    <div className="flex justify-start gap-14 border-b border-dotted border-gray-400 p-1 border-t">
-                        <label className="">Total Amount</label>
-                        <p className="">₹099</p>
+                    <div className="flex justify-between gap-10 border-b border-dotted border-gray-400 p-1 border-t">
+                        <label className="text-gray-700 font-medium">Total Amount :</label>
+                        <p className="text-gray-700 font-medium">₹{totalAmount}</p>
+                    </div>
+                    <div>
+                        <Link href={'/placeOrder'}><button className="bg-slate-600 w-96 hover:bg-slate-500 p-3 h-10 flex justify-center items-center hover:text-green-400 text-white font-bold py-2 px-4 rounded">PLACE ORDER</button></Link>
                     </div>
                 </div>
             </div>
