@@ -6,7 +6,9 @@ const useCartIdState = () => {
         setAddToCartId([...allAddToCartId, item]);
     };
     const removeIdFromArray = (id) => {
+        // const updateId = allAddToCartId.filter((item)=>item._id !== id );
         setAddToCartId((preState) => preState.filter((item) => item !== id))
+        // setAddToCartId(updateId)
     }
     const removeAllItems = () => {
         setAddToCartId([]);

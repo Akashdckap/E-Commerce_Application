@@ -126,9 +126,9 @@ export default function cartItems() {
                 </div>
                 <Link href={'productList'} className="border-2 bg-blue-600 rounded-md w-20 h-10 text-xl pt-1 pl-4 mr-4"><button>Back</button></Link>
             </div > */}
-            <div className="pl-4">
+            <div className="flex justify-between items-start mt-5 pb-10">
                 <div>
-                    <table className="table-auto w-7/12 mt-6 bg-white border border-gray-300 ml-20 border-none rounded">
+                    <table className="table-auto w-full bg-white border border-gray-300 ml-20 border-none rounded">
                         <thead className="text-center">
                             <tr>
                                 <th className="py-2 px-4 border-b text-left pl-8 text-indigo-400 font-medium">Item</th>
@@ -147,26 +147,26 @@ export default function cartItems() {
                                                     <img className="h-24 w-24 max-w-full rounded-lg object-cover" src="https://images.unsplash.com/flagged/photo-1556637640-2c80d3201be8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8c25lYWtlcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60" alt="" />
                                                     <div>
                                                         <p className="text-orange-600 text-start">{cartData.productName}</p>
-                                                        <p className="text-start">{cartData.category}</p>
+                                                        <p className="text-start text-gray-500">{cartData.category}</p>
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td className="py-2 px-4 border-b border-t-0">₹ {cartData.price}</td>
+                                            <td className="py-2 px-4 border-b border-t-0 text-gray-500">₹ {cartData.price}</td>
                                             <td className="py-2 px-4 border-b border-t-0">
                                                 <div className='flex justify-center items-center gap-3'>
                                                     <button disabled={cartData.count == 1} >
-                                                        <FontAwesomeIcon icon={faMinus} onClick={() => handleDecrementCount(cartData._id)} className={`${cartData.count === 1 ? 'cursor-default' : "cursor-pointer"} border border-solid border-blue-300 font-thin rounded-xl p-1 text-xs`} />
+                                                        <FontAwesomeIcon icon={faMinus} onClick={() => handleDecrementCount(cartData._id)} className={`${cartData.count === 1 ? 'cursor-default' : "cursor-pointer"} text-gray-500 border border-solid border-blue-300 font-thin rounded-xl p-1 text-xs`} />
                                                     </button>
                                                     {
                                                         cartData.count > 0 ? (
-                                                            <span className='border border-gray-400 w-10 rounded-sm flex justify-center items-center'>{cartData.count}</span>
-                                                        ) : <span className='border border-gray-400 w-10 rounded-sm flex justify-center items-center'>0</span>
+                                                            <span className='border border-gray-400 w-10 rounded-sm flex text-gray-500 justify-center items-center'>{cartData.count}</span>
+                                                        ) : <span className='border border-gray-400 w-10 rounded-sm flex text-gray-500 justify-center items-center'>0</span>
 
                                                     }
-                                                    <FontAwesomeIcon icon={faPlus} onClick={() => handleIncrementCount(cartData._id)} className='cursor-pointer border border-solid border-blue-300 font-thin rounded-xl p-1 text-xs' />
+                                                    <FontAwesomeIcon icon={faPlus} onClick={() => handleIncrementCount(cartData._id)} className='cursor-pointer border border-solid text-gray-500 border-blue-300 font-thin rounded-xl p-1 text-xs' />
                                                 </div>
                                             </td>
-                                            <td className="py-2 px-4 border-b border-t-0">< FontAwesomeIcon icon={faTrash} onClick={() => handleRemoveDataFromLocal(cartData._id, cartData.productName)} className="hover:text-red-400 cursor-pointer" /></td>
+                                            <td className="py-2 px-4 border-b border-t-0">< FontAwesomeIcon icon={faTrash} onClick={() => handleRemoveDataFromLocal(cartData._id, cartData.productName)} className="hover:text-red-400 cursor-pointer text-gray-600" /></td>
                                         </tr>
                                     </tbody>
                                 )
@@ -174,12 +174,12 @@ export default function cartItems() {
                         }
                     </table>
                     {
-                        cartProducts.length > 1 ? <div className="flex justify-center items-center ml-60 mt-4">
-                            <button className="text-red-400 hover:text-red-500 cursor-pointer p-1 h-9 rounded w-28 font-normal text-base flex justify-center items-center border border-red-300" onClick={handleRemoveAllItems}>Remove All</button>
+                        cartProducts.length > 1 ? <div className="flex justify-end items-end mt-4">
+                            <button className="text-red-400 hover:text-red-500 cursor-pointer ml-20 p-1 h-9 rounded w-28 font-normal text-base flex justify-center items-center border border-red-300" onClick={handleRemoveAllItems}>Remove All</button>
                         </div> : ""
                     }
                 </div>
-                <div className="grid justify-center gap-3 mt-4 pb-10 bg-white w-1/2 m-auto rounded pt-5">
+                <div className="grid justify-start gap-3 mt-4 pb-10 pl-10 pr-10 mr-20 bg-white rounded pt-5">
                     <p className="text-green-600 border-b border-gray-400 pb-1">PRICE DETAILS</p>
                     <div className="flex justify-between gap-10">
                         <label className="text-gray-500">Price ({cartProducts.length} - items) :</label>
