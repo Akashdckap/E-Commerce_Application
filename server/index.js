@@ -44,10 +44,7 @@ app.addHook("preValidation", async function (request, reply) {
 });
 
 async function server(app1) {
-
-
   // app.register(fastifyMultipart);
-
   const apolloServer = new ApolloServer({
     typeDefs,
     resolvers,
