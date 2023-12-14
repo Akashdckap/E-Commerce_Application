@@ -15,7 +15,7 @@ export default function ProductList() {
     const dispatch = useDispatch()
     const [openCart, setCart] = useState()
     const [getProductData, setgetProductData] = useState([])
-    const [allAddToCartId, setAddToCartId] = useState([]);
+    // const [allAddToCartId, setAddToCartId] = useState([]);
     const [searchText, setSearchText] = useState('') 
     const { allAddToCartId, addToCartArray, removeIdFromArray, removeAllItems } = useCartIdState();
 

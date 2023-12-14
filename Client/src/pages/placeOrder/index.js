@@ -10,6 +10,7 @@ export default function placeOrder() {
     return (
         <>
             <div className="flex">
+                <h2 className="text-xl ml-6 mt-5">Billing address</h2>
                 <div className="border-dashed border-2 border-blue-600 h-auto rounded-md mx-auto my-9">
                     <form>
                         <div>
@@ -52,22 +53,22 @@ export default function placeOrder() {
                         </div>
                     </form>
                 </div>
-                <div className="m-auto">
-                    <h2 className="ml-16 leading-loose text-3xl">Order Details</h2>
-                    <div className="flex border-2 border-dashed border-blue-600 p-3 rounded-md">
-                        <ul className="leading-loose text-2xl">
+                <div className="mx-auto">
+                    <h2 className="ml-16 leading-loose text-2xl">Order Details</h2>
+                    <div className="flex border-4 border-solid border-black p-3 bg-white ">
+                        <ul className="leading-loose text-xl">
                             <li>Price ({cartProducts.length > 1 ? `${cartProducts.length} - items` : `${cartProducts.length} - item`})</li>
                             <li>Discount</li>
                             <li>Delivery chagres</li>
                             <li>Total amount</li>
                         </ul>
-                        <ul className="ml-6 mr-6 leading-loose text-2xl">
+                        <ul className="ml-6 mr-6 leading-loose text-xl">
                             <li>:</li>
                             <li>:</li>
                             <li>:</li>
                             <li>:</li>
                         </ul>
-                        <ul className="leading-loose text-2xl">
+                        <ul className="leading-loose text-xl">
                             <li>{totalPrice}</li>
                             <li>5</li>
                             <li>55</li>
