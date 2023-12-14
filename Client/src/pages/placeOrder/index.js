@@ -1,3 +1,6 @@
+import { faLessThan } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Link from "next/link";
 import React from "react";
 import { useSelector } from "react-redux";
 
@@ -9,7 +12,7 @@ export default function placeOrder() {
 
     return (
         <>
-            <div className="flex">
+            {/* <div className="flex">
                 <div className="border-dashed border-2 border-blue-600 h-auto rounded-md mx-auto my-9">
                     <form>
                         <div>
@@ -73,6 +76,76 @@ export default function placeOrder() {
                             <li>55</li>
                             <li>6000</li>
                         </ul>
+                    </div>
+                </div>
+            </div> */}
+            <div>
+                <div className="grid justify-start ml-20 mt-10">
+                    <Link href={'/cartItems'} className="flex justify-center items-center gap-2">
+                        <FontAwesomeIcon icon={faLessThan} className="text-xs cursor-pointer text-blue-500" />
+                        <p className="cursor-pointer text-blue-500">Back to cart</p>
+                    </Link>
+                </div>
+                <div className="flex justify-start items-center ml-20 mt-5">
+                    <h1 className="text-gray-600 text-xl">Shipping Address</h1>
+                </div>
+                <div className="grid justify-start ml-20 mt-5 p-10 w-3/4 gap-4 bg-teal-100 border-2 border-gray-300 rounded-md">
+                    <h4>Add New Address</h4>
+                    <div className="flex justify-between gap-10">
+                        <div className="grid">
+                            <label className="text-gray-700">First Name<span className="pl-1 text-red-400">*</span></label>
+                            <input placeholder="Enter the first name" type="text" className="border-2 p-2 text-gray-600 w-96 bg-white rounded-md focus:outline-none focus:border-gray-400" />
+                        </div>
+                        <div className="grid">
+                            <label className="text-gray-700">Last Name</label>
+                            <input placeholder="Enter the last name" className="border-2 p-2 w-96 text-gray-600 bg-white rounded-md focus:outline-none  focus:border-gray-400" />
+                        </div>
+                    </div>
+                    <div className="flex justify-between">
+                        <div className="grid">
+                            <label className="text-gray-700">Email<span className="pl-1 text-red-400">*</span></label>
+                            <input placeholder="Enter the email" type="text" className="border-2 p-2 text-gray-600 w-96 bg-white rounded-md focus:outline-none focus:border-gray-400" />
+                        </div>
+                        <div className="grid">
+                            <label className="text-gray-700">Contact Number<span className="pl-1 text-red-400">*</span></label>
+                            <input placeholder="Enter the number" type="number" className="border-2 p-2 w-96 text-gray-600 bg-white rounded-md focus:outline-none  focus:border-gray-400" />
+                        </div>
+                    </div>
+                    <div className="flex justify-between">
+                        <div className="grid">
+                            <label className="text-gray-700">Address<span className="pl-1 text-red-400">*</span></label>
+                            <input placeholder="Enter the address" type="text" className="border-2 p-2 text-gray-600 w-96 bg-white rounded-md focus:outline-none focus:border-gray-400" />
+                        </div>
+                        <div className="grid">
+                            <label className="text-gray-700">District</label>
+                            <input placeholder="City/District/Town" className="border-2 p-2 bg-white text-gray-600 w-96 rounded-md focus:outline-none  focus:border-gray-400" />
+                        </div>
+                    </div>
+                    <div className="flex justify-between gap-4">
+                        <div className="grid">
+                            <label className="text-gray-700">State</label>
+                            <input placeholder="Enter the state" className="border-2 p-2 bg-white text-gray-600 rounded-md focus:outline-none  focus:border-gray-400" />
+                        </div>
+                        <div className="grid">
+                            <label className="text-gray-700">Pin Code<span className="pl-1 text-red-400">*</span></label>
+                            <input placeholder="Enter the code" type="number" className="border-2 p-2 bg-white text-gray-600 rounded-md focus:outline-none  focus:border-gray-400" />
+                        </div>
+                        <div className="grid">
+                            <label className="text-gray-700">Country<span className="pl-1 text-red-400">*</span></label>
+                            <select className="border-2 p-2 bg-white text-gray-600 rounded-md focus:outline-none  focus:border-gray-400">
+                                <option defaultValue="Select One">Select One</option>
+                                <option value="India">India</option>
+                                <option value="Pakistan">Pakistan</option>
+                                <option value="Australia">Australia</option>
+                                <option value="Newsland">Newsland</option>
+                                <option value="Netharland">Netharland</option>
+                                <option value="England">England</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div className="flex justify-start items-center gap-4">
+                        <button className="border border-red-400 h-9 flex justify-center items-center p-2 rounded text-red-400">Cancel</button>
+                        <button className="border border-blue-400 hover:border-green-400  h-9 flex justify-center items-center p-2 rounded text-blue-400 hover:text-green-400 hover:bg-green-100">Submit Order</button>
                     </div>
                 </div>
             </div>
