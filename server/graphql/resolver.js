@@ -5,6 +5,7 @@
 // const mongoose = require("mongoose");
 import admins from '../model/adminSchema.js';
 import productDetails from '../model/productSchema.js';
+import newOrders from '../model/order.js';
 // import Upload from 'graphql-upload/Upload.mjs';
 // import GraphQLUpload from "graphql-upload/GraphQLUpload.js";
 // const {GraphQLUpload}  = require('graphql-upload/GraphQLUpload.js')
@@ -150,6 +151,31 @@ const resolvers = {
             }
 
         },
+
+        async createOrders(_, { newOrders:{productID,quantity,firstName,lastName,email,phoneNo,address,district,state,pincode,country} }) {
+            try {
+                const newOrder = new newOrders({
+                    productId:productID,
+                    quantity:quantity,
+                    firstName:firstName,
+                    lastName:lastName,
+                    email:email,
+                    phoneNo:phoneNo,
+                    address:address,
+                    district:district,
+                    state:state,
+                    pincode:pincode,
+                    country:country
+                })
+                const result = await newOrder.save();
+                return {
+                    ...result._doc
+                }
+            }
+            catch(err){
+                console.log(err,"Placing order error");
+            }
+        }
     }
 }
 

@@ -9,13 +9,15 @@ const placeOrder = mongoose.Schema({
     quantity:{
         type:Array
     },
-    name:String,
+    firstName:String,
+    lastName:String,
     email:String,
     phoneNo:Number,
     address:String,
     district:String,
     state:String,
-    pincode:Number
+    pincode:Number,
+    country:String,
 },{
     timestamps:true
 })

@@ -48,13 +48,15 @@ const typeDefs = gql` #graphql
     input ordersInput{
         productId: ID,
         quantity: Int,
-        name: String,
+        firstName: String,
+        lastName:String,
         email: String,
         phoneNo: Int,
         address: String,
         district: String,
         state: String,
-        pincode: Int
+        pincode: Int,
+        country: String,
     }
 
     input productsInput{
