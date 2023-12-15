@@ -208,7 +208,7 @@ export default function AdminStore() {
                                 file:rounded-full file:border-0
                                 file:text-sm file:font-semibold
                                 file:bg-violet-50 file:text-blue-400
-                                // hover:file:bg-violet-100" value={setImage.image} onChange={handleChangeFile} name='image' />
+                             hover:file:bg-violet-100" value={setImage.image} onChange={handleChangeFile} name='image' />
                     </div>
                     <div className='flex items-center justify-evenly p-2'>
                         <div>
@@ -367,7 +367,7 @@ export default function AdminStore() {
                             <p className=''>Are you sure to delete this product</p>
                         </div>
                         <div className="flex justify-last">
-                            <button type="submit" onClick={closeDeletePopUp} className="mt-3 inline-flex justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0">Cancel</button>
+                            <button onClick={closeDeletePopUp} className="mt-3 inline-flex justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0">Cancel</button>
                             <button type="submit" className="inline-flex justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3">Delete</button>
                         </div>
                     </div>

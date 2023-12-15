@@ -6,36 +6,29 @@ import { incrementProductCount, decrementProductCount, removeCartdata, removeAll
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { notification } from "antd";
-import useCartIdState from "../productList/useAddToCartId";
 
 export default function cartItems() {
     const router = useRouter();
-    const { removeIdFromArray, removeAllItems } = useCartIdState()
     const cartProducts = useSelector(state => state.productDetails.cartData);
     const dispatch = useDispatch()
 
     const handleRemoveDataFromLocal = (itemId, itemName) => {
         dispatch(removeCartdata(itemId))
-        removeIdFromArray(itemId)
         notification.success({ message: `Successfully removed ${itemName} from your cart` })
     }
     const handleRemoveAllItems = () => {
         dispatch(removeAllCartDatas())
-        removeAllItems();
     };
-    // if (cartProducts.length < 1) {
-    //     router.back("/productList")
-    // }
-    // }, [])
-    // const removeAllCartData = () => {
-    //     dispatch(removeAllCartDatas())
-    //     setAddToCartId([])
-    //     setCart(false)
-    // }
+
+    useEffect(() => {
+        if (cartProducts.length < 1) {
+            router.push("/productList")
+        }
+    }, [cartProducts])
+
     const valuesArray = cartProducts.map((total) => total.price)
     const totalAmount = valuesArray.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
-    // console.log("cartProducts-----------",cartProducts);
-    // cartProducts.map((cart)=>console.log("cart-----------",cart.price))
+
     const handleIncrementCount = (productId) => {
         dispatch(incrementProductCount({ productId }))
     }
