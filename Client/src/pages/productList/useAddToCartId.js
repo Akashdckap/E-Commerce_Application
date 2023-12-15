@@ -1,9 +1,13 @@
 import { useState } from 'react';
 
 const useCartIdState = () => {
-    const [allAddToCartId, setAddToCartId] = useState([]);
+    const [allAddToCartId, setAddToCartId] = useState();
     const addToCartArray = (item) => {
-        setAddToCartId([...allAddToCartId, item]);
+        // const checkIds = allAddToCartId.filter((check) => check !== item)
+
+        setAddToCartId(item);
+        // console.log("allAddToCartId-----------", allAddToCartId);
+        // console.log("checkIds-------------", checkIds);
     };
     const removeIdFromArray = (id) => {
         // const updateId = allAddToCartId.filter((item)=>item._id !== id );

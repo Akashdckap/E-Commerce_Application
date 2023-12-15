@@ -44,15 +44,23 @@ const resolvers = {
             const totalCount = await productDetails.countDocuments();
             return totalCount;
         },
+        // addToCartProductData: async (_, { ids }) => {
+        //     try {
+        //         const data = await productDetails.find({ _id: { $in: ids } })
+        //         return data
+        //     }
+        //     catch (error) {
+        //         console.log(error, "Error fetching data from mongodb");
+        //     }
+        // }
         addToCartProductData: async (_, { ids }) => {
             try {
-                const data = await productDetails.find({ _id: { $in: ids } })
+                const data = await productDetails.findOne({ _id: new ObjectId(ids) })
                 return data
             }
             catch (error) {
                 console.log(error, "Error fetching data from mongodb");
             }
-
         }
     },
     Mutation: {
@@ -152,28 +160,28 @@ const resolvers = {
 
         },
 
-        async createOrders(_, { newOrders:{productID,quantity,firstName,lastName,email,phoneNo,address,district,state,pincode,country} }) {
+        async createOrders(_, { newOrders: { productID, quantity, firstName, lastName, email, phoneNo, address, district, state, pincode, country } }) {
             try {
                 const newOrder = new newOrders({
-                    productId:productID,
-                    quantity:quantity,
-                    firstName:firstName,
-                    lastName:lastName,
-                    email:email,
-                    phoneNo:phoneNo,
-                    address:address,
-                    district:district,
-                    state:state,
-                    pincode:pincode,
-                    country:country
+                    productId: productID,
+                    quantity: quantity,
+                    firstName: firstName,
+                    lastName: lastName,
+                    email: email,
+                    phoneNo: phoneNo,
+                    address: address,
+                    district: district,
+                    state: state,
+                    pincode: pincode,
+                    country: country
                 })
                 const result = await newOrder.save();
                 return {
                     ...result._doc
                 }
             }
-            catch(err){
-                console.log(err,"Placing order error");
+            catch (err) {
+                console.log(err, "Placing order error");
             }
         }
     }
