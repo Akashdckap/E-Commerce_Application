@@ -20,7 +20,7 @@ export default function ProductList() {
     const [searchText, setSearchText] = useState('')
     const [allAddToCartId, setAddToCartId] = useState('');
     const [quantity, setQuantity] = useState(0);
-    // const { allAddToCartId, addToCartArray, removeIdFromArray, removeAllItems } = useCartIdState();
+    // const { allAddToCartId, addToCartArray, removeIdFromArray, removeAllItems } = useCartIdState()
 
     // const { data: getSingleData, error: getSingleError, loading: getSingleLoading } = useQuery(GET_ADD_TO_CART_SINGLE_PRODUCT_DATA, {
     //     variables: { ids: allAddToCartId }
@@ -169,7 +169,6 @@ export default function ProductList() {
                                 {
                                     getCartData.length > 0 ? (
                                         getCartData.map((listCartData, index) => {
-
                                             // console.log(listCartData.price.sum());
                                             return (
                                                 // setTotalAmount(listCartData.price),
