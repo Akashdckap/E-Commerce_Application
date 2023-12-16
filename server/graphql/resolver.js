@@ -82,7 +82,7 @@ const resolvers = {
                 price: price,
                 weight: weight,
                 color: color,
-                description: description
+                description: newOrdersdescription
             })
             const res = await newProduct.save();
             return {
@@ -152,28 +152,55 @@ const resolvers = {
 
         },
 
-        async createOrders(_, { newOrders:{productID,quantity,firstName,lastName,email,phoneNo,address,district,state,pincode,country} }) {
+        // async createOrders(_, { newOrders:{productID,quantity,firstName,lastName,email,phoneNo,address,district,state,pincode,country} }) {
+        //     try {
+        //         const newOrder = new newOrders({
+        //             productId:productID,
+        //             quantity:quantity,
+        //             firstName:firstName,
+        //             lastName:lastName,
+        //             email:email,
+        //             phoneNo:phoneNo,
+        //             address:address,
+        //             district:district,
+        //             state:state,
+        //             pincode:pincode,
+        //             country:country
+        //         })
+        //         const result = await newOrder.save();
+        //         return {
+        //             ...result._doc
+        //         }
+        //     }
+        //     catch(err){
+        //         console.log(err,"Placing order error");
+        //     }
+        // }
+        // async insertOrders(_, { orderedProducts, personalDetails, shippingAddress, billingAddress }) {
+        //     try{
+        //         const orders = new newOrders({
+        //             orderedProducts,
+        //             personalDetails,
+        //             shippingAddress,
+        //             billingAddress,
+        //         })
+        //         const result = await orders.save();
+        //         console.log(result);
+        //     }
+        //     catch(err){
+        //         console.log(err,"insertingOrders error");
+        //     }
+        // }
+        async createOrders(_, { input }) {
             try {
-                const newOrder = new newOrders({
-                    productId:productID,
-                    quantity:quantity,
-                    firstName:firstName,
-                    lastName:lastName,
-                    email:email,
-                    phoneNo:phoneNo,
-                    address:address,
-                    district:district,
-                    state:state,
-                    pincode:pincode,
-                    country:country
-                })
-                const result = await newOrder.save();
-                return {
-                    ...result._doc
-                }
+                const orders = new newOrders({
+                    input
+                });
+                const saveOrders = await orders.save();
+                console.log(saveOrders);
             }
-            catch(err){
-                console.log(err,"Placing order error");
+            catch (err) {
+                console.log(err, "create orders error");
             }
         }
     }

@@ -46,19 +46,37 @@ const typeDefs = gql` #graphql
     }
 
     input ordersInput{
-        productId: ID,
+        productName: String,
         quantity: Int,
+        price:Int,
+    }
+    input personalDetails{
+        name: String,
+        email: String,
+        phoneNo: Int,
+    }
+    input shippingAddress{
         firstName: String,
-        lastName:String,
+        lastName: String,
         email: String,
         phoneNo: Int,
         address: String,
         district: String,
         state: String,
         pincode: Int,
-        country: String,
+        country: String,   
     }
-
+    input billingAddress{
+        firstName: String,
+        lastName: String,
+        email: String,
+        phoneNo: Int,
+        address: String,
+        district: String,
+        state: String,
+        pincode: Int,
+        country: String,   
+    }
     input productsInput{
         productName: String,
         category:String,
@@ -68,6 +86,14 @@ const typeDefs = gql` #graphql
         color: String,
         description: String,
     }
+
+    input placeOrder{
+        orderedProducts:[ordersInput!]!,
+        personalDetails: personalDetails!,
+        shippingAddress: shippingAddress!,
+        billingAddress: billingAddress!
+    }
+    
     input updateProductInput{
         productName: String,
         category:String,
@@ -101,10 +127,12 @@ const typeDefs = gql` #graphql
     type Mutation{
         createAdmins(adminsInput: adminsInput): admins!
         createProducts(newProducts: productsInput): products!
-        createOrders(newOrders: ordersInput): orders!
+        # createOrders(newOrders: ordersInput): orders!
         deleteProduct(id: ID!) : Boolean!
         updateProduct(id: ID!, input: updateProductInput): products!
         uploadFile(file: Upload!): String!
+        # insertOrders(orderedProducts:[ordersInput!]!,personalDetails: personalDetails!,shippingAddress: shippingAddress!,billingAddress: billingAddress!):orders!
+        createOrders(input: placeOrder!):orders!
     }
 `
 // module.exports = typeDefs;
