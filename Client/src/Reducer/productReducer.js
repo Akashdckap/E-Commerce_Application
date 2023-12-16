@@ -1,9 +1,10 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, nanoid } from "@reduxjs/toolkit";
 
 export const productSlice = createSlice({
     name: "productDetails",
     initialState: {
         cartData: [],
+        shippingData: [],
     },
     reducers: {
         storeAddToCartProductData: (state, action) => {
@@ -43,11 +44,20 @@ export const productSlice = createSlice({
         removeAllCartDatas: (state) => {
             state.cartData = state.cartData = []
         },
+        storeShippingAddress: (state, action) => {
+            state.shippingData.push({ ...action.payload, id: nanoid() });
+        },
+        // updateFormDataById: (state, action) => {
+        //     const { id, updatedData } = action.payload;
+        //     state.formDataArray = state.formDataArray.map(item =>
+        //       item.id === id ? { ...item, ...updatedData } : item
+        //     );
+        //   },
         // updateCartItemQuantity: (state, action) => {
         //     console.log("updateCartItemQuantity", action.payload);
         // }
     },
 })
 
-export const { storeAddToCartProductData, updateCartItemQuantity, removeCartdata, removeAllCartDatas, incrementProductCount, decrementProductCount } = productSlice.actions
+export const { storeAddToCartProductData, storeShippingAddress, updateCartItemQuantity, removeCartdata, removeAllCartDatas, incrementProductCount, decrementProductCount } = productSlice.actions
 export default productSlice.reducer

@@ -1,13 +1,15 @@
-import { faDeleteLeft, faL, faLessThan, faPlus, faRemove, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft, faDeleteLeft, faL, faLessThan, faPlus, faRemove, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
-
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { notification } from "antd";
+import { removeCartdata, storeShippingAddress } from "@/Reducer/productReducer";
 export default function placeOrder() {
     const getCartData = useSelector(state => state.productDetails.cartData);
-
-    const [shippingFormOpen, setShippingForm] = useState(true)
+    const getShippingData = useSelector(state => state.productDetails.shippingData)
+    const dispatch = useDispatch()
+    const [shippingFormOpen, setShippingForm] = useState(false)
     const [shippingDetails, setShippingDetails] = useState({
         firstName: "",
         lastName: "",
@@ -38,7 +40,15 @@ export default function placeOrder() {
         });
         delete shippingDetailsError[name]
     };
-
+    // if (getShippingData.length > 1) {
+    //     setShippingForm(false)
+    // }
+    useEffect(() => {
+        if (getShippingData.length > 1) {
+            setShippingForm(false)
+        }
+    }, [])
+    console.log("getShippingData.length-------------------", getShippingData.length);
     const validate = () => {
         let newErrors = { ...shippingDetailsError };
         let isVaild = true;
@@ -55,26 +65,57 @@ export default function placeOrder() {
             newErrors.country = "Country is required";
             isVaild = false;
         }
-        if (shippingDetails.phoneNo.length < 9 || 5 && shippingDetails.phoneNo.trim() !== "") {
+        console.log("shippingDetails.phoneNo----", shippingDetails.phoneNo.length);
+        if (shippingDetails.phoneNo.length < 9 && shippingDetails.phoneNo.trim() !== "") {
             newErrors.phoneNo = "Contact number should be 10 numbers"
             isVaild = false
         }
-        if (shippingDetails.pincode.length < 9 || 5 && shippingDetails.pincode.trim() !== "") {
+        if (shippingDetails.pincode.length < 5 && shippingDetails.pincode.trim() !== "") {
             newErrors.pincode = "pincode should be 6 number"
             isVaild = false
         }
         setShippingDetailsError(newErrors);
-        console.log(shippingDetailsError);
         return isVaild;
     }
 
     const handleOrderSubmit = (e) => {
         e.preventDefault();
         if (validate()) {
-            console.log(shippingDetailsError);
-            console.log("shippingDetails--------", shippingDetails);
+            dispatch(storeShippingAddress(shippingDetails));
+            // const shippingDetails = {
+            //     firstName: "",
+            //     lastName: "",
+            //     email: "",
+            //     phoneNo: "",
+            //     address: "",
+            //     district: "",
+            //     state: "",
+            //     pincode: "",
+            //     country: ""
+            // }
+            setShippingDetails({
+                firstName: "",
+                lastName: "",
+                email: "",
+                phoneNo: "",
+                address: "",
+                district: "",
+                state: "",
+                pincode: "",
+                country: ""
+            })
+            // console.log("shippingDetails------------------", shippingDetails);
         }
     }
+    const handleRemoveDataFromLocal = (itemId, itemName) => {
+        dispatch(removeCartdata(itemId))
+        notification.success({ message: `Successfully removed ${itemName} from your cart` })
+    }
+    const editShippingDetails = (editId) => {
+        // const updateData = useSelector(state => state.productDetails.shippingData);
+        console.log("getShippingData------------------", getShippingData);
+    }
+    // console.log("getShippingData-----------------", getShippingData);
     // const cartProducts = useSelector(state => state.productDetails.cartData);
     // const priceGetting = cartProducts.map((total) => total.price);
     // const totalPrice = priceGetting.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
@@ -84,13 +125,41 @@ export default function placeOrder() {
             <div>
                 <div className="flex justify-start ml-20 mt-10 gap-20">
                     <Link href={'/cartItems'} className="flex justify-center items-center gap-2">
-                        <FontAwesomeIcon icon={faLessThan} className="text-xs cursor-pointer text-blue-500" />
+                        <FontAwesomeIcon icon={faArrowLeft} className="cursor-pointer text-blue-500" />
                         <p className="cursor-pointer text-blue-500">Back to cart</p>
                     </Link>
                     <div onClick={() => setShippingForm(true)} className="flex justify-evenly items-center bg-white h-10 w-56 rounded hover:border-orange-400 border hover:bg-orange-50 hover:shadow-lg transition-all duration-300">
                         <FontAwesomeIcon icon={faPlus} className="text-orange-400 cursor-pointer" />
                         <p className="text-orange-400 cursor-pointer">Add a new address</p>
                     </div>
+                </div>
+                <div>
+                    {
+                        getShippingData.map((shippinData, index) => {
+                            return (
+                                <div className="flex justify-start items-start ml-20 mt-5 w-auto">
+                                    <div className="w-7/12 flex p-5 justify-between items-center bg-white rounded-md border-gray-300 border border-solid" key={index}>
+                                        <div className="flex justify-between items-center gap-10">
+                                            <input type="radio" className="border-2 h-5 w-5 border-gray-300 checked:border-green-200 checked:bg-green-500 rounded-full focus:outline-none focus:border-green-200 focus:ring-green-200 active:border-green-500" />
+                                            <div className="flex">
+                                                <h4 className="text-gray-800">{shippinData.firstName}</h4>
+                                                <h4 className="text-gray-800">{shippinData.lastName}</h4>
+                                            </div>
+                                            <div className="flex justify-start">
+                                                <p className="text-gray-500">{shippinData.address}</p>
+                                                <p className="text-gray-500">{shippinData.district}</p>
+                                                <p className="text-gray-500">{shippinData.pincode}</p>
+                                            </div>
+                                        </div>
+                                        <div className="flex justify-end">
+                                            <span id={shippinData.id} onClick={() => editShippingDetails(shippinData.id)} className="text-blue-500 hover:text-blue-600 hover:cursor-pointer">Edit</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            )
+                        })
+                    }
+
                 </div>
                 <div className="flex justify-start items-center ml-20 mt-5">
                     <h1 className="text-gray-600 text-xl">Shipping Address</h1>
@@ -167,28 +236,30 @@ export default function placeOrder() {
                         </div>
                     </form>
                     <div>
-                        <div className="bg-white w-auto h-auto">
-                            <div className="flex justify-center items-center">
-                                <h3>Order Summary</h3>
+                        <div className="bg-white w-96 h-auto p-3 pb-6 rounded-md border-gray-300 border border-solid">
+                            <div className="flex justify-center items-center bg-gray-200 h-10 w-80 m-auto rounded-sm mt-3">
+                                <h3 className="text-gray-600">Order Summary</h3>
                             </div>
-                            <div>
+                            <div className="grid justify-center items-center mt-3">
                                 {
                                     getCartData.map((cartItems, index) => {
                                         return (
-                                            <div key={index} className="flex justify-center items-center gap-x-5 gap-y-5">
-                                                <div>
-                                                    <span className="float-right ">{cartItems.count}</span>
-                                                    <div className="grid border-gray-400 border-solid border rounded-md">
-                                                        <img className="h-24 w-24 max-w-full p-2 rounded-2xl  object-cover" src="https://images.unsplash.com/flagged/photo-1556637640-2c80d3201be8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8c25lYWtlcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60" alt="" />
+                                            <div key={index} className="flex justify-between items-center gap-x-14 gap-y-10 pt-5">
+                                                <div className="flex justify-start items-center">
+                                                    <div>
+                                                        <span className="float-right flex justify-center items-center relative bottom-2 right-3 bg-gray-400 border-0 h-5 w-5 text-sm rounded-full text-white">{cartItems.count}</span>
+                                                        <div className="grid border-gray-300 border-solid border rounded-md">
+                                                            <img className="h-24 w-24 max-w-full p-2 rounded-2xl  object-cover" src="https://images.unsplash.com/flagged/photo-1556637640-2c80d3201be8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8c25lYWtlcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60" alt="" />
+                                                        </div>
+                                                    </div>
+                                                    <div className="grid justify-start">
+                                                        <h4 className="text-gray-700">{cartItems.productName}</h4>
+                                                        <p className="text-gray-400">{cartItems.category}</p>
                                                     </div>
                                                 </div>
-                                                <div className="grid">
-                                                    <h4>{cartItems.productName}</h4>
-                                                    <p>{cartItems.category}</p>
-                                                </div>
-                                                <div className="gird justify-center items-center">
-                                                    <p>{cartItems.price}</p>
-                                                    <FontAwesomeIcon icon={faDeleteLeft} />
+                                                <div className="gird justify-start items-center">
+                                                    <p className="text-gray-500">₹{cartItems.price}</p>
+                                                    <FontAwesomeIcon onClick={() => handleRemoveDataFromLocal(cartItems._id, cartItems.productName)} icon={faDeleteLeft} className="text-red-300 hover:cursor-pointer hover:text-red-400" />
                                                 </div>
                                             </div>
                                         )
