@@ -7,73 +7,33 @@ export const productSlice = createSlice({
     },
     reducers: {
         storeAddToCartProductData: (state, action) => {
-            const productData = action.payload
-            console.log("productData---------------", productData);
-            if (productData) {
-                productData.forEach(element => {
-                    // console.log("element-------------", element._id);
-                    const productIndex = state.cartData.some((product) => product._id === element._id);
-                    // console.log("productIndex-----------", productIndex);
-                    if (productIndex) {
-                        state.cartData = state.cartData.map((product) =>
-                            product._id === element._id ? { ...product, count: (product.count || 0) + 1 }
-                                : product
-                        );
-                    }
-                    else {
-                        state.cartData.push({ ...element, count: 1 });
-                    }
-                });
+            const productData = action.payload;
+            const findProduct = state.cartData.find((product) => product._id === productData._id);
+            if (findProduct) {
+                findProduct.count += 1;
+            } else {
+                state.cartData.push({ ...productData, count: 1 });
             }
         },
-        // storeAddToCartProductData: (state, action) => {
-        //     const productData = action.payload
-        //     console.log("productData---------------", productData);
-        //     if (productData) {
-        //         productData.forEach(element => {
-        //             // if (!state.cartData.some(item => item._id === element._id)) {
-        //             //     state.cartData.push(element)
-        //             // }
-        //             console.log("element-------------", element._id);
-        //             const productIndex = state.cartData.find((product) => product._id === element._id);
-        //             console.log("productIndex-----------", productIndex);
-        //             // const productIndex = state.cartData.findIndex((product) => product._id === element._id)
-        //             if (state.cartData[productIndex].count === undefined) {
-        //                         state.cartData[productIndex].count =
-        //                             (state.cartData[productIndex].count || 0) + 1;
-        //             }
-        //             // if (productIndex !== -1) {
-        //             //     if (state.cartData[productIndex].count === undefined) {
-        //             //         state.cartData[productIndex].count =
-        //             //             (state.cartData[productIndex].count || 0) + 1;
-        //             //     }
-        //             // }
-
-        //             // if (productIndex !== -1) {
-        //             // if (state.cartData.some(item => item._id === element._id)) {
-        //             // console.log("productIndex------------------", productIndex);
-        //             // if (state.cartData.some(item => item._id === element._id) && state.cartData[productIndex].count !== undefined) {
-        //             //     console.log("no");
-        //             //     state.cartData[productIndex].count = (state.cartData[productIndex].count || 0) + 1;
-        //             // } else {
-        //             //     state.cartData[productIndex].count = 1;
-        //             //     console.log("yes");
-        //             // }
-        //             // }
-        //             // }
-        //             console.log("productIndex--------------------", productIndex);
-        //         });
-        //     }
-        // },
 
         removeCartdata: (state, action) => {
             const itemId = action.payload
             state.cartData = state.cartData.filter(cart => cart._id !== itemId)
         },
         incrementProductCount: (state, action) => {
-            const { productId } = action.payload
+            const { productId } = action.payload;
             const productIndex = state.cartData.findIndex(product => product._id === productId)
             state.cartData[productIndex].count = (state.cartData[productIndex].count || 0) + 1;
+            // const { productId } = action.payload;
+            // const existingProduct = state.cartData.find(product => product._id === productId);
+
+            // if (existingProduct) {
+            //     existingProduct.count += 1;
+            //     existingProduct.price = existingProduct.originalPrice * existingProduct.count;
+            // } else {
+            //     const { productId, UpdatePrice } = action.payload;
+            //     state.cartData.push({ productId, count: 1, price: originalPrice, originalPrice });
+            // }
         },
         decrementProductCount: (state, action) => {
             const { productId } = action.payload
@@ -82,9 +42,12 @@ export const productSlice = createSlice({
         },
         removeAllCartDatas: (state) => {
             state.cartData = state.cartData = []
-        }
+        },
+        // updateCartItemQuantity: (state, action) => {
+        //     console.log("updateCartItemQuantity", action.payload);
+        // }
     },
 })
 
-export const { storeAddToCartProductData, removeCartdata, removeAllCartDatas, incrementProductCount, decrementProductCount } = productSlice.actions
+export const { storeAddToCartProductData, updateCartItemQuantity, removeCartdata, removeAllCartDatas, incrementProductCount, decrementProductCount } = productSlice.actions
 export default productSlice.reducer

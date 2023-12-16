@@ -44,15 +44,23 @@ const resolvers = {
             const totalCount = await productDetails.countDocuments();
             return totalCount;
         },
+        // addToCartProductData: async (_, { ids }) => {
+        //     try {
+        //         const data = await productDetails.find({ _id: { $in: ids } })
+        //         return data
+        //     }
+        //     catch (error) {
+        //         console.log(error, "Error fetching data from mongodb");
+        //     }
+        // }
         addToCartProductData: async (_, { ids }) => {
             try {
-                const data = await productDetails.find({ _id: { $in: ids } })
+                const data = await productDetails.findOne({ _id: new ObjectId(ids) })
                 return data
             }
             catch (error) {
                 console.log(error, "Error fetching data from mongodb");
             }
-
         }
     },
     Mutation: {

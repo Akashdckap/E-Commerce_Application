@@ -8,16 +8,19 @@ import { faClose, faMinus, faPlus, faShoppingCart } from '@fortawesome/free-soli
 import Link from 'next/link';
 import Image from 'next/image';
 import { useDispatch, useSelector } from 'react-redux';
-import { storeAddToCartProductData, removeCartdata, removeAllCartDatas, incrementProductCount, decrementProductCount } from '@/Reducer/productReducer';
-import useCartIdState from './useAddToCartId';
+import { storeAddToCartProductData, updateCartItemQuantity, removeCartdata, removeAllCartDatas, incrementProductCount, decrementProductCount } from '@/Reducer/productReducer';
+// import useCartIdState from './useAddToCartId';
 export default function ProductList() {
     const getCartData = useSelector(state => state.productDetails.cartData);
+
     const dispatch = useDispatch()
     const [openCart, setCart] = useState()
     const [getProductData, setgetProductData] = useState([])
     // const [allAddToCartId, setAddToCartId] = useState([]);
     const [searchText, setSearchText] = useState('')
-    const { allAddToCartId, addToCartArray, removeIdFromArray, removeAllItems } = useCartIdState();
+    const [allAddToCartId, setAddToCartId] = useState('');
+    const [quantity, setQuantity] = useState(0);
+    // const { allAddToCartId, addToCartArray, removeIdFromArray, removeAllItems } = useCartIdState()
 
     // const { data: getSingleData, error: getSingleError, loading: getSingleLoading } = useQuery(GET_ADD_TO_CART_SINGLE_PRODUCT_DATA, {
     //     variables: { ids: allAddToCartId }
@@ -30,11 +33,12 @@ export default function ProductList() {
     console.log("allAddToCartId----------------", allAddToCartId);
     const handleAddtoCartBtn = (getId, Qty) => {
         parseIds()
+        console.log("getids-----------", getId);
         if (getId) {
-            addToCartArray(getId)
-
+            setAddToCartId(getId)
         }
         notification.success({ message: 'Successfully added to cart' });
+        console.log("getSingleData-------", getSingleData);
         // const datas = JSON.parse(localStorage.getItem('productData'))
         // datas.productDetails.cartData.map((list) => {
         //     if (list._id === getId) {
@@ -63,12 +67,10 @@ export default function ProductList() {
 
     const handleRemoveDataFromLocal = (itemId) => {
         dispatch(removeCartdata(itemId))
-        removeIdFromArray(itemId)
     }
 
     const removeAllCartData = () => {
         dispatch(removeAllCartDatas())
-        removeAllItems();
         setCart(false)
     }
     const filteredList = getProductData.filter((item) => {
@@ -82,6 +84,14 @@ export default function ProductList() {
     const handleDecrementCount = (productId) => {
         dispatch(decrementProductCount({ productId }))
     }
+    console.log("quantity", quantity);
+
+    // const handleQuantityChange = (e) => {
+    //     console.log(e.target.value);
+    //     const newQuantity = parseInt(e.target.value, 10) || 1;
+    //     dispatch(updateCartItemQuantity({ productId: e.target.id, newQuantity }));
+    // };
+
     const valuesArray = getCartData.map((total) => total.price)
     const totalAmount = valuesArray.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
 
@@ -184,12 +194,10 @@ export default function ProductList() {
                                                                             <FontAwesomeIcon icon={faMinus} onClick={() => handleDecrementCount(listCartData._id)} className={`${listCartData.count === 1 ? 'cursor-default' : "cursor-pointer"} border border-solid border-blue-300 font-thin rounded-xl p-1 text-xs`} />
                                                                         </button>
                                                                         {
-                                                                            listCartData.count > 0 ? (
-                                                                                <span className='border border-gray-400 w-10 rounded-sm flex justify-center items-center'>{listCartData.count}</span>
-                                                                            ) : <span className='border border-gray-400 w-10 rounded-sm flex justify-center items-center'>0</span>
-
+                                                                            <span className='border border-gray-400 w-10 rounded-sm flex justify-center items-center'>{listCartData.count}</span>
+                                                                            // <input type='text' id={listCartData._id} className='flex justify-center hover:border-blue-300 items-center pl-3.5 border border-gray-400 w-10 rounded-sm' value={listCartData.count} onChange={handleQuantityChange} />
                                                                         }
-                                                                        <FontAwesomeIcon icon={faPlus} onClick={() => handleIncrementCount(listCartData._id)} className='cursor-pointer border border-solid border-blue-300 font-thin rounded-xl p-1 text-xs' />
+                                                                        <FontAwesomeIcon icon={faPlus} onClick={() => handleIncrementCount(listCartData._id, listCartData.price)} className='cursor-pointer border border-solid border-blue-300 font-thin rounded-xl p-1 text-xs' />
                                                                     </div>
                                                                     <button type="submit" onClick={() => handleRemoveDataFromLocal(listCartData._id, listCartData.productName)} className="flex rounded p-2 text-center text-gray-950 transition-all duration-200 ease-in-out focus:shadow hover:text-red-500">
                                                                         Remove

@@ -40,5 +40,5 @@ const placeOrder = mongoose.Schema({
     timestamps:true
 })
 // module.exports = mongoose.model('orders',placeOrder);
-const orders = mongoose.model('orders',placeOrder);
+const orders = mongoose.model('orders', placeOrder);
 export default orders;
