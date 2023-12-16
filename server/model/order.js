@@ -3,41 +3,41 @@ import mongoose from "mongoose";
 // const ObjectId = mongoose.Types.ObjectId
 
 const placeOrder = mongoose.Schema({
-    orderedProducts:[{
-      productName:String,
-      quantity:Number,  
-      price:Number,
-      productId:Number,
+    orderedProducts: [{
+        productName: String,
+        quantity: Number,
+        price: Number,
+
     }],
-    personalDetails:{
-        name:String,
-        email:String,
-        phoneNo:Number,
+    personalDetails: {
+        name: String,
+        email: String,
+        phoneNo: Number,
     },
-    shippingAddress:{
-        firstName:String,
-        lastName:String,
-        email:String,
-        phoneNo:Number,
-        address:String,
-        district:String,
-        state:String,
-        pincode:Number,
-        country:String,
+    shippingAddress: {
+        firstName: String,
+        lastName: String,
+        email: String,
+        phoneNo: Number,
+        address: String,
+        district: String,
+        state: String,
+        pincode: Number,
+        country: String,
     },
-    billingAddress:{
-        firstName:String,
-        lastName:String,
-        email:String,
-        phoneNo:Number,
-        address:String,
-        district:String,
-        state:String,
-        pincode:Number,
-        country:String,
+    billingAddress: {
+        firstName: String,
+        lastName: String,
+        email: String,
+        phoneNo: Number,
+        address: String,
+        district: String,
+        state: String,
+        pincode: Number,
+        country: String,
     },
-},{
-    timestamps:true
+}, {
+    timestamps: true
 })
 // module.exports = mongoose.model('orders',placeOrder);
 const orders = mongoose.model('orders', placeOrder);
