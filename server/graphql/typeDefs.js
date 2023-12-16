@@ -11,18 +11,18 @@ const typeDefs = gql` #graphql
         password: String!,
     }
     
-    type orders{
-        _id: ID,
-        productId: ID,
-        quantity: String,
-        name: String,
-        email: String,
-        phoneNo: Int,
-        address: String,
-        district: String,
-        state: String,
-        pincode: Int
-    }
+    # type orders{
+    #     _id: ID,
+    #     productId: ID,
+    #     quantity: String,
+    #     name: String,
+    #     email: String,
+    #     phoneNo: Int,
+    #     address: String,
+    #     district: String,
+    #     state: String,
+    #     pincode: Int
+    # }
 
     type products{
         _id: ID,
@@ -45,17 +45,17 @@ const typeDefs = gql` #graphql
         password:String!,
     }
 
-    input ordersInput{
+    input orderProductInput{
         productName: String,
         quantity: Int,
         price:Int,
     }
-    input personalDetails{
+    input personalDetailsInput{
         name: String,
         email: String,
         phoneNo: Int,
     }
-    input shippingAddress{
+    input shippingAddressInput{
         firstName: String,
         lastName: String,
         email: String,
@@ -66,7 +66,7 @@ const typeDefs = gql` #graphql
         pincode: Int,
         country: String,   
     }
-    input billingAddress{
+    input billingAddressInput{
         firstName: String,
         lastName: String,
         email: String,
@@ -77,6 +77,14 @@ const typeDefs = gql` #graphql
         pincode: Int,
         country: String,   
     }
+
+    input orderedInput{
+        orderedProducts:[orderProductInput!]!,
+        personalDetails: personalDetailsInput!,
+        shippingAddress: shippingAddressInput!,
+        billingAddress: billingAddressInput!,
+    }
+
     input productsInput{
         productName: String,
         category:String,
@@ -87,13 +95,46 @@ const typeDefs = gql` #graphql
         description: String,
     }
 
-    input placeOrder{
-        orderedProducts:[ordersInput!]!,
-        personalDetails: personalDetails!,
-        shippingAddress: shippingAddress!,
-        billingAddress: billingAddress!
+    type orderProduct{
+        productName: String,
+        quantity: Int,
+        price:Int,
     }
-    
+    type personalDetails{
+        name: String,
+        email: String,
+        phoneNo: Int,
+    }
+    type shippingAddress{
+        firstName: String,
+        lastName: String,
+        email: String,
+        phoneNo: Int,
+        address: String,
+        district: String,
+        state: String,
+        pincode: Int,
+        country: String, 
+    }
+    type billingAddress{
+        firstName: String,
+        lastName: String,
+        email: String,
+        phoneNo: Int,
+        address: String,
+        district: String,
+        state: String,
+        pincode: Int,
+        country: String, 
+    }
+
+    type orders{
+        orderedProducts:[orderProduct],
+        personalDetails:personalDetails,
+        shippingAddress:shippingAddress,
+        billingAddress:billingAddress,
+    }
+
     input updateProductInput{
         productName: String,
         category:String,
@@ -114,7 +155,7 @@ const typeDefs = gql` #graphql
 
     type Query{
         getAllAdmins:[admins]
-        getAllOrders:[orders]
+        # getAllOrders:[orders]
         getAllProductsData: [products]
         getAllProducts(page:Int!,pageSize:Int!):[products!]!
         getTotalProductCount:Int!
@@ -133,7 +174,7 @@ const typeDefs = gql` #graphql
         updateProduct(id: ID!, input: updateProductInput): products!
         uploadFile(file: Upload!): String!
         # insertOrders(orderedProducts:[ordersInput!]!,personalDetails: personalDetails!,shippingAddress: shippingAddress!,billingAddress: billingAddress!):orders!
-        createOrders(input: placeOrder!):orders!
+        createOrders(input: orderedInput!): orders!
     }
 `
 // module.exports = typeDefs;

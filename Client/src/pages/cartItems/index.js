@@ -11,7 +11,7 @@ export default function cartItems() {
     const router = useRouter();
     const cartProducts = useSelector(state => state.productDetails.cartData);
     const dispatch = useDispatch()
-
+    // console.log(cartProducts)
     const handleRemoveDataFromLocal = (itemId, itemName) => {
         dispatch(removeCartdata(itemId))
         notification.success({ message: `Successfully removed ${itemName} from your cart` })

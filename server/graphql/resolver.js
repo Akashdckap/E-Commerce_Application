@@ -20,9 +20,9 @@ const resolvers = {
         getAllAdmins: async () => {
             return await (admins.find({}));
         },
-        getAllOrders: async () => {
-            return await (order.find({}));
-        },
+        // getAllOrders: async () => {
+        //     return await (order.find({}));
+        // },
         getEditProductData: async (_, { id }) => {
             return await productDetails.findOne({ _id: new ObjectId(id) })
         },
@@ -201,9 +201,7 @@ const resolvers = {
         // }
         async createOrders(_, { input }) {
             try {
-                const orders = new newOrders({
-                    input
-                });
+                const orders = new newOrders(input);
                 const saveOrders = await orders.save();
                 console.log(saveOrders);
             }
