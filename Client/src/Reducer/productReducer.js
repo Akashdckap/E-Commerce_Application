@@ -47,6 +47,14 @@ export const productSlice = createSlice({
         storeShippingAddress: (state, action) => {
             state.shippingData.push({ ...action.payload, id: nanoid() });
         },
+        // updateShippingAddress: (state, action) => {
+        //     const { name, value } = action.payload
+        //     const dataIndex = state.shippingData.findIndex((field) => field.firstName === name);
+        //     if (dataIndex !== -1) {
+        //         state.shippingData[dataIndex].value = value
+        //     }
+        //     console.log("updateShippingAddress-----------", action.payload);
+        // }
         // updateFormDataById: (state, action) => {
         //     const { id, updatedData } = action.payload;
         //     state.formDataArray = state.formDataArray.map(item =>
@@ -59,5 +67,5 @@ export const productSlice = createSlice({
     },
 })
 
-export const { storeAddToCartProductData, storeShippingAddress, updateCartItemQuantity, removeCartdata, removeAllCartDatas, incrementProductCount, decrementProductCount } = productSlice.actions
+export const { storeAddToCartProductData, storeShippingAddress, updateShippingAddress, updateCartItemQuantity, removeCartdata, removeAllCartDatas, incrementProductCount, decrementProductCount } = productSlice.actions
 export default productSlice.reducer

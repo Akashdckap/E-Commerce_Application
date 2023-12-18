@@ -4,12 +4,14 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { notification } from "antd";
-import { removeCartdata, storeShippingAddress } from "@/Reducer/productReducer";
+import { removeCartdata, storeShippingAddress, updateShippingAddress } from "@/Reducer/productReducer";
 export default function placeOrder() {
     const getCartData = useSelector(state => state.productDetails.cartData);
     const getShippingData = useSelector(state => state.productDetails.shippingData)
     const dispatch = useDispatch()
     const [shippingFormOpen, setShippingForm] = useState(false)
+    const [selectedShippingAddress, setSelectedShippingAddress] = useState(null);
+
     const [shippingDetails, setShippingDetails] = useState({
         firstName: "",
         lastName: "",
@@ -39,6 +41,7 @@ export default function placeOrder() {
             [name]: value,
         });
         delete shippingDetailsError[name]
+        dispatch(updateShippingAddress({ name, value }));
     };
     // if (getShippingData.length > 1) {
     //     setShippingForm(false)
@@ -82,17 +85,6 @@ export default function placeOrder() {
         e.preventDefault();
         if (validate()) {
             dispatch(storeShippingAddress(shippingDetails));
-            // const shippingDetails = {
-            //     firstName: "",
-            //     lastName: "",
-            //     email: "",
-            //     phoneNo: "",
-            //     address: "",
-            //     district: "",
-            //     state: "",
-            //     pincode: "",
-            //     country: ""
-            // }
             setShippingDetails({
                 firstName: "",
                 lastName: "",
@@ -104,7 +96,6 @@ export default function placeOrder() {
                 pincode: "",
                 country: ""
             })
-            // console.log("shippingDetails------------------", shippingDetails);
         }
     }
     const handleRemoveDataFromLocal = (itemId, itemName) => {
@@ -112,9 +103,25 @@ export default function placeOrder() {
         notification.success({ message: `Successfully removed ${itemName} from your cart` })
     }
     const editShippingDetails = (editId) => {
-        // const updateData = useSelector(state => state.productDetails.shippingData);
-        console.log("getShippingData------------------", getShippingData);
+        const shippingData = getShippingData.find((shipping) => shipping.id === editId);
+        setShippingDetails({
+            firstName: shippingData.firstName,
+            lastName: shippingData.lastName,
+            email: shippingData.email,
+            phoneNo: shippingData.phoneNo,
+            address: shippingData.address,
+            district: shippingData.district,
+            state: shippingData.state,
+            pincode: shippingData.pincode,
+            country: shippingData.country
+        })
+        setShippingForm(true)
+        setSelectedShippingAddress(editId)
     }
+    // const handleSelectShippingAddress = (e) => {
+    //     setSelectedShippingAddress(e.target.id)
+    //     // setSelectedShippingAddress(true)
+    // }
     // console.log("getShippingData-----------------", getShippingData);
     // const cartProducts = useSelector(state => state.productDetails.cartData);
     // const priceGetting = cartProducts.map((total) => total.price);
@@ -138,9 +145,9 @@ export default function placeOrder() {
                         getShippingData.map((shippinData, index) => {
                             return (
                                 <div className="flex justify-start items-start ml-20 mt-5 w-auto">
-                                    <div className="w-7/12 flex p-5 justify-between items-center bg-white rounded-md border-gray-300 border border-solid" key={index}>
+                                    <div onClick={() => editShippingDetails(shippinData.id)} className={`w-7/12 flex p-5 justify-between items-center bg-white rounded-md border border-solid ${selectedShippingAddress === shippinData.id ? 'border-gray-400 shadow-lg transition-all duration-300' : 'border-gray-300'}`} key={index}>
                                         <div className="flex justify-between items-center gap-10">
-                                            <input type="radio" className="border-2 h-5 w-5 border-gray-300 checked:border-green-200 checked:bg-green-500 rounded-full focus:outline-none focus:border-green-200 focus:ring-green-200 active:border-green-500" />
+                                            <input type="radio" id={shippinData.id} onChange={(e) => setSelectedShippingAddress(e.target.id)} onClick={() => editShippingDetails(shippinData.id)} checked={selectedShippingAddress === shippinData.id} className="border-2 h-5 w-5 border-gray-300 checked:border-green-200 checked:bg-green-500 rounded-full focus:outline-none focus:border-green-200 focus:ring-green-200 active:border-green-500" />
                                             <div className="flex">
                                                 <h4 className="text-gray-800">{shippinData.firstName}</h4>
                                                 <h4 className="text-gray-800">{shippinData.lastName}</h4>
