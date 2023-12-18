@@ -110,3 +110,44 @@ export const GET_PRODUCT_DETAILS = gql`
         }
     }
 `
+export const ALL_ORDERED_PRODUCTS = gql`
+    query {
+        getAllOrders{
+            orderedProducts{
+            productName,
+            category,
+            brand,
+            color,
+            quantity,
+            price
+            }
+            personalDetails{
+            name
+            email
+            phoneNo
+            }
+            shippingAddress{
+            firstName,
+            lastName,
+            email,
+            phoneNo,
+            address,
+            district,
+            state,
+            pincode,
+            country
+            }
+            billingAddress{
+            firstName,
+            lastName,
+            email,
+            phoneNo,
+            address,
+            district,
+            state,
+            pincode,
+            country
+            }
+        }
+    }
+`

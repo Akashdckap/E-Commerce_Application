@@ -10,19 +10,6 @@ const typeDefs = gql` #graphql
         email: String!,
         password: String!,
     }
-    
-    # type orders{
-    #     _id: ID,
-    #     productId: ID,
-    #     quantity: String,
-    #     name: String,
-    #     email: String,
-    #     phoneNo: Int,
-    #     address: String,
-    #     district: String,
-    #     state: String,
-    #     pincode: Int
-    # }
 
     type products{
         _id: ID,
@@ -47,6 +34,9 @@ const typeDefs = gql` #graphql
 
     input orderProductInput{
         productName: String,
+        category:String,
+        brand: String,
+        color: String,
         quantity: Int,
         price:Int,
     }
@@ -97,6 +87,9 @@ const typeDefs = gql` #graphql
 
     type orderProduct{
         productName: String,
+        category: String,
+        brand: String,
+        color: String,
         quantity: Int,
         price:Int,
     }
@@ -155,25 +148,22 @@ const typeDefs = gql` #graphql
 
     type Query{
         getAllAdmins:[admins]
-        # getAllOrders:[orders]
         getAllProductsData: [products]
         getAllProducts(page:Int!,pageSize:Int!):[products!]!
         getTotalProductCount:Int!
         getEditProductData(id: ID!): products
         getProductDetails(id: ID!):products
-        # addToCartProductData(ids: [ID!]!): [products]!
         addToCartProductData(ids: ID!): products
+        getAllOrders:[orders]
         # getImages:[images]
     }
 
     type Mutation{
         createAdmins(adminsInput: adminsInput): admins!
         createProducts(newProducts: productsInput): products!
-        # createOrders(newOrders: ordersInput): orders!
         deleteProduct(id: ID!) : Boolean!
         updateProduct(id: ID!, input: updateProductInput): products!
         uploadFile(file: Upload!): String!
-        # insertOrders(orderedProducts:[ordersInput!]!,personalDetails: personalDetails!,shippingAddress: shippingAddress!,billingAddress: billingAddress!):orders!
         createOrders(input: orderedInput!): orders!
     }
 `

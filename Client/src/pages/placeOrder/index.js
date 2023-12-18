@@ -43,12 +43,12 @@ export default function placeOrder() {
     // if (getShippingData.length > 1) {
     //     setShippingForm(false)
     // }
-    useEffect(() => {
-        if (getShippingData.length > 1) {
-            setShippingForm(false)
-        }
-    }, [])
-    console.log("getShippingData.length-------------------", getShippingData.length);
+    // useEffect(() => {
+    //     if (getShippingData.length > 1) {
+    //         setShippingForm(false)
+    //     }
+    // }, [])
+    // console.log("getShippingData.length-------------------", getShippingData.length);
     const validate = () => {
         let newErrors = { ...shippingDetailsError };
         let isVaild = true;
