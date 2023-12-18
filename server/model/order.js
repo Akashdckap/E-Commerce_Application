@@ -5,6 +5,9 @@ import mongoose from "mongoose";
 const placeOrder = mongoose.Schema({
     orderedProducts: [{
         productName: String,
+        category: String,
+        brand: String,
+        color: String,
         quantity: Number,
         price: Number,
 

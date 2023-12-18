@@ -44,6 +44,10 @@ const resolvers = {
             const totalCount = await productDetails.countDocuments();
             return totalCount;
         },
+        getAllOrders: async () => {
+            const allOrders = await newOrders.find({});
+            return allOrders;
+        },
         // addToCartProductData: async (_, { ids }) => {
         //     try {
         //         const data = await productDetails.find({ _id: { $in: ids } })

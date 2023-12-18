@@ -45,6 +45,7 @@ export const productSlice = createSlice({
             state.cartData = state.cartData = []
         },
         storeShippingAddress: (state, action) => {
+            // state.shippingData = action.payload
             state.shippingData.push({ ...action.payload, id: nanoid() });
         },
         // updateFormDataById: (state, action) => {
