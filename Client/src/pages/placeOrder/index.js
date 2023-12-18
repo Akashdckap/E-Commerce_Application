@@ -11,7 +11,9 @@ export default function placeOrder() {
     const getBillingData = useSelector(state => state.productDetails.billingData)
     const dispatch = useDispatch()
 
-    const [shippingFormOpen, setShippingForm] = useState(true)
+    const [shippingFormOpen, setShippingForm] = useState(false)
+    const [personalDetailForm, setPersonalDetailForm] = useState(false);
+    const [selectedShippingAddress, setSelectedShippingAddress] = useState(null);
     const [billingFormOpen, setBillingForm] = useState(true)
 
     const [selectedShippingAddress, setSelectedShippingAddress] = useState(null);
@@ -38,6 +40,8 @@ export default function placeOrder() {
         pincode: "",
         country: ""
     })
+
+    const handleChange = (e) => {
     const [billingDetails, setBillingDetails] = useState({
         firstName: "",
         lastName: "",
@@ -72,6 +76,19 @@ export default function placeOrder() {
         // dispatch(updateShippingAddress({ name, value }));
     };
 
+    const handleOpenShippingForm = () => {
+        setShippingForm(true);
+        setShippingDetails({
+            firstName: "",
+            lastName: "",
+            email: "",
+            phoneNo: "",
+            address: "",
+            district: "",
+            state: "",
+            pincode: "",
+            country: ""
+        })
     const handleChangeBillingAddress = (e) => {
         const { name, value } = e.target;
         setBillingDetails({
@@ -234,11 +251,46 @@ export default function placeOrder() {
         <>
             <div>
                 <div className="flex justify-start ml-20 mt-10 gap-20">
-                    <Link href={'/cartItems'} className="flex justify-center items-center gap-2">
-                        <FontAwesomeIcon icon={faArrowLeft} className="cursor-pointer text-blue-500" />
-                        <p className="cursor-pointer text-blue-500">Back to cart</p>
-                    </Link>
-                    <div onClick={() => setShippingForm(true)} className="flex justify-evenly items-center bg-white h-10 w-56 rounded hover:border-orange-400 border hover:bg-orange-50 hover:shadow-lg transition-all duration-300">
+                    <div onClick={() => setPersonalDetailForm(true)} className="flex justify-evenly items-center bg-white h-10 w-56 rounded hover:border-orange-400 border hover:bg-orange-50 hover:shadow-lg transition-all duration-300">
+                        <FontAwesomeIcon icon={faPlus} className="text-orange-400 cursor-pointer"></FontAwesomeIcon>
+                        <p className="text-orange-400 cursor-pointer">Add personal details</p>
+                    </div>
+                    <div className="flex justify-around gap-80">
+                        <Link href={'/cartItems'} className="flex justify-center items-center gap-2">
+                            <FontAwesomeIcon icon={faArrowLeft} className="cursor-pointer text-blue-500" />
+                            <p className="cursor-pointer text-blue-500">Back to cart</p>
+                        </Link>
+                    </div>
+                </div>
+                <div className="flex justify-start items-start ml-20 mt-5 gap-10">
+                    <form style={{ display: personalDetailForm ? "block" : "none" }}>
+                        <div className="grid justify-start p-10 mb-10 w-auto gap-4 bg-teal-100 border-2 border-gray-300 rounded-md" onClick={() => setPersonalDetailForm(true)}>
+                            <h4 className="text-gray-600 text-xl">Add Personal Details</h4>
+                            <div className="flex justify-between gap-16">
+                                <div className="grid">
+                                    <label className="text-gray-700 pl-1 pb-1">Name</label>
+                                    <input placeholder="Name..." className="h-10 border-2 p-2 text-gray-600 w-72 bg-white rounded-md focus:outline-none focus:border-gray-400"></input>
+                                </div>
+                                <div className="grid">
+                                    <label className="text-gray-700 pl-1 pb-1">Email</label>
+                                    <input placeholder="Email..." className="h-10 border-2 p-2 text-gray-600 w-72 bg-white rounded-md focus:outline-none focus:border-gray-400"></input>
+                                </div>
+                            </div>
+                            <div className="flex">
+                                <div className="grid">
+                                    <label className="text-gray-700 pl-1 pb-1">PhoneNo</label>
+                                    <input placeholder="PhoneNo..." className="h-10 border-2 p-2 text-gray-600 w-72 bg-white rounded-md focus:outline-none focus:border-gray-400"></input>
+                                </div>
+                                <div className="flex mt-7 gap-6 ml-44">
+                                    <button className="border border-red-400 h-9 flex justify-center items-center p-2 rounded text-red-400 cursor-pointer" onClick={() => setPersonalDetailForm(false)}>Cancel</button>
+                                    <button className="border border-blue-400 hover:border-green-400  h-9 flex justify-center items-center p-2 rounded text-blue-400 hover:text-white-400 hover:bg-green-400" type="submit">Submit</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div className="flex justify-start ml-20 mt-10 gap-20">
+                    <div onClick={handleOpenShippingForm} className="flex justify-evenly items-center bg-white h-10 w-56 rounded hover:border-orange-400 border hover:bg-orange-50 hover:shadow-lg transition-all duration-300">
                         <FontAwesomeIcon icon={faPlus} className="text-orange-400 cursor-pointer" />
                         <p className="text-orange-400 cursor-pointer">Add a new address</p>
                     </div>
