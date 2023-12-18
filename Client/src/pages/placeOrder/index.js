@@ -281,7 +281,10 @@ export default function placeOrder() {
                 <div className="flex justify-start items-start ml-20 pt-5 gap-x-10">
                     <form onSubmit={handleShipppingDetails} style={{ display: shippingFormOpen ? "block" : "none" }}>
                         <div className="grid justify-start p-10 w-auto gap-4 bg-teal-100 border-2 border-gray-300 rounded-md">
-                            <h4>Add New Shipping Address</h4>
+                            <div className="flex justify-start items-center gap-3">
+                                <input type="radio" checked={selectedShippingAddress !== null} className="border-2 h-5 w-5 border-gray-300 checked:border-green-200 checked:bg-green-500 rounded-full focus:outline-none focus:border-green-200 focus:ring-green-200 active:border-green-500" />
+                                <h4 className="text-blue-500">Add New Shipping Address</h4>
+                            </div>
                             <div className="flex justify-between gap-16">
                                 <div className="grid">
                                     <label className="text-gray-700 pl-1 pb-1">First Name<span className="pl-1 text-red-400">*</span></label>
@@ -426,11 +429,13 @@ export default function placeOrder() {
 
                 {/* { -----------------------------Below these code is for the billing form -----------------------------> */}
 
-
                 <div className="flex justify-start items-start ml-20 mt-5 gap-10">
                     <form onSubmit={handleBillingDetails} style={{ display: billingFormOpen ? "block" : "none" }}>
                         <div className="grid justify-start p-10 mb-10 w-auto gap-4 bg-teal-100 border-2 border-gray-300 rounded-md">
-                            <h4>Add New Billing Address</h4>
+                            <div className="flex justify-start items-center gap-3">
+                                <input type="radio" checked={selectedBillingAddress !== null} className="border-2 h-5 w-5 border-gray-300 checked:border-green-200 checked:bg-green-500 rounded-full focus:outline-none focus:border-green-200 focus:ring-green-200 active:border-green-500" />
+                                <h4 className="text-blue-500">Add New Billing Address</h4>
+                            </div>
                             <div className="flex justify-between gap-16">
                                 <div className="grid">
                                     <label className="text-gray-700 pl-1 pb-1">First Name<span className="pl-1 text-red-400">*</span></label>
@@ -492,9 +497,14 @@ export default function placeOrder() {
                                     {billingDetailsError.country && <span className="text-red-400">{billingDetailsError.country}</span>}
                                 </div>
                             </div>
-                            <div className="flex justify-start items-center gap-4">
-                                <span className="border border-red-400 h-9 flex justify-center items-center p-2 rounded text-red-400 cursor-pointer" onClick={() => setBillingForm(false)}>Cancel</span>
-                                <button className="border border-blue-400 hover:border-green-400  h-9 flex justify-center items-center p-2 rounded text-blue-400 hover:text-white-400 hover:bg-green-400" type="submit">Save</button>
+                            <div className="flex justify-between items-center pt-3">
+                                <div className="flex justify-start items-center gap-4">
+                                    <span className="border border-red-400 h-9 flex justify-center items-center p-2 rounded text-red-400 cursor-pointer" onClick={() => setBillingForm(false)}>Cancel</span>
+                                    <button className="border border-blue-400 hover:border-green-400  h-9 flex justify-center items-center p-2 rounded text-blue-400 hover:text-white-400 hover:bg-green-400" type="submit">Save</button>
+                                </div>
+                                <div>
+                                    <span  className="p-3 cursor-pointer text-orange-600 bg-white h-10 w-56 rounded hover:border-orange-400 border hover:bg-orange-50 hover:shadow-lg transition-all duration-300">Same as Shipping Address</span>
+                                </div>
                             </div>
                         </div>
                     </form>
