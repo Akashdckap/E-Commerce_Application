@@ -5,6 +5,7 @@ export const productSlice = createSlice({
     initialState: {
         cartData: [],
         shippingData: [],
+        billingData: []
     },
     reducers: {
         storeAddToCartProductData: (state, action) => {
@@ -48,13 +49,28 @@ export const productSlice = createSlice({
             // state.shippingData = action.payload
             state.shippingData.push({ ...action.payload, id: nanoid() });
         },
+        storeBillingAddress: (state, action) => {
+            // state.billingData = action.payload
+            state.billingData.push({ ...action.payload, id: nanoid() });
+        }
         // updateShippingAddress: (state, action) => {
         //     const { name, value } = action.payload
-        //     const dataIndex = state.shippingData.findIndex((field) => field.firstName === name);
-        //     if (dataIndex !== -1) {
-        //         state.shippingData[dataIndex].value = value
-        //     }
-        //     console.log("updateShippingAddress-----------", action.payload);
+        //     const fieldIndex = state.shippingData.find((field) => field.firstName === name);
+        //     // console.log();
+        //     // console.log("dataIndex------------------", dataIndex);
+        //     // if (dataIndex) {
+        //     //     state.shippingData[dataIndex].value = value
+        //     //     // console.log("checking-------", state.shippingData[dataIndex].value);
+        //     // }
+        //     if (fieldIndex !== -1) {
+        //         state.shippingData = [
+        //           ...state.shippingData.slice(0, fieldIndex),
+        //           { ...state.shippingData[fieldIndex], value },
+        //           ...state.shippingData.slice(fieldIndex + 1),
+        //         ];
+        //       }
+        //     console.log("name-----------", name);
+        //     console.log("value-----------", value);
         // }
         // updateFormDataById: (state, action) => {
         //     const { id, updatedData } = action.payload;
@@ -68,5 +84,15 @@ export const productSlice = createSlice({
     },
 })
 
-export const { storeAddToCartProductData, storeShippingAddress, updateShippingAddress, updateCartItemQuantity, removeCartdata, removeAllCartDatas, incrementProductCount, decrementProductCount } = productSlice.actions
+export const {
+    storeAddToCartProductData,
+    storeBillingAddress,
+    storeShippingAddress,
+    updateShippingAddress,
+    updateCartItemQuantity,
+    removeCartdata,
+    removeAllCartDatas,
+    incrementProductCount,
+    decrementProductCount
+} = productSlice.actions
 export default productSlice.reducer
