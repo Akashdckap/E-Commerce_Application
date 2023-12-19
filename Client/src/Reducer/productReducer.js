@@ -5,7 +5,8 @@ export const productSlice = createSlice({
     initialState: {
         cartData: [],
         shippingData: [],
-        billingData: []
+        billingData: [],
+        personalData: [],
     },
     reducers: {
         storeAddToCartProductData: (state, action) => {
@@ -46,41 +47,26 @@ export const productSlice = createSlice({
             state.cartData = state.cartData = []
         },
         storeShippingAddress: (state, action) => {
-            // state.shippingData = action.payload
-            state.shippingData.push({ ...action.payload, id: nanoid() });
+            state.shippingData = action.payload
+            // state.shippingData.push({ ...action.payload, id: nanoid() });
         },
         storeBillingAddress: (state, action) => {
-            // state.billingData = action.payload
-            state.billingData.push({ ...action.payload, id: nanoid() });
+            state.billingData = action.payload
+            // state.billingData.push({ ...action.payload, id: nanoid() });
+        },
+        storePersonalDetails: (state, action) => {
+            state.personalData = action.payload
+            // state.personalData.push({ ...action.payload, id: nanoid() });
+        },
+        updatePersonalDetails: (state, action) => {
+            state.personalData = { ...state.personalData, ...action.payload }
+        },
+        updateShippingAddress: (state, action) => {
+            state.shippingData = { ...state.shippingData, ...action.payload }
+        },
+        updateBillingAddress: (state, action) => {
+            state.billingData = { ...state.billingData, ...action.payload }
         }
-        // updateShippingAddress: (state, action) => {
-        //     const { name, value } = action.payload
-        //     const fieldIndex = state.shippingData.find((field) => field.firstName === name);
-        //     // console.log();
-        //     // console.log("dataIndex------------------", dataIndex);
-        //     // if (dataIndex) {
-        //     //     state.shippingData[dataIndex].value = value
-        //     //     // console.log("checking-------", state.shippingData[dataIndex].value);
-        //     // }
-        //     if (fieldIndex !== -1) {
-        //         state.shippingData = [
-        //           ...state.shippingData.slice(0, fieldIndex),
-        //           { ...state.shippingData[fieldIndex], value },
-        //           ...state.shippingData.slice(fieldIndex + 1),
-        //         ];
-        //       }
-        //     console.log("name-----------", name);
-        //     console.log("value-----------", value);
-        // }
-        // updateFormDataById: (state, action) => {
-        //     const { id, updatedData } = action.payload;
-        //     state.formDataArray = state.formDataArray.map(item =>
-        //       item.id === id ? { ...item, ...updatedData } : item
-        //     );
-        //   },
-        // updateCartItemQuantity: (state, action) => {
-        //     console.log("updateCartItemQuantity", action.payload);
-        // }
     },
 })
 
@@ -89,10 +75,12 @@ export const {
     storeBillingAddress,
     storeShippingAddress,
     updateShippingAddress,
-    updateCartItemQuantity,
     removeCartdata,
     removeAllCartDatas,
     incrementProductCount,
-    decrementProductCount
+    decrementProductCount,
+    storePersonalDetails,
+    updatePersonalDetails,
+    updateBillingAddress
 } = productSlice.actions
 export default productSlice.reducer
