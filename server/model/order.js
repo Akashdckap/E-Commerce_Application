@@ -39,6 +39,7 @@ const placeOrder = mongoose.Schema({
         pincode: Number,
         country: String,
     },
+    totalPrice: Number,
 }, {
     timestamps: true
 })
