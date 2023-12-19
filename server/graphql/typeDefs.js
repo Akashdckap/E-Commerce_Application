@@ -68,11 +68,17 @@ const typeDefs = gql` #graphql
         country: String,   
     }
 
+    # input totalPriceInput{
+    #     totalPrice: Int,
+    # }
+
     input orderedInput{
-        orderedProducts:[orderProductInput!]!,
+        orderedProducts:[orderProductInput]!,
         personalDetails: personalDetailsInput!,
         shippingAddress: shippingAddressInput!,
         billingAddress: billingAddressInput!,
+        # totalPrice: totalPriceInput!
+        # totalPrice: Float!
     }
 
     input productsInput{
@@ -93,11 +99,13 @@ const typeDefs = gql` #graphql
         quantity: Int,
         price:Int,
     }
+
     type personalDetails{
         name: String,
         email: String,
         phoneNo: Int,
     }
+
     type shippingAddress{
         firstName: String,
         lastName: String,
@@ -109,6 +117,7 @@ const typeDefs = gql` #graphql
         pincode: Int,
         country: String, 
     }
+
     type billingAddress{
         firstName: String,
         lastName: String,
@@ -121,11 +130,17 @@ const typeDefs = gql` #graphql
         country: String, 
     }
 
+    # type totalPrice{
+    #     totalPrice: Int,
+    # }
+
     type orders{
         orderedProducts:[orderProduct],
         personalDetails:personalDetails,
         shippingAddress:shippingAddress,
         billingAddress:billingAddress,
+        # totalPrice: Float,
+        # totalPrice:totalPrice,
     }
 
     input updateProductInput{
@@ -154,7 +169,7 @@ const typeDefs = gql` #graphql
         getEditProductData(id: ID!): products
         getProductDetails(id: ID!):products
         addToCartProductData(ids: ID!): products
-        getAllOrders:[orders]
+        getAllOrders:[orders!]!
         # getImages:[images]
     }
 
@@ -164,7 +179,7 @@ const typeDefs = gql` #graphql
         deleteProduct(id: ID!) : Boolean!
         updateProduct(id: ID!, input: updateProductInput): products!
         uploadFile(file: Upload!): String!
-        createOrders(input: orderedInput!): orders!
+        createOrders(input: orderedInput): orders!
     }
 `
 // module.exports = typeDefs;

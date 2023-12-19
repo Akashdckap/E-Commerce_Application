@@ -6,6 +6,7 @@ import { incrementProductCount, decrementProductCount, removeCartdata, removeAll
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { notification } from "antd";
+import { current } from "@reduxjs/toolkit";
 
 export default function cartItems() {
     const router = useRouter();
@@ -28,6 +29,9 @@ export default function cartItems() {
 
     const valuesArray = cartProducts.map((total) => total.price)
     const totalAmount = valuesArray.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+
+    const value = cartProducts.reduce((accumulator, currentValue) => { console.log(accumulator + (currentValue.price * currentValue.count)) }, 0);
+    // console.log("value---------", value);
 
     const handleIncrementCount = (productId) => {
         dispatch(incrementProductCount({ productId }))

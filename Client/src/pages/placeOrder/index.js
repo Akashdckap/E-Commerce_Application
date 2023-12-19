@@ -94,7 +94,6 @@ export default function placeOrder() {
         });
         delete personalDetailsError[name]
     };
-
     const handleChangeShippingAddress = (e) => {
         const { name, value } = e.target;
         setShippingDetails({
@@ -103,6 +102,14 @@ export default function placeOrder() {
         });
         delete shippingDetailsError[name]
     };
+    const handleChangeBillingAddress = (e) => {
+        const { name, value } = e.target;
+        setBillingDetails({
+            ...billingDetails,
+            [name]: value,
+        });
+        delete billingDetailsError[name]
+    }
 
     const handleChangeBillingAddress = (e) => {
         const { name, value } = e.target;
