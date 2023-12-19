@@ -13,7 +13,6 @@ export default function placeOrder() {
 
     const [shippingFormOpen, setShippingForm] = useState(false)
     const [personalDetailForm, setPersonalDetailForm] = useState(false);
-    const [selectedShippingAddress, setSelectedShippingAddress] = useState(null);
     const [billingFormOpen, setBillingForm] = useState(true)
 
     const [selectedShippingAddress, setSelectedShippingAddress] = useState(null);
@@ -41,7 +40,6 @@ export default function placeOrder() {
         country: ""
     })
 
-    const handleChange = (e) => {
     const [billingDetails, setBillingDetails] = useState({
         firstName: "",
         lastName: "",
@@ -64,7 +62,6 @@ export default function placeOrder() {
         pincode: "",
         country: ""
     })
-
     const handleChangeShippingAddress = (e) => {
         const { name, value } = e.target;
         setShippingDetails({
@@ -75,6 +72,14 @@ export default function placeOrder() {
         // console.log("shippingDetails-----------------------", shippingDetails);
         // dispatch(updateShippingAddress({ name, value }));
     };
+    const handleChangeBillingAddress = (e) => {
+        const { name, value } = e.target;
+        setBillingDetails({
+            ...billingDetails,
+            [name]: value,
+        });
+        delete billingDetailsError[name]
+    }
 
     const handleOpenShippingForm = () => {
         setShippingForm(true);
@@ -89,13 +94,6 @@ export default function placeOrder() {
             pincode: "",
             country: ""
         })
-    const handleChangeBillingAddress = (e) => {
-        const { name, value } = e.target;
-        setBillingDetails({
-            ...billingDetails,
-            [name]: value,
-        });
-        delete billingDetailsError[name]
     }
     // if (getShippingData.length > 1) {
     //     setShippingForm(false)

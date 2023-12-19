@@ -205,9 +205,27 @@ const resolvers = {
         // }
         async createOrders(_, { input }) {
             try {
-                const orders = new newOrders(input);
-                const saveOrders = await orders.save();
+
+                const totalPrice = input.orderedProducts.reduce((accumulator, products) => {
+                    return accumulator + (products.price * products.quantity);
+                }, 0)
+                // const { orderedProducts, personalDetails, shippingAddress, billingAddress } = input;
+                // const totalPrice = orderedProducts.reduce((acc,cuu)=> acc + cuu.price,0)
+                const order = new newOrders({
+                    orderedProducts: input.orderedProducts,
+                    personalDetails: input.personalDetails,
+                    shippingAddress: input.shippingAddress,
+                    billingAddress: input.billingAddress,
+                    totalPrice,
+                    // totalPrice: input.totalPrice
+                })
+                // const orders = new newOrders(input);
+                const saveOrders = await order.save();
                 console.log(saveOrders);
+                // console.log(saveOrders.orderedProducts);
+                // const totalPrice = saveOrders.orderedProducts
+                // const price = totalPrice.map((ord) => ord.price);
+                // const amount = price.reduce((accumulator, currentValue) => { accumulator + currentValue }, 0);
             }
             catch (err) {
                 console.log(err, "create orders error");
