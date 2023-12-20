@@ -9,13 +9,24 @@ export const productSlice = createSlice({
         personalData: [],
     },
     reducers: {
+        // storeAddToCartProductData: (state, action) => {
+        //     const productData = action.payload;
+        //     const findProduct = state.cartData.find((product) => product._id === productData._id);
+        //     if (findProduct) {
+        //         findProduct.count += 1;
+        //         findProduct.expandedPrice = findProduct.price * findProduct.count
+        //     } else {
+        //         state.cartData.push({ ...productData, count: 1, expandedPrice: findProduct.price });
+        //     }
+        // },
         storeAddToCartProductData: (state, action) => {
             const productData = action.payload;
-            const findProduct = state.cartData.find((product) => product._id === productData._id);
-            if (findProduct) {
-                findProduct.count += 1;
+            const productIndex = state.cartData.findIndex((product) => product._id === productData._id);
+            if (productIndex !== -1) {
+                state.cartData[productIndex].count = (state.cartData[productIndex].count || 0) + 1;
+                state.cartData[productIndex].expandedPrice = (state.cartData[productIndex].price) * state.cartData[productIndex].count
             } else {
-                state.cartData.push({ ...productData, count: 1 });
+                state.cartData.push({ ...productData, count: 1, expandedPrice: productData.price });
             }
         },
 
@@ -27,21 +38,13 @@ export const productSlice = createSlice({
             const { productId } = action.payload;
             const productIndex = state.cartData.findIndex(product => product._id === productId)
             state.cartData[productIndex].count = (state.cartData[productIndex].count || 0) + 1;
-            // const { productId } = action.payload;
-            // const existingProduct = state.cartData.find(product => product._id === productId);
-
-            // if (existingProduct) {
-            //     existingProduct.count += 1;
-            //     existingProduct.price = existingProduct.originalPrice * existingProduct.count;
-            // } else {
-            //     const { productId, UpdatePrice } = action.payload;
-            //     state.cartData.push({ productId, count: 1, price: originalPrice, originalPrice });
-            // }
+            state.cartData[productIndex].expandedPrice = (state.cartData[productIndex].price) * state.cartData[productIndex].count
         },
         decrementProductCount: (state, action) => {
             const { productId } = action.payload
             const productIndex = state.cartData.findIndex(product => product._id === productId)
             state.cartData[productIndex].count = Math.max((state.cartData[productIndex].count || 0) - 1, 1);
+            state.cartData[productIndex].expandedPrice = (state.cartData[productIndex].price) * state.cartData[productIndex].count
         },
         removeAllCartDatas: (state) => {
             state.cartData = state.cartData = []
