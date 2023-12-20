@@ -92,9 +92,11 @@ export default function ProductList() {
     //     dispatch(updateCartItemQuantity({ productId: e.target.id, newQuantity }));
     // };
 
-    const valuesArray = getCartData.map((total) => total.price)
-    const totalAmount = valuesArray.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+    // const valuesArray = getCartData.map((total) => total.price);
+    // const totalAmount = valuesArray.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
 
+    const ExpandedAmountarray = getCartData.map((expanded) => expanded.expandedPrice)
+    const totalExpandedAmount = ExpandedAmountarray.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
     return (
         <>
             <div>
@@ -169,9 +171,7 @@ export default function ProductList() {
                                 {
                                     getCartData.length > 0 ? (
                                         getCartData.map((listCartData, index) => {
-                                            // console.log(listCartData.price.sum());
                                             return (
-                                                // setTotalAmount(listCartData.price),
                                                 <div className="flow-root" key={listCartData._id}>
                                                     <ul className="-my-8">
                                                         <li className="flex flex-col space-y-1 py-10 text-left sm:flex-row sm:space-x-5 sm:space-y-1">
@@ -182,10 +182,11 @@ export default function ProductList() {
                                                                 <div className="sm:col-gap-3 sm:grid sm:grid-cols-2">
                                                                     <div className="pr-8 sm:pr-5">
                                                                         <p className="text-base font-semibold text-gray-900">{listCartData.productName}</p>
-                                                                        <p className="mx-0 mt-1 mb-0 text-sm text-gray-400">{listCartData.category}</p>
+                                                                        {/* <span>{listCartData.category}</span> */}
+                                                                        <p className="mx-0 mt-1 mb-0 text-base text-gray-500">₹{listCartData.price}</p>
                                                                     </div>
                                                                     <div className="mt-4 flex items-end justify-between sm:mt-0 sm:items-start sm:justify-end">
-                                                                        <p className="shrink-0 w-20 text-base font-semibold text-gray-900 sm:order-2 sm:ml-8 sm:text-right">₹{listCartData.price}</p>
+                                                                        <p className="shrink-0 w-20 text-base font-semibold text-gray-900 sm:order-2 sm:ml-8 sm:text-right">₹{listCartData.expandedPrice}</p>
                                                                     </div>
                                                                 </div>
                                                                 <div className="flex justify-center items-center gap-32">
@@ -230,7 +231,7 @@ export default function ProductList() {
                             </div>
                             <div className='flex justify-around'>
                                 <h5>Total Amount: </h5>
-                                <p>₹{totalAmount}</p>
+                                <p>₹{totalExpandedAmount}</p>
                             </div>
                             <div className="flex justify-center place-items-center gap-2 pb-8">
                                 <div className='flex justify-center items-center pt-5'>

@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { notification } from "antd";
 import { removeCartdata, storeShippingAddress, storePersonalDetails, updatePersonalDetails, updateShippingAddress, updateBillingAddress, storeBillingAddress } from "@/Reducer/productReducer";
 export default function placeOrder() {
+    const cartProducts = useSelector(state => state.productDetails.cartData);
     const dispatch = useDispatch()
     const getCartData = useSelector(state => state.productDetails.cartData);
 
@@ -102,15 +103,6 @@ export default function placeOrder() {
         });
         delete shippingDetailsError[name]
     };
-    const handleChangeBillingAddress = (e) => {
-        const { name, value } = e.target;
-        setBillingDetails({
-            ...billingDetails,
-            [name]: value,
-        });
-        delete billingDetailsError[name]
-    }
-
     const handleChangeBillingAddress = (e) => {
         const { name, value } = e.target;
         setBillingDetails({
@@ -342,10 +334,52 @@ export default function placeOrder() {
         })
         setShowBillingData(false)
     }
+    const handleCancelPersonal = () => {
+        setShowPersonalData(true)
+        setPersonalDetails({
+            PersonalName: "",
+            PersonalEmail: "",
+            PersonalPhoneNo: "",
+        })
+    }
+    const handleCancelShipping = () => {
+        setShowShippingData(true)
+        setShippingDetails({
+            firstName: "",
+            lastName: "",
+            email: "",
+            phoneNo: "",
+            address: "",
+            district: "",
+            state: "",
+            pincode: "",
+            country: ""
+        })
+    }
+    const handleCancelBilling = () => {
+        setShowBillingData(true)
+        setBillingDetails({
+            firstName: "",
+            lastName: "",
+            email: "",
+            phoneNo: "",
+            address: "",
+            district: "",
+            state: "",
+            pincode: "",
+            country: ""
+        })
+    }
+    const handleSameAsShipping = () => {
+        setBillingDetails(shippingDetails)
+    }
+
+    const expandedAmountarray = cartProducts.map((expanded) => expanded.expandedPrice)
+    const totalExpandedAmount = expandedAmountarray.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
 
     return (
         <>
-            <div>
+            <div className="overflow-x-auto">
                 <div className="flex justify-between ml-20 mt-10 gap-20 pr-16">
                     <div className="flex justify-around gap-80">
                         <Link href={'/cartItems'} className="flex justify-center items-center gap-2">
@@ -354,20 +388,23 @@ export default function placeOrder() {
                         </Link>
                     </div>
                 </div>
-                <div className={`flex justify-start items-start ml-20 mt-5 w-auto`} style={{ display: showPersonalData ? 'block' : 'none' }} >
-                    <div onClick={editPersonalDetails} className={`w-7/12 flex p-5 justify-between items-center bg-white rounded-md border border-solid  'border-gray-400 shadow-lg transition-all duration-300'`}>
+                <div className="flex justify-start items-center ml-20 mt-5">
+                    <h1 className="text-[#575F70] text-lg font-medium">Personal Details</h1>
+                </div>
+                <div className={`flex justify-start items-start ml-20 mt-5`} style={{ display: showPersonalData ? 'block' : 'none', width: '96.5%' }} >
+                    <div onClick={editPersonalDetails} className={`w-7/12 flex p-5 hover:border-green-300 justify-between items-center bg-white rounded-md border border-solid'`}>
                         <div className="flex justify-start items-start gap-10">
                             <input type="radio" onClick={editPersonalDetails} className="border-2 h-5 w-5 border-gray-300 checked:border-green-200 checked:bg-green-500 rounded-full focus:outline-none focus:border-green-200 focus:ring-green-200 active:border-green-500" />
                             <div className="flex justify-center gap-3">
-                                <h4 className="text-gray-800">{getPersonalData.PersonalName}</h4>
-                                <h4 className="text-gray-800">{getPersonalData.PersonalEmail}</h4>
+                                <h4 className="text-gray-600">{getPersonalData.PersonalName}</h4>
+                                <h4 className="text-gray-600">{getPersonalData.PersonalEmail}</h4>
                             </div>
                             <div className="flex justify-start">
-                                <p className="text-gray-500">{getPersonalData.PersonalPhoneNo}</p>
+                                <p className="text-gray-400">{getPersonalData.PersonalPhoneNo}</p>
                             </div>
                         </div>
                         <div className="flex justify-end">
-                            <span onClick={editPersonalDetails} className="text-blue-500 hover:text-blue-600 hover:cursor-pointer">Edit</span>
+                            <span onClick={editPersonalDetails} className="text-blue-400  hover:cursor-pointer hover:text-green-500">Edit</span>
                         </div>
                     </div>
                 </div>
@@ -375,29 +412,32 @@ export default function placeOrder() {
                     <div className="grid">
                         <div className="ml-20">
                             <form onSubmit={handlePersonalDetailForm} style={{ display: personalDetailForm ? "block" : "none" }}>
-                                <div className="grid justify-start p-10 w-auto gap-4 bg-teal-100 border-2 border-gray-300 rounded-md" onClick={() => setPersonalDetailForm(true)}>
-                                    <h4 className="text-gray-600 text-xl">Add Personal Details</h4>
+                                <div className={`grid justify-start p-10 w-auto gap-4 bg-white rounded-md ${showPersonalData ? 'border-gray-200 border border-solid' : 'border-green-300 border-2 border-solid'}`} onClick={() => setPersonalDetailForm(true)}>
+                                    <div className="flex justify-start items-center gap-3">
+                                        <input type="radio" checked={!showPersonalData} className="border-2 h-5 w-5 border-gray-300 checked:border-green-200 checked:bg-green-500 rounded-full focus:outline-none focus:border-green-200 focus:ring-green-200 active:border-green-500" />
+                                        <h4 className="text-gray-700 text-base font-normal">Add New Personal Details</h4>
+                                    </div>
                                     <div className="flex justify-between gap-16">
                                         <div className="grid">
-                                            <label className="text-gray-700 pl-1 pb-1">Name</label>
-                                            <input placeholder="Name..." onChange={handleChangePersonalDetails} value={personalDetails.PersonalName} name="PersonalName" className="h-10 border-2 p-2 text-gray-600 w-72 bg-white rounded-md focus:outline-none focus:border-gray-400" />
+                                            <label className="text-[#B9BECB] pl-1 pb-1">Name<span className="pl-1 text-red-400">*</span></label>
+                                            <input placeholder="Enter the name..." onChange={handleChangePersonalDetails} value={personalDetails.PersonalName} name="PersonalName" className="h-10 border border-gray-300 border-solid p-2 text-gray-700 w-72 bg-white rounded-md focus:outline-none focus:border-green-300 hover:border-green-300" />
                                             {personalDetailsError.PersonalName && <span className="text-red-400">{personalDetailsError.PersonalName}</span>}
                                         </div>
                                         <div className="grid">
-                                            <label className="text-gray-700 pl-1 pb-1">Email</label>
-                                            <input placeholder="Email..." onChange={handleChangePersonalDetails} value={personalDetails.PersonalEmail} name="PersonalEmail" className="h-10 border-2 p-2 text-gray-600 w-72 bg-white rounded-md focus:outline-none focus:border-gray-400" />
+                                            <label className="text-[#B9BECB] pl-1 pb-1">Email<span className="pl-1 text-red-400">*</span></label>
+                                            <input placeholder="Enter the email..." onChange={handleChangePersonalDetails} value={personalDetails.PersonalEmail} name="PersonalEmail" className="h-10 border border-gray-300 border-solid p-2 text-gray-700 w-72 bg-white rounded-md focus:outline-none focus:border-green-300 hover:border-green-300" />
                                             {personalDetailsError.PersonalEmail && <span className="text-red-400">{personalDetailsError.PersonalEmail}</span>}
                                         </div>
                                     </div>
-                                    <div className="flex">
+                                    <div className="flex justify-between item-center gap-16">
                                         <div className="grid">
-                                            <label className="text-gray-700 pl-1 pb-1">PhoneNo</label>
-                                            <input placeholder="PhoneNo..." onChange={handleChangePersonalDetails} value={personalDetails.PersonalPhoneNo} name="PersonalPhoneNo" className="h-10 border-2 p-2 text-gray-600 w-72 bg-white rounded-md focus:outline-none focus:border-gray-400" />
+                                            <label className="text-[#B9BECB] pl-1 pb-1">PhoneNo<span className="pl-1 text-red-400">*</span></label>
+                                            <input placeholder="Enter the phoneno..." onChange={handleChangePersonalDetails} value={personalDetails.PersonalPhoneNo} name="PersonalPhoneNo" className="h-10 border border-gray-300 border-solid p-2 text-gray-700 w-72 bg-white rounded-md focus:outline-none focus:border-green-300 hover:border-green-300" />
                                             {personalDetailsError.PersonalPhoneNo && <span className="text-red-400">{personalDetailsError.PersonalPhoneNo}</span>}
                                         </div>
-                                        <div className="flex mt-7 gap-6 ml-44">
-                                            <span className="border border-red-400 h-9 flex justify-center items-center p-2 rounded text-red-400 cursor-pointer" onClick={() => setPersonalDetailForm(false)}>Cancel</span>
-                                            <button className="border border-blue-400 hover:border-green-400  h-9 flex justify-center items-center p-2 rounded text-blue-400 hover:text-white-400 hover:bg-green-400" type="submit">{getPersonalData.length === 0 ? 'Save' : 'Update'}</button>
+                                        <div className="flex justify-between gap-3 mt-8">
+                                            <span className="border border-gray-200 hover:border-red-300 hover:text-red-400 h-9 flex justify-center items-center p-2 rounded text-gray-400 cursor-pointer" onClick={handleCancelPersonal}>Cancel</span>
+                                            <button className={` ${getPersonalData.length === 0 ? 'w-18' : 'w-44'} border border-blue-400 h-9 flex justify-center items-center p-2 rounded text-blue-400 hover:text-white hover:bg-[#45BA76] hover:border-[#45BA76]`} type="submit">{getPersonalData.length === 0 ? 'Save' : 'Use This Address'}</button>
                                         </div>
                                     </div>
                                 </div>
@@ -408,85 +448,86 @@ export default function placeOrder() {
                             <p className="text-orange-400 cursor-pointer">Add a new Shipping address</p>
                         </div> */}
                         {/* { -----------------------------Below these code is for the shipping data listed in UI -----------------------------> */}
+                        <div className="flex justify-start items-center ml-20 mt-5">
+                            <h1 className="text-[#575F70] text-lg font-medium">Shipping Address</h1>
+                        </div>
                         <div style={{ display: showShippingData ? 'block' : 'none' }}>
-                            <div onClick={editShippingDetails} className={`flex justify-between w-auto ml-20 mt-5 p-5 bg-white rounded-md border border-solid 'border-gray-400 shadow-lg transition-all duration-300'}`}>
+                            <div onClick={editShippingDetails} className={`flex hover:border-green-300 justify-between w-auto ml-20 mt-5 p-5 bg-white rounded-md border border-solid border-gray-300'}`}>
                                 <div className="flex justify-start items-center gap-5">
                                     <input type="radio" onClick={editShippingDetails} className="border-2 h-5 w-5 border-gray-300 checked:border-green-200 checked:bg-green-500 rounded-full focus:outline-none focus:border-green-200 focus:ring-green-200 active:border-green-500" />
                                     <div className="flex">
-                                        <h4 className="text-gray-800">{getShippingData.firstName}</h4>
-                                        <h4 className="text-gray-800">{getShippingData.lastName}</h4>
+                                        <h4 className="text-gray-600">{getShippingData.firstName}</h4>
+                                        <h4 className="text-gray-600">{getShippingData.lastName}</h4>
                                     </div>
                                     <div className="flex justify-start gap-3">
-                                        <p className="text-gray-500">{getShippingData.address}</p>
-                                        <p className="text-gray-500">{getShippingData.district}</p>
-                                        <p className="text-gray-500">{getShippingData.pincode}</p>
+                                        <p className="text-gray-400">{getShippingData.address}</p>
+                                        <p className="text-gray-400">{getShippingData.district}</p>
+                                        <p className="text-gray-400">{getShippingData.pincode}</p>
                                     </div>
                                 </div>
                                 <div>
-                                    <button onClick={editShippingDetails} className="text-blue-500 hover:text-blue-600 hover:cursor-pointer">Edit</button>
+                                    <button onClick={editShippingDetails} className="text-blue-500 hover:text-green-400 hover:cursor-pointer">Edit</button>
                                 </div>
                             </div>
                         </div>
-                        <div className="flex justify-start items-center ml-20 mt-5">
-                            <h1 className="text-gray-600 text-xl">Shipping Address</h1>
-                        </div>
+
                         <div className="flex justify-start items-start ml-20 pt-5 gap-x-10">
                             <form onSubmit={handleShipppingDetails} style={{ display: shippingFormOpen ? "block" : "none" }}>
-                                <div className="grid justify-start p-10 w-auto gap-4 bg-teal-100 border-2 border-gray-300 rounded-md">
+                                <div className={`grid justify-start p-10 w-auto gap-4 bg-white border border-solid ${showShippingData ? 'border-gray-200 border border-solid' : 'border-green-300 border-2 border-solid'} rounded-md`}>
                                     <div className="flex justify-start items-center gap-3">
-                                        <input type="radio" checked={selectedShippingAddress !== null} className="border-2 h-5 w-5 border-gray-300 checked:border-green-200 checked:bg-green-500 rounded-full focus:outline-none focus:border-green-200 focus:ring-green-200 active:border-green-500" />
-                                        <h4 className="text-blue-500">Add New Shipping Address</h4>
+                                        <input type="radio" checked={!showShippingData} className="border-2 h-5 w-5 border-gray-300 checked:border-green-200 checked:bg-green-500 rounded-full focus:outline-none focus:border-green-200 focus:ring-green-200 active:border-green-500" />
+                                        <h4 className="text-gray-700 text-base font-normal">Add New Shipping Address</h4>
                                     </div>
                                     <div className="flex justify-between gap-16">
                                         <div className="grid">
-                                            <label className="text-gray-700 pl-1 pb-1">First Name<span className="pl-1 text-red-400">*</span></label>
-                                            <input placeholder="Enter the first name" onChange={handleChangeShippingAddress} name="firstName" value={shippingDetails.firstName} type="text" className="h-10 border-2 p-2 text-gray-600 w-72 bg-white rounded-md focus:outline-none focus:border-gray-400" />
+                                            <label className="text-gray-400 pl-1 pb-1">First Name<span className="pl-1 text-red-400">*</span></label>
+                                            <input placeholder="Enter the first name" onChange={handleChangeShippingAddress} name="firstName" value={shippingDetails.firstName} type="text" className="h-10 border border-solid p-2 text-gray-700 w-72 bg-white rounded-md focus:outline-none focus:border-green-300" />
                                             {shippingDetailsError.firstName && <span className="text-red-400">{shippingDetailsError.firstName}</span>}
                                         </div>
                                         <div className="grid">
-                                            <label className="text-gray-700 pl-1 pb-1">Last Name</label>
-                                            <input placeholder="Enter the last name" onChange={handleChangeShippingAddress} name="lastName" value={shippingDetails.lastName} className="h-10 border-2 p-2 w-72 text-gray-600 bg-white rounded-md focus:outline-none  focus:border-gray-400" />
+                                            <label className="text-gray-400 pl-1 pb-1">Last Name</label>
+                                            <input placeholder="Enter the last name" onChange={handleChangeShippingAddress} name="lastName" value={shippingDetails.lastName} className="h-10 border border-solid p-2 w-72 text-gray-700 bg-white rounded-md focus:outline-none  hover:border-green-300 focus:border-green-300" />
                                             {shippingDetailsError.lastName && <span className="text-red-400">{shippingDetailsError.lastName}</span>}
                                         </div>
                                     </div>
                                     <div className="flex justify-between">
                                         <div className="grid">
-                                            <label className="text-gray-700 pl-1 pb-1">Email<span className="pl-1 text-red-400">*</span></label>
-                                            <input placeholder="Enter the email" onChange={handleChangeShippingAddress} name="email" type="text" value={shippingDetails.email} className="border-2 p-2 text-gray-600 w-72 bg-white rounded-md focus:outline-none focus:border-gray-400" />
+                                            <label className="text-gray-400 pl-1 pb-1">Email<span className="pl-1 text-red-400">*</span></label>
+                                            <input placeholder="Enter the email" onChange={handleChangeShippingAddress} name="email" type="text" value={shippingDetails.email} className="border border-solid p-2 text-gray-700 w-72 bg-white rounded-md focus:outline-none hover:border-green-300 focus:border-green-300" />
                                             {shippingDetailsError.email && <span className="text-red-400">{shippingDetailsError.email}</span>}
                                         </div>
                                         <div className="grid">
-                                            <label className="text-gray-700 pl-1 pb-1">Contact Number<span className="pl-1 text-red-400">*</span></label>
-                                            <input placeholder="Enter the number" onChange={handleChangeShippingAddress} name="phoneNo" value={shippingDetails.phoneNo} type="number" className="border-2 p-2 w-72 text-gray-600 bg-white rounded-md focus:outline-none  focus:border-gray-400" />
+                                            <label className="text-gray-400 pl-1 pb-1">Contact Number<span className="pl-1 text-red-400">*</span></label>
+                                            <input placeholder="Enter the number" onChange={handleChangeShippingAddress} name="phoneNo" value={shippingDetails.phoneNo} type="number" className="border border-solid p-2 w-72 text-gray-700 bg-white rounded-md focus:outline-none  hover:border-green-300 focus:border-green-300" />
                                             {shippingDetailsError.phoneNo && <span className="text-red-400">{shippingDetailsError.phoneNo}</span>}
                                         </div>
                                     </div>
                                     <div className="grid">
-                                        <label className="text-gray-700 pl-1 pb-1">Address<span className="pl-1 text-red-400">*</span></label>
-                                        <input placeholder="Enter the address" onChange={handleChangeShippingAddress} name="address" value={shippingDetails.address} type="text" className="border-2 p-2 text-gray-600 bg-white rounded-md focus:outline-none focus:border-gray-400" />
+                                        <label className="text-gray-400 pl-1 pb-1">Address<span className="pl-1 text-red-400">*</span></label>
+                                        <input placeholder="Enter the address" onChange={handleChangeShippingAddress} name="address" value={shippingDetails.address} type="text" className="border border-solid p-2 text-gray-700 bg-white rounded-md focus:outline-none hover:border-green-300 focus:border-green-300" />
                                         {shippingDetailsError.address && <span className="text-red-400">{shippingDetailsError.address}</span>}
                                     </div>
                                     <div className="flex justify-between gap-4">
                                         <div className="grid">
-                                            <label className="text-gray-700 pl-1 pb-1">District</label>
-                                            <input placeholder="City/District/Town" onChange={handleChangeShippingAddress} name="district" value={shippingDetails.district} className="border-2 p-2 text-gray-600 w-72 bg-white rounded-md focus:outline-none focus:border-gray-400" />
+                                            <label className="text-gray-400 pl-1 pb-1">District</label>
+                                            <input placeholder="City/District/Town" onChange={handleChangeShippingAddress} name="district" value={shippingDetails.district} className="border border-solid p-2 text-gray-700 w-72 bg-white rounded-md focus:outline-none hover:border-green-300 focus:border-green-300" />
                                             {shippingDetailsError.district && <span className="text-red-400">{shippingDetailsError.district}</span>}
                                         </div>
                                         <div className="grid">
-                                            <label className="text-gray-700 pl-1 pb-1">State</label>
-                                            <input placeholder="Enter the state" onChange={handleChangeShippingAddress} name="state" value={shippingDetails.state} className="border-2 p-2 bg-white text-gray-600 w-72 rounded-md focus:outline-none  focus:border-gray-400" />
+                                            <label className="text-gray-400 pl-1 pb-1">State</label>
+                                            <input placeholder="Enter the state" onChange={handleChangeShippingAddress} name="state" value={shippingDetails.state} className="border border-solid p-2 bg-white text-gray-700 w-72 rounded-md focus:outline-none  hover:border-green-300 focus:border-green-300" />
                                             {shippingDetailsError.state && <span className="text-red-400">{shippingDetailsError.state}</span>}
                                         </div>
                                     </div>
                                     <div className="flex justify-between gap-4">
                                         <div className="grid">
-                                            <label className="text-gray-700 pl-1 pb-1">Pin Code<span className="pl-1 text-red-400">*</span></label>
-                                            <input placeholder="Enter the code" onChange={handleChangeShippingAddress} name="pincode" value={shippingDetails.pincode} type="number" className="border-2 p-2 bg-white text-gray-600 w-72 rounded-md focus:outline-none  focus:border-gray-400" />
+                                            <label className="text-gray-400 pl-1 pb-1">Pin Code<span className="pl-1 text-red-400">*</span></label>
+                                            <input placeholder="Enter the code" onChange={handleChangeShippingAddress} name="pincode" value={shippingDetails.pincode} type="number" className="border border-solid p-2 bg-white text-gray-700 w-72 rounded-md focus:outline-none  hover:border-green-300 focus:border-green-300" />
                                             {shippingDetailsError.pincode && <span className="text-red-400">{shippingDetailsError.pincode}</span>}
                                         </div>
                                         <div className="grid">
-                                            <label className="text-gray-700 pl-1 pb-1">Country<span className="pl-1 text-red-400">*</span></label>
-                                            <select value={shippingDetails.country} onChange={handleChangeShippingAddress} name="country" className="border-2 p-2 w-72 bg-white text-gray-600 rounded-md focus:outline-none  focus:border-gray-400">
+                                            <label className="text-gray-400 pl-1 pb-1">Country<span className="pl-1 text-red-400">*</span></label>
+                                            <select value={shippingDetails.country} onChange={handleChangeShippingAddress} name="country" className="border border-solid p-2 w-72 bg-white text-gray-600 rounded-md focus:outline-none  hover:border-green-300 focus:border-green-300">
                                                 <option defaultValue="Select One">Select One</option>
                                                 <option value="India">India</option>
                                                 <option value="Pakistan">Pakistan</option>
@@ -499,8 +540,8 @@ export default function placeOrder() {
                                         </div>
                                     </div>
                                     <div className="flex justify-start items-center gap-4">
-                                        <span className="border border-red-400 h-9 flex justify-center items-center p-2 rounded text-red-400 cursor-pointer" onClick={() => setShippingForm(false)}>Cancel</span>
-                                        <button className="border border-blue-400 hover:border-green-400  h-9 flex justify-center items-center p-2 rounded text-blue-400 hover:text-white-400 hover:bg-green-400" type="submit">{getShippingData.length === 0 ? "Save" : "Update"}</button>
+                                        <span className="border border-gray-200 hover:border-red-300 hover:text-red-400 h-9 flex justify-center items-center p-2 rounded text-gray-400 cursor-pointer" onClick={handleCancelShipping}>Cancel</span>
+                                        <button className={`${getShippingData.length === 0 ? 'w-18' : 'w-44'} border border-blue-400 h-9 flex justify-center items-center p-2 rounded text-blue-400 hover:text-white hover:bg-[#45BA76] hover:border-[#45BA76]`} type="submit">{getShippingData.length === 0 ? "Save" : "Use This Address"}</button>
                                     </div>
                                 </div>
                             </form>
@@ -511,7 +552,7 @@ export default function placeOrder() {
                             <p className="text-orange-400 cursor-pointer">Add a new Billing address</p>
                         </div> */}
                         <div className="" style={{ display: showBillingData ? 'block' : 'none' }}>
-                            <div onClick={editBillingDetails} className={`w-auto ml-20 mt-5 flex p-5 justify-between items-center bg-white rounded-md border border-solid  border-gray-400 shadow-lg transition-all duration-300'}`}>
+                            <div onClick={editBillingDetails} className='w-auto ml-20 mt-5 flex p-5 justify-between items-center bg-white rounded-md border border-solid  border-gray-300 hover:border-green-300'>
                                 <div className="flex justify-between items-center gap-10">
                                     <input type="radio" onClick={editBillingDetails} className="border-2 h-5 w-5 border-gray-300 checked:border-green-200 checked:bg-green-500 rounded-full focus:outline-none focus:border-green-200 focus:ring-green-200 active:border-green-500" />
                                     <div className="flex">
@@ -525,70 +566,70 @@ export default function placeOrder() {
                                     </div>
                                 </div>
                                 <div className="flex justify-end">
-                                    <span onClick={editBillingDetails} className="text-blue-500 hover:text-blue-600 hover:cursor-pointer">Edit</span>
+                                    <span onClick={editBillingDetails} className="text-blue-400  hover:cursor-pointer hover:text-green-300">Edit</span>
                                 </div>
                             </div>
                         </div>
                         <div className="flex justify-start items-center ml-20 mt-5">
-                            <h1 className="text-gray-600 text-xl">Billing Address</h1>
+                            <h1 className="text-[#575F70] text-lg font-medium">Billing Address</h1>
                         </div>
                         <div className="flex justify-start items-start ml-20 mt-5 gap-10">
                             <form onSubmit={handleBillingDetails} style={{ display: billingFormOpen ? "block" : "none" }}>
-                                <div className="grid justify-start p-10 mb-10 w-auto gap-4 bg-teal-100 border-2 border-gray-300 rounded-md">
+                                <div className={`grid justify-start p-10 mb-10 w-auto gap-4 bg-white rounded-md ${showBillingData ? 'border-gray-200 border border-solid' : 'border-green-300 border-2 border-solid'}`}>
                                     <div className="flex justify-start items-center gap-3">
-                                        <input type="radio" checked={selectedBillingAddress !== null} className="border-2 h-5 w-5 border-gray-300 checked:border-green-200 checked:bg-green-500 rounded-full focus:outline-none focus:border-green-200 focus:ring-green-200 active:border-green-500" />
-                                        <h4 className="text-blue-500">Add New Billing Address</h4>
+                                        <input type="radio" checked={!showBillingData} className="border-2 h-5 w-5 border-gray-300 checked:border-green-200 checked:bg-green-500 rounded-full focus:outline-none focus:border-green-200 focus:ring-green-200 active:border-green-500" />
+                                        <h4 className="text-gray-700 text-base font-normal">Add New Billing Address</h4>
                                     </div>
                                     <div className="flex justify-between gap-16">
                                         <div className="grid">
-                                            <label className="text-gray-700 pl-1 pb-1">First Name<span className="pl-1 text-red-400">*</span></label>
-                                            <input placeholder="Enter the first name" onChange={handleChangeBillingAddress} name="firstName" value={billingDetails.firstName} type="text" className="h-10 border-2 p-2 text-gray-600 w-72 bg-white rounded-md focus:outline-none focus:border-gray-400" />
+                                            <label className="text-gray-400 pl-1 pb-1">First Name<span className="pl-1 text-red-400">*</span></label>
+                                            <input placeholder="Enter the first name" onChange={handleChangeBillingAddress} name="firstName" value={billingDetails.firstName} type="text" className="h-10 border border-solid hover:border-green-300 focus:border-green-300 p-2 text-gray-700 w-72 bg-white rounded-md focus:outline-none" />
                                             {billingDetailsError.firstName && <span className="text-red-400">{billingDetailsError.firstName}</span>}
                                         </div>
                                         <div className="grid">
-                                            <label className="text-gray-700 pl-1 pb-1">Last Name</label>
-                                            <input placeholder="Enter the last name" onChange={handleChangeBillingAddress} name="lastName" value={billingDetails.lastName} className="h-10 border-2 p-2 w-72 text-gray-600 bg-white rounded-md focus:outline-none  focus:border-gray-400" />
+                                            <label className="text-gray-400 pl-1 pb-1">Last Name</label>
+                                            <input placeholder="Enter the last name" onChange={handleChangeBillingAddress} name="lastName" value={billingDetails.lastName} className="h-10 border border-solid hover:border-green-300 focus:border-green-300 p-2 w-72 text-gray-700 bg-white rounded-md focus:outline-none" />
                                             {billingDetailsError.lastName && <span className="text-red-400">{billingDetailsError.lastName}</span>}
                                         </div>
                                     </div>
                                     <div className="flex justify-between">
                                         <div className="grid">
-                                            <label className="text-gray-700 pl-1 pb-1">Email<span className="pl-1 text-red-400">*</span></label>
-                                            <input placeholder="Enter the email" onChange={handleChangeBillingAddress} name="email" type="text" value={billingDetails.email} className="border-2 p-2 text-gray-600 w-72 bg-white rounded-md focus:outline-none focus:border-gray-400" />
+                                            <label className="text-gray-400 pl-1 pb-1">Email<span className="pl-1 text-red-400">*</span></label>
+                                            <input placeholder="Enter the email" onChange={handleChangeBillingAddress} name="email" type="text" value={billingDetails.email} className="border border-solid hover:border-green-300 focus:border-green-300 p-2 text-gray-700 w-72 bg-white rounded-md focus:outline-none" />
                                             {billingDetailsError.email && <span className="text-red-400">{billingDetailsError.email}</span>}
                                         </div>
                                         <div className="grid">
-                                            <label className="text-gray-700 pl-1 pb-1">Contact Number<span className="pl-1 text-red-400">*</span></label>
-                                            <input placeholder="Enter the number" onChange={handleChangeBillingAddress} name="phoneNo" value={billingDetails.phoneNo} type="number" className="border-2 p-2 w-72 text-gray-600 bg-white rounded-md focus:outline-none  focus:border-gray-400" />
+                                            <label className="text-gray-400 pl-1 pb-1">Contact Number<span className="pl-1 text-red-400">*</span></label>
+                                            <input placeholder="Enter the number" onChange={handleChangeBillingAddress} name="phoneNo" value={billingDetails.phoneNo} type="number" className="border border-solid hover:border-green-300 focus:border-green-300 p-2 w-72 text-gray-700 bg-white rounded-md focus:outline-none" />
                                             {billingDetailsError.phoneNo && <span className="text-red-400">{billingDetailsError.phoneNo}</span>}
                                         </div>
                                     </div>
                                     <div className="grid">
-                                        <label className="text-gray-700 pl-1 pb-1">Address<span className="pl-1 text-red-400">*</span></label>
-                                        <input placeholder="Enter the address" onChange={handleChangeBillingAddress} name="address" value={billingDetails.address} type="text" className="border-2 p-2 text-gray-600 bg-white rounded-md focus:outline-none focus:border-gray-400" />
+                                        <label className="text-gray-400 pl-1 pb-1">Address<span className="pl-1 text-red-400">*</span></label>
+                                        <input placeholder="Enter the address" onChange={handleChangeBillingAddress} name="address" value={billingDetails.address} type="text" className="border border-solid hover:border-green-300 focus:border-green-300 p-2 text-gray-700 bg-white rounded-md focus:outline-none" />
                                         {billingDetailsError.address && <span className="text-red-400">{billingDetailsError.address}</span>}
                                     </div>
                                     <div className="flex justify-between gap-4">
                                         <div className="grid">
-                                            <label className="text-gray-700 pl-1 pb-1">District</label>
-                                            <input placeholder="City/District/Town" onChange={handleChangeBillingAddress} name="district" value={billingDetails.district} className="border-2 p-2 text-gray-600 w-72 bg-white rounded-md focus:outline-none focus:border-gray-400" />
+                                            <label className="text-gray-400 pl-1 pb-1">District</label>
+                                            <input placeholder="City/District/Town" onChange={handleChangeBillingAddress} name="district" value={billingDetails.district} className="border border-solid hover:border-green-300 focus:border-green-300 p-2 text-gray-700 w-72 bg-white rounded-md focus:outline-none" />
                                             {billingDetailsError.district && <span className="text-red-400">{billingDetailsError.district}</span>}
                                         </div>
                                         <div className="grid">
-                                            <label className="text-gray-700 pl-1 pb-1">State</label>
-                                            <input placeholder="Enter the state" onChange={handleChangeBillingAddress} name="state" value={billingDetails.state} className="border-2 p-2 bg-white text-gray-600 w-72 rounded-md focus:outline-none  focus:border-gray-400" />
+                                            <label className="text-gray-400 pl-1 pb-1">State</label>
+                                            <input placeholder="Enter the state" onChange={handleChangeBillingAddress} name="state" value={billingDetails.state} className="border border-solid hover:border-green-300 focus:border-green-300 p-2 bg-white text-gray-700 w-72 rounded-md focus:outline-none" />
                                             {billingDetailsError.state && <span className="text-red-400">{billingDetailsError.state}</span>}
                                         </div>
                                     </div>
                                     <div className="flex justify-between gap-4">
                                         <div className="grid">
-                                            <label className="text-gray-700 pl-1 pb-1">Pin Code<span className="pl-1 text-red-400">*</span></label>
-                                            <input placeholder="Enter the code" onChange={handleChangeBillingAddress} name="pincode" value={billingDetails.pincode} type="number" className="border-2 p-2 bg-white text-gray-600 w-72 rounded-md focus:outline-none  focus:border-gray-400" />
+                                            <label className="text-gray-400 pl-1 pb-1">Pin Code<span className="pl-1 text-red-400">*</span></label>
+                                            <input placeholder="Enter the code" onChange={handleChangeBillingAddress} name="pincode" value={billingDetails.pincode} type="number" className="border border-solid hover:border-green-300 focus:border-green-300 p-2 bg-white text-gray-700 w-72 rounded-md focus:outline-none" />
                                             {billingDetailsError.pincode && <span className="text-red-400">{billingDetailsError.pincode}</span>}
                                         </div>
                                         <div className="grid">
-                                            <label className="text-gray-700 pl-1 pb-1">Country<span className="pl-1 text-red-400">*</span></label>
-                                            <select value={billingDetails.country} onChange={handleChangeBillingAddress} name="country" className="border-2 p-2 w-72 bg-white text-gray-600 rounded-md focus:outline-none  focus:border-gray-400">
+                                            <label className="text-gray-400 pl-1 pb-1">Country<span className="pl-1 text-red-400">*</span></label>
+                                            <select value={billingDetails.country} onChange={handleChangeBillingAddress} name="country" className="border border-solid hover:border-green-300 focus:border-green-300 p-2 w-72 bg-white text-gray-700 rounded-md focus:outline-none">
                                                 <option defaultValue="Select One">Select One</option>
                                                 <option value="India">India</option>
                                                 <option value="Pakistan">Pakistan</option>
@@ -602,11 +643,11 @@ export default function placeOrder() {
                                     </div>
                                     <div className="flex justify-between items-center pt-3">
                                         <div className="flex justify-start items-center gap-4">
-                                            <span className="border border-red-400 h-9 flex justify-center items-center p-2 rounded text-red-400 cursor-pointer" onClick={() => setBillingForm(false)}>Cancel</span>
-                                            <button className="border border-blue-400 hover:border-green-400  h-9 flex justify-center items-center p-2 rounded text-blue-400 hover:text-white-400 hover:bg-green-400" type="submit">{getBillingData.length === 0 ? "Save" : "Update"}</button>
+                                            <span className="border border-gray-200 hover:border-red-300 hover:text-red-400 h-9 flex justify-center items-center p-2 rounded text-gray-400 cursor-pointer" onClick={handleCancelBilling}>Cancel</span>
+                                            <button className={`${getBillingData.length === 0 ? 'w-18' : 'w-44'} border border-blue-400 h-9 flex justify-center items-center p-2 rounded text-blue-400 hover:text-white hover:bg-[#45BA76] hover:border-[#45BA76]`} type="submit">{getBillingData.length === 0 ? "Save" : "Use This Address"}</button>
                                         </div>
                                         <div>
-                                            <span onClick={() => setBillingDetails(shippingDetails)} className="p-3 cursor-pointer text-orange-600 bg-white h-10 w-56 rounded hover:border-orange-400 border hover:bg-orange-50 hover:shadow-lg transition-all duration-300">Same as Shipping Address</span>
+                                            <span onClick={handleSameAsShipping} className="p-3 cursor-pointer text-orange-600 bg-white h-10 w-56 rounded hover:border-orange-400 border hover:bg-orange-50 hover:shadow-lg transition-all duration-300">Same as Shipping Address</span>
                                         </div>
                                     </div>
                                 </div>
@@ -615,8 +656,8 @@ export default function placeOrder() {
                     </div>
                     <div>
                         <div className="bg-white w-96 h-auto p-3 pb-6 rounded-md border-gray-300 border border-solid">
-                            <div className="flex justify-center items-center bg-gray-200 h-10 w-80 m-auto rounded-sm mt-3">
-                                <h3 className="text-gray-600">Order Summary</h3>
+                            <div className="flex justify-center items-center bg-[#F5F7FA] h-10 w-80 m-auto rounded-sm mt-3">
+                                <h3 className="text-[#51596B] font-normal">Order Summary</h3>
                             </div>
                             <div className="grid justify-center items-center mt-3">
                                 {
@@ -625,18 +666,18 @@ export default function placeOrder() {
                                             <div key={index} className="flex justify-between items-center gap-x-14 gap-y-10 pt-5">
                                                 <div className="flex justify-start items-center">
                                                     <div>
-                                                        <span className="float-right flex justify-center items-center relative bottom-2 right-3 bg-gray-400 border-0 h-5 w-5 text-sm rounded-full text-white">{cartItems.count}</span>
+                                                        <span className="float-right flex justify-center items-center relative bottom-2 right-3 bg-[#AAB1BC] border-0 h-5 w-5 text-sm rounded-full text-white">{cartItems.count}</span>
                                                         <div className="grid border-gray-300 border-solid border rounded-md">
                                                             <img className="h-24 w-24 max-w-full p-2 rounded-2xl  object-cover" src="https://images.unsplash.com/flagged/photo-1556637640-2c80d3201be8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8c25lYWtlcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60" alt="" />
                                                         </div>
                                                     </div>
                                                     <div className="grid justify-start">
-                                                        <h4 className="text-gray-700">{cartItems.productName}</h4>
-                                                        <p className="text-gray-400">{cartItems.category}</p>
+                                                        <h4 className="text-[#949AAA]">{cartItems.productName}</h4>
+                                                        <p className="text-[#C3C8D3]">{cartItems.category}</p>
                                                     </div>
                                                 </div>
                                                 <div className="gird justify-start items-center">
-                                                    <p className="text-gray-500">₹{cartItems.price}</p>
+                                                    <p className="text-gray-500">₹{cartItems.expandedPrice}</p>
                                                     <FontAwesomeIcon onClick={() => handleRemoveDataFromLocal(cartItems._id, cartItems.productName)} icon={faDeleteLeft} className="text-red-300 hover:cursor-pointer hover:text-red-400" />
                                                 </div>
                                             </div>
@@ -644,11 +685,18 @@ export default function placeOrder() {
                                     })
                                 }
                             </div>
+                            <div className="flex justify-between items-center mt-5 w-80 ml-5 gap-2  border-b border-solid border-gray-300 p-2 border-t">
+                                <label className="text-gray-700 font-medium">Total Amount :</label>
+                                <p className="text-orange-400 font-medium">₹{totalExpandedAmount}</p>
+                            </div>
+                            <div className="flex justify-center items-center mt-5">
+                                <button className="bg-white w-80 border border-solid border-gray-400 hover:border-green-300 p-3 h-10 flex justify-center items-center hover:text-white hover:bg-green-400 text-gray-600 font-bold rounded">PLACE ORDER</button>
+                            </div>
                         </div>
                     </div>
                 </div>
                 {/* { -----------------------------Below these code is for the billing form -----------------------------> */}
-            </div>
+            </div >
         </>
     )
 }
