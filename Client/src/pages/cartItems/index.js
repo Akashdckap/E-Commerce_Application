@@ -12,7 +12,6 @@ export default function cartItems() {
     const router = useRouter();
     const cartProducts = useSelector(state => state.productDetails.cartData);
     const dispatch = useDispatch()
-    // console.log(cartProducts)
     const handleRemoveDataFromLocal = (itemId, itemName) => {
         dispatch(removeCartdata(itemId))
         notification.success({ message: `Successfully removed ${itemName} from your cart` })
@@ -97,7 +96,7 @@ export default function cartItems() {
                     </table>
                     {
                         cartProducts.length > 1 ? <div className="flex justify-end items-end mt-4">
-                            <button className="text-red-400 hover:text-red-500 cursor-pointer ml-20 p-1 h-9 rounded w-28 font-normal text-base flex justify-center items-center border border-red-300" onClick={handleRemoveAllItems}>Remove All</button>
+                            <button className="text-red-400 hover:text-red-500 cursor-pointer ml-20 p-1 h-9 rounded w-28 font-normal text-base flex justify-center items-center border border-red-300" onClick={handleRemoveAllItems}>Clear Cart</button>
                         </div> : ""
                     }
                 </div>
@@ -109,14 +108,14 @@ export default function cartItems() {
                     </div>
                     <div className="flex justify-between gap-10">
                         <label className="text-gray-500">Discount :</label>
-                        <p className="text-gray-500">₹-219</p>
+                        <p className="text-red-400">₹-219</p>
                     </div>
                     <div className="flex justify-between gap-10 border-b border-dotted border-gray-400 p-1 border-t">
                         <label className="text-gray-700 font-medium">Total Amount :</label>
                         <p className="text-gray-700 font-medium">₹{totalExpandedAmount}</p>
                     </div>
                     <div className="grid gap-2">
-                        <Link href={'/placeOrder'}><button className="bg-slate-600 w-96 hover:bg-slate-500 p-3 h-10 flex justify-center items-center hover:text-green-400 text-white font-bold py-2 px-4 rounded">MAKE PURCHASE</button></Link>
+                        <Link href={'/placeOrder'}><button className="bg-slate-600 w-96 hover:bg-slate-500 p-3 h-10 flex justify-center items-center hover:text-green-400 text-white font-medium py-2 px-4 rounded">PROCEED TO CHECKOUT</button></Link>
                         <Link href={'/productList'}><button className="bg-white w-96 border border-solid border-gray-400 hover:border-orange-300 p-3 h-10 flex justify-center items-center hover:text-orange-400 text-gray-600 font-bold py-2 px-4 rounded">Back to Shop</button></Link>
                     </div>
                 </div>
