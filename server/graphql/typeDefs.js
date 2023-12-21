@@ -73,10 +73,10 @@ const typeDefs = gql` #graphql
     # }
 
     input orderedInput{
-        orderedProducts:[orderProductInput]!,
-        personalDetails: personalDetailsInput!,
-        shippingAddress: shippingAddressInput!,
-        billingAddress: billingAddressInput!,
+        orderedProducts:[orderProductInput],
+        personalDetails: personalDetailsInput,
+        shippingAddress: shippingAddressInput,
+        billingAddress: billingAddressInput,
         # totalPrice: totalPriceInput!
         # totalPrice: Float!
     }
