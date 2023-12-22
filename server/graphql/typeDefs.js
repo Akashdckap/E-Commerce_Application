@@ -39,6 +39,7 @@ const typeDefs = gql` #graphql
         color: String,
         quantity: Int,
         price:Int,
+        product_id: ID,
     }
     input personalDetailsInput{
         name: String,
@@ -73,7 +74,7 @@ const typeDefs = gql` #graphql
     # }
 
     input orderedInput{
-        orderedProducts:[orderProductInput],
+        orderedProducts: [orderProductInput],
         personalDetails: personalDetailsInput,
         shippingAddress: shippingAddressInput,
         billingAddress: billingAddressInput,
@@ -98,6 +99,7 @@ const typeDefs = gql` #graphql
         color: String,
         quantity: Int,
         price:Int,
+        product_id: ID,
     }
 
     type personalDetails{

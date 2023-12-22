@@ -21,6 +21,7 @@ export const productSlice = createSlice({
         // },
         storeAddToCartProductData: (state, action) => {
             const productData = action.payload;
+            console.log("product--------",productData);
             const productIndex = state.cartData.findIndex((product) => product._id === productData._id);
             if (productIndex !== -1) {
                 state.cartData[productIndex].count = (state.cartData[productIndex].count || 0) + 1;
