@@ -1,7 +1,6 @@
 // const mongoose = require('mongoose');
 import mongoose from "mongoose";
 // const ObjectId = mongoose.Types.ObjectId
-
 const placeOrder = mongoose.Schema({
     orderedProducts: [{
         productName: String,
@@ -10,7 +9,7 @@ const placeOrder = mongoose.Schema({
         color: String,
         quantity: Number,
         price: Number,
-
+        product_id: mongoose.Schema.Types.ObjectId,
     }],
     personalDetails: {
         name: String,
@@ -40,9 +39,11 @@ const placeOrder = mongoose.Schema({
         country: String,
     },
     totalPrice: Number,
-}, {
-    timestamps: true
-})
+},
+    {
+        timestamps: true
+    }
+)
 // module.exports = mongoose.model('orders',placeOrder);
 const orders = mongoose.model('orders', placeOrder);
 export default orders;
