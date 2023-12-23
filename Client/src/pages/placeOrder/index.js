@@ -1,14 +1,25 @@
 import { faArrowLeft, faDeleteLeft, faInbox, faL, faLessThan, faPerson, faPlus, faRemove, faSection, faSeedling, faShare, faShareAlt, faShareNodes, faShareSquare, faShippingFast, faTrash, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
+import { notification } from "antd";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { notification } from "antd";
 import { useMutation, useQuery } from "@apollo/client";
 import { ORDER_PRODUCT } from "../../../Grahpql/mutation";
 import { removeCartdata, storeShippingAddress, storePersonalDetails, updatePersonalDetails, updateShippingAddress, updateBillingAddress, storeBillingAddress } from "@/Reducer/productReducer";
+import { ALL_ORDERED_PRODUCTS } from "../../../Grahpql/queries";
 export default function placeOrder() {
+    const { data: orderData, loading: orderLoading, error: orderError } = useQuery(ALL_ORDERED_PRODUCTS);
+    useEffect(() => {
+        if (orderData && !orderLoading) {
+            console.log("orderData-------------", orderData);
+        }
+        else {
+            console.log("orderError----------", orderError);
+        }
+
+    }, [orderData, orderLoading, orderError]);
+
     const cartProducts = useSelector(state => state.productDetails.cartData);
     const dispatch = useDispatch()
     const getCartData = useSelector(state => state.productDetails.cartData);
@@ -85,11 +96,6 @@ export default function placeOrder() {
         pincode: "",
         country: ""
     })
-
-    // useEffect(() => {
-
-    // }, [showListedData]);
-
     const handleChangePersonalDetails = (e) => {
         const { name, value } = e.target;
         setPersonalDetails({
@@ -166,7 +172,6 @@ export default function placeOrder() {
         let newErrors = { ...billingDetailsError };
         let isVaild = true;
         if (billingDetails.firstName.trim() === "" && billingDetails.lastName.trim() === "" && billingDetails.email.trim() === "" && billingDetails.phoneNo.trim() === "" && billingDetails.address.trim() === "" && billingDetails.district.trim() === "" && billingDetails.state.trim() === "" && billingDetails.pincode.trim() === "" && billingDetails.country.trim() === "") {
-            // console.log(billingDetailsError);
             newErrors.firstName = 'FirstName is required';
             newErrors.lastName = 'LastName is required';
             newErrors.email = 'Email is required';
@@ -178,7 +183,6 @@ export default function placeOrder() {
             newErrors.country = "Country is required";
             isVaild = false;
         }
-        // console.log("billingDetails.phoneNo----", billingDetails.phoneNo.length);
         if (billingDetails.phoneNo.length < 9 && billingDetails.phoneNo.trim() !== "") {
             newErrors.phoneNo = "Contact number should be 10 numbers"
             isVaild = false
@@ -383,11 +387,14 @@ export default function placeOrder() {
         setBillingDetails(getShippingData)
         console.log("billingDetails-----------", billingDetails);
     }
-    const [createOrders] = useMutation(ORDER_PRODUCT);
+    const [createOrders, { loading, data, error }] = useMutation(ORDER_PRODUCT);
+
     const handlePlaceOrder = async () => {
         try {
+            const updatedData = getCartData.map(({ _id, ...rest }) => ({ ...rest, productID: _id }));
+            const finalData = updatedData.map(({ __typename, ...rest }) => ({ ...rest }));
             const orderedInputData = {
-                orderedProducts: getCartData,
+                orderedProducts: finalData,
                 personalDetails: getPersonalData,
                 shippingAddress: getShippingData,
                 billingAddress: getBillingData
@@ -397,24 +404,21 @@ export default function placeOrder() {
                     inputs: orderedInputData
                 }
             }));
-            console.log("checking-------------", checking);
-            // // console.log(result);
-            // return result
+            if (checking) {
+                notification.success({ message: "Order Submitted" });
+                return checking;
+            }
+            else {
+                notification.success({ message: "Order Submitted" });
+            }
         }
         catch (error) {
             if (error.graphQLErrors) {
-                // Handle GraphQL validation errors
                 console.error("GraphQL Validation Errors:", error.graphQLErrors);
             }
             console.error("place order error :", error);
         }
-
-        console.log("getCartData-------------------", getCartData);
-        console.log("getPersonalData------------", getPersonalData);
-        console.log("getShippingData------------", getShippingData);
-        console.log("getBillingData-----------------", getShippingData);
     }
-
 
     useEffect(() => {
         if (getPersonalData.length === 0) {
@@ -522,7 +526,7 @@ export default function placeOrder() {
                         <div className="flex justify-start items-center mt-5">
                             <h1 className="text-[#575F70] text-lg font-medium">Shipping Address</h1>
                         </div>
-                        <div style={{ display: showShippingData ? 'none' : 'block', width: '112%' }}>
+                        <div style={{ display: showShippingData ? 'none' : 'block', width: '100%' }}>
                             <div onClick={editShippingDetails} className='flex justify-between items-center gap-20 hover:border-green-300 mt-5 p-5 bg-white rounded-md border border-solid border-gray-300' >
                                 <div className="flex justify-between items-center gap-10">
                                     {/* <input type="radio" onClick={editShippingDetails} className="border-2 h-5 w-5 border-gray-300 checked:border-green-200 checked:bg-green-500 rounded-full focus:outline-none focus:border-green-200 focus:ring-green-200 active:border-green-500" /> */}

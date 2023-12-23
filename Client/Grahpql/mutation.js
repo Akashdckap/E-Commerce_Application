@@ -59,12 +59,12 @@ export const ORDER_PRODUCT = gql`
   mutation createOrders($inputs: orderedInput!) {
   createOrders(inputs: $inputs) {
     orderedProducts {
-      _id
       productName
+      productID
+      description
       category
       brand
       color
-      quantity
       weight
       price
       count
