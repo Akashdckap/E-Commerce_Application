@@ -2,7 +2,6 @@
 import mongoose from "mongoose";
 mongoose.set('strictQuery', true);
 // const ObjectId = mongoose.Types.ObjectId
-
 const placeOrder = mongoose.Schema({
     orderedProducts: [{
         productName: String,
@@ -44,9 +43,11 @@ const placeOrder = mongoose.Schema({
         country: String,
     },
     totalPrice: Number,
-}, {
-    timestamps: true
-})
+},
+    {
+        timestamps: true
+    }
+)
 // module.exports = mongoose.model('orders',placeOrder);
 const orders = mongoose.model('orders', placeOrder);
 export default orders;

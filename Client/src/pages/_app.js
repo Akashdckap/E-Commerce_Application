@@ -41,7 +41,8 @@ export function preloadState() {
   return data
 }
 const rootReducer = combineReducers({
-  productDetails: productSlice
+  productDetails: productSlice,
+  
 })
 
 const store = configureStore({
