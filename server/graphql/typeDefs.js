@@ -77,7 +77,7 @@ const typeDefs = gql` #graphql
     # }
 
     input orderedInput{
-        orderedProducts:[orderProductInput],
+        orderedProducts: [orderProductInput],
         personalDetails: personalDetailsInput,
         shippingAddress: shippingAddressInput,
         billingAddress: billingAddressInput,

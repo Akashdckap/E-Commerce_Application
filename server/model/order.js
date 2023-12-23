@@ -1,7 +1,6 @@
 // const mongoose = require('mongoose');
 import mongoose from "mongoose";
 // const ObjectId = mongoose.Types.ObjectId
-
 const placeOrder = mongoose.Schema({
     orderedProducts: [{
         id: String,
@@ -43,9 +42,11 @@ const placeOrder = mongoose.Schema({
         country: String,
     },
     totalPrice: Number,
-}, {
-    timestamps: true
-})
+},
+    {
+        timestamps: true
+    }
+)
 // module.exports = mongoose.model('orders',placeOrder);
 const orders = mongoose.model('orders', placeOrder);
 export default orders;
