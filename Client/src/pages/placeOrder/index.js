@@ -219,7 +219,7 @@ export default function placeOrder() {
         }
     }
 
-    console.log("getPersonalData------------------", getPersonalData.length === 0);
+    // console.log("getPersonalData------------------", getPersonalData.length === 0);
 
     const handleShipppingDetails = (e) => {
         e.preventDefault();
@@ -308,8 +308,8 @@ export default function placeOrder() {
             PersonalEmail: getPersonalData.PersonalEmail,
             PersonalPhoneNo: getPersonalData.PersonalPhoneNo,
         })
-        // setShowPersonalData(false)
-        setPersonalDetailForm(true)
+        setShowPersonalData(true)
+        // setPersonalDetailForm(true)
     }
 
     const editShippingDetails = () => {
@@ -324,7 +324,7 @@ export default function placeOrder() {
             pincode: getShippingData.pincode,
             country: getShippingData.country
         })
-        setShowShippingData(false)
+        setShowShippingData(true)
     }
     // <-----------------------------Below the code for the  editBillingDetails function  ----------------------------->
 
@@ -340,7 +340,7 @@ export default function placeOrder() {
             pincode: getBillingData.pincode,
             country: getBillingData.country
         })
-        setShowBillingData(false)
+        setShowBillingData(true)
     }
     const handleCancelPersonal = () => {
         setShowPersonalData(true)
@@ -379,21 +379,70 @@ export default function placeOrder() {
         })
     }
     const handleSameAsShipping = () => {
-        setBillingDetails(shippingDetails)
+        console.log("getShippingData-----------", getShippingData);
+        setBillingDetails(getShippingData)
+        console.log("billingDetails-----------", billingDetails);
     }
-    const [createOrders, { data, loading, error }] = useMutation(ORDER_PRODUCT);
-    const handlePlaceOrder = () => {
+    const [createOrders] = useMutation(ORDER_PRODUCT);
+    const handlePlaceOrder = async () => {
         try {
-            // await(createOrders({ variables: { getCartData, getPersonalData, getShippingData, getShippingData } }));
+            const orderedInputData = {
+                orderedProducts: getCartData,
+                personalDetails: getPersonalData,
+                shippingAddress: getShippingData,
+                billingAddress: getBillingData
+            }
+            const checking = await (createOrders({
+                variables: {
+                    inputs: orderedInputData
+                }
+            }));
+            console.log("checking-------------", checking);
+            // // console.log(result);
+            // return result
         }
         catch (error) {
+            if (error.graphQLErrors) {
+                // Handle GraphQL validation errors
+                console.error("GraphQL Validation Errors:", error.graphQLErrors);
+            }
             console.error("place order error :", error);
         }
+
         console.log("getCartData-------------------", getCartData);
         console.log("getPersonalData------------", getPersonalData);
         console.log("getShippingData------------", getShippingData);
         console.log("getBillingData-----------------", getShippingData);
     }
+
+
+    useEffect(() => {
+        if (getPersonalData.length === 0) {
+            setShowPersonalData(true)
+        }
+        else {
+            setShowPersonalData(false)
+        }
+    }, [getPersonalData]);
+
+    useEffect(() => {
+        if (getShippingData.length === 0) {
+            setShowShippingData(true)
+        }
+        else {
+            setShowShippingData(false)
+        }
+    }, [getShippingData])
+
+    useEffect(() => {
+        if (getBillingData.length === 0) {
+            setShowBillingData(true)
+        }
+        else {
+            setShowBillingData(false)
+        }
+    }, [getBillingData])
+
     const expandedAmountarray = cartProducts.map((expanded) => expanded.expandedPrice)
     const totalExpandedAmount = expandedAmountarray.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
 
@@ -411,7 +460,7 @@ export default function placeOrder() {
                 <div className="flex justify-start items-center ml-20 mt-5">
                     <h1 className="text-[#575F70] text-lg font-medium">Personal Details</h1>
                 </div>
-                <div className={`flex justify-start items-start ml-20 mt-5`} style={{ display: getPersonalData.length === 0 ? 'none' : 'block', width: '56.5%' }} >
+                <div className={`flex justify-start items-start ml-20 mt-5`} style={{ display: showPersonalData ? 'none' : 'block', width: '56.5%' }} >
                     <div onClick={editPersonalDetails} className={`flex p-5 hover:border-green-300 justify-between items-center bg-white rounded-md border border-solid'`}>
                         <div className="flex justify-start items-center gap-10">
                             {/* <input type="radio" onClick={editPersonalDetails} className="border-2 h-5 w-5 border-gray-300 checked:border-green-200 checked:bg-green-500 rounded-full focus:outline-none focus:border-green-200 focus:ring-green-200 active:border-green-500" /> */}
@@ -429,10 +478,10 @@ export default function placeOrder() {
                         </div>
                     </div>
                 </div>
-                <div className="flex justify-start items-start mt-5 gap-10">
+                <div className="flex justify-between items-start mt-5 pl-20 pr-5">
                     <div className="grid">
-                        <div className="ml-20">
-                            <form onSubmit={handlePersonalDetailForm} style={{ display: getPersonalData.length === 0 ? "none" : "block" }}>
+                        <div className="">
+                            <form onSubmit={handlePersonalDetailForm} style={{ display: showPersonalData ? "block" : "none" }}>
                                 <div className={`grid justify-start p-10 w-auto gap-4 bg-white rounded-md ${showPersonalData ? 'border-gray-200 border border-solid' : 'border-green-300 border-2 border-solid'}`} onClick={() => setPersonalDetailForm(true)}>
                                     <div className="flex justify-start items-center gap-3">
                                         {/* <input type="radio" checked={!showPersonalData} className="border-2 h-5 w-5 border-gray-300 checked:border-green-200 checked:bg-green-500 rounded-full focus:outline-none focus:border-green-200 focus:ring-green-200 active:border-green-500" /> */}
@@ -470,12 +519,12 @@ export default function placeOrder() {
                             <p className="text-orange-400 cursor-pointer">Add a new Shipping address</p>
                         </div> */}
                         {/* { -----------------------------Below these code is for the shipping data listed in UI -----------------------------> */}
-                        <div className="flex justify-start items-center ml-20 mt-5">
+                        <div className="flex justify-start items-center mt-5">
                             <h1 className="text-[#575F70] text-lg font-medium">Shipping Address</h1>
                         </div>
-                        <div style={{ display: showShippingData ? 'block' : 'none' }}>
-                            <div onClick={editShippingDetails} className={`flex hover:border-green-300 justify-between w-auto ml-20 mt-5 p-5 bg-white rounded-md border border-solid border-gray-300'}`}>
-                                <div className="flex justify-start items-center gap-10">
+                        <div style={{ display: showShippingData ? 'none' : 'block', width: '112%' }}>
+                            <div onClick={editShippingDetails} className='flex justify-between items-center gap-20 hover:border-green-300 mt-5 p-5 bg-white rounded-md border border-solid border-gray-300' >
+                                <div className="flex justify-between items-center gap-10">
                                     {/* <input type="radio" onClick={editShippingDetails} className="border-2 h-5 w-5 border-gray-300 checked:border-green-200 checked:bg-green-500 rounded-full focus:outline-none focus:border-green-200 focus:ring-green-200 active:border-green-500" /> */}
                                     <FontAwesomeIcon icon={faShippingFast} className="text-green-400 text-lg" />
                                     <div className="flex">
@@ -488,14 +537,14 @@ export default function placeOrder() {
                                         <p className="text-gray-400">{getShippingData.pincode}</p>
                                     </div>
                                 </div>
-                                <div>
+                                <div className="">
                                     <button onClick={editShippingDetails} className="text-blue-500 hover:text-green-400 hover:cursor-pointer">Edit</button>
                                 </div>
                             </div>
                         </div>
 
-                        <div className="flex justify-start items-start ml-20 pt-5 gap-x-10">
-                            <form onSubmit={handleShipppingDetails} style={{ display: shippingFormOpen ? "block" : "none" }}>
+                        <div className="flex justify-start items-start pt-5 gap-x-10">
+                            <form onSubmit={handleShipppingDetails} style={{ display: showShippingData ? "block" : "none" }}>
                                 <div className={`grid justify-start p-10 w-auto gap-4 bg-white border border-solid ${showShippingData ? 'border-gray-200 border border-solid' : 'border-green-300 border-2 border-solid'} rounded-md`}>
                                     <div className="flex justify-start items-center gap-3">
                                         {/* <input type="radio" checked={!showShippingData} className="border-2 h-5 w-5 border-gray-300 checked:border-green-200 checked:bg-green-500 rounded-full focus:outline-none focus:border-green-200 focus:ring-green-200 active:border-green-500" /> */}
@@ -575,8 +624,11 @@ export default function placeOrder() {
                             <FontAwesomeIcon icon={faPlus} className="text-orange-400 cursor-pointer" />
                             <p className="text-orange-400 cursor-pointer">Add a new Billing address</p>
                         </div> */}
-                        <div className="" style={{ display: showBillingData ? 'block' : 'none' }}>
-                            <div onClick={editBillingDetails} className='w-auto ml-20 mt-5 flex p-5 justify-between items-center bg-white rounded-md border border-solid  border-gray-300 hover:border-green-300'>
+                        <div className="flex justify-start items-center mt-5">
+                            <h1 className="text-[#575F70] text-lg font-medium">Billing Address</h1>
+                        </div>
+                        <div className="" style={{ display: showBillingData ? 'none' : 'block', width: '112%' }}>
+                            <div onClick={editBillingDetails} className='mt-5 flex p-5 justify-between items-center bg-white rounded-md border border-solid  border-gray-300 hover:border-green-300'>
                                 <div className="flex justify-between items-center gap-10">
                                     {/* <input type="radio" onClick={editBillingDetails} className="border-2 h-5 w-5 border-gray-300 checked:border-green-200 checked:bg-green-500 rounded-full focus:outline-none focus:border-green-200 focus:ring-green-200 active:border-green-500" /> */}
                                     <FontAwesomeIcon icon={faShippingFast} className="text-green-400 text-lg" />
@@ -595,11 +647,8 @@ export default function placeOrder() {
                                 </div>
                             </div>
                         </div>
-                        <div className="flex justify-start items-center ml-20 mt-5">
-                            <h1 className="text-[#575F70] text-lg font-medium">Billing Address</h1>
-                        </div>
-                        <div className="flex justify-start items-start ml-20 mt-5 gap-10">
-                            <form onSubmit={handleBillingDetails} style={{ display: billingFormOpen ? "block" : "none" }}>
+                        <div className="flex justify-start items-start mt-5 gap-10">
+                            <form onSubmit={handleBillingDetails} style={{ display: showBillingData ? "block" : "none" }}>
                                 <div className={`grid justify-start p-10 mb-10 w-auto gap-4 bg-white rounded-md ${showBillingData ? 'border-gray-200 border border-solid' : 'border-green-300 border-2 border-solid'}`}>
                                     <div className="flex justify-start items-center gap-3">
                                         {/* <input type="radio" checked={!showBillingData} className="border-2 h-5 w-5 border-gray-300 checked:border-green-200 checked:bg-green-500 rounded-full focus:outline-none focus:border-green-200 focus:ring-green-200 active:border-green-500" /> */}
@@ -673,7 +722,7 @@ export default function placeOrder() {
                                             <button className={`${getBillingData.length === 0 ? 'w-18' : 'w-44'} border border-blue-400 h-9 flex justify-center items-center p-2 rounded text-blue-400 hover:text-white hover:bg-[#45BA76] hover:border-[#45BA76]`} type="submit">{getBillingData.length === 0 ? "Save" : "Use This Address"}</button>
                                         </div>
                                         <div>
-                                            <span onClick={handleSameAsShipping} className="p-3 cursor-pointer text-orange-600 bg-white h-10 w-56 rounded hover:border-orange-400 border hover:bg-orange-50 hover:shadow-lg transition-all duration-300">Same as Shipping Address</span>
+                                            <button type="submit" onClick={handleSameAsShipping} className="p-3 cursor-pointer text-orange-600 bg-white h-10 w-56 rounded hover:border-orange-400 border hover:bg-orange-50 hover:shadow-lg transition-all duration-300">Same as Shipping Address</button>
                                         </div>
                                     </div>
                                 </div>

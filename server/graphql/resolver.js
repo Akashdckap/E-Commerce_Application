@@ -44,10 +44,10 @@ const resolvers = {
             const totalCount = await productDetails.countDocuments();
             return totalCount;
         },
-        getAllOrders: async () => {
-            const allOrders = await newOrders.find({});
-            return allOrders;
-        },
+        // getAllOrders: async () => {
+        //     const allOrders = await newOrders.find({});
+        //     return allOrders;
+        // },
         // addToCartProductData: async (_, { ids }) => {
         //     try {
         //         const data = await productDetails.find({ _id: { $in: ids } })
@@ -94,7 +94,7 @@ const resolvers = {
                 price: price,
                 weight: weight,
                 color: color,
-                description: newOrdersdescription
+                description: description
             })
             const res = await newProduct.save();
             return {
@@ -203,19 +203,20 @@ const resolvers = {
         //         console.log(err,"insertingOrders error");
         //     }
         // }
-        async createOrders(_, { input }) {
+        async createOrders(_, { inputs }) {
+            // console.log("input----------------", input);
             try {
 
-                const totalPrice = input.orderedProducts.reduce((accumulator, products) => {
+                const totalPrice = inputs.orderedProducts.reduce((accumulator, products) => {
                     return accumulator + (products.price * products.quantity);
                 }, 0)
-                // const { orderedProducts, personalDetails, shippingAddress, billingAddress } = input;
+                // const { orderedProducts, personalDetails, shippingAddress, billingAddress } = inputs;
                 // const totalPrice = orderedProducts.reduce((acc,cuu)=> acc + cuu.price,0)
                 const order = new newOrders({
-                    orderedProducts: input.orderedProducts,
-                    personalDetails: input.personalDetails,
-                    shippingAddress: input.shippingAddress,
-                    billingAddress: input.billingAddress,
+                    orderedProducts: inputs.orderedProducts,
+                    personalDetails: inputs.personalDetails,
+                    shippingAddress: inputs.shippingAddress,
+                    billingAddress: inputs.billingAddress,
                     totalPrice,
                     // totalPrice: input.totalPrice
                 })

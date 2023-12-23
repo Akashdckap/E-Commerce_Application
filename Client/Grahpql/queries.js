@@ -114,17 +114,21 @@ export const ALL_ORDERED_PRODUCTS = gql`
     query {
         getAllOrders{
             orderedProducts{
+            _id,
             productName,
             category,
             brand,
             color,
             quantity,
+            weight,
             price
+            count,
+            expandedPrice,
             }
             personalDetails{
-            name
-            email
-            phoneNo
+            PersonalName,
+            PersonalEmail,
+            PersonalPhoneNo,
             }
             shippingAddress{
             firstName,

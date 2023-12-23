@@ -33,38 +33,42 @@ const typeDefs = gql` #graphql
     }
 
     input orderProductInput{
+        _id: ID,
         productName: String,
         category:String,
         brand: String,
         color: String,
         quantity: Int,
-        price:Int,
+        weight:Int,
+        price: Int,
+        count: Int,
+        expandedPrice: Int,
     }
     input personalDetailsInput{
-        name: String,
-        email: String,
-        phoneNo: Int,
+        PersonalName: String,
+        PersonalEmail: String,
+        PersonalPhoneNo: String,
     }
     input shippingAddressInput{
         firstName: String,
         lastName: String,
         email: String,
-        phoneNo: Int,
+        phoneNo: String,
         address: String,
         district: String,
         state: String,
-        pincode: Int,
+        pincode: String,
         country: String,   
     }
     input billingAddressInput{
         firstName: String,
         lastName: String,
         email: String,
-        phoneNo: Int,
+        phoneNo: String,
         address: String,
         district: String,
         state: String,
-        pincode: Int,
+        pincode: String,
         country: String,   
     }
 
@@ -92,29 +96,33 @@ const typeDefs = gql` #graphql
     }
 
     type orderProduct{
+        _id: String,
         productName: String,
         category: String,
         brand: String,
         color: String,
         quantity: Int,
-        price:Int,
+        weight:Int,
+        price: Int,
+        count: Int,
+        expandedPrice: String,
     }
 
     type personalDetails{
-        name: String,
-        email: String,
-        phoneNo: Int,
+        PersonalName: String,
+        PersonalEmail: String,
+        PersonalPhoneNo: Int,
     }
 
     type shippingAddress{
         firstName: String,
         lastName: String,
         email: String,
-        phoneNo: Int,
+        phoneNo: String,
         address: String,
         district: String,
         state: String,
-        pincode: Int,
+        pincode: String,
         country: String, 
     }
 
@@ -122,11 +130,11 @@ const typeDefs = gql` #graphql
         firstName: String,
         lastName: String,
         email: String,
-        phoneNo: Int,
+        phoneNo: String,
         address: String,
         district: String,
         state: String,
-        pincode: Int,
+        pincode: String,
         country: String, 
     }
 
@@ -169,7 +177,7 @@ const typeDefs = gql` #graphql
         getEditProductData(id: ID!): products
         getProductDetails(id: ID!):products
         addToCartProductData(ids: ID!): products
-        getAllOrders:[orders!]!
+        getAllOrders:[orders]!
         # getImages:[images]
     }
 
@@ -178,8 +186,8 @@ const typeDefs = gql` #graphql
         createProducts(newProducts: productsInput): products!
         deleteProduct(id: ID!) : Boolean!
         updateProduct(id: ID!, input: updateProductInput): products!
+        createOrders(inputs: orderedInput): orders!
         uploadFile(file: Upload!): String!
-        createOrders(input: orderedInput): orders!
     }
 `
 // module.exports = typeDefs;
