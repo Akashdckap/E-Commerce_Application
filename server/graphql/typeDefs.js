@@ -33,43 +33,43 @@ const typeDefs = gql` #graphql
     }
 
     input orderProductInput{
-        _id: ID,
-        productName: String,
-        category:String,
-        brand: String,
-        color: String,
-        quantity: Int,
-        weight:Int,
-        price: Int,
-        count: Int,
-        expandedPrice: Int,
+        productID: String!,
+        productName: String!,
+        description: String!,
+        category: String!,
+        brand: String!,
+        color: String!,
+        weight: Int!,
+        price: Int!,
+        count: Int!,
+        expandedPrice: Int!,
     }
     input personalDetailsInput{
-        PersonalName: String,
-        PersonalEmail: String,
-        PersonalPhoneNo: String,
+        PersonalName: String!,
+        PersonalEmail: String!,
+        PersonalPhoneNo: String!,
     }
     input shippingAddressInput{
-        firstName: String,
-        lastName: String,
-        email: String,
-        phoneNo: String,
-        address: String,
-        district: String,
-        state: String,
-        pincode: String,
-        country: String,   
+        firstName: String!,
+        lastName: String!,
+        email: String!,
+        phoneNo: String!,
+        address: String!,
+        district: String!,
+        state: String!,
+        pincode: String!,
+        country: String!, 
     }
     input billingAddressInput{
-        firstName: String,
-        lastName: String,
-        email: String,
-        phoneNo: String,
-        address: String,
-        district: String,
-        state: String,
-        pincode: String,
-        country: String,   
+        firstName: String!,
+        lastName: String!,
+        email: String!,
+        phoneNo: String!,
+        address: String!,
+        district: String!,
+        state: String!,
+        pincode: String!,
+        country: String!,   
     }
 
     # input totalPriceInput{
@@ -77,10 +77,10 @@ const typeDefs = gql` #graphql
     # }
 
     input orderedInput{
-        orderedProducts: [orderProductInput],
-        personalDetails: personalDetailsInput,
-        shippingAddress: shippingAddressInput,
-        billingAddress: billingAddressInput,
+        orderedProducts:[orderProductInput!]!,
+        personalDetails: personalDetailsInput!,
+        shippingAddress: shippingAddressInput!,
+        billingAddress: billingAddressInput!,
         # totalPrice: totalPriceInput!
         # totalPrice: Float!
     }
@@ -96,22 +96,22 @@ const typeDefs = gql` #graphql
     }
 
     type orderProduct{
-        _id: String,
         productName: String,
+        productID: String,
+        description: String,
         category: String,
         brand: String,
         color: String,
-        quantity: Int,
-        weight:Int,
+        weight: Int,
         price: Int,
         count: Int,
-        expandedPrice: String,
+        expandedPrice: Int,
     }
 
     type personalDetails{
         PersonalName: String,
         PersonalEmail: String,
-        PersonalPhoneNo: Int,
+        PersonalPhoneNo: String,
     }
 
     type shippingAddress{
@@ -143,6 +143,7 @@ const typeDefs = gql` #graphql
     # }
 
     type orders{
+        _id: ID,
         orderedProducts:[orderProduct],
         personalDetails:personalDetails,
         shippingAddress:shippingAddress,

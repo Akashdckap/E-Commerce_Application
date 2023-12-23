@@ -6,6 +6,8 @@
 import admins from '../model/adminSchema.js';
 import productDetails from '../model/productSchema.js';
 import newOrders from '../model/order.js';
+
+
 // import Upload from 'graphql-upload/Upload.mjs';
 // import GraphQLUpload from "graphql-upload/GraphQLUpload.js";
 // const {GraphQLUpload}  = require('graphql-upload/GraphQLUpload.js')
@@ -44,10 +46,10 @@ const resolvers = {
             const totalCount = await productDetails.countDocuments();
             return totalCount;
         },
-        // getAllOrders: async () => {
-        //     const allOrders = await newOrders.find({});
-        //     return allOrders;
-        // },
+        getAllOrders: async () => {
+            const allOrders = await newOrders.find({});
+            return allOrders;
+        },
         // addToCartProductData: async (_, { ids }) => {
         //     try {
         //         const data = await productDetails.find({ _id: { $in: ids } })
@@ -204,12 +206,13 @@ const resolvers = {
         //     }
         // }
         async createOrders(_, { inputs }) {
-            // console.log("input----------------", input);
             try {
-
-                const totalPrice = inputs.orderedProducts.reduce((accumulator, products) => {
-                    return accumulator + (products.price * products.quantity);
-                }, 0)
+                const expandedAmountarray = inputs.orderedProducts.map((expanded) => expanded.expandedPrice)
+                const totalPrice = expandedAmountarray.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+                // console.log("totalExpandedAmount--------------", totalExpandedAmount);
+                // const totalPrice = inputs.orderedProducts.reduce((accumulator, products) => {
+                //     return accumulator + (products.price * products.expandedPrice);
+                // }, 0)
                 // const { orderedProducts, personalDetails, shippingAddress, billingAddress } = inputs;
                 // const totalPrice = orderedProducts.reduce((acc,cuu)=> acc + cuu.price,0)
                 const order = new newOrders({
@@ -218,15 +221,8 @@ const resolvers = {
                     shippingAddress: inputs.shippingAddress,
                     billingAddress: inputs.billingAddress,
                     totalPrice,
-                    // totalPrice: input.totalPrice
                 })
-                // const orders = new newOrders(input);
-                const saveOrders = await order.save();
-                console.log(saveOrders);
-                // console.log(saveOrders.orderedProducts);
-                // const totalPrice = saveOrders.orderedProducts
-                // const price = totalPrice.map((ord) => ord.price);
-                // const amount = price.reduce((accumulator, currentValue) => { accumulator + currentValue }, 0);
+                await order.save();
             }
             catch (err) {
                 console.log(err, "create orders error");

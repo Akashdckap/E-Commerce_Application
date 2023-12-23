@@ -1,14 +1,15 @@
 // const mongoose = require('mongoose');
 import mongoose from "mongoose";
+mongoose.set('strictQuery', true);
 // const ObjectId = mongoose.Types.ObjectId
 const placeOrder = mongoose.Schema({
     orderedProducts: [{
-        id: String,
         productName: String,
+        productID: String,
+        description: String,
         category: String,
         brand: String,
         color: String,
-        quantity: Number,
         weight: Number,
         price: Number,
         count: Number,
@@ -17,13 +18,13 @@ const placeOrder = mongoose.Schema({
     personalDetails: {
         PersonalName: String,
         PersonalEmail: String,
-        PersonalPhoneNo: Number,
+        PersonalPhoneNo: String,
     },
     shippingAddress: {
         firstName: String,
         lastName: String,
         email: String,
-        phoneNo: Number,
+        phoneNo: String,
         address: String,
         district: String,
         state: String,
@@ -34,7 +35,7 @@ const placeOrder = mongoose.Schema({
         firstName: String,
         lastName: String,
         email: String,
-        phoneNo: Number,
+        phoneNo: String,
         address: String,
         district: String,
         state: String,
@@ -50,3 +51,43 @@ const placeOrder = mongoose.Schema({
 // module.exports = mongoose.model('orders',placeOrder);
 const orders = mongoose.model('orders', placeOrder);
 export default orders;
+// const orderedProductSchema = new Schema({
+// productName: String,
+// description: String,
+// category: String,
+// brand: String,
+// color: String,
+// weight: Number,
+// price: Number,
+// count: Number,
+// expandedPrice: Number,
+// });
+
+// const personalDetailsSchema = new Schema({
+//     PersonalName: String,
+//     PersonalEmail: String,
+//     PersonalPhoneNo: String,
+// });
+
+// const addressSchema = new Schema({
+//     firstName: String,
+//     lastName: String,
+//     email: String,
+//     phoneNo: String,
+//     address: String,
+//     district: String,
+//     state: String,
+//     pincode: String,
+//     country: String,
+// });
+
+// const createdOrderSchema = new Schema({
+//     orderedProducts: [orderedProductSchema],
+//     personalDetails: personalDetailsSchema,
+//     shippingAddress: addressSchema,
+//     billingAddress: addressSchema,
+// });
+
+// const CreatedOrderModel = mongoose.model('orders', createdOrderSchema);
+
+// module.exports =  CreatedOrderModel 
