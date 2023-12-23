@@ -3,18 +3,21 @@ import mongoose from "mongoose";
 // const ObjectId = mongoose.Types.ObjectId
 const placeOrder = mongoose.Schema({
     orderedProducts: [{
+        id: String,
         productName: String,
         category: String,
         brand: String,
         color: String,
         quantity: Number,
+        weight: Number,
         price: Number,
-        product_id: mongoose.Schema.Types.ObjectId,
+        count: Number,
+        expandedPrice: Number,
     }],
     personalDetails: {
-        name: String,
-        email: String,
-        phoneNo: Number,
+        PersonalName: String,
+        PersonalEmail: String,
+        PersonalPhoneNo: Number,
     },
     shippingAddress: {
         firstName: String,
