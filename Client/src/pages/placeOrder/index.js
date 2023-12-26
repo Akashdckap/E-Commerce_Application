@@ -387,6 +387,7 @@ export default function placeOrder() {
         setBillingDetails(getShippingData)
         console.log("billingDetails-----------", billingDetails);
     }
+
     const [createOrders, { loading, data, error }] = useMutation(ORDER_PRODUCT);
 
     const handlePlaceOrder = async () => {
