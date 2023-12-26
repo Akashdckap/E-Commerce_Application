@@ -149,7 +149,7 @@ export default function AdminStore() {
             setCurrentPage(currentPage - 1)
         }
     };
-
+    console.log("getData--------------------",getData);
     const calculateSI = (index) => {
         return (currentPage - 1) * pageSize + index + 1;
     };

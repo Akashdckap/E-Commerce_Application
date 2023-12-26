@@ -6,6 +6,8 @@
 import admins from '../model/adminSchema.js';
 import productDetails from '../model/productSchema.js';
 import newOrders from '../model/order.js';
+
+
 // import Upload from 'graphql-upload/Upload.mjs';
 // import GraphQLUpload from "graphql-upload/GraphQLUpload.js";
 // const {GraphQLUpload}  = require('graphql-upload/GraphQLUpload.js')
@@ -94,7 +96,7 @@ const resolvers = {
                 price: price,
                 weight: weight,
                 color: color,
-                description: newOrdersdescription
+                description: description
             })
             const res = await newProduct.save();
             return {
@@ -203,26 +205,28 @@ const resolvers = {
         //         console.log(err,"insertingOrders error");
         //     }
         // }
-        async createOrders(_, { input }) {
+        async createOrders(_, { inputs }) {
             try {
-
-                const totalPrice = input.orderedProducts.reduce((accumulator, products) => {
-                    return accumulator + (products.price * products.quantity);
-                }, 0)
-                // const { orderedProducts, personalDetails, shippingAddress, billingAddress } = input;
+                const expandedAmountarray = inputs.orderedProducts.map((expanded) => expanded.expandedPrice)
+                const totalPrice = expandedAmountarray.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+                // console.log("totalExpandedAmount--------------", totalExpandedAmount);
+                // const totalPrice = inputs.orderedProducts.reduce((accumulator, products) => {
+                //     return accumulator + (products.price * products.expandedPrice);
+                // }, 0)
+                // const { orderedProducts, personalDetails, shippingAddress, billingAddress } = inputs;
                 // const totalPrice = orderedProducts.reduce((acc,cuu)=> acc + cuu.price,0)
                 const order = new newOrders({
-                    orderedProducts: input.orderedProducts,
-                    personalDetails: input.personalDetails,
-                    shippingAddress: input.shippingAddress,
-                    billingAddress: input.billingAddress,
+                    orderedProducts: inputs.orderedProducts,
+                    personalDetails: inputs.personalDetails,
+                    shippingAddress: inputs.shippingAddress,
+                    billingAddress: inputs.billingAddress,
                     totalPrice,
-                    // totalPrice: input.totalPrice
                 })
                 // const orders = new newOrders(input);
                 const saveOrders = await order.save();
                 // console.log(saveOrders);
                 return saveOrders
+                await order.save();
             }
             catch (err) {
                 console.log(err, "create orders error");

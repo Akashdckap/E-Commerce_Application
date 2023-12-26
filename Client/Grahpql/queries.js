@@ -113,18 +113,23 @@ export const GET_PRODUCT_DETAILS = gql`
 export const ALL_ORDERED_PRODUCTS = gql`
     query {
         getAllOrders{
+            _id
             orderedProducts{
+            productID,
             productName,
+            description,
             category,
             brand,
             color,
-            quantity,
+            weight,
             price
+            count,
+            expandedPrice,
             }
             personalDetails{
-            name
-            email
-            phoneNo
+            PersonalName,
+            PersonalEmail,
+            PersonalPhoneNo,
             }
             shippingAddress{
             firstName,
@@ -135,7 +140,7 @@ export const ALL_ORDERED_PRODUCTS = gql`
             district,
             state,
             pincode,
-            country
+            country,
             }
             billingAddress{
             firstName,
@@ -146,7 +151,7 @@ export const ALL_ORDERED_PRODUCTS = gql`
             district,
             state,
             pincode,
-            country
+            country,
             }
         }
     }
