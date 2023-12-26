@@ -382,9 +382,13 @@ export default function placeOrder() {
         setBillingDetails(shippingDetails)
     }
     const [createOrders, { data, loading, error }] = useMutation(ORDER_PRODUCT);
+    console.log(data,"------data")
     const handlePlaceOrder = () => {
         try {
             // await(createOrders({ variables: { getCartData, getPersonalData, getShippingData, getShippingData } }));
+            createOrders({ variables: { input: getCartData, getPersonalData, getShippingData, getBillingData } })
+                .then(response => { console.log(response, "order details") })
+                .catch(error => { console.error(error, "Error handling") })
         }
         catch (error) {
             console.error("place order error :", error);

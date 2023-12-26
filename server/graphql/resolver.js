@@ -221,14 +221,12 @@ const resolvers = {
                 })
                 // const orders = new newOrders(input);
                 const saveOrders = await order.save();
-                console.log(saveOrders);
-                // console.log(saveOrders.orderedProducts);
-                // const totalPrice = saveOrders.orderedProducts
-                // const price = totalPrice.map((ord) => ord.price);
-                // const amount = price.reduce((accumulator, currentValue) => { accumulator + currentValue }, 0);
+                // console.log(saveOrders);
+                return saveOrders
             }
             catch (err) {
                 console.log(err, "create orders error");
+                throw new Error("Failed to create order");
             }
         }
     }

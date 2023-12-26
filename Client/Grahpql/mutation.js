@@ -56,7 +56,7 @@ export const UPLOAD_FILE = gql`
 `
 
 export const ORDER_PRODUCT = gql`
-  mutation createOrders($input: input){
+  mutation createOrders($input: input!){
     createOrders(input: $input){
       orderedProducts{
         productName,
