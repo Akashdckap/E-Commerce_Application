@@ -138,18 +138,12 @@ const typeDefs = gql` #graphql
         country: String, 
     }
 
-    # type totalPrice{
-    #     totalPrice: Int,
-    # }
-
     type orders{
-        _id: ID,
-        orderedProducts:[orderProduct],
-        personalDetails:personalDetails,
-        shippingAddress:shippingAddress,
-        billingAddress:billingAddress,
-        # totalPrice: Float,
-        # totalPrice:totalPrice,
+        _id: ID!,
+        orderedProducts: [orderProduct]!,
+        personalDetails: personalDetails!,
+        shippingAddress: shippingAddress!,
+        billingAddress: billingAddress!,
     }
 
     input updateProductInput{
@@ -178,7 +172,7 @@ const typeDefs = gql` #graphql
         getEditProductData(id: ID!): products
         getProductDetails(id: ID!):products
         addToCartProductData(ids: ID!): products
-        getAllOrders:[orders]!
+        getAllOrders: [orders]!
         # getImages:[images]
     }
 

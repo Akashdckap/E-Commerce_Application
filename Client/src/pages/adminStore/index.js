@@ -3,7 +3,7 @@ import { Upload, notification } from 'antd';
 import Link from 'next/link';
 import { CREATE_PRODUCTS, DELETE_PRODUCT, UPLOAD_FILE } from '../../../Grahpql/mutation';
 
-import { GET_ALL_PRODUCTS, GET_ALL_PRODUCTS_DATA, GET_TOTAL_PRODUCT_COUNT } from '../../../Grahpql/queries';
+import { GET_ALL_PRODUCTS, GET_ALL_PRODUCTS_DATA, GET_TOTAL_PRODUCT_COUNT, ALL_ORDERED_PRODUCTS } from '../../../Grahpql/queries';
 
 import { useMutation, useQuery } from '@apollo/client';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -122,6 +122,7 @@ export default function AdminStore() {
     });
     const { data: getAllData, error: getAllError, loading: getAllLoading } = useQuery(GET_ALL_PRODUCTS_DATA);
     const { loading: getCountLoading, error: getCountError, data: getCountData } = useQuery(GET_TOTAL_PRODUCT_COUNT);
+    // const { data: orderData, loading: orderLoading, error: orderError } = useQuery(ALL_ORDERED_PRODUCTS);
 
     useEffect(() => {
         if (getData && !getLoading && getAllData && !getAllLoading && getCountData) {
@@ -139,6 +140,7 @@ export default function AdminStore() {
 
     }, [currentPage, getRefetch, getProductData, pageSize, totalPages, getCountData])
 
+    // console.log("orderData--------------------", orderData);
 
     const nextPage = () => {
         setCurrentPage(currentPage + 1);
@@ -149,7 +151,7 @@ export default function AdminStore() {
             setCurrentPage(currentPage - 1)
         }
     };
-    console.log("getData--------------------",getData);
+    console.log("getData--------------------", getData);
     const calculateSI = (index) => {
         return (currentPage - 1) * pageSize + index + 1;
     };
