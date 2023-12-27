@@ -31,6 +31,11 @@ const resolvers = {
         getProductDetails: async (_, { id }) => {
             return await productDetails.findOne({ _id: new ObjectId(id) })
         },
+        getOrderProductDetails: async (_, { id }) => {
+            const order =  await newOrders.findOne({ _id: new ObjectId(id) })
+            // console.log(order)
+            return order;
+        },
         getAllProductsData: async () => {
             // const da = await (productDetails.find({}));
             // console.log(da);
@@ -49,6 +54,7 @@ const resolvers = {
         getAllOrders: async () => {
             const allOrders = await newOrders.find({});
             return allOrders;
+            // console.log(allOrders);
         },
         // addToCartProductData: async (_, { ids }) => {
         //     try {
@@ -191,8 +197,7 @@ const resolvers = {
                 const saveOrders = await order.save();
                 // console.log(saveOrders);
                 return saveOrders
-                await order.save();
-                return order;
+
             }
             catch (err) {
                 console.log(err, "create orders error");
