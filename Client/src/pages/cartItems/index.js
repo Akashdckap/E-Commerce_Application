@@ -6,7 +6,6 @@ import { incrementProductCount, decrementProductCount, removeCartdata, removeAll
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { notification } from "antd";
-import { current } from "@reduxjs/toolkit";
 
 export default function cartItems() {
     const router = useRouter();
@@ -100,7 +99,7 @@ export default function cartItems() {
                         </div> : ""
                     }
                 </div>
-                <div className="grid justify-start gap-3 mt-4 pb-10 pl-10 pr-10 mr-20 bg-white rounded pt-5">
+                <div className="grid justify-start gap-3 pb-10 pl-10 pr-10 mr-20 bg-white rounded pt-5">
                     <p className="text-green-600 border-b border-gray-400 pb-1">PRICE DETAILS</p>
                     <div className="flex justify-between gap-10">
                         <label className="text-gray-500">Price ({cartProducts.length} - items) :</label>
@@ -110,7 +109,7 @@ export default function cartItems() {
                         <label className="text-gray-500">Discount :</label>
                         <p className="text-red-400">₹-219</p>
                     </div>
-                    <div className="flex justify-between gap-10 border-b border-dotted border-gray-400 p-1 border-t">
+                    <div className="flex justify-between gap-10 border-b-2 border-dotted border-gray-400 pt-1 pb-1 border-t-2">
                         <label className="text-gray-700 font-medium">Total Amount :</label>
                         <p className="text-gray-700 font-medium">₹{totalExpandedAmount}</p>
                     </div>

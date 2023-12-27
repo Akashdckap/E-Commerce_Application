@@ -9,17 +9,7 @@ import { ORDER_PRODUCT } from "../../../Grahpql/mutation";
 import { removeCartdata, storeShippingAddress, storePersonalDetails, updatePersonalDetails, updateShippingAddress, updateBillingAddress, storeBillingAddress } from "@/Reducer/productReducer";
 import { ALL_ORDERED_PRODUCTS } from "../../../Grahpql/queries";
 export default function placeOrder() {
-    const { data: orderData, loading: orderLoading, error: orderError } = useQuery(ALL_ORDERED_PRODUCTS);
-    useEffect(() => {
-        if (orderData && !orderLoading) {
-            console.log("orderData-------------", orderData);
-        }
-        else {
-            console.log("orderError----------", orderError);
-        }
-
-    }, [orderData, orderLoading, orderError]);
-
+    // const { data: orderData, loading: orderLoading, error: orderError } = useQuery(ALL_ORDERED_PRODUCTS);
     const cartProducts = useSelector(state => state.productDetails.cartData);
     const dispatch = useDispatch()
     const getCartData = useSelector(state => state.productDetails.cartData);
@@ -31,6 +21,7 @@ export default function placeOrder() {
     const [shippingFormOpen, setShippingForm] = useState(true)
     const [personalDetailForm, setPersonalDetailForm] = useState(true);
     const [billingFormOpen, setBillingForm] = useState(true)
+
 
     // const [selectedPersonalDetails, setSelectedPersonalDetails] = useState(null);
     // const [selectedShippingAddress, setSelectedShippingAddress] = useState(null);
@@ -383,39 +374,51 @@ export default function placeOrder() {
         })
     }
     const handleSameAsShipping = () => {
-        console.log("getShippingData-----------", getShippingData);
+
+        // if (getShippingData.length === 0) {
+        //     notification.error({ message: "Didn't having the shipping details" });
+        // }
+        // else {
+        //     setBillingDetails(getShippingData)
+        //     setShowBillingData(false)
+        // }
+
         setBillingDetails(getShippingData)
-        console.log("billingDetails-----------", billingDetails);
+        setShowBillingData(false)
     }
 
-    const [createOrders, { loading, data, error }] = useMutation(ORDER_PRODUCT);
+    const [createOrders] = useMutation(ORDER_PRODUCT, {
+        refetchQueries: [{ query: ALL_ORDERED_PRODUCTS }]
+    })
 
     const handlePlaceOrder = async () => {
         try {
-            const updatedData = getCartData.map(({ _id, ...rest }) => ({ ...rest, productID: _id }));
-            const finalData = updatedData.map(({ __typename, ...rest }) => ({ ...rest }));
+            const finalData = getCartData.map(({ _id, __typename, ...rest }) => ({ ...rest, productID: _id }));
             const orderedInputData = {
                 orderedProducts: finalData,
                 personalDetails: getPersonalData,
                 shippingAddress: getShippingData,
                 billingAddress: getBillingData
             }
-            const checking = await (createOrders({
+            if (!orderedInputData.orderedProducts.length || !orderedInputData.personalDetails || !orderedInputData.shippingAddress || !orderedInputData.billingAddress) {
+                notification.error({ message: "Incomplete order data. Please fill in all required information." });
+                return;
+            }
+            const { data: orderSubmitData, errors: SubmitOrderError } = await (createOrders({
                 variables: {
                     inputs: orderedInputData
-                }
+                },
+                awaitRefetchQueries: ALL_ORDERED_PRODUCTS
             }));
-            if (checking) {
-                notification.success({ message: "Order Submitted" });
-                return checking;
-            }
-            else {
+            if (orderSubmitData) {
                 notification.success({ message: "Order Submitted" });
             }
+            return { orderSubmitData, SubmitOrderError }
         }
         catch (error) {
             if (error.graphQLErrors) {
                 console.error("GraphQL Validation Errors:", error.graphQLErrors);
+                notification.error({ message: "Order Submission Error" });
             }
             console.error("place order error :", error);
         }
@@ -450,7 +453,7 @@ export default function placeOrder() {
 
     const expandedAmountarray = cartProducts.map((expanded) => expanded.expandedPrice)
     const totalExpandedAmount = expandedAmountarray.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
-
+    // console.log("orderData--------------------------------", orderData);
     return (
         <>
             <div className="">
@@ -459,6 +462,9 @@ export default function placeOrder() {
                         <Link href={'/cartItems'} className="flex justify-center items-center gap-2">
                             <FontAwesomeIcon icon={faArrowLeft} className="cursor-pointer text-blue-500" />
                             <p className="cursor-pointer text-blue-500">Back to cart</p>
+                        </Link>
+                        <Link href={'/adminStore'}>
+                            Admine Store
                         </Link>
                     </div>
                 </div>
@@ -726,16 +732,28 @@ export default function placeOrder() {
                                             <span className="border border-gray-200 hover:border-red-300 hover:text-red-400 h-9 flex justify-center items-center p-2 rounded text-gray-400 cursor-pointer" onClick={handleCancelBilling}>Cancel</span>
                                             <button className={`${getBillingData.length === 0 ? 'w-18' : 'w-44'} border border-blue-400 h-9 flex justify-center items-center p-2 rounded text-blue-400 hover:text-white hover:bg-[#45BA76] hover:border-[#45BA76]`} type="submit">{getBillingData.length === 0 ? "Save" : "Use This Address"}</button>
                                         </div>
-                                        <div>
-                                            <button type="submit" onClick={handleSameAsShipping} className="p-3 cursor-pointer text-orange-600 bg-white h-10 w-56 rounded hover:border-orange-400 border hover:bg-orange-50 hover:shadow-lg transition-all duration-300">Same as Shipping Address</button>
-                                        </div>
+                                        {
+                                            getShippingData.length !== 0 ?
+                                                <div>
+                                                    <button type="submit" onClick={handleSameAsShipping} className="p-3 flex justify-center items-center cursor-pointer text-orange-600 bg-white h-10 w-56 rounded hover:border-orange-400 border hover:bg-orange-50 hover:shadow-lg transition-all duration-300">Same as Shipping Address</button>
+                                                </div>
+                                                : ''
+                                        }
+                                        {/* <div>
+                                            {
+                                                getShippingData.length === 0 ?
+                                                    <span onClick={handleSameAsShipping} className="p-3 flex justify-center items-center cursor-pointer text-orange-600 bg-white h-10 w-56 rounded hover:border-orange-400 border hover:bg-orange-50 hover:shadow-lg transition-all duration-300">Same as Shipping Address</span>
+                                                    :
+                                                    <button type="submit" onClick={handleSameAsShipping} className="p-3 flex justify-center items-center cursor-pointer text-orange-600 bg-white h-10 w-56 rounded hover:border-orange-400 border hover:bg-orange-50 hover:shadow-lg transition-all duration-300">Same as Shipping Address</button>
+                                            }
+                                        </div> */}
                                     </div>
                                 </div>
                             </form>
                         </div>
                     </div>
-                    <div>
-                        <div className="bg-white w-auto h-auto p-3 pb-6 rounded-md border-gray-300 border border-solid">
+                    <div className="pb-10">
+                        <div className="bg-white w-auto h-full p-5 pb-6 rounded-md border-gray-300 border border-solid">
                             <div className="flex justify-center items-center bg-[#F5F7FA] h-10 w-80 m-auto rounded-sm mt-3">
                                 <h3 className="text-[#51596B] font-normal">Order Summary</h3>
                             </div>
@@ -765,7 +783,7 @@ export default function placeOrder() {
                                     })
                                 }
                             </div>
-                            <div className="flex justify-between items-center mt-5 w-80 ml-5 gap-2  border-b border-solid border-gray-300 p-2 border-t">
+                            <div className="flex justify-between items-center mt-5 w-80 gap-2  border-b border-solid border-gray-300 p-2 border-t">
                                 <label className="text-gray-700 font-medium">Total Amount :</label>
                                 <p className="text-orange-400 font-medium">₹{totalExpandedAmount}</p>
                             </div>
