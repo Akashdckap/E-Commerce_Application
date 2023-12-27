@@ -187,11 +187,16 @@ const resolvers = {
                     billingAddress: inputs.billingAddress,
                     totalPrice,
                 })
+                // const orders = new newOrders(input);
+                const saveOrders = await order.save();
+                // console.log(saveOrders);
+                return saveOrders
                 await order.save();
                 return order;
             }
             catch (err) {
                 console.log(err, "create orders error");
+                throw new Error("Failed to create order");
             }
         }
     }
