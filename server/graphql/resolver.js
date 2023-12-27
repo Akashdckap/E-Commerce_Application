@@ -176,6 +176,10 @@ const resolvers = {
             try {
                 const expandedAmountarray = inputs.orderedProducts.map((expanded) => expanded.expandedPrice)
                 const totalPrice = expandedAmountarray.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+                //    if(!inputs || inputs.orderedProducts || inputs.orderedProducts.length === 0){
+                //     throw new Error("Invalid input. Ensure 'orderedProducts' is provided and not empty.");
+
+                //    }
                 // console.log("totalExpandedAmount--------------", totalExpandedAmount);
                 // const totalPrice = inputs.orderedProducts.reduce((accumulator, products) => {
                 //     return accumulator + (products.price * products.expandedPrice);
@@ -193,6 +197,7 @@ const resolvers = {
                 const saveOrders = await order.save();
                 // console.log(saveOrders);
                 return saveOrders
+
             }
             catch (err) {
                 console.log(err, "create orders error");
