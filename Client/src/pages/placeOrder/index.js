@@ -389,11 +389,13 @@ export default function placeOrder() {
     }
 
     const [createOrders, { loading, data, error }] = useMutation(ORDER_PRODUCT);
-
     const handlePlaceOrder = async () => {
         try {
             const updatedData = getCartData.map(({ _id, ...rest }) => ({ ...rest, productID: _id }));
             const finalData = updatedData.map(({ __typename, ...rest }) => ({ ...rest }));
+            // const check = updatedData.map(({__typename,...rest}) => {console.log("rest-----------",rest)})
+            console.log("finalData----------",finalData);
+
             const orderedInputData = {
                 orderedProducts: finalData,
                 personalDetails: getPersonalData,
