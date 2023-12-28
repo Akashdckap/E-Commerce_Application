@@ -138,10 +138,6 @@ const typeDefs = gql` #graphql
         country: String, 
     }
 
-    # type totalPrice{
-    #     totalPrice: Int,
-    # }
-
     type orders{
         _id: ID,
         orderedProducts:[orderProduct],
@@ -178,8 +174,10 @@ const typeDefs = gql` #graphql
         getEditProductData(id: ID!): products
         getProductDetails(id: ID!):products
         addToCartProductData(ids: ID!): products
+
         getAllOrders:[orders]!
         getOrderProductDetails(id: ID!): orders!
+
         # getImages:[images]
     }
 
