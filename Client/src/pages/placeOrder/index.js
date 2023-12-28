@@ -387,6 +387,7 @@ export default function placeOrder() {
         setShowBillingData(false)
     }
 
+
     const [createOrders] = useMutation(ORDER_PRODUCT, {
         refetchQueries: [{ query: ALL_ORDERED_PRODUCTS }]
     });

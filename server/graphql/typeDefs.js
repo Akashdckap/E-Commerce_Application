@@ -174,7 +174,10 @@ const typeDefs = gql` #graphql
         getEditProductData(id: ID!): products
         getProductDetails(id: ID!):products
         addToCartProductData(ids: ID!): products
-        getAllOrders: [orders]!
+
+        getAllOrders:[orders]!
+        getOrderProductDetails(id: ID!): orders!
+
         # getImages:[images]
     }
 

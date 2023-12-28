@@ -110,6 +110,53 @@ export const GET_PRODUCT_DETAILS = gql`
         }
     }
 `
+export const GET_ORDER_PRODUCT_DETAILS = gql`
+    query GetOrderProductDetails($id:ID!){
+        getOrderProductDetails(id : $id){
+            orderedProducts{
+            productID,
+            productName,
+            description,
+            category,
+            brand,
+            color,
+            weight,
+            price
+            count,
+            expandedPrice,
+            }
+            personalDetails{
+            PersonalName,
+            PersonalEmail,
+            PersonalPhoneNo,
+            }
+            shippingAddress{
+            firstName,
+            lastName,
+            email,
+            phoneNo,
+            address,
+            district,
+            state,
+            pincode,
+            country,
+            }
+            billingAddress{
+            firstName,
+            lastName,
+            email,
+            phoneNo,
+            address,
+            district,
+            state,
+            pincode,
+            country,
+            }
+            totalPrice
+        }
+    }
+`
+
 export const ALL_ORDERED_PRODUCTS = gql`
     query {
         getAllOrders{
