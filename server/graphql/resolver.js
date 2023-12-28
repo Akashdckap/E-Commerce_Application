@@ -53,8 +53,19 @@ const resolvers = {
         },
         getAllOrders: async () => {
             const allOrders = await newOrders.find({});
-            return allOrders;
-            // console.log(allOrders);
+            const formattedOrders = allOrders.map(order => {
+                return {
+                    ...order._doc,
+                    OrderTime: order.createdAt.toLocaleString('en-US', {
+                        month: 'short',
+                        day: 'numeric',
+                        hour: 'numeric',
+                        minute: 'numeric',
+                        hour12: true,
+                    }),
+                };
+            });
+            return formattedOrders;
         },
         // addToCartProductData: async (_, { ids }) => {
         //     try {
@@ -67,8 +78,14 @@ const resolvers = {
         // }
         addToCartProductData: async (_, { ids }) => {
             try {
-                const data = await productDetails.findOne({ _id: new ObjectId(ids) })
-                return data
+                const validObjectId = ObjectId.isValid(ids);
+                if (validObjectId) {
+                    const data = await productDetails.findOne({ _id: new ObjectId(validObjectId) })
+                    return data
+                }
+                else {
+                    console.error("Invalid ObjectId:", ids);
+                }
             }
             catch (error) {
                 console.log(error, "Error fetching data from mongodb");

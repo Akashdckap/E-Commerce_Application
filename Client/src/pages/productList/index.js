@@ -84,14 +84,6 @@ export default function ProductList() {
     const handleDecrementCount = (productId) => {
         dispatch(decrementProductCount({ productId }))
     }
-    console.log("quantity", quantity);
-
-    // const handleQuantityChange = (e) => {
-    //     console.log(e.target.value);
-    //     const newQuantity = parseInt(e.target.value, 10) || 1;
-    //     dispatch(updateCartItemQuantity({ productId: e.target.id, newQuantity }));
-    // };
-
     // const valuesArray = getCartData.map((total) => total.price);
     // const totalAmount = valuesArray.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
 
@@ -104,7 +96,7 @@ export default function ProductList() {
                     <h1 className='mb-4 text-4xl font-normal p-4 flex justify-center items-center text-gray-900 dark:text-cyan-600'>Product list</h1>
                     <div className='flex justify-center item-center'>
                         <div className='flex justify-center item-center gap-10'>
-                            <input type="text" onChange={(e) => setSearchText(e.target.value)} className="h-10 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-200 focus:border-blue-200 block w-full ps-5 dark:bg-white-700 dark:border-gray-600 dark:placeholder-gray-400" placeholder="Search products..." />
+                            <input type="text" onChange={(e) => setSearchText(e.target.value)} className="h-10 bg-gray-50 border-solid border border-gray-300 text-gray-900 text-sm rounded-lg hover:border-gray-500 focus:border-gray-500 ps-5" placeholder="Search products..." />
                             <Link href="adminStore"><button type="button" className="h-10 w-40 py-2.5 px-5 me-2 mb-2 mr-10 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-full border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Go to Store</button></Link>
                         </div>
                         <div className='relative bottom-4'>
@@ -181,12 +173,12 @@ export default function ProductList() {
                                                             <div className="relative flex flex-1 flex-col justify-between">
                                                                 <div className="sm:col-gap-3 sm:grid sm:grid-cols-2">
                                                                     <div className="pr-8 sm:pr-5">
-                                                                        <p className="text-base font-semibold text-gray-900">{listCartData.productName}</p>
+                                                                        <p className="text-base font-semibold text-gray-600">{listCartData.productName}</p>
                                                                         {/* <span>{listCartData.category}</span> */}
                                                                         <p className="mx-0 mt-1 mb-0 text-base text-gray-500">₹{listCartData.price}</p>
                                                                     </div>
                                                                     <div className="mt-4 flex items-end justify-between sm:mt-0 sm:items-start sm:justify-end">
-                                                                        <p className="shrink-0 w-20 text-base font-semibold text-gray-900 sm:order-2 sm:ml-8 sm:text-right">₹{listCartData.expandedPrice}</p>
+                                                                        <p className="shrink-0 w-20 text-base font-semibold text-gray-700 sm:order-2 sm:ml-8 sm:text-right">₹{listCartData.expandedPrice}</p>
                                                                     </div>
                                                                 </div>
                                                                 <div className="flex justify-center items-center gap-32">
@@ -200,7 +192,7 @@ export default function ProductList() {
                                                                         }
                                                                         <FontAwesomeIcon icon={faPlus} onClick={() => handleIncrementCount(listCartData._id, listCartData.price)} className='cursor-pointer border border-solid border-blue-300 font-thin rounded-xl p-1 text-xs' />
                                                                     </div>
-                                                                    <button type="submit" onClick={() => handleRemoveDataFromLocal(listCartData._id, listCartData.productName)} className="flex rounded p-2 text-center text-gray-950 transition-all duration-200 ease-in-out focus:shadow hover:text-red-500">
+                                                                    <button type="submit" onClick={() => handleRemoveDataFromLocal(listCartData._id, listCartData.productName)} className="flex rounded p-2 text-center text-gray-700 transition-all duration-200 ease-in-out focus:shadow hover:text-red-500">
                                                                         Remove
                                                                     </button>
                                                                 </div>

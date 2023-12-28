@@ -4,7 +4,7 @@ import gql from "graphql-tag";
 const typeDefs = gql` #graphql
 
     scalar Upload
-    
+    scalar Date
     type admins{
         _id: ID!,
         email: String!,
@@ -139,13 +139,13 @@ const typeDefs = gql` #graphql
     }
 
     type orders{
-        _id: ID,
-        orderedProducts:[orderProduct],
-        personalDetails:personalDetails,
-        shippingAddress:shippingAddress,
-        billingAddress:billingAddress,
-        totalPrice: Float,
-        # totalPrice:totalPrice,
+        _id: ID!,
+        orderedProducts: [orderProduct]!,
+        personalDetails: personalDetails!,
+        shippingAddress: shippingAddress!,
+        billingAddress: billingAddress!,
+        OrderTime: Date,
+        totalPrice: Int,
     }
 
     input updateProductInput{

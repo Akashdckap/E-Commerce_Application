@@ -38,7 +38,7 @@ export default function cartItems() {
     return (
         <>
             <div className="flex justify-start mt-10 ml-20">
-                <h1 className="text-2xl text-start text-gray-700">Your Shopping Cart ({cartProducts.length} items)</h1>
+                <h1 className="text-2xl text-start text-gray-700">Your Shopping Cart ( <span className="text-orange-400">{cartProducts.length} items</span>)</h1>
                 {/* <Link href={'/productList'}><button className="bg-slate-600 hover:bg-slate-500 hover:text-orange-400 text-white font-bold py-2 px-4 rounded">
                     Back
                 </button></Link> */}
@@ -99,7 +99,7 @@ export default function cartItems() {
                         </div> : ""
                     }
                 </div>
-                <div className="grid justify-start gap-3 pb-10 pl-10 pr-10 mr-20 bg-white rounded pt-5">
+                <div className="grid justify-start gap-4 pb-10 pl-10 pr-10 mr-20 bg-white rounded pt-5 shadow-sm p-6 mb-6 border-gray-900">
                     <p className="text-green-600 border-b border-gray-400 pb-1">PRICE DETAILS</p>
                     <div className="flex justify-between gap-10">
                         <label className="text-gray-500">Price ({cartProducts.length} - items) :</label>
@@ -109,11 +109,11 @@ export default function cartItems() {
                         <label className="text-gray-500">Discount :</label>
                         <p className="text-red-400">₹-219</p>
                     </div>
-                    <div className="flex justify-between gap-10 border-b-2 border-dotted border-gray-400 pt-1 pb-1 border-t-2">
-                        <label className="text-gray-700 font-medium">Total Amount :</label>
-                        <p className="text-gray-700 font-medium">₹{totalExpandedAmount}</p>
+                    <div className="flex justify-between gap-10 border-b-2 border-dotted border-gray-400 pt-2 pb-2 border-t-2">
+                        <label className="text-gray-600 font-medium">Total Amount :</label>
+                        <p className="text-gray-600 font-medium">₹{totalExpandedAmount}</p>
                     </div>
-                    <div className="grid gap-2">
+                    <div className="grid gap-3 pt-2">
                         <Link href={'/placeOrder'}><button className="bg-slate-600 w-96 hover:bg-slate-500 p-3 h-10 flex justify-center items-center hover:text-green-400 text-white font-medium py-2 px-4 rounded">PROCEED TO CHECKOUT</button></Link>
                         <Link href={'/productList'}><button className="bg-white w-96 border border-solid border-gray-400 hover:border-orange-300 p-3 h-10 flex justify-center items-center hover:text-orange-400 text-gray-600 font-bold py-2 px-4 rounded">Back to Shop</button></Link>
                     </div>

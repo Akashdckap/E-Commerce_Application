@@ -14,5 +14,14 @@ module.exports = {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    function ({ addUtilities }) {
+      const newUtilities = {
+        '.ml-26': {
+          'margin-left': '6.5rem',
+        },
+      };
+      addUtilities(newUtilities, ['responsive', 'hover']);
+    },
+  ],
 }
