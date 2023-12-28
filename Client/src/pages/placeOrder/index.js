@@ -9,7 +9,7 @@ import { ORDER_PRODUCT } from "../../../Grahpql/mutation";
 import { removeCartdata, storeShippingAddress, storePersonalDetails, updatePersonalDetails, updateShippingAddress, updateBillingAddress, storeBillingAddress } from "@/Reducer/productReducer";
 import { ALL_ORDERED_PRODUCTS } from "../../../Grahpql/queries";
 export default function placeOrder() {
-    // const { data: orderData, loading: orderLoading, error: orderError } = useQuery(ALL_ORDERED_PRODUCTS);
+    const { data: orderData, loading: orderLoading, error: orderError } = useQuery(ALL_ORDERED_PRODUCTS);
     const cartProducts = useSelector(state => state.productDetails.cartData);
     const dispatch = useDispatch()
     const getCartData = useSelector(state => state.productDetails.cartData);
@@ -22,7 +22,7 @@ export default function placeOrder() {
     const [personalDetailForm, setPersonalDetailForm] = useState(true);
     const [billingFormOpen, setBillingForm] = useState(true)
 
-
+    console.log("orderData------------", orderData);
     // const [selectedPersonalDetails, setSelectedPersonalDetails] = useState(null);
     // const [selectedShippingAddress, setSelectedShippingAddress] = useState(null);
     // const [selectedBillingAddress, setSelectedBillingAddress] = useState(null);
@@ -389,7 +389,7 @@ export default function placeOrder() {
 
     const [createOrders] = useMutation(ORDER_PRODUCT, {
         refetchQueries: [{ query: ALL_ORDERED_PRODUCTS }]
-    })
+    });
 
     const handlePlaceOrder = async () => {
         try {
@@ -410,6 +410,9 @@ export default function placeOrder() {
                 },
                 awaitRefetchQueries: ALL_ORDERED_PRODUCTS
             }));
+            if (SubmitOrderError) {
+                notification.success({ message: "Order Submission error" });
+            }
             if (orderSubmitData) {
                 notification.success({ message: "Order Submitted" });
             }
@@ -427,27 +430,39 @@ export default function placeOrder() {
     useEffect(() => {
         if (getPersonalData.length === 0) {
             setShowPersonalData(true)
+            // setShowShippingData(false)
+            // setShowBillingData(false)
         }
         else {
             setShowPersonalData(false)
+            // setShowShippingData(true)
+            // setShowBillingData(true)
         }
     }, [getPersonalData]);
 
     useEffect(() => {
         if (getShippingData.length === 0) {
             setShowShippingData(true)
+            // setShowPersonalData(false)
+            // setShowBillingData(false)
         }
         else {
             setShowShippingData(false)
+            // setShowPersonalData(true)
+            // setShowBillingData(true)
         }
     }, [getShippingData])
 
     useEffect(() => {
         if (getBillingData.length === 0) {
             setShowBillingData(true)
+            // setShowShippingData(false)
+            // setShowPersonalData(false)
         }
         else {
             setShowBillingData(false)
+            // setShowShippingData(true)
+            // setShowPersonalData(true)
         }
     }, [getBillingData])
 
@@ -457,7 +472,7 @@ export default function placeOrder() {
     return (
         <>
             <div className="">
-                <div className="flex justify-between ml-20 mt-10 gap-20 pr-16">
+                <div className="flex justify-between ml-26 mt-10 gap-20 pr-16">
                     <div className="flex justify-around gap-80">
                         <Link href={'/cartItems'} className="flex justify-center items-center gap-2">
                             <FontAwesomeIcon icon={faArrowLeft} className="cursor-pointer text-blue-500" />
@@ -468,29 +483,29 @@ export default function placeOrder() {
                         </Link>
                     </div>
                 </div>
-                <div className="flex justify-start items-center ml-20 mt-5">
+                <div className="flex justify-start items-center ml-26 mt-5">
                     <h1 className="text-[#575F70] text-lg font-medium">Personal Details</h1>
                 </div>
-                <div className={`flex justify-start items-start ml-20 mt-5`} style={{ display: showPersonalData ? 'none' : 'block', width: '56.5%' }} >
-                    <div onClick={editPersonalDetails} className={`flex p-5 hover:border-green-300 justify-between items-center bg-white rounded-md border border-solid'`}>
-                        <div className="flex justify-start items-center gap-10">
-                            {/* <input type="radio" onClick={editPersonalDetails} className="border-2 h-5 w-5 border-gray-300 checked:border-green-200 checked:bg-green-500 rounded-full focus:outline-none focus:border-green-200 focus:ring-green-200 active:border-green-500" /> */}
-                            <FontAwesomeIcon icon={faUser} className="text-green-400 text-lg" />
-                            <div className="flex justify-start gap-3">
-                                <h4 className="text-gray-600">{getPersonalData.PersonalName}</h4>
-                                <h4 className="text-gray-600">{getPersonalData.PersonalEmail}</h4>
-                            </div>
-                            <div className="flex justify-start">
-                                <p className="text-gray-400">{getPersonalData.PersonalPhoneNo}</p>
-                            </div>
-                        </div>
-                        <div className="flex justify-end">
-                            <span onClick={editPersonalDetails} className="text-blue-400  hover:cursor-pointer hover:text-green-500">Edit</span>
-                        </div>
-                    </div>
-                </div>
-                <div className="flex justify-between items-start mt-5 pl-20 pr-5">
+                <div className="flex justify-center items-start mt-5 pl-20 pr-5 gap-12">
                     <div className="grid">
+                        <div style={{ display: showPersonalData ? 'none' : 'block' }} >
+                            <div onClick={editPersonalDetails} className='flex p-5 w-auto gap-32 hover:border-green-300 justify-between items-center bg-white rounded-md border border-solid' >
+                                <div className="flex justify-start items-center gap-10">
+                                    {/* <input type="radio" onClick={editPersonalDetails} className="border-2 h-5 w-5 border-gray-300 checked:border-green-200 checked:bg-green-500 rounded-full focus:outline-none focus:border-green-200 focus:ring-green-200 active:border-green-500" /> */}
+                                    <FontAwesomeIcon icon={faUser} className="text-green-400 text-lg" />
+                                    <div className="flex justify-start gap-3">
+                                        <h4 className="text-gray-600">{getPersonalData.PersonalName}</h4>
+                                        <h4 className="text-gray-600">{getPersonalData.PersonalEmail}</h4>
+                                    </div>
+                                    <div className="flex justify-start">
+                                        <p className="text-gray-400">{getPersonalData.PersonalPhoneNo}</p>
+                                    </div>
+                                </div>
+                                <div className="flex justify-end">
+                                    <span onClick={editPersonalDetails} className="text-blue-400  hover:cursor-pointer hover:text-green-500">Change</span>
+                                </div>
+                            </div>
+                        </div>
                         <div className="">
                             <form onSubmit={handlePersonalDetailForm} style={{ display: showPersonalData ? "block" : "none" }}>
                                 <div className={`grid justify-start p-10 w-auto gap-4 bg-white rounded-md ${showPersonalData ? 'border-gray-200 border border-solid' : 'border-green-300 border-2 border-solid'}`} onClick={() => setPersonalDetailForm(true)}>
@@ -518,7 +533,7 @@ export default function placeOrder() {
                                             {personalDetailsError.PersonalPhoneNo && <span className="text-red-400">{personalDetailsError.PersonalPhoneNo}</span>}
                                         </div>
                                         <div className="flex justify-between gap-3 mt-8">
-                                            <span className="border border-gray-200 hover:border-red-300 hover:text-red-400 h-9 flex justify-center items-center p-2 rounded text-gray-400 cursor-pointer" onClick={handleCancelPersonal}>Cancel</span>
+                                            <span className="border border-gray-200 hover:border-red-300 hover:text-red-400 h-9 flex justify-center items-center p-2 rounded text-gray-400 cursor-pointer" onClick={() => setShowPersonalData(false)}>Cancel</span>
                                             <button className={` ${getPersonalData.length === 0 ? 'w-18' : 'w-44'} border border-blue-400 h-9 flex justify-center items-center p-2 rounded text-blue-400 hover:text-white hover:bg-[#45BA76] hover:border-[#45BA76]`} type="submit">{getPersonalData.length === 0 ? 'Save' : 'Use This Address'}</button>
                                         </div>
                                     </div>
@@ -533,9 +548,9 @@ export default function placeOrder() {
                         <div className="flex justify-start items-center mt-5">
                             <h1 className="text-[#575F70] text-lg font-medium">Shipping Address</h1>
                         </div>
-                        <div style={{ display: showShippingData ? 'none' : 'block', width: '100%' }}>
-                            <div onClick={editShippingDetails} className='flex justify-between items-center gap-20 hover:border-green-300 mt-5 p-5 bg-white rounded-md border border-solid border-gray-300' >
-                                <div className="flex justify-between items-center gap-10">
+                        <div style={{ display: showShippingData ? 'none' : 'block' }}>
+                            <div onClick={editShippingDetails} className='flex justify-between w-auto items-center gap-32 hover:border-green-300 mt-5 p-5 bg-white rounded-md border border-solid border-gray-300' >
+                                <div className="flex justify-start items-center gap-10">
                                     {/* <input type="radio" onClick={editShippingDetails} className="border-2 h-5 w-5 border-gray-300 checked:border-green-200 checked:bg-green-500 rounded-full focus:outline-none focus:border-green-200 focus:ring-green-200 active:border-green-500" /> */}
                                     <FontAwesomeIcon icon={faShippingFast} className="text-green-400 text-lg" />
                                     <div className="flex">
@@ -549,11 +564,10 @@ export default function placeOrder() {
                                     </div>
                                 </div>
                                 <div className="">
-                                    <button onClick={editShippingDetails} className="text-blue-500 hover:text-green-400 hover:cursor-pointer">Edit</button>
+                                    <button onClick={editShippingDetails} className="text-blue-400 hover:text-green-400 hover:cursor-pointer">Change</button>
                                 </div>
                             </div>
                         </div>
-
                         <div className="flex justify-start items-start pt-5 gap-x-10">
                             <form onSubmit={handleShipppingDetails} style={{ display: showShippingData ? "block" : "none" }}>
                                 <div className={`grid justify-start p-10 w-auto gap-4 bg-white border border-solid ${showShippingData ? 'border-gray-200 border border-solid' : 'border-green-300 border-2 border-solid'} rounded-md`}>
@@ -624,7 +638,7 @@ export default function placeOrder() {
                                         </div>
                                     </div>
                                     <div className="flex justify-start items-center gap-4">
-                                        <span className="border border-gray-200 hover:border-red-300 hover:text-red-400 h-9 flex justify-center items-center p-2 rounded text-gray-400 cursor-pointer" onClick={handleCancelShipping}>Cancel</span>
+                                        <span className="border border-gray-200 hover:border-red-300 hover:text-red-400 h-9 flex justify-center items-center p-2 rounded text-gray-400 cursor-pointer" onClick={() => setShowShippingData(false)}>Cancel</span>
                                         <button className={`${getShippingData.length === 0 ? 'w-18' : 'w-44'} border border-blue-400 h-9 flex justify-center items-center p-2 rounded text-blue-400 hover:text-white hover:bg-[#45BA76] hover:border-[#45BA76]`} type="submit">{getShippingData.length === 0 ? "Save" : "Use This Address"}</button>
                                     </div>
                                 </div>
@@ -638,23 +652,23 @@ export default function placeOrder() {
                         <div className="flex justify-start items-center mt-5">
                             <h1 className="text-[#575F70] text-lg font-medium">Billing Address</h1>
                         </div>
-                        <div className="" style={{ display: showBillingData ? 'none' : 'block', width: '112%' }}>
-                            <div onClick={editBillingDetails} className='mt-5 flex p-5 justify-between items-center bg-white rounded-md border border-solid  border-gray-300 hover:border-green-300'>
+                        <div style={{ display: showBillingData ? 'none' : 'block' }}>
+                            <div onClick={editBillingDetails} className='flex justify-between w-auto items-center gap-32 hover:border-green-300 mt-5 p-5 bg-white rounded-md border border-solid border-gray-300'>
                                 <div className="flex justify-between items-center gap-10">
                                     {/* <input type="radio" onClick={editBillingDetails} className="border-2 h-5 w-5 border-gray-300 checked:border-green-200 checked:bg-green-500 rounded-full focus:outline-none focus:border-green-200 focus:ring-green-200 active:border-green-500" /> */}
                                     <FontAwesomeIcon icon={faShippingFast} className="text-green-400 text-lg" />
                                     <div className="flex">
-                                        <h4 className="text-gray-800">{getBillingData.firstName}</h4>
-                                        <h4 className="text-gray-800">{getBillingData.lastName}</h4>
+                                        <h4 className="text-gray-600">{getBillingData.firstName}</h4>
+                                        <h4 className="text-gray-600">{getBillingData.lastName}</h4>
                                     </div>
-                                    <div className="flex justify-start">
-                                        <p className="text-gray-500">{getBillingData.address}</p>
-                                        <p className="text-gray-500">{getBillingData.district}</p>
-                                        <p className="text-gray-500">{getBillingData.pincode}</p>
+                                    <div className="flex justify-start gap-3">
+                                        <p className="text-gray-400">{getBillingData.address}</p>
+                                        <p className="text-gray-400">{getBillingData.district}</p>
+                                        <p className="text-gray-400">{getBillingData.pincode}</p>
                                     </div>
                                 </div>
                                 <div className="flex justify-end">
-                                    <span onClick={editBillingDetails} className="text-blue-400  hover:cursor-pointer hover:text-green-400">Edit</span>
+                                    <span onClick={editBillingDetails} className="text-blue-400  hover:cursor-pointer hover:text-green-400">Change</span>
                                 </div>
                             </div>
                         </div>
@@ -729,7 +743,7 @@ export default function placeOrder() {
                                     </div>
                                     <div className="flex justify-between items-center pt-3">
                                         <div className="flex justify-start items-center gap-4">
-                                            <span className="border border-gray-200 hover:border-red-300 hover:text-red-400 h-9 flex justify-center items-center p-2 rounded text-gray-400 cursor-pointer" onClick={handleCancelBilling}>Cancel</span>
+                                            <span className="border border-gray-200 hover:border-red-300 hover:text-red-400 h-9 flex justify-center items-center p-2 rounded text-gray-400 cursor-pointer" onClick={() => setShowBillingData(false)}>Cancel</span>
                                             <button className={`${getBillingData.length === 0 ? 'w-18' : 'w-44'} border border-blue-400 h-9 flex justify-center items-center p-2 rounded text-blue-400 hover:text-white hover:bg-[#45BA76] hover:border-[#45BA76]`} type="submit">{getBillingData.length === 0 ? "Save" : "Use This Address"}</button>
                                         </div>
                                         {
@@ -794,7 +808,7 @@ export default function placeOrder() {
                     </div>
                 </div>
                 {/* { -----------------------------Below these code is for the billing form -----------------------------> */}
-            </div >
+            </div>
         </>
     )
 }

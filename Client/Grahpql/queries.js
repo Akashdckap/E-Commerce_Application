@@ -153,6 +153,8 @@ export const ALL_ORDERED_PRODUCTS = gql`
             pincode,
             country,
             }
+            OrderTime,
+            totalPrice
         }
     }
 `
