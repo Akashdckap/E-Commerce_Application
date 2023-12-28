@@ -32,7 +32,7 @@ const resolvers = {
             return await productDetails.findOne({ _id: new ObjectId(id) })
         },
         getOrderProductDetails: async (_, { id }) => {
-            const order =  await newOrders.findOne({ _id: new ObjectId(id) })
+            const order = await newOrders.findOne({ _id: new ObjectId(id) })
             // console.log(order)
             return order;
         },
@@ -77,15 +77,12 @@ const resolvers = {
         //     }
         // }
         addToCartProductData: async (_, { ids }) => {
+            if (!ObjectId.isValid(ids)) {
+                throw new Error('Invalid ObjectId format');
+            }
             try {
-                const validObjectId = ObjectId.isValid(ids);
-                if (validObjectId) {
-                    const data = await productDetails.findOne({ _id: new ObjectId(validObjectId) })
-                    return data
-                }
-                else {
-                    console.error("Invalid ObjectId:", ids);
-                }
+                const data = await productDetails.findById(ids)
+                return data
             }
             catch (error) {
                 console.log(error, "Error fetching data from mongodb");
