@@ -152,6 +152,7 @@ export const GET_ORDER_PRODUCT_DETAILS = gql`
             pincode,
             country,
             }
+            totalPrice
         }
     }
 `
@@ -199,6 +200,7 @@ export const ALL_ORDERED_PRODUCTS = gql`
             pincode,
             country,
             }
+            totalPrice
         }
     }
 `

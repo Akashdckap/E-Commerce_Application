@@ -139,11 +139,13 @@ const typeDefs = gql` #graphql
     }
 
     type orders{
-        _id: ID!,
-        orderedProducts: [orderProduct]!,
-        personalDetails: personalDetails!,
-        shippingAddress: shippingAddress!,
-        billingAddress: billingAddress!,
+        _id: ID,
+        orderedProducts:[orderProduct],
+        personalDetails:personalDetails,
+        shippingAddress:shippingAddress,
+        billingAddress:billingAddress,
+        totalPrice: Float,
+        # totalPrice:totalPrice,
     }
 
     input updateProductInput{
