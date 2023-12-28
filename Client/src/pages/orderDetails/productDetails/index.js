@@ -37,18 +37,18 @@ export default function ProductDetails() {
                 <div className="flex">
                     <div className="my-2 mx-10">
                         <div>
-                            <h2 className="leading leading-loose text-3xl text-gray-700">Ordered Products - {orderDatas.length}</h2>
+                            <h2 className="leading leading-loose text-3xl text-gray-700 ">Ordered Products - {orderDatas.length}</h2>
                         </div>
                         <table className="border border-gray-400 rounded-md">
                             <thead>
-                                <tr className="border border-gray-400 bg-white rounded-md hover:border-green-300 border-solid">
-                                    <th className="px-5 py-2 text-indigo-400">S.No</th>
-                                    <th className="px-5 py-2 text-indigo-400">Product Name</th>
-                                    <th className="px-5 py-2 text-indigo-400">Category</th>
-                                    <th className="px-5 py-2 text-indigo-400">Brand</th>
-                                    <th className="px-5 py-2 text-indigo-400">Quantity</th>
-                                    <th className="px-5 py-2 text-indigo-400">Price</th>
-                                    <th className="px-5 py-2 text-indigo-400">Expanded Price</th>
+                                <tr className="border border-gray-300 bg-white rounded-md hover:border-green-300 border-solid">
+                                    <th className="px-5 py-2 text-blue-400">S.No</th>
+                                    <th className="px-5 py-2 text-blue-400">Product Name</th>
+                                    <th className="px-5 py-2 text-blue-400">Category</th>
+                                    <th className="px-5 py-2 text-blue-400">Brand</th>
+                                    <th className="px-5 py-2 text-blue-400">Quantity</th>
+                                    <th className="px-5 py-2 text-blue-400">Price</th>
+                                    <th className="px-5 py-2 text-blue-400">Expanded Price</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -69,8 +69,8 @@ export default function ProductDetails() {
                         </table>
                         <div className="flex justify-end">
                             <div className="flex gap-3 items-center border border-gray-400 rounded-md py-3 px-3 bg-white hover:bg-green-300">
-                                <h4>Total Price: </h4>
-                                <p className="">{totalPrice}</p>
+                                <h4 className="text-gray-700">Total Price: </h4>
+                                <p className="text-gray-700">{totalPrice}</p>
                             </div>
                         </div>
                     </div>
@@ -78,62 +78,62 @@ export default function ProductDetails() {
                         <h2 className="leading leading-loose text-2xl text-gray-700">Shipping Details</h2>
                         <div className="border border-gray-400 py-3 px-6 flex bg-white rounded-md hover:border-green-300 border-solid">
                             <div>
-                                <p className="py-1">firstName</p>
-                                <p className="py-1">lastName</p>
-                                <p className="py-1">Email</p>
-                                <p className="py-1">PhoneNo</p>
-                                <p className="py-1">Address</p>
-                                <p className="py-1">District</p>
-                                <p className="py-1">State</p>
+                                <p className="py-1 text-gray-700">firstName</p>
+                                <p className="py-1 text-gray-700">lastName</p>
+                                <p className="py-1 text-gray-700">Email</p>
+                                <p className="py-1 text-gray-700">PhoneNo</p>
+                                <p className="py-1 text-gray-700">Address</p>
+                                <p className="py-1 text-gray-700">District</p>
+                                <p className="py-1 text-gray-700">State</p>
                             </div>
                             <div className="mx-3">
-                                <p className="py-1">:</p>
-                                <p className="py-1">:</p>
-                                <p className="py-1">:</p>
-                                <p className="py-1">:</p>
-                                <p className="py-1">:</p>
-                                <p className="py-1">:</p>
-                                <p className="py-1">:</p>
+                                <p className="py-1 text-gray-700">:</p>
+                                <p className="py-1 text-gray-700">:</p>
+                                <p className="py-1 text-gray-700">:</p>
+                                <p className="py-1 text-gray-700">:</p>
+                                <p className="py-1 text-gray-700">:</p>
+                                <p className="py-1 text-gray-700">:</p>
+                                <p className="py-1 text-gray-700">:</p>
                             </div>
                             <div>
-                                <p className="py-1">{shippingData.firstName}</p>
-                                <p className="py-1">{shippingData.lastName}</p>
-                                <p className="py-1">{shippingData.email}</p>
-                                <p className="py-1">{shippingData.phoneNo}</p>
-                                <p className="py-1">{shippingData.address}</p>
-                                <p className="py-1">{shippingData.district}</p>
-                                <p className="py-1">{shippingData.state}</p>
+                                <p className="py-1 text-gray-700">{shippingData.firstName}</p>
+                                <p className="py-1 text-gray-700">{shippingData.lastName}</p>
+                                <p className="py-1 text-gray-700">{shippingData.email}</p>
+                                <p className="py-1 text-gray-700">{shippingData.phoneNo}</p>
+                                <p className="py-1 text-gray-700">{shippingData.address}</p>
+                                <p className="py-1 text-gray-700">{shippingData.district}</p>
+                                <p className="py-1 text-gray-700">{shippingData.state}</p>
                             </div>
 
                         </div>
                         <h2 className="leading leading-loose text-2xl text-gray-700">Billing Details</h2>
                         <div className="border border-gray-400 py-3 px-6 flex bg-white rounded-md hover:border-green-300 border-solid">
                             <div>
-                                <p className="py-1">firstName</p>
-                                <p className="py-1">lastName</p>
-                                <p className="py-1">Email</p>
-                                <p className="py-1">PhoneNo</p>
-                                <p className="py-1">Address</p>
-                                <p className="py-1">District</p>
-                                <p className="py-1">State</p>
+                                <p className="py-1 text-gray-700">firstName</p>
+                                <p className="py-1 text-gray-700">lastName</p>
+                                <p className="py-1 text-gray-700">Email</p>
+                                <p className="py-1 text-gray-700">PhoneNo</p>
+                                <p className="py-1 text-gray-700">Address</p>
+                                <p className="py-1 text-gray-700">District</p>
+                                <p className="py-1 text-gray-700">State</p>
                             </div>
                             <div className="mx-3">
-                                <p className="py-1">:</p>
-                                <p className="py-1">:</p>
-                                <p className="py-1">:</p>
-                                <p className="py-1">:</p>
-                                <p className="py-1">:</p>
-                                <p className="py-1">:</p>
-                                <p className="py-1">:</p>
+                                <p className="py-1 text-gray-700">:</p>
+                                <p className="py-1 text-gray-700">:</p>
+                                <p className="py-1 text-gray-700">:</p>
+                                <p className="py-1 text-gray-700">:</p>
+                                <p className="py-1 text-gray-700">:</p>
+                                <p className="py-1 text-gray-700">:</p>
+                                <p className="py-1 text-gray-700">:</p>
                             </div>
                             <div>
-                                <p className="py-1">{billingAddress.firstName}</p>
-                                <p className="py-1">{billingAddress.lastName}</p>
-                                <p className="py-1">{billingAddress.email}</p>
-                                <p className="py-1">{billingAddress.phoneNo}</p>
-                                <p className="py-1">{billingAddress.address}</p>
-                                <p className="py-1">{billingAddress.district}</p>
-                                <p className="py-1">{billingAddress.state}</p>
+                                <p className="py-1 text-gray-700">{billingAddress.firstName}</p>
+                                <p className="py-1 text-gray-700">{billingAddress.lastName}</p>
+                                <p className="py-1 text-gray-700">{billingAddress.email}</p>
+                                <p className="py-1 text-gray-700">{billingAddress.phoneNo}</p>
+                                <p className="py-1 text-gray-700">{billingAddress.address}</p>
+                                <p className="py-1 text-gray-700">{billingAddress.district}</p>
+                                <p className="py-1 text-gray-700">{billingAddress.state}</p>
                             </div>
                         </div>
                     </div>

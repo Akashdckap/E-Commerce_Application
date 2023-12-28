@@ -16,6 +16,8 @@ export default function OrderDetails() {
     // const personDetail = personalDetails.map((data) => { return data });
     // console.log("--------------",personalDetails.length);
     const orderId = orderData.map((orderId) => { return orderId._id })
+    const totalPrice = orderData.map((total)=>{return total.totalPrice})
+    
     // console.log(orderId.length,"------")
     const result = []
     if (personalDetails.length === orderId.length) {
@@ -28,7 +30,17 @@ export default function OrderDetails() {
         console.log("Length is different");
     }
 
-    console.log("personalDetails", result)
+    const result2 = [];
+    if(result.length === totalPrice.length){
+        for(let i=0; i<result.length; i++){
+            let modifyObject2 = {...result[i],totalPrice: totalPrice[i]}
+            result2.push(modifyObject2);
+        }
+    }
+    else {
+        console.log("Length is different");
+    }
+    console.log("personalDetails", result2)
 
     useEffect(() => {
         if (orderedProducts && !dataLoading) {
@@ -41,30 +53,30 @@ export default function OrderDetails() {
     }, [orderedProducts, dataLoading, dataError])
     return (
         <>
-            <h1 className="text-center mt-4 text-2xl">Order Details</h1>
+            <h1 className="text-center mt-4 text-2xl text-gray-700">Order Details</h1>
             <div>
-                <div className="border border-gray-400 mx-4 mt-4">
-                    <table className="w-full mt-4">
+                <div className="border border-gray-400 mx-4 mt-4 bg-white rounded-md hover:border-green-300">
+                    <table className="w-full">
                         <thead>
                             <tr>
-                                <th className="text-center">S.No</th>
-                                <th className="text-center">Name</th>
-                                <th className="text-center">Email</th>
-                                <th className="text-center">PhoneNo</th>
-                                <th className="text-center">View Products</th>
-                                <th className="text-center">Delete</th>
+                                <th className="text-center text-gray-700 py-6">S.No</th>
+                                <th className="text-center text-gray-700">Name</th>
+                                <th className="text-center text-gray-700">Email</th>
+                                <th className="text-center text-gray-700">PhoneNo</th>
+                                <th className="text-center text-gray-700">View Products</th>
+                                <th className="text-center text-gray-700">Total price</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {result.map((item, index) => {
+                            {result2.map((item, index) => {
                                 return (
-                                    <tr>
-                                        <td className="text-center py-5">{index + 1}</td>
-                                        <td className="text-center">{item.PersonalName}</td>
-                                        <td className="text-center">{item.PersonalEmail}</td>
-                                        <td className="text-center">{item.PersonalPhoneNo}</td>
-                                        <Link href={`/orderDetails/productDetails/${item.objectId}`}><td className="text-center" ><FontAwesomeIcon icon={faEye} /></td></Link>
-                                        <td className="text-center"><FontAwesomeIcon icon={faTrash} /></td>
+                                    <tr className="border hover:border-green-300">
+                                        <td className="text-center py-5 text-gray-700">{index + 1}</td>
+                                        <td className="text-center text-gray-700">{item.PersonalName}</td>
+                                        <td className="text-center text-gray-700">{item.PersonalEmail}</td>
+                                        <td className="text-center text-gray-700">{item.PersonalPhoneNo}</td>
+                                        <td className="text-center text-gray-700" ><Link href={`/orderDetails/productDetails/${item.objectId}`}><FontAwesomeIcon icon={faEye} className=" hover:border-green-400" /></Link></td>
+                                        <td className="text-center text-gray-700">{item.totalPrice}</td>
                                     </tr>
                                 )
                             })}
