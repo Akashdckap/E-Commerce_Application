@@ -148,7 +148,7 @@ const typeDefs = gql` #graphql
         personalDetails:personalDetails,
         shippingAddress:shippingAddress,
         billingAddress:billingAddress,
-        # totalPrice: Float,
+        totalPrice: Float,
         # totalPrice:totalPrice,
     }
 
