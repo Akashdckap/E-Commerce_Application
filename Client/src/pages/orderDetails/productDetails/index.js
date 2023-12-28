@@ -39,7 +39,7 @@ export default function ProductDetails() {
                         <div>
                             <h2 className="leading leading-loose text-3xl text-gray-700 ">Ordered Products - {orderDatas.length}</h2>
                         </div>
-                        <table className="border border-gray-400 rounded-md">
+                        <table className="border border-gray-400 rounded-md hover:border-green-300">
                             <thead>
                                 <tr className="border border-gray-300 bg-white rounded-md hover:border-green-300 border-solid">
                                     <th className="px-5 py-2 text-blue-400">S.No</th>

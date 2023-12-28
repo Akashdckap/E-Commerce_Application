@@ -40,7 +40,7 @@ export default function OrderDetails() {
     else {
         console.log("Length is different");
     }
-    console.log("personalDetails", result2)
+    console.log("orderedProducts-------------", orderedProducts)
 
     useEffect(() => {
         if (orderedProducts && !dataLoading) {
