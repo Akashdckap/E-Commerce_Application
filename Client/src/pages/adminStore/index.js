@@ -3,7 +3,7 @@ import { Upload, notification } from 'antd';
 import Link from 'next/link';
 import { CREATE_PRODUCTS, DELETE_PRODUCT, UPLOAD_FILE } from '../../../Grahpql/mutation';
 
-import { GET_ALL_PRODUCTS, GET_ALL_PRODUCTS_DATA, GET_TOTAL_PRODUCT_COUNT, ALL_ORDERED_PRODUCTS } from '../../../Grahpql/queries';
+import { GET_ALL_PRODUCTS, GET_ALL_PRODUCTS_DATA, GET_TOTAL_PRODUCT_COUNT, ORDER_COUNT } from '../../../Grahpql/queries';
 
 import { useMutation, useQuery } from '@apollo/client';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -124,11 +124,11 @@ export default function AdminStore() {
     const { loading: getCountLoading, error: getCountError, data: getCountData } = useQuery(GET_TOTAL_PRODUCT_COUNT);
     // const { data: orderData, loading: orderLoading, error: orderError } = useQuery(ALL_ORDERED_PRODUCTS);
 
-    const { data: OrderData, loading: OrderLoading, error: OrderError } = useQuery(ALL_ORDERED_PRODUCTS)
+    const { data: orderCount, loading: CountLoading, error: countError } = useQuery(ORDER_COUNT)
 
-    if (OrderData && OrderData.getAllOrders) {
-        console.log("OrderData----------------", OrderData.getAllOrders.length);
-    }
+    // if (OrderData && OrderData.getAllOrders) {
+    //     console.log("OrderData----------------", OrderData.getAllOrders.length);
+    // }
     useEffect(() => {
         if (getData && !getLoading && getAllData && !getAllLoading && getCountData) {
             getAllProductData(getAllData.getAllProductsData);
@@ -194,7 +194,7 @@ export default function AdminStore() {
                         <svg className="w-3.5 h-3.5 ms-2 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
                             <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M1 5h12m0 0L9 1m4 4L9 9" />
                         </svg>
-                        <span className='ml-2 w-6 h-7 font-medium text-lg text-yellow-500 bg-white flex justify-center items-center px-3.5 rounded-full'>{OrderData && OrderData.getAllOrders ? OrderData.getAllOrders.length : '0'}</span>
+                        <span className='ml-2 w-6 h-7 font-medium text-sm text-yellow-500 bg-white flex justify-center items-center px-3.5 rounded-full'>{orderCount ? orderCount.getOrderCount : '0'}</span>
                     </Link>
                     <button className='bg-blue-400 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded' onClick={() => setFormOpen(true)}>Add Product</button>
                 </div>

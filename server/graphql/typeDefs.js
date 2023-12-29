@@ -174,11 +174,10 @@ const typeDefs = gql` #graphql
         getEditProductData(id: ID!): products
         getProductDetails(id: ID!):products
         addToCartProductData(ids: ID!): products
-
-        getAllOrders:[orders]!
+        
+        getOrderCount: Int!
         getOrderProductDetails(id: ID!): orders!
-
-        # getImages:[images]
+        getAllOrderDatas(page:Int!,pageSize:Int!): [orders]!
     }
 
     type Mutation{

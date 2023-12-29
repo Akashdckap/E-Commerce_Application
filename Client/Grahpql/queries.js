@@ -156,10 +156,15 @@ export const GET_ORDER_PRODUCT_DETAILS = gql`
         }
     }
 `
+export const ORDER_COUNT = gql`
+    query getOrderCount{
+        getOrderCount
+    }
+`
 
-export const ALL_ORDERED_PRODUCTS = gql`
-    query {
-        getAllOrders{
+export const GET_ALL_ORDER_DATA_WITH_PAGE = gql`
+    query getAllOrderDatas($page:Int!, $pageSize:Int!){
+        getAllOrderDatas(page:$page,pageSize:$pageSize){
             _id
             orderedProducts{
             productID,

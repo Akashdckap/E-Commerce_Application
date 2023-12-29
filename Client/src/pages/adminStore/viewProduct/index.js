@@ -31,10 +31,10 @@ export default function viewProductId() {
     }, [getData])
     // console.log(getData)
     return (
-        <>  
+        <>
             <div className="flex justify-end float-right pr-3">
                 <Link href={`/adminStore`}><button className="bg-blue-400 hover:bg-blue-700 text-white font-bold py-2 px-2 mr-7 w-24 rounded">Back</button></Link>
-            </div>  
+            </div>
             <div className="mt-3">
                 <h2 className="leading-loose text-2xl text-center text-gray-700">Product Details</h2>
             </div>
