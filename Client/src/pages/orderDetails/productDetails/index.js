@@ -18,7 +18,6 @@ export default function ProductDetails() {
     });
     useEffect(() => {
         if (orderData && !orderLoading) {
-            // console.log('-----------orderData', orderData)
             setOrderDatas(orderData.getOrderProductDetails.orderedProducts);
             setPersonalData(orderData.getOrderProductDetails.personalDetails);
             setShippingData(orderData.getOrderProductDetails.shippingAddress);
