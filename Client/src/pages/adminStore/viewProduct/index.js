@@ -71,7 +71,7 @@ export default function viewProductId() {
                         <p className="h-10">{price}</p>
                         <p className="h-10">{weight}</p>
                         <p className="h-10">{color}</p>
-                        <p className={`${description.length>5?"h-10 truncate w-72":"h-10"}`}>{description}</p>
+                        <p className={`${description.length > 5 ? "h-10 truncate w-72" : "h-10"}`}>{description}</p>
                     </div>
                 </div>
             </div>
