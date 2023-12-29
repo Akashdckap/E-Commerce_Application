@@ -117,7 +117,7 @@ export default function AdminStore() {
             }
         }
     }
-    const { data: getData, error: getError, loading: getLoading, refetch: getRefetch } = useQuery(GET_ALL_PRODUCTS, {
+    const { data: getData, error: getError, loading: getLoading } = useQuery(GET_ALL_PRODUCTS, {
         variables: { page: currentPage, pageSize },
     });
     const { data: getAllData, error: getAllError, loading: getAllLoading } = useQuery(GET_ALL_PRODUCTS_DATA);
@@ -143,7 +143,7 @@ export default function AdminStore() {
             console.error('Error fetching data:', getError);
         }
 
-    }, [currentPage, getRefetch, getProductData, pageSize, totalPages, getCountData])
+    }, [currentPage, getProductData, pageSize, totalPages, getCountData, getData])
 
     // console.log("orderData--------------------", orderData);
 
@@ -156,7 +156,6 @@ export default function AdminStore() {
             setCurrentPage(currentPage - 1)
         }
     };
-    console.log("getData--------------------", getData);
     const calculateSI = (index) => {
         return (currentPage - 1) * pageSize + index + 1;
     };

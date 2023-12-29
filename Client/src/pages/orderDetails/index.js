@@ -2,7 +2,7 @@ import React, { use, useEffect, useState } from "react";
 import { GET_ALL_ORDER_DATA_WITH_PAGE, ORDER_COUNT } from "../../../Grahpql/queries";
 import { useQuery, useMutation } from "@apollo/client";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faLessThan, faGreaterThan, faStreetView } from '@fortawesome/free-solid-svg-icons';
+import { faEye, faLessThan, faGreaterThan, faStreetView, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
 
 export default function OrderDetails() {
@@ -40,9 +40,12 @@ export default function OrderDetails() {
         <>
             <div>
                 <div className="py-10 px-16">
-                    <h1 className="text-start pl-4 text-2xl text-orange-400">Order Details</h1>
-                    <div className="border-0 border-solid border-gray-400 mx-4 mt-4 bg-white rounded-lg">
-                        <table className="w-full">
+                    <div className="flex justify-between items-center pr-4">
+                        <h1 className="text-start pl-4 text-2xl text-orange-400">Order Details</h1>
+                        <Link href={"/adminStore"} className="text-teal-400 hover:border-teal-400 flex justify-center items-center border border-solid h-10 w-40 rounded-md"><FontAwesomeIcon icon={faArrowLeft} className="pr-2" />Back to Product</Link>
+                    </div>
+                    <div className="mx-4 mt-4 bg-white rounded-md border border-solid">
+                        <table className="w-full rounded-md overflow-hidden border border-solid border-gray-400">
                             <thead>
                                 <tr className="bg-slate-300">
                                     <th scope="col" className="text-center text-gray-700  px-6 py-4">S.No</th>
@@ -79,7 +82,7 @@ export default function OrderDetails() {
                         </div>
                         <div className='flex gap-4 items-center justify-center'>
                             <FontAwesomeIcon icon={faLessThan} onClick={prevPage} disabled={currentPage === 1} className='hover:text-white border border-gray-300 focus:outline-none focus:ring-4 focus:ring-gray-200 font-semibold rounded-lg text-sm px-2.5 py-1.5 dark:bg-transparent dark:text-blue-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700' style={{ cursor: currentPage <= 1 ? 'not-allowed' : 'pointer' }} />
-                            <span className='bg-blue-400 border border-teal-500 hover:bg-blue-300 text-white font-bold py-1.5 px-3.5 rounded-full'>{currentPage}</span>
+                            <span className='bg-cyan-400 border border-teal-500 hover:bg-cyan-300 text-white font-bold py-1.5 px-3.5 rounded-full'>{currentPage}</span>
                             <button disabled={currentPage === totalPages}><FontAwesomeIcon onClick={nextPage} icon={faGreaterThan} className='hover:text-white border border-gray-300 focus:outline-none focus:ring-4 focus:ring-gray-200 font-semibold rounded-lg text-sm px-2.5 py-1.5 dark:bg-transparent dark:text-blue-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700' style={{ cursor: currentPage === totalPages ? 'not-allowed' : 'pointer' }} /></button>
                         </div>
                     </div>
