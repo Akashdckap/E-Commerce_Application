@@ -31,11 +31,7 @@ const resolvers = {
         getProductDetails: async (_, { id }) => {
             return await productDetails.findOne({ _id: new ObjectId(id) })
         },
-        getOrderProductDetails: async (_, { id }) => {
-            const order = await newOrders.findOne({ _id: new ObjectId(id) })
-            // console.log(order)
-            return order;
-        },
+
         getAllProductsData: async () => {
             // const da = await (productDetails.find({}));
             // console.log(da);
@@ -51,9 +47,27 @@ const resolvers = {
             const totalCount = await productDetails.countDocuments();
             return totalCount;
         },
-        getAllOrders: async () => {
-            const allOrders = await newOrders.find({});
-            const formattedOrders = allOrders.map(order => {
+
+        addToCartProductData: async (_, { ids }) => {
+            if (!ObjectId.isValid(ids)) {
+                throw new Error('Invalid ObjectId format');
+            }
+            try {
+                const data = await productDetails.findById(ids)
+                return data
+            }
+            catch (error) {
+                console.log(error, "Error fetching data from mongodb");
+            }
+        },
+        getOrderProductDetails: async (_, { id }) => {
+            const order = await newOrders.findOne({ _id: new ObjectId(id) })
+            return order;
+        },
+        getAllOrderDatas: async (_, { page, pageSize }) => {
+            const skip = (page - 1) * pageSize;
+            const orderDatas = await (newOrders.find({}).skip(skip).limit(pageSize));
+            const formattedOrders = orderDatas.map(order => {
                 return {
                     ...order._doc,
                     OrderTime: order.createdAt.toLocaleString('en-US', {
@@ -67,27 +81,11 @@ const resolvers = {
             });
             return formattedOrders;
         },
-        // addToCartProductData: async (_, { ids }) => {
-        //     try {
-        //         const data = await productDetails.find({ _id: { $in: ids } })
-        //         return data
-        //     }
-        //     catch (error) {
-        //         console.log(error, "Error fetching data from mongodb");
-        //     }
-        // }
-        addToCartProductData: async (_, { ids }) => {
-            if (!ObjectId.isValid(ids)) {
-                throw new Error('Invalid ObjectId format');
-            }
-            try {
-                const data = await productDetails.findById(ids)
-                return data
-            }
-            catch (error) {
-                console.log(error, "Error fetching data from mongodb");
-            }
-        }
+        getOrderCount: async () => {
+            const orderCount = await newOrders.countDocuments();
+            console.log("count-------", orderCount);
+            return orderCount;
+        },
     },
     Mutation: {
         async createAdmins(_, { adminsInput: { email, password } }) {
