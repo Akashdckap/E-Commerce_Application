@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { GET_ORDER_PRODUCT_DETAILS } from "../../../../Grahpql/queries";
 import { useQuery } from "@apollo/client";
+import Link from "next/link";
 
 
 export default function ProductDetails() {
@@ -40,7 +41,7 @@ export default function ProductDetails() {
                         </div>
                         <table className="border border-gray-400 rounded-md hover:border-green-300">
                             <thead>
-                                <tr className="border border-gray-300 bg-white rounded-md hover:border-green-300 border-solid">
+                                <tr className="border border-gray-300 rounded-md hover:border-green-300 border-solid bg-slate-300  ">
                                     <th className="px-5 py-2 text-blue-400">S.No</th>
                                     <th className="px-5 py-2 text-blue-400">Product Name</th>
                                     <th className="px-5 py-2 text-blue-400">Category</th>
@@ -74,7 +75,10 @@ export default function ProductDetails() {
                         </div>
                     </div>
                     <div className="my-4">
+                        <div className="flex gap-36">
                         <h2 className="leading leading-loose text-2xl text-gray-700">Shipping Details</h2>
+                        <Link href={`/orderDetails`}><button className="border border-green-300 w-20 h-10 bg-blue-300 hover:bg-blue-700 rounded-md text-gray-700">Back</button></Link>
+                        </div>
                         <div className="border border-gray-400 py-3 px-6 flex bg-white rounded-md hover:border-green-300 border-solid">
                             <div>
                                 <p className="py-1 text-gray-700">firstName</p>
@@ -143,37 +147,3 @@ export default function ProductDetails() {
     )
 
 }
-
-
-// <div className=" border border-gray-400 mx-8">
-{/* <div className="flex space-x-96 m-5"> */ }
-{/* <div>
-                                            <div>
-                                                <label>Product Name</label>
-                                                <p>{item.productName}</p>
-                                            </div>
-                                            <div>
-                                                <label>Brand</label>
-                                                <p>{item.brand}</p>
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <div>
-                                                <label>Category</label>
-                                                <p>{item.description}</p>
-                                            </div>
-                                            <div>
-                                                <label>Quantity</label>
-                                                <p>{item.count}</p>
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <label>Price</label>
-                                            <p>{item.price}</p>
-                                        </div>
-                                        <div>
-                                            <label>Total Price</label>
-                                            <p>{item.price}</p>
-                                        </div> */}
-{/* </div> */ }
-// </div>
