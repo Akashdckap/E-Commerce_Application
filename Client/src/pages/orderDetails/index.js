@@ -35,7 +35,7 @@ export default function OrderDetails() {
                                             <td className="text-center text-gray-700">{entireData.personalDetails.PersonalEmail}</td>
                                             <td className="text-center text-gray-700">{entireData.personalDetails.PersonalPhoneNo}</td>
                                             <td className="text-center text-gray-700">{entireData.OrderTime}</td>
-                                            <td className="text-center text-gray-700" ><Link href={`/orderDetails/productDetails/${entireData.objectId}`}><FontAwesomeIcon icon={faEye} className=" hover:border-green-400" /></Link></td>
+                                            <td className="text-center text-gray-700" ><Link href={`/orderDetails/productDetails/${entireData._id}`}><FontAwesomeIcon icon={faEye} className=" hover:border-green-400" /></Link></td>
                                             <td className="text-center text-gray-700">{entireData.totalPrice}</td>
                                         </tr>
                                     )
