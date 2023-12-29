@@ -31,16 +31,20 @@ export default function viewProductId() {
     }, [getData])
     // console.log(getData)
     return (
-        <>
-            <div className="flex items-center justify-end float-right pr-3">
+        <>  
+            <div className="flex justify-end float-right pr-3">
                 <Link href={`/adminStore`}><button className="bg-blue-400 hover:bg-blue-700 text-white font-bold py-2 px-2 mr-7 w-24 rounded">Back</button></Link>
+            </div>  
+            <div className="mt-3">
+                <h2 className="leading-loose text-2xl text-center text-gray-700">Product Details</h2>
             </div>
-            <div className="border-dashed border-2 border-blue-600 w-2/3 h-auto mt-10 p-1 m-auto rounded-md">
-                <div className="flex justify-center">
-                    <p className="text-center"><img className="h-48 py-3 text-sm" src="https://images.unsplash.com/flagged/photo-1556637640-2c80d3201be8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8c25lYWtlcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60" alt="product image" /><span>Image</span></p>
+            <div className="flex mx-28 my-28">
+                <div className="border border-green-300 rounded-md shadow-xl bg-white">
+                    <p><img className="h-48 mx-16 my-6 border text-sm" src="https://images.unsplash.com/flagged/photo-1556637640-2c80d3201be8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8c25lYWtlcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60" alt="product image" /></p>
+                    <p className="my-3 flex justify-center text-gray-700">Image</p>
                 </div>
-                <div className="flex justify-center">
-                    <div className="ml-8 leading-loose text-2xl">
+                <div className="flex items-center border border-green-300 w-auto h-72 rounded-md mx-20 shadow-xl bg-white">
+                    <div className="ml-8 leading-loose text-xl text-gray-700">
                         <p>ProductName</p>
                         <p>Category</p>
                         <p>Brand</p>
@@ -49,7 +53,7 @@ export default function viewProductId() {
                         <p>Color</p>
                         <p>Description</p>
                     </div>
-                    <div className="ml-10 leading-loose text-2xl">
+                    <div className="m-10 leading-loose text-xl text-gray-700">
                         <ul>
                             <li>:</li>
                             <li>:</li>
@@ -60,7 +64,7 @@ export default function viewProductId() {
                             <li>:</li>
                         </ul>
                     </div>
-                    <div className="ml-8 leading-loose text-2xl">
+                    <div className="mr-8 leading-loose text-xl text-gray-700">
                         <p>{productName}</p>
                         <p>{category}</p>
                         <p>{brand}</p>
@@ -69,27 +73,6 @@ export default function viewProductId() {
                         <p>{color}</p>
                         <p>{description}</p>
                     </div>
-                    {/* <div>
-                        <p className="text-center"><span className="mr-2">Product name : </span>{productName}</p>
-                    </div>
-                    <div>
-                        <p className="text-center"><span className="mr-2">Category : </span>{category}</p>
-                    </div>
-                    <div>
-                        <p className="text-center"><span>Brand : </span>{brand}</p>
-                    </div>
-                    <div>
-                        <p className="text-center"><span>Price : </span>{price}</p>
-                    </div>
-                    <div>
-                        <p className="text-center"><span>Weight : </span>{weight}</p>
-                    </div>
-                    <div>
-                        <p className="text-center"><span>color : </span>{color}</p>
-                    </div>
-                    <div>
-                        <p className="text-center"><span>description : </span>{description}</p>
-                    </div> */}
                 </div>
             </div>
         </>
