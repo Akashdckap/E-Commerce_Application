@@ -124,6 +124,11 @@ export default function AdminStore() {
     const { loading: getCountLoading, error: getCountError, data: getCountData } = useQuery(GET_TOTAL_PRODUCT_COUNT);
     // const { data: orderData, loading: orderLoading, error: orderError } = useQuery(ALL_ORDERED_PRODUCTS);
 
+    const { data: OrderData, loading: OrderLoading, error: OrderError } = useQuery(ALL_ORDERED_PRODUCTS)
+
+    if (OrderData && OrderData.getAllOrders) {
+        console.log("OrderData----------------", OrderData.getAllOrders.length);
+    }
     useEffect(() => {
         if (getData && !getLoading && getAllData && !getAllLoading && getCountData) {
             getAllProductData(getAllData.getAllProductsData);
@@ -178,21 +183,18 @@ export default function AdminStore() {
         router.push("/adminStore");
         setdeletePopUpOpen(false)
     }
-    // console.log("condition checking------------", currentPage == totalPages);
-    // console.log("currentPage---------", currentPage);
-    // console.log("totalPages---------", totalPages);
-    // console.log("getProductData.length---------", getProductData.length);
     return (
         <>
             <div className='flex justify-between p-10'>
                 <h1>Welcome to our site Balamurugan</h1>
                 <div className='flex justify-center gap-10'>
                     <Link href='/login'><button className='bg-red-400 hover:bg-grey-700 text-white font-bold py-2 px-4 border border-white-700 rounded'>Log Out</button></Link>
-                    <Link href="/orderDetails" className="inline-flex items-center justify-center px-5 py-3 text-base font-medium text-center text-white bg-blue-600 rounded-lg hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900">
+                    <Link href="/orderDetails" className="inline-flex items-center justify-center px-5 py-3 text-base font-medium text-center text-white bg-blue-500 rounded-lg hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900">
                         Order Details
                         <svg className="w-3.5 h-3.5 ms-2 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
                             <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M1 5h12m0 0L9 1m4 4L9 9" />
                         </svg>
+                        <span className='ml-2 w-6 h-7 font-medium text-lg text-yellow-500 bg-white flex justify-center items-center px-3.5 rounded-full'>{OrderData && OrderData.getAllOrders ? OrderData.getAllOrders.length : '0'}</span>
                     </Link>
                     <button className='bg-blue-400 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded' onClick={() => setFormOpen(true)}>Add Product</button>
                 </div>

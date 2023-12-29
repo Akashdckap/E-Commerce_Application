@@ -100,8 +100,8 @@ export default function ProductList() {
                             <Link href="adminStore"><button type="button" className="h-10 w-40 py-2.5 px-5 me-2 mb-2 mr-10 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-full border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Go to Store</button></Link>
                         </div>
                         <div className='relative bottom-4'>
-                            <p className='relative left-5 top-2 text-yellow-500 text-lg font-semibold'>{getCartData.length}</p>
-                            <FontAwesomeIcon onClick={() => setCart(true)} icon={faShoppingCart} className='text-white-400  mb-10 text-2xl cursor-pointer' />
+                            <p className='relative left-4 top-1 text-white bg-yellow-600 text-base font-medium rounded-full h-6 w-6 flex justify-center items-center'>{getCartData.length}</p>
+                            <FontAwesomeIcon onClick={() => setCart(true)} icon={faShoppingCart} className='text-gray-700 hover:text-gray-600 mb-10 text-2xl cursor-pointer' />
                         </div>
                     </div>
                 </div>
@@ -230,7 +230,7 @@ export default function ProductList() {
                                     <button type='button' onClick={() => { setCart(false) }} className='bg-transparent  text-blue-700 font-semibold py-2 px-4 border border-blue-500 rounded hover:text-cyan-600 hover:border-cyan-600'>Continue Shopping</button>
                                 </div>
                                 <div className='flex justify-center items-center pt-5'>
-                                    <Link href="cartItems">
+                                    <Link href="/cartItems">
                                         <button type="button" className="items-center justify-center rounded-md bg-orange-500 py-2 px-4 text-sm font-semibold text-white transition-all duration-200 ease-in-out focus:shadow hover:bg-gray-800">
                                             View Cart
                                         </button>
