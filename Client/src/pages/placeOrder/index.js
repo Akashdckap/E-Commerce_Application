@@ -7,9 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useMutation, useQuery } from "@apollo/client";
 import { ORDER_PRODUCT } from "../../../Grahpql/mutation";
 import { removeCartdata, storeShippingAddress, storePersonalDetails, updatePersonalDetails, updateShippingAddress, updateBillingAddress, storeBillingAddress } from "@/Reducer/productReducer";
-import { ALL_ORDERED_PRODUCTS } from "../../../Grahpql/queries";
 export default function placeOrder() {
-    const { data: orderData, loading: orderLoading, error: orderError } = useQuery(ALL_ORDERED_PRODUCTS);
     const cartProducts = useSelector(state => state.productDetails.cartData);
     const dispatch = useDispatch()
     const getCartData = useSelector(state => state.productDetails.cartData);
@@ -22,7 +20,6 @@ export default function placeOrder() {
     const [personalDetailForm, setPersonalDetailForm] = useState(true);
     const [billingFormOpen, setBillingForm] = useState(true)
 
-    console.log("orderData------------", orderData);
     // const [selectedPersonalDetails, setSelectedPersonalDetails] = useState(null);
     // const [selectedShippingAddress, setSelectedShippingAddress] = useState(null);
     // const [selectedBillingAddress, setSelectedBillingAddress] = useState(null);
@@ -388,9 +385,7 @@ export default function placeOrder() {
     }
 
 
-    const [createOrders] = useMutation(ORDER_PRODUCT, {
-        refetchQueries: [{ query: ALL_ORDERED_PRODUCTS }]
-    });
+    const [createOrders] = useMutation(ORDER_PRODUCT);
 
     const handlePlaceOrder = async () => {
         try {
@@ -409,7 +404,6 @@ export default function placeOrder() {
                 variables: {
                     inputs: orderedInputData
                 },
-                awaitRefetchQueries: ALL_ORDERED_PRODUCTS
             }));
             if (SubmitOrderError) {
                 notification.success({ message: "Order Submission error" });
