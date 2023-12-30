@@ -360,9 +360,9 @@ export default function AdminStore() {
                         <p className='text-gray-700 text-base'>Showing {startItem} to {endItem} of {countProductData} results</p>
                     </div>
                     <div className='flex justify-between items-center gap-8'>
-                        <div className="border border-solid border-teal-600 rounded-md flex justify-between items-center h-9 w-32 gap-3 p-2">
+                        <div className="border border-solid border-blue-400 rounded-md flex justify-between items-center h-9 w-32 gap-3 p-2">
                             <p className="text-gray-800">Show :</p>
-                            <select className="pl-3 outline-0 bg-transparent" onChange={(e) => setPageSize(parseInt(e.target.value))}>
+                            <select className="pl-3 outline-0 bg-transparent" onChange={(e) => { setPageSize(parseInt(e.target.value)), currentPage === 1 ? setCurrentPage(1) : currentPage }}>
                                 <option value="5">5</option>
                                 <option value="10">10</option>
                                 <option value="15">15</option>

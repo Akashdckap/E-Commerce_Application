@@ -4,14 +4,17 @@ import { useQuery, useMutation } from "@apollo/client";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faLessThan, faGreaterThan, faStreetView, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
+import { notification } from "antd";
 
 export default function OrderDetails() {
     const [pageSize, setPageSize] = useState(10)
     const [currentPage, setCurrentPage] = useState(1)
     const [countOrderData, setCountOrderData] = useState(null)
     const [totalPages, setTotalPages] = useState(null);
+    // const [balance, setBalance] = useState(0);
+
     const { data: orderedProducts, loading: dataLoading, error: dataError } = useQuery(GET_ALL_ORDER_DATA_WITH_PAGE, {
-        variables: { page: currentPage, pageSize }
+        variables: { page: currentPage, pageSize: pageSize }
     })
     const { data: orderCount, loading: CountLoading, error: countError } = useQuery(ORDER_COUNT)
 
@@ -36,6 +39,21 @@ export default function OrderDetails() {
 
     const startItem = (currentPage - 1) * pageSize + 1;
     const endItem = Math.min(currentPage * pageSize, countOrderData);
+
+    // console.log("pageSize--------------", pageSize);
+    // const handlePageSizeChange = (e) => {
+    //     const selectedPageSize = parseInt(e.target.value, 10);
+    //     setBalance(orderCount.getOrderCount)
+    //     if (selectedPageSize <= balance) {
+    //         setPageSize(selectedPageSize);
+    //     } else {
+    //         notification.error({ message: "Selected page size exceeds balance limit" })
+    //         // console.log("Selected page size exceeds balance limit");
+    //     }
+    // }
+    // if (orderedProducts && orderedProducts.getAllOrderDatas && orderedProducts.getAllOrderDatas.length === 0) {
+    //     console.log("No orders found for this page.");
+    // }
     return (
         <>
             <div>
