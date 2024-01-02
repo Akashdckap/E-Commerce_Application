@@ -7,9 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useMutation, useQuery } from "@apollo/client";
 import { ORDER_PRODUCT } from "../../../Grahpql/mutation";
 import { removeCartdata, storeShippingAddress, storePersonalDetails, updatePersonalDetails, updateShippingAddress, updateBillingAddress, storeBillingAddress } from "@/Reducer/productReducer";
-// import { ALL_ORDERED_PRODUCTS } from "../../../Grahpql/queries";
 export default function placeOrder() {
-    // const { data: orderData, loading: orderLoading, error: orderError } = useQuery(ALL_ORDERED_PRODUCTS);
     const cartProducts = useSelector(state => state.productDetails.cartData);
     const dispatch = useDispatch()
     const getCartData = useSelector(state => state.productDetails.cartData);
@@ -21,8 +19,6 @@ export default function placeOrder() {
     const [shippingFormOpen, setShippingForm] = useState(true)
     const [personalDetailForm, setPersonalDetailForm] = useState(true);
     const [billingFormOpen, setBillingForm] = useState(true)
-
-    // console.log("orderData------------", orderData);
     // const [selectedPersonalDetails, setSelectedPersonalDetails] = useState(null);
     // const [selectedShippingAddress, setSelectedShippingAddress] = useState(null);
     // const [selectedBillingAddress, setSelectedBillingAddress] = useState(null);
@@ -377,7 +373,6 @@ export default function placeOrder() {
         setBillingDetails(getShippingData)
         setShowBillingData(false)
     }
-
 
     const [createOrders] = useMutation(ORDER_PRODUCT)
 

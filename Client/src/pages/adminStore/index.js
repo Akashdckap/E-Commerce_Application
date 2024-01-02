@@ -13,12 +13,13 @@ import { useRouter } from 'next/router';
 export default function AdminStore() {
     const [formOpen, setFormOpen] = useState(false);
     const router = useRouter();
+    const [pageSize, setPageSize] = useState(5)
     const [currentPage, setCurrentPage] = useState(1)
     const [getProductData, setgetProductData] = useState([])
 
     const [getAllProductdata, getAllProductData] = useState([])
     const [countProductData, getCountProductData] = useState()
-    const pageSize = 5;
+    // const pageSize = 5;
     const [totalPages, setTotalPages] = useState(null);
     const [deletePopUpOpen, setdeletePopUpOpen] = useState(false);
     const [image, setImage] = useState('');
@@ -118,7 +119,7 @@ export default function AdminStore() {
         }
     }
     const { data: getData, error: getError, loading: getLoading } = useQuery(GET_ALL_PRODUCTS, {
-        variables: { page: currentPage, pageSize },
+        variables: { page: currentPage, pageSize: pageSize },
     });
     const { data: getAllData, error: getAllError, loading: getAllLoading } = useQuery(GET_ALL_PRODUCTS_DATA);
     const { loading: getCountLoading, error: getCountError, data: getCountData } = useQuery(GET_TOTAL_PRODUCT_COUNT);
@@ -129,6 +130,9 @@ export default function AdminStore() {
     // if (OrderData && OrderData.getAllOrders) {
     //     console.log("OrderData----------------", OrderData.getAllOrders.length);
     // }
+    useEffect(() => {
+
+    }, [pageSize, getData])
     useEffect(() => {
         if (getData && !getLoading && getAllData && !getAllLoading && getCountData) {
             getAllProductData(getAllData.getAllProductsData);
@@ -143,9 +147,9 @@ export default function AdminStore() {
             console.error('Error fetching data:', getError);
         }
 
-    }, [currentPage, getProductData, pageSize, totalPages, getCountData, getData])
+    }, [currentPage, getProductData, totalPages, getCountData, getData])
 
-    // console.log("orderData--------------------", orderData);
+    console.log("pageSize--------------------", pageSize);
 
     const nextPage = () => {
         setCurrentPage(currentPage + 1);
@@ -355,10 +359,23 @@ export default function AdminStore() {
                     <div>
                         <p className='text-gray-700 text-base'>Showing {startItem} to {endItem} of {countProductData} results</p>
                     </div>
-                    <div className='flex gap-4 items-center justify-center'>
-                        <FontAwesomeIcon icon={faLessThan} onClick={prevPage} disabled={currentPage === 1} className='hover:text-white border border-gray-300 focus:outline-none focus:ring-4 focus:ring-gray-200 font-semibold rounded-lg text-sm px-2.5 py-1.5 dark:bg-transparent dark:text-blue-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700' style={{ cursor: currentPage <= 1 ? 'not-allowed' : 'pointer' }} />
-                        <span className='bg-blue-400 border border-teal-500 hover:bg-blue-300 text-white font-bold py-1.5 px-3.5 rounded-full'>{currentPage}</span>
-                        <button disabled={currentPage === totalPages}><FontAwesomeIcon onClick={nextPage} icon={faGreaterThan} className='hover:text-white border border-gray-300 focus:outline-none focus:ring-4 focus:ring-gray-200 font-semibold rounded-lg text-sm px-2.5 py-1.5 dark:bg-transparent dark:text-blue-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700' style={{ cursor: currentPage == totalPages ? 'not-allowed' : 'pointer' }} /></button>
+                    <div className='flex justify-between items-center gap-8'>
+                        <div className="border border-solid border-blue-400 rounded-md flex justify-between items-center h-9 w-32 gap-3 p-2">
+                            <p className="text-gray-800">Show :</p>
+                            <select className="pl-3 outline-0 bg-transparent" onChange={(e) => { setPageSize(parseInt(e.target.value)), currentPage === 1 ? setCurrentPage(1) : currentPage }}>
+                                <option value="5">5</option>
+                                <option value="10">10</option>
+                                <option value="15">15</option>
+                                <option value="20">20</option>
+                                <option value="25">25</option>
+                                <option value="30">30</option>
+                            </select>
+                        </div>
+                        <div className='flex gap-4 items-center justify-center'>
+                            <FontAwesomeIcon icon={faLessThan} onClick={prevPage} disabled={currentPage === 1} className='hover:text-white border border-gray-300 focus:outline-none focus:ring-4 focus:ring-gray-200 font-semibold rounded-lg text-sm px-2.5 py-1.5 dark:bg-transparent dark:text-blue-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700' style={{ cursor: currentPage <= 1 ? 'not-allowed' : 'pointer' }} />
+                            <span className='bg-blue-400 border border-teal-500 hover:bg-blue-300 text-white font-bold py-1.5 px-3.5 rounded-full'>{currentPage}</span>
+                            <button disabled={currentPage === totalPages}><FontAwesomeIcon onClick={nextPage} icon={faGreaterThan} className='hover:text-white border border-gray-300 focus:outline-none focus:ring-4 focus:ring-gray-200 font-semibold rounded-lg text-sm px-2.5 py-1.5 dark:bg-transparent dark:text-blue-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700' style={{ cursor: currentPage == totalPages ? 'not-allowed' : 'pointer' }} /></button>
+                        </div>
                     </div>
                 </div>
             </div >

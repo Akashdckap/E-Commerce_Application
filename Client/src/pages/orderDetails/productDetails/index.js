@@ -54,7 +54,7 @@ export default function ProductDetails() {
                             <tbody>
                                 {orderDatas.map((item, index) => {
                                     return (
-                                        <tr className="text-center border border-gray-300 bg-white rounded-md hover:bg-green-300 border-solid">
+                                        <tr className="text-center border border-gray-300 bg-white rounded-md hover:bg-green-300 border-solid" key={index}>
                                             <td className="py-2 text-gray-700">{index + 1}</td>
                                             <td className="py-2 text-gray-700">{item.productName}</td>
                                             <td className="py-2 text-gray-700">{item.category}</td>

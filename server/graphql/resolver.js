@@ -79,11 +79,53 @@ const resolvers = {
                     }),
                 };
             });
+            // console.log("pageSize------------", pageSize);
+            // console.log("page------------", page);
+            // console.log("formattedOrders------------", formattedOrders.length);
             return formattedOrders;
         },
+        // getAllOrderDatas: async (_, { page, pageSize }) => {
+        //     const skip = (page - 1) * pageSize;
+
+        //     try {
+        //         let orderDatas;
+
+        //         // Check if the specified pageSize is greater than the remaining items
+        //         const remainingItems = await newOrders.find({}).count() - skip;
+        //         console.log("remainingItems----------",remainingItems);
+        //         if (pageSize > remainingItems) {
+        //             // If pageSize is greater than remaining items, fetch all remaining items
+        //             orderDatas = await newOrders.find({}).limit(pageSize);
+        //             console.log("orderDatas------------", orderDatas.length);
+        //         } else {
+        //             // Fetch only the specified pageSize
+        //             orderDatas = await newOrders.find({}).skip(skip).limit(pageSize)
+        //         }
+
+        //         const formattedOrders = orderDatas.map(order => ({
+        //             ...order._doc,
+        //             OrderTime: order.createdAt.toLocaleString('en-US', {
+        //                 month: 'short',
+        //                 day: 'numeric',
+        //                 hour: 'numeric',
+        //                 minute: 'numeric',
+        //                 hour12: true,
+        //             }),
+        //         }));
+
+        //         console.log("pageSize------------", pageSize);
+        //         console.log("page------------", page);
+        //         // console.log("formattedOrders------------", formattedOrders.length);
+
+        //         return formattedOrders;
+        //     } catch (error) {
+        //         console.error("Error fetching data:", error.message);
+        //         throw new Error("Error fetching data");
+        //     }
+        // },
+
         getOrderCount: async () => {
             const orderCount = await newOrders.countDocuments();
-            console.log("count-------", orderCount);
             return orderCount;
         },
     },
