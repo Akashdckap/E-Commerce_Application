@@ -35,7 +35,7 @@ export default function OrderDetails() {
             setCountOrderData(orderCount.getOrderCount)
             setTotalPages(Math.ceil(countOrderData / pageSize));
         }
-    }, [orderedProducts, countOrderData, orderCount, pageSize]);
+    }, [orderedProducts, countOrderData, orderCount, pageSize, currentPage]);
 
     const startItem = (currentPage - 1) * pageSize + 1;
     const endItem = Math.min(currentPage * pageSize, countOrderData);
@@ -80,7 +80,7 @@ export default function OrderDetails() {
                                     orderedProducts && orderedProducts.getAllOrderDatas && orderedProducts.getAllOrderDatas.map((entireData, index) => {
                                         return (
                                             <tr className="border hover:bg-gray-100 hover:rounded-t-full transition-all duration-300 ease-in-out" key={index}>
-                                                <td className="text-center py-3.5 text-gray-700 font-medium">{calculateSI(index)}</td>
+                                                <td className="text-center py-3.5 text-gray-700 font-medium" role="cell">{calculateSI(index)}</td>
                                                 <td className="text-start text-cyan-600">{entireData.personalDetails.PersonalName}</td>
                                                 <td className="text-start text-cyan-600">{entireData.personalDetails.PersonalEmail}</td>
                                                 <td className="text-start text-gray-600">{entireData.personalDetails.PersonalPhoneNo}</td>
@@ -112,6 +112,8 @@ export default function OrderDetails() {
                             <div className='flex gap-4 items-center justify-center'>
                                 <FontAwesomeIcon icon={faLessThan} onClick={prevPage} disabled={currentPage === 1} className='hover:text-white border border-gray-300 focus:outline-none focus:ring-4 focus:ring-gray-200 font-semibold rounded-lg text-sm px-2.5 py-1.5 dark:bg-transparent dark:text-blue-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700' style={{ cursor: currentPage <= 1 ? 'not-allowed' : 'pointer' }} />
                                 <span className='bg-cyan-400 border border-teal-500 hover:bg-cyan-300 text-white font-bold py-1.5 px-3.5 rounded-full'>{currentPage}</span>
+                                {/* <input value={currentPage} type="number" onChange={(e) => setCurrentPage(parseInt(e.target.value, currentPage))} className='bg-cyan-400 flex justify-center items-center outline-0 border border-teal-500 hover:bg-cyan-300 text-white font-bold py-1.5 px-3.5 rounded-full' /> */}
+                                {/* {console.log("currentPage-------------------------", currentPage)} */}
                                 <button disabled={currentPage === totalPages}><FontAwesomeIcon onClick={nextPage} icon={faGreaterThan} className='hover:text-white border border-gray-300 focus:outline-none focus:ring-4 focus:ring-gray-200 font-semibold rounded-lg text-sm px-2.5 py-1.5 dark:bg-transparent dark:text-blue-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700' style={{ cursor: currentPage === totalPages ? 'not-allowed' : 'pointer' }} /></button>
                             </div>
                         </div>

@@ -20,6 +20,17 @@ module.exports = {
         '.ml-26': {
           'margin-left': '6.5rem',
         },
+        '.responsive-table': {
+          'overflow-x': 'auto',
+        },
+        '.responsive-table th, .responsive-table td': {
+          'min-width': '120px',
+        },
+        '@media (min-width: 640px)': {
+          '.responsive-table th, .responsive-table td': {
+            'min-width': '160px',
+          },
+        },
       };
       addUtilities(newUtilities, ['responsive', 'hover']);
     },
