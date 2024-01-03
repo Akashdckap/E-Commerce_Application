@@ -6,12 +6,13 @@
 import admins from '../model/adminSchema.js';
 import productDetails from '../model/productSchema.js';
 import newOrders from '../model/order.js';
-
+import customerInformation from '../model/customerSchema.js';
 
 // import Upload from 'graphql-upload/Upload.mjs';
 // import GraphQLUpload from "graphql-upload/GraphQLUpload.js";
 // const {GraphQLUpload}  = require('graphql-upload/GraphQLUpload.js')
 import path from 'path';
+import bcrypt from 'bcrypt';
 import fileSchema from '../model/fileSchema.js'
 import mongoose from 'mongoose';
 
@@ -19,12 +20,12 @@ const ObjectId = mongoose.Types.ObjectId;
 const resolvers = {
     // Upload: GraphQLUpload,
     Query: {
+        getCustomerRegister: async () => {
+            return await (customerInformation.find({}));
+        },
         getAllAdmins: async () => {
             return await (admins.find({}));
         },
-        // getAllOrders: async () => {
-        //     return await (order.find({}));
-        // },
         getEditProductData: async (_, { id }) => {
             return await productDetails.findOne({ _id: new ObjectId(id) })
         },
@@ -33,8 +34,6 @@ const resolvers = {
         },
 
         getAllProductsData: async () => {
-            // const da = await (productDetails.find({}));
-            // console.log(da);
             return await (productDetails.find({}))
         },
         getAllProducts: async (_, { page, pageSize }) => {
@@ -79,50 +78,8 @@ const resolvers = {
                     }),
                 };
             });
-            // console.log("pageSize------------", pageSize);
-            // console.log("page------------", page);
-            // console.log("formattedOrders------------", formattedOrders.length);
             return formattedOrders;
         },
-        // getAllOrderDatas: async (_, { page, pageSize }) => {
-        //     const skip = (page - 1) * pageSize;
-
-        //     try {
-        //         let orderDatas;
-
-        //         // Check if the specified pageSize is greater than the remaining items
-        //         const remainingItems = await newOrders.find({}).count() - skip;
-        //         console.log("remainingItems----------",remainingItems);
-        //         if (pageSize > remainingItems) {
-        //             // If pageSize is greater than remaining items, fetch all remaining items
-        //             orderDatas = await newOrders.find({}).limit(pageSize);
-        //             console.log("orderDatas------------", orderDatas.length);
-        //         } else {
-        //             // Fetch only the specified pageSize
-        //             orderDatas = await newOrders.find({}).skip(skip).limit(pageSize)
-        //         }
-
-        //         const formattedOrders = orderDatas.map(order => ({
-        //             ...order._doc,
-        //             OrderTime: order.createdAt.toLocaleString('en-US', {
-        //                 month: 'short',
-        //                 day: 'numeric',
-        //                 hour: 'numeric',
-        //                 minute: 'numeric',
-        //                 hour12: true,
-        //             }),
-        //         }));
-
-        //         console.log("pageSize------------", pageSize);
-        //         console.log("page------------", page);
-        //         // console.log("formattedOrders------------", formattedOrders.length);
-
-        //         return formattedOrders;
-        //     } catch (error) {
-        //         console.error("Error fetching data:", error.message);
-        //         throw new Error("Error fetching data");
-        //     }
-        // },
 
         getOrderCount: async () => {
             const orderCount = await newOrders.countDocuments();
@@ -130,6 +87,32 @@ const resolvers = {
         },
     },
     Mutation: {
+        async newCustomer(_, { customerInput }) {
+            const hashPassword = await bcrypt.hash(customerInput.password, 10)
+            const customer = new customerInformation({
+                name: customerInput.name,
+                email: customerInput.email,
+                phoneNo: customerInput.phoneNo,
+                password: hashPassword
+            });
+            const details = await customer.save();
+            return details
+        },
+        async customerLogin(_, { loginInput }) {
+            const check = await customerInformation.find({ email: loginInput.email });
+            if (check.length > 0) {
+                const comparePassword = bcrypt.compare(loginInput.password, check[0].password);
+                if (comparePassword == true) {
+                    console.log("password matched");
+                }
+                else {
+                    console.log("password not matched");
+                }
+            }
+            else{
+                console.log("email not matched")
+            }
+        },
         async createAdmins(_, { adminsInput: { email, password } }) {
             const newUsers = new admins({
                 email: email,
