@@ -7,6 +7,7 @@ export const productSlice = createSlice({
         shippingData: [],
         billingData: [],
         personalData: [],
+        LoginData: {},
     },
     reducers: {
         // storeAddToCartProductData: (state, action) => {
@@ -21,7 +22,7 @@ export const productSlice = createSlice({
         // },
         storeAddToCartProductData: (state, action) => {
             const productData = action.payload;
-            console.log("product--------",productData);
+            console.log("product--------", productData);
             const productIndex = state.cartData.findIndex((product) => product._id === productData._id);
             if (productIndex !== -1) {
                 state.cartData[productIndex].count = (state.cartData[productIndex].count || 0) + 1;
@@ -70,6 +71,12 @@ export const productSlice = createSlice({
         },
         updateBillingAddress: (state, action) => {
             state.billingData = { ...state.billingData, ...action.payload }
+        },
+        customerLoginData: (state, action) => {
+            state.LoginData = action.payload
+        },
+        logOutCustomer: (state, action) => {
+            state.LoginData = {}
         }
     },
 })
@@ -85,6 +92,8 @@ export const {
     decrementProductCount,
     storePersonalDetails,
     updatePersonalDetails,
-    updateBillingAddress
+    updateBillingAddress,
+    customerLoginData,
+    logOutCustomer
 } = productSlice.actions
 export default productSlice.reducer
