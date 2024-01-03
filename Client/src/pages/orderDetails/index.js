@@ -40,20 +40,6 @@ export default function OrderDetails() {
     const startItem = (currentPage - 1) * pageSize + 1;
     const endItem = Math.min(currentPage * pageSize, countOrderData);
 
-    // console.log("pageSize--------------", pageSize);
-    // const handlePageSizeChange = (e) => {
-    //     const selectedPageSize = parseInt(e.target.value, 10);
-    //     setBalance(orderCount.getOrderCount)
-    //     if (selectedPageSize <= balance) {
-    //         setPageSize(selectedPageSize);
-    //     } else {
-    //         notification.error({ message: "Selected page size exceeds balance limit" })
-    //         // console.log("Selected page size exceeds balance limit");
-    //     }
-    // }
-    // if (orderedProducts && orderedProducts.getAllOrderDatas && orderedProducts.getAllOrderDatas.length === 0) {
-    //     console.log("No orders found for this page.");
-    // }
     return (
         <>
             <div>
@@ -110,7 +96,7 @@ export default function OrderDetails() {
                                 </select>
                             </div>
                             <div className='flex gap-4 items-center justify-center'>
-                                <FontAwesomeIcon icon={faLessThan} onClick={prevPage} disabled={currentPage === 1} className='hover:text-white border border-gray-300 focus:outline-none focus:ring-4 focus:ring-gray-200 font-semibold rounded-lg text-sm px-2.5 py-1.5 dark:bg-transparent dark:text-blue-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700' style={{ cursor: currentPage <= 1 ? 'not-allowed' : 'pointer' }} />
+                                <FontAwesomeIcon icon={faLessThan} onClick={prevPage} disabled={currentPage === 1} className='hover:text-white border border-gray-300 hover:bg-black focus:outline-none focus:ring-4 focus:ring-gray-200 font-semibold rounded-lg text-sm px-2.5 py-1.5 dark:bg-transparent dark:text-blue-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700' style={{ cursor: currentPage <= 1 ? 'not-allowed' : 'pointer' }} />
                                 <span className='bg-cyan-400 border border-teal-500 hover:bg-cyan-300 text-white font-bold py-1.5 px-3.5 rounded-full'>{currentPage}</span>
                                 {/* <input value={currentPage} type="number" onChange={(e) => setCurrentPage(parseInt(e.target.value, currentPage))} className='bg-cyan-400 flex justify-center items-center outline-0 border border-teal-500 hover:bg-cyan-300 text-white font-bold py-1.5 px-3.5 rounded-full' /> */}
                                 {/* {console.log("currentPage-------------------------", currentPage)} */}

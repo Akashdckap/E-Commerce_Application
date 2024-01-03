@@ -339,8 +339,7 @@ export default function placeOrder() {
         setShowBillingData(false)
     }
 
-
-    const [createOrders] = useMutation(ORDER_PRODUCT);
+    const [createOrders] = useMutation(ORDER_PRODUCT)
 
     const handlePlaceOrder = async () => {
         try {
@@ -712,7 +711,7 @@ export default function placeOrder() {
                         </div>
                     </div>
                     <div className="pb-10">
-                        <div className="bg-white w-auto h-full p-5 pb-6 rounded-md border-gray-300 border border-solid">
+                        <div className="bg-white w-auto h-full p-5 pb-6 rounded-md border-gray-300 border  hover:border-green-300 border-solid">
                             <div className="flex justify-center items-center bg-[#F5F7FA] h-10 w-80 m-auto rounded-sm mt-3">
                                 <h3 className="text-[#51596B] font-normal">Order Summary</h3>
                             </div>
