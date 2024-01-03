@@ -4,7 +4,13 @@ import React, { useState } from 'react'
 import { GET_REGISTER_CUSTOMER } from '../../Grahpql/queries'
 
 import { LOGIN_CUSTOMER } from '../../Grahpql/mutation';
+import { customerLoginData } from '@/Reducer/productReducer';
+import { useRouter } from 'next/router';
+import { notification } from 'antd';
+import { useDispatch } from 'react-redux';
 export default function customerLogin() {
+    const router = useRouter();
+    const dispatch = useDispatch();
     const [loginForm, setLoginForm] = useState({
         password: "",
         email: "",
@@ -45,21 +51,29 @@ export default function customerLogin() {
         if (validateLoginForm()) {
             console.log("success");
             try {
-                const { data } = await customerLogin({ variables: { loginInput: loginForm } });
-                console.log("data-------------", data.customerLogin);
-                // const { token, customerId, name } = data.customerLogin;
-
-                console.log("token-------------", token);
-                console.log("customerId-------------", customerId);
-                console.log("name-------------", name);
+                const { data, errors } = await customerLogin({ variables: { loginInput: loginForm } });
+                const { token, customerId, name } = data.customerLogin;
+                dispatch(customerLoginData({ customerId, name, token }));
+                router.push('/customerHome')
+                notification.success({ message: "User successfully logged" })
             }
             catch (error) {
-                console.error("Register form error :", error);
+                notification.error({ message: error.message })
+                // if (error.message === 'Email is not registered') {
+                //     setLoginError({
+                //         email: error.message
+                //     })
+                // }
+                // if (error.message === "Password is not correct") {
+                //     setLoginError({
+                //         password: error.message,
+                //     })
+                // }
+                console.error(error.message);
             }
         }
         else {
-            console.log("error");
-            // router.push('/customerRegister')
+            router.push('/customerLogin')
         }
     }
     return (

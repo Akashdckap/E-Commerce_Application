@@ -17,7 +17,7 @@ export default function ProductList() {
     const [openCart, setCart] = useState()
     const [getProductData, setgetProductData] = useState([])
     // const [allAddToCartId, setAddToCartId] = useState([]);
-    const [searchText, setSearchText] = useState('')
+    const [searchText, setSearchText] = useState('');
     const [allAddToCartId, setAddToCartId] = useState('');
     const [quantity, setQuantity] = useState(0);
     // const { allAddToCartId, addToCartArray, removeIdFromArray, removeAllItems } = useCartIdState()
