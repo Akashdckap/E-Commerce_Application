@@ -202,7 +202,7 @@ const typeDefs = gql` #graphql
     }
 
     type Mutation{
-        newCustomer(customerInput: customerRegisterInput):customerRegister!
+        registerCustomer(customerInput: customerRegisterInput):customerRegister!
         customerLogin(loginInput: customerLoginInput): customerLogin!
         createAdmins(adminsInput: adminsInput): admins!
         createProducts(newProducts: productsInput): products!
