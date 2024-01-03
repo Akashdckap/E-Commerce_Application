@@ -101,3 +101,14 @@ export const ORDER_PRODUCT = gql`
 }
 `
 
+export const CUSTOMER_REGISTER = gql`
+   mutation registerCustomer($customerInput: customerRegisterInput!){
+    registerCustomer(customerInput: $customerInput){
+      name,
+      email,
+      phoneNo,
+      password,
+    }
+   }
+`
+

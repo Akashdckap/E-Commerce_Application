@@ -87,7 +87,7 @@ const resolvers = {
         },
     },
     Mutation: {
-        async newCustomer(_, { customerInput }) {
+        async registerCustomer(_, { customerInput }) {
             const hashPassword = await bcrypt.hash(customerInput.password, 10)
             const customer = new customerInformation({
                 name: customerInput.name,
@@ -109,7 +109,7 @@ const resolvers = {
                     console.log("password not matched");
                 }
             }
-            else{
+            else {
                 console.log("email not matched")
             }
         },

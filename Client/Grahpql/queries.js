@@ -210,3 +210,11 @@ export const GET_ALL_ORDER_DATA_WITH_PAGE = gql`
         }
     }
 `
+export const GET_REGISTER_CUSTOMER = gql`
+    query getCustomerRegister{
+        name,
+        email,
+        phoneNo,
+        password
+    }
+`

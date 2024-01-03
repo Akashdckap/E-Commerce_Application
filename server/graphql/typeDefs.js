@@ -13,6 +13,7 @@ const typeDefs = gql` #graphql
         password: String!,
     }
     type customerRegister{
+        _id: ID!
         name: String,
         email: String,
         phoneNo: BigInt,
@@ -188,6 +189,7 @@ const typeDefs = gql` #graphql
 
     type Query{
         getCustomerRegister:[customerRegister]
+
         getAllAdmins:[admins]
         getAllProductsData: [products]
         getAllProducts(page:Int!,pageSize:Int!):[products!]!
@@ -202,8 +204,9 @@ const typeDefs = gql` #graphql
     }
 
     type Mutation{
-        newCustomer(customerInput: customerRegisterInput):customerRegister!
+        registerCustomer(customerInput: customerRegisterInput):customerRegister!
         customerLogin(loginInput: customerLoginInput): customerLogin!
+
         createAdmins(adminsInput: adminsInput): admins!
         createProducts(newProducts: productsInput): products!
         deleteProduct(id: ID!) : Boolean!
@@ -212,6 +215,4 @@ const typeDefs = gql` #graphql
         uploadFile(file: Upload!): String!
     }
 `
-// module.exports = typeDefs;
-
 export default typeDefs;
