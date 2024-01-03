@@ -99,6 +99,7 @@ const resolvers = {
             return details
         },
         async customerLogin(_, { loginInput }) {
+            // console.log("loginInput-------------------", loginInput);
             const check = await customerInformation.find({ email: loginInput.email });
             if (check.length > 0) {
                 const comparePassword = await bcrypt.compare(loginInput.password, check[0].password);
@@ -107,7 +108,10 @@ const resolvers = {
                     const customerId = check[0]._id;
                     const token = jwt.sign({ name, customerId }, "secret-key", { expiresIn: '1d' })
                     // console.log({ token, name, customerId })
+                    console.log("name", name);
                     return { token, name, customerId };
+                    // const { token, customerId, name } = data.customerLogin;
+
                 }
                 else {
                     throw new Error("Password is not correct");

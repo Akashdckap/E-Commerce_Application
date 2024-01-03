@@ -14,6 +14,9 @@ export const LOGIN_CUSTOMER = gql`
     customerLogin(loginInput: $loginInput){
       email
       password
+      token
+      customerId
+      name
     }
   }
 `
