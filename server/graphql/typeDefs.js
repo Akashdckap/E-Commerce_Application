@@ -194,6 +194,14 @@ const typeDefs = gql` #graphql
         password: String,
     }
 
+    type loginResponse {
+      token: String
+      customerId: String
+      name: String
+      email: String
+      password: String
+    }
+
     type Query{
         getCustomerRegister:[customerRegister]
         getAllAdmins:[admins]
