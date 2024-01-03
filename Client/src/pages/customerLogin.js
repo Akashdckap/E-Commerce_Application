@@ -47,7 +47,7 @@ export default function customerLogin() {
             try {
                 const { data } = await customerLogin({ variables: { loginInput: loginForm } });
                 console.log("data-------------", data.customerLogin);
-                const { token, customerId, name } = data.customerLogin;
+                // const { token, customerId, name } = data.customerLogin;
 
                 console.log("token-------------", token);
                 console.log("customerId-------------", customerId);
