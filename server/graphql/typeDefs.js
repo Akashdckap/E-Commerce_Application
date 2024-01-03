@@ -5,12 +5,23 @@ const typeDefs = gql` #graphql
 
     scalar Upload
     scalar Date
+    scalar BigInt
+
     type admins{
         _id: ID!,
         email: String!,
         password: String!,
     }
-
+    type customerRegister{
+        name: String,
+        email: String,
+        phoneNo: BigInt,
+        password: String,
+    }
+    type customerLogin{
+        email:String,
+        password: String,
+    }
     type products{
         _id: ID,
         productName: String,
@@ -147,7 +158,16 @@ const typeDefs = gql` #graphql
         OrderTime: Date,
         totalPrice: Int,
     }
-
+    input customerRegisterInput{
+        name: String,
+        email:String,
+        phoneNo: BigInt,
+        password: String,
+    }
+    input customerLoginInput{
+        email: String,
+        password: String,
+    }
     input updateProductInput{
         productName: String,
         category:String,
@@ -167,6 +187,7 @@ const typeDefs = gql` #graphql
     }
 
     type Query{
+        getCustomerRegister:[customerRegister]
         getAllAdmins:[admins]
         getAllProductsData: [products]
         getAllProducts(page:Int!,pageSize:Int!):[products!]!
@@ -181,6 +202,8 @@ const typeDefs = gql` #graphql
     }
 
     type Mutation{
+        newCustomer(customerInput: customerRegisterInput):customerRegister!
+        customerLogin(loginInput: customerLoginInput): customerLogin!
         createAdmins(adminsInput: adminsInput): admins!
         createProducts(newProducts: productsInput): products!
         deleteProduct(id: ID!) : Boolean!
