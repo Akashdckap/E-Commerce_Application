@@ -1,7 +1,12 @@
 import Link from 'next/link'
 import React, { useState } from 'react'
+import { CUSTOMER_REGISTER } from '../../Grahpql/mutation';
+import { useMutation } from '@apollo/client';
+import { notification } from 'antd';
+import { useRouter } from 'next/router';
 
 export default function customerRegister() {
+    const router = useRouter();
     const [registerForm, setRegisterForm] = useState({
         name: '',
         email: '',
@@ -59,12 +64,19 @@ export default function customerRegister() {
         });
         delete registerError[name]
     };
-
-    const handleRegisterForm = (e) => {
+    const [registerCustomer] = useMutation(CUSTOMER_REGISTER)
+    const handleRegisterForm = async (e) => {
         e.preventDefault()
         if (validateRegisterForm()) {
-            console.log("success");
-            console.log("registerForm----------------------", registerForm);
+            try {
+                await (registerCustomer({ variables: { customerInput: registerForm } }));
+                notification.success({ message: "Registered successfully" })
+                router.push('/customerLogin')
+            }
+            catch (error) {
+                console.error("Register form error :", error);
+                router.push('/customerRegister')
+            }
         }
         else {
             console.log("error");
@@ -82,25 +94,25 @@ export default function customerRegister() {
                         <div className='grid justify-start items-center gap-1'>
                             <label className='text-violet-400'>Name</label>
                             <input onChange={handleChange} value={registerForm.name} name='name' placeholder='Enter the name' className='border border-solid border-gray-400 h-10 w-72 pl-3 rounded-md hover:border-violet-400 focus:border-violet-400 outline-none text-gray-500' />
-                            {registerError.name && <span className="text-red-600">{registerError.name}</span>}
+                            {registerError.name && <span className="text-red-400">{registerError.name}</span>}
 
                         </div>
                         <div className='grid justify-start items-center gap-1'>
                             <label className='text-violet-400'>Email</label>
                             <input onChange={handleChange} value={registerForm.email} name='email' placeholder='Enter the email' className='border border-solid border-gray-400 h-10 w-72 pl-3 rounded-md hover:border-violet-400 focus:border-violet-400 outline-none text-gray-500' />
-                            {registerError.email && <span className="text-red-600">{registerError.email}</span>}
+                            {registerError.email && <span className="text-red-400">{registerError.email}</span>}
 
                         </div>
                         <div className='grid justify-start items-center gap-1'>
                             <label className='text-violet-400'>Phone Number</label>
                             <input onChange={handleChange} value={registerForm.phoneNo} name='phoneNo' placeholder='Enter the contact' className='border border-solid border-gray-400 h-10 w-72 pl-3 rounded-md hover:border-violet-400 focus:border-violet-400 outline-none text-gray-500' />
-                            {registerError.phoneNo && <span className="text-red-600">{registerError.phoneNo}</span>}
+                            {registerError.phoneNo && <span className="text-red-400">{registerError.phoneNo}</span>}
 
                         </div>
                         <div className='grid justify-start items-center gap-1'>
                             <label className='text-violet-400'>Password</label>
                             <input onChange={handleChange} value={registerForm.password} name='password' placeholder='Enter the password' className='border border-solid border-gray-400 h-10 w-72 pl-3 rounded-md hover:border-violet-400 focus:border-violet-400 outline-none text-gray-500' />
-                            {registerError.password && <span className="text-red-600">{registerError.password}</span>}
+                            {registerError.password && <span className="text-red-400">{registerError.password}</span>}
 
                         </div>
                         <div className='flex gap-3 justify-start items-center pt-3'>
