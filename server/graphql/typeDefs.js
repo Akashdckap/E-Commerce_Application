@@ -187,6 +187,14 @@ const typeDefs = gql` #graphql
         url: String!
     }
 
+    type LoginResponse {
+      token: String
+      customerId: String
+      name: String
+      email: String
+      password: String
+    }
+
     type Query{
         getCustomerRegister:[customerRegister]
 
@@ -205,7 +213,7 @@ const typeDefs = gql` #graphql
 
     type Mutation{
         registerCustomer(customerInput: customerRegisterInput):customerRegister!
-        customerLogin(loginInput: customerLoginInput): customerLogin!
+        customerLogin(loginInput: customerLoginInput): LoginResponse!
 
         createAdmins(adminsInput: adminsInput): admins!
         createProducts(newProducts: productsInput): products!
