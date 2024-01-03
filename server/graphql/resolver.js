@@ -66,7 +66,9 @@ const resolvers = {
         getAllOrderDatas: async (_, { page, pageSize }) => {
             const skip = (page - 1) * pageSize;
             const orderDatas = await (newOrders.find({}).skip(skip).limit(pageSize));
+            // console.log(orderDatas);
             const formattedOrders = orderDatas.map(order => {
+                // console.log(order)
                 return {
                     ...order._doc,
                     OrderTime: order.createdAt.toLocaleString('en-US', {
@@ -88,18 +90,22 @@ const resolvers = {
     },
     Mutation: {
         async registerCustomer(_, { customerInput }) {
-            // const verifyUser = await customerInformation.find({})
+            const emailExists = await customerInformation.find({ email: customerInput.email })
+            // console.log(emailExists.length);
             const hashPassword = await bcrypt.hash(customerInput.password, 10)
-            const customer = new customerInformation({
-                name: customerInput.name,
-                email: customerInput.email,
-                phoneNo: customerInput.phoneNo,
-                password: hashPassword
-            });
-            // console.log("verifyUser", verifyUser);
-
-            const details = await customer.save();
-            return details
+            if (emailExists.length < 1 ) {
+                const customer = new customerInformation({
+                    name: customerInput.name,
+                    email: customerInput.email,
+                    phoneNo: customerInput.phoneNo,
+                    password: hashPassword
+                });
+                const details = await customer.save();
+                return details
+            }
+            else {
+                throw new Error("Email id already exists");
+            }
         },
         async customerLogin(_, { loginInput }) {
             const check = await customerInformation.find({ email: loginInput.email });

@@ -74,7 +74,8 @@ export default function customerRegister() {
                 router.push('/customerLogin')
             }
             catch (error) {
-                console.error("Register form error :", error);
+                console.log(error.message);
+                notification.error({ message: error.message })
                 router.push('/customerRegister')
             }
         }
