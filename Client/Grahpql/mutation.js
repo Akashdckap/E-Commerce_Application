@@ -12,8 +12,11 @@ export const CREATE_ADMINS = gql`
 export const LOGIN_CUSTOMER = gql`
   mutation customerLogin($loginInput: customerLoginInput){
     customerLogin(loginInput: $loginInput){
-      email
-      password
+        token
+        name
+        customerId
+        email
+        password
     }
   }
 `

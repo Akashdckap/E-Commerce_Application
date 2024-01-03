@@ -1,9 +1,11 @@
-import { useQuery } from '@apollo/client'
+import { useMutation, useQuery } from '@apollo/client'
 import Link from 'next/link'
 import React from 'react'
 import { GET_REGISTER_CUSTOMER } from '../../Grahpql/queries'
+import { LOGIN_CUSTOMER } from '../../Grahpql/mutation'
 export default function customerLogin() {
     const { data, loading, error } = useQuery(GET_REGISTER_CUSTOMER);
+    // const [customerLogin { data, error }] = useMutation(LOGIN_CUSTOMER);
     console.log("data--------", data);
     return (
         <div>
