@@ -186,8 +186,15 @@ const typeDefs = gql` #graphql
     input File{
         url: String!
     }
+    type loginResponse{
+        token: String,
+        name: String,
+        customerId: String,
+        email: String,
+        password: String,
+    }
 
-    type LoginResponse {
+    type loginResponse {
       token: String
       customerId: String
       name: String
@@ -197,7 +204,6 @@ const typeDefs = gql` #graphql
 
     type Query{
         getCustomerRegister:[customerRegister]
-
         getAllAdmins:[admins]
         getAllProductsData: [products]
         getAllProducts(page:Int!,pageSize:Int!):[products!]!
@@ -205,7 +211,6 @@ const typeDefs = gql` #graphql
         getEditProductData(id: ID!): products
         getProductDetails(id: ID!):products
         addToCartProductData(ids: ID!): products
-        
         getOrderCount: Int!
         getOrderProductDetails(id: ID!): orders!
         getAllOrderDatas(page:Int!,pageSize:Int!): [orders]!
@@ -213,8 +218,7 @@ const typeDefs = gql` #graphql
 
     type Mutation{
         registerCustomer(customerInput: customerRegisterInput):customerRegister!
-        customerLogin(loginInput: customerLoginInput): LoginResponse!
-
+        customerLogin(loginInput: customerLoginInput): loginResponse!
         createAdmins(adminsInput: adminsInput): admins!
         createProducts(newProducts: productsInput): products!
         deleteProduct(id: ID!) : Boolean!

@@ -2,6 +2,7 @@ import { useMutation, useQuery } from '@apollo/client'
 import Link from 'next/link'
 import React, { useState } from 'react'
 import { GET_REGISTER_CUSTOMER } from '../../Grahpql/queries'
+
 import { LOGIN_CUSTOMER } from '../../Grahpql/mutation';
 export default function customerLogin() {
     const [loginForm, setLoginForm] = useState({
