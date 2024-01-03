@@ -132,7 +132,7 @@ export default function AdminStore() {
     // }
     useEffect(() => {
 
-    }, [pageSize, getData])
+    }, [pageSize])
     useEffect(() => {
         if (getData && !getLoading && getAllData && !getAllLoading && getCountData) {
             getAllProductData(getAllData.getAllProductsData);

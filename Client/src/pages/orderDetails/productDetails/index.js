@@ -76,8 +76,8 @@ export default function ProductDetails() {
                     </div>
                     <div className="my-4">
                         <div className="flex gap-36">
-                        <h2 className="leading leading-loose text-2xl text-gray-700">Shipping Details</h2>
-                        <Link href={`/orderDetails`}><button className="border border-green-300 w-20 h-10 bg-blue-300 hover:bg-blue-700 rounded-md text-gray-700">Back</button></Link>
+                            <h2 className="leading leading-loose text-2xl text-gray-700">Shipping Details</h2>
+                            <Link href={`/orderDetails`}><button className="border border-green-300 w-20 h-10 bg-blue-300 hover:bg-blue-700 rounded-md text-gray-700">Back</button></Link>
                         </div>
                         <div className="border border-gray-400 py-3 px-6 flex bg-white rounded-md hover:border-green-300 border-solid">
                             <div>

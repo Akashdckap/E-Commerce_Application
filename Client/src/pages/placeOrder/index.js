@@ -8,20 +8,13 @@ import { useMutation, useQuery } from "@apollo/client";
 import { ORDER_PRODUCT } from "../../../Grahpql/mutation";
 import { removeCartdata, storeShippingAddress, storePersonalDetails, updatePersonalDetails, updateShippingAddress, updateBillingAddress, storeBillingAddress } from "@/Reducer/productReducer";
 export default function placeOrder() {
-    const cartProducts = useSelector(state => state.productDetails.cartData);
+    // const cartProducts = useSelector(state => state.productDetails.cartData);
     const dispatch = useDispatch()
     const getCartData = useSelector(state => state.productDetails.cartData);
 
     const getShippingData = useSelector(state => state.productDetails.shippingData)
     const getBillingData = useSelector(state => state.productDetails.billingData)
     const getPersonalData = useSelector(state => state.productDetails.personalData)
-
-    const [shippingFormOpen, setShippingForm] = useState(true)
-    const [personalDetailForm, setPersonalDetailForm] = useState(true);
-    const [billingFormOpen, setBillingForm] = useState(true)
-    // const [selectedPersonalDetails, setSelectedPersonalDetails] = useState(null);
-    // const [selectedShippingAddress, setSelectedShippingAddress] = useState(null);
-    // const [selectedBillingAddress, setSelectedBillingAddress] = useState(null);
 
     const [showPersonalData, setShowPersonalData] = useState(true);
     const [showShippingData, setShowShippingData] = useState(true);
@@ -110,39 +103,84 @@ export default function placeOrder() {
 
     const validatePersonalDetailForm = () => {
         let newErrors = { ...personalDetailsError };
-        let isVaild = true;
-        if (personalDetails.PersonalName.trim() === "" && personalDetails.PersonalEmail.trim() === "" && personalDetails.PersonalPhoneNo.trim() === "") {
+        let isValid = true;
+
+        if (personalDetails.PersonalName.trim() === "") {
             newErrors.PersonalName = 'Name is required';
+            isValid = false;
+        }
+
+        if (personalDetails.PersonalEmail.trim() === "") {
             newErrors.PersonalEmail = 'Email is required';
+            isValid = false;
+        }
+
+        if (personalDetails.PersonalPhoneNo.trim() === "") {
             newErrors.PersonalPhoneNo = 'Contact is required';
-            isVaild = false;
+            isValid = false;
+
+        } else if (personalDetails.PersonalPhoneNo.length < 9) {
+            newErrors.PersonalPhoneNo = 'Contact number should be 10 numbers';
+            isValid = false;
         }
-        if (personalDetails.PersonalPhoneNo.length < 9 && personalDetails.PersonalPhoneNo.trim() !== "") {
-            newErrors.PersonalPhoneNo = "Contact number should be 10 numbers"
-            isVaild = false
-        }
+
         setPersonalDetailsError(newErrors);
-        return isVaild;
+        return isValid;
     }
+
 
 
     const validateShippingForm = () => {
         let newErrors = { ...shippingDetailsError };
         let isVaild = true;
-        if (shippingDetails.firstName.trim() === "" && shippingDetails.lastName.trim() === "" && shippingDetails.email.trim() === "" && shippingDetails.phoneNo.trim() === "" && shippingDetails.address.trim() === "" && shippingDetails.district.trim() === "" && shippingDetails.state.trim() === "" && shippingDetails.pincode.trim() === "" && shippingDetails.country.trim() === "") {
-            console.log(shippingDetailsError);
+        // if (shippingDetails.firstName.trim() === "" || shippingDetails.lastName.trim() === "" || shippingDetails.email.trim() === "" || shippingDetails.phoneNo.trim() === "" || shippingDetails.address.trim() === "" || shippingDetails.district.trim() === "" || shippingDetails.state.trim() === "" || shippingDetails.pincode.trim() === "" || shippingDetails.country.trim() === "") {
+        //     newErrors.firstName = 'FirstName is required';
+        //     newErrors.lastName = 'LastName is required';
+        //     newErrors.email = 'Email is required';
+        //     newErrors.phoneNo = 'Contact is required';
+        //     newErrors.address = "Address is required";
+        //     newErrors.district = "District is required";
+        //     newErrors.state = "State is required";
+        //     newErrors.pincode = "Pincode is required";
+        //     newErrors.country = "Country is required";
+        //     isVaild = false;
+        // }
+        if (shippingDetails.firstName.trim() === "") {
             newErrors.firstName = 'FirstName is required';
-            newErrors.lastName = 'LastName is required';
-            newErrors.email = 'Email is required';
-            newErrors.phoneNo = 'Contact is required';
-            newErrors.address = "Address is required";
-            newErrors.district = "District is required";
-            newErrors.state = "State is required";
-            newErrors.pincode = "Pincode is required";
-            newErrors.country = "Country is required";
             isVaild = false;
         }
-        console.log("shippingDetails.phoneNo----", shippingDetails.phoneNo.length);
+        if (shippingDetails.lastName.trim() === "") {
+            newErrors.lastName = 'LastName is required';
+            isVaild = false;
+        }
+        if (shippingDetails.email.trim() === "") {
+            newErrors.email = 'Email is required';
+            isVaild = false;
+        }
+        if (shippingDetails.phoneNo.trim() === "") {
+            newErrors.phoneNo = 'Contact is required';
+            isVaild = false;
+        }
+        if (shippingDetails.address.trim() === "") {
+            newErrors.address = "Address is required";
+            isVaild = false;
+        }
+        if (shippingDetails.district.trim() === "") {
+            newErrors.district = "District is required";
+            isVaild = false;
+        }
+        if (shippingDetails.state.trim() === "") {
+            newErrors.state = "State is required";
+            isVaild = false;
+        }
+        if (shippingDetails.pincode.trim() === "") {
+            newErrors.pincode = "Pincode is required";
+            isVaild = false;
+        }
+        if (shippingDetails.country.trim() === "") {
+            newErrors.country = 'country is required';
+            isVaild = false;
+        }
         if (shippingDetails.phoneNo.length < 9 && shippingDetails.phoneNo.trim() !== "") {
             newErrors.phoneNo = "Contact number should be 10 numbers"
             isVaild = false
@@ -158,18 +196,43 @@ export default function placeOrder() {
     const validateBillingForm = () => {
         let newErrors = { ...billingDetailsError };
         let isVaild = true;
-        if (billingDetails.firstName.trim() === "" && billingDetails.lastName.trim() === "" && billingDetails.email.trim() === "" && billingDetails.phoneNo.trim() === "" && billingDetails.address.trim() === "" && billingDetails.district.trim() === "" && billingDetails.state.trim() === "" && billingDetails.pincode.trim() === "" && billingDetails.country.trim() === "") {
+        if (billingDetails.firstName.trim() === "") {
             newErrors.firstName = 'FirstName is required';
-            newErrors.lastName = 'LastName is required';
-            newErrors.email = 'Email is required';
-            newErrors.phoneNo = 'Contact is required';
-            newErrors.address = "Address is required";
-            newErrors.district = "District is required";
-            newErrors.state = "State is required";
-            newErrors.pincode = "Pincode is required";
-            newErrors.country = "Country is required";
             isVaild = false;
         }
+        if (billingDetails.lastName.trim() === "") {
+            newErrors.lastName = 'LastName is required';
+            isVaild = false;
+        }
+        if (billingDetails.email.trim() === "") {
+            newErrors.email = 'Email is required';
+            isVaild = false;
+        }
+        if (billingDetails.phoneNo.trim() === "") {
+            newErrors.phoneNo = 'Contact is required';
+            isVaild = false;
+        }
+        if (billingDetails.address.trim() === "") {
+            newErrors.address = "Address is required";
+            isVaild = false;
+        }
+        if (billingDetails.district.trim() === "") {
+            newErrors.district = "District is required";
+            isVaild = false;
+        }
+        if (billingDetails.state.trim() === "") {
+            newErrors.state = "State is required";
+            isVaild = false;
+        }
+        if (billingDetails.pincode.trim() === "") {
+            newErrors.pincode = "Pincode is required";
+            isVaild = false;
+        }
+        if (billingDetails.country.trim() === "") {
+            newErrors.country = 'country is required';
+            isVaild = false;
+        }
+
         if (billingDetails.phoneNo.length < 9 && billingDetails.phoneNo.trim() !== "") {
             newErrors.phoneNo = "Contact number should be 10 numbers"
             isVaild = false
@@ -189,60 +252,21 @@ export default function placeOrder() {
         if (validatePersonalDetailForm()) {
             if (getPersonalData.length === 0) {
                 dispatch(storePersonalDetails(personalDetails))
-                setPersonalDetails({
-                    PersonalName: "",
-                    PersonalEmail: "",
-                    PersonalPhoneNo: "",
-                })
-                setPersonalDetailForm(false)
-                // setShowPersonalData(true)
             }
             else {
                 dispatch(updatePersonalDetails(personalDetails))
-                setPersonalDetails({
-                    PersonalName: "",
-                    PersonalEmail: "",
-                    PersonalPhoneNo: "",
-                })
-                setPersonalDetailForm(false)
-                // setShowPersonalData(true)
             }
         }
     }
-
-    // console.log("getPersonalData------------------", getPersonalData.length === 0);
-
     const handleShipppingDetails = (e) => {
         e.preventDefault();
         if (validateShippingForm()) {
             if (getShippingData.length === 0) {
                 dispatch(storeShippingAddress(shippingDetails));
-                setShippingDetails({
-                    firstName: "",
-                    lastName: "",
-                    email: "",
-                    phoneNo: "",
-                    address: "",
-                    district: "",
-                    state: "",
-                    pincode: "",
-                    country: ""
-                })
                 setShowShippingData(true)
             }
             else {
                 dispatch(updateShippingAddress(shippingDetails));
-                setShippingDetails({
-                    firstName: "",
-                    lastName: "",
-                    email: "",
-                    phoneNo: "",
-                    address: "",
-                    district: "",
-                    state: "",
-                    pincode: "",
-                    country: ""
-                })
                 setShowShippingData(true)
             }
         }
@@ -252,33 +276,10 @@ export default function placeOrder() {
         if (validateBillingForm()) {
             if (getBillingData.length === 0) {
                 dispatch(storeBillingAddress(billingDetails));
-                setBillingDetails({
-                    firstName: "",
-                    lastName: "",
-                    email: "",
-                    phoneNo: "",
-                    address: "",
-                    district: "",
-                    state: "",
-                    pincode: "",
-                    country: ""
-                })
-                console.log("billingDetails------------------", billingDetails);
                 setShowBillingData(true)
             }
             else {
                 dispatch(updateBillingAddress(billingDetails));
-                setBillingDetails({
-                    firstName: "",
-                    lastName: "",
-                    email: "",
-                    phoneNo: "",
-                    address: "",
-                    district: "",
-                    state: "",
-                    pincode: "",
-                    country: ""
-                })
                 setShowBillingData(true)
             }
         }
@@ -333,42 +334,6 @@ export default function placeOrder() {
         })
         setShowBillingData(true)
     }
-    const handleCancelPersonal = () => {
-        setShowPersonalData(true)
-        setPersonalDetails({
-            PersonalName: "",
-            PersonalEmail: "",
-            PersonalPhoneNo: "",
-        })
-    }
-    const handleCancelShipping = () => {
-        setShowShippingData(true)
-        setShippingDetails({
-            firstName: "",
-            lastName: "",
-            email: "",
-            phoneNo: "",
-            address: "",
-            district: "",
-            state: "",
-            pincode: "",
-            country: ""
-        })
-    }
-    const handleCancelBilling = () => {
-        setShowBillingData(true)
-        setBillingDetails({
-            firstName: "",
-            lastName: "",
-            email: "",
-            phoneNo: "",
-            address: "",
-            district: "",
-            state: "",
-            pincode: "",
-            country: ""
-        })
-    }
     const handleSameAsShipping = () => {
         setBillingDetails(getShippingData)
         setShowBillingData(false)
@@ -414,45 +379,32 @@ export default function placeOrder() {
     useEffect(() => {
         if (getPersonalData.length === 0) {
             setShowPersonalData(true)
-            // setShowShippingData(false)
-            // setShowBillingData(false)
         }
         else {
             setShowPersonalData(false)
-            // setShowShippingData(true)
-            // setShowBillingData(true)
         }
     }, [getPersonalData]);
 
     useEffect(() => {
         if (getShippingData.length === 0) {
             setShowShippingData(true)
-            // setShowPersonalData(false)
-            // setShowBillingData(false)
         }
         else {
             setShowShippingData(false)
-            // setShowPersonalData(true)
-            // setShowBillingData(true)
         }
     }, [getShippingData])
 
     useEffect(() => {
         if (getBillingData.length === 0) {
             setShowBillingData(true)
-            // setShowShippingData(false)
-            // setShowPersonalData(false)
         }
         else {
             setShowBillingData(false)
-            // setShowShippingData(true)
-            // setShowPersonalData(true)
         }
     }, [getBillingData])
 
-    const expandedAmountarray = cartProducts.map((expanded) => expanded.expandedPrice)
+    const expandedAmountarray = getCartData.map((expanded) => expanded.expandedPrice)
     const totalExpandedAmount = expandedAmountarray.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
-    // console.log("orderData--------------------------------", orderData);
     return (
         <>
             <div className="">
@@ -489,7 +441,7 @@ export default function placeOrder() {
                         </div>
                         <div className="">
                             <form onSubmit={handlePersonalDetailForm} style={{ display: showPersonalData ? "block" : "none" }}>
-                                <div className={`grid justify-start p-10 w-auto gap-4 bg-white rounded-md ${showPersonalData ? 'border-gray-200 border border-solid' : 'border-green-300 border-2 border-solid'}`} onClick={() => setPersonalDetailForm(true)}>
+                                <div className={`grid justify-start p-10 w-auto gap-4 bg-white rounded-md ${showPersonalData ? 'border-gray-200 border border-solid' : 'border-green-300 border-2 border-solid'}`}>
                                     <div className="flex justify-start items-center gap-3">
                                         {/* <input type="radio" checked={!showPersonalData} className="border-2 h-5 w-5 border-gray-300 checked:border-green-200 checked:bg-green-500 rounded-full focus:outline-none focus:border-green-200 focus:ring-green-200 active:border-green-500" /> */}
                                         <FontAwesomeIcon icon={faUser} className="text-green-400 text-lg" />
@@ -514,7 +466,7 @@ export default function placeOrder() {
                                             {personalDetailsError.PersonalPhoneNo && <span className="text-red-400">{personalDetailsError.PersonalPhoneNo}</span>}
                                         </div>
                                         <div className="flex justify-between gap-3 mt-8">
-                                            <span className="border border-gray-200 hover:border-red-300 hover:text-red-400 h-9 flex justify-center items-center p-2 rounded text-gray-400 cursor-pointer" onClick={() => setShowPersonalData(false)}>Cancel</span>
+                                            <span className="border border-gray-200 hover:border-red-300 hover:text-red-400 h-9 flex justify-center items-center p-2 rounded text-gray-400 cursor-pointer" onClick={() => { getPersonalData.length === 0 ? setShowPersonalData(true) : setShowPersonalData(false) }}>Cancel</span>
                                             <button className={` ${getPersonalData.length === 0 ? 'w-18' : 'w-44'} border border-blue-400 h-9 flex justify-center items-center p-2 rounded text-blue-400 hover:text-white hover:bg-[#45BA76] hover:border-[#45BA76]`} type="submit">{getPersonalData.length === 0 ? 'Save' : 'Use This Address'}</button>
                                         </div>
                                     </div>
@@ -625,7 +577,7 @@ export default function placeOrder() {
                                         </div>
                                     </div>
                                     <div className="flex justify-start items-center gap-4">
-                                        <span className="border border-gray-200 hover:border-red-300 hover:text-red-400 h-9 flex justify-center items-center p-2 rounded text-gray-400 cursor-pointer" onClick={() => setShowShippingData(false)}>Cancel</span>
+                                        <span className="border border-gray-200 hover:border-red-300 hover:text-red-400 h-9 flex justify-center items-center p-2 rounded text-gray-400 cursor-pointer" onClick={() => { getShippingData.length === 0 ? setShowShippingData(true) : setShowShippingData(false) }}>Cancel</span>
                                         <button className={`${getShippingData.length === 0 ? 'w-18' : 'w-44'} border border-blue-400 h-9 flex justify-center items-center p-2 rounded text-blue-400 hover:text-white hover:bg-[#45BA76] hover:border-[#45BA76]`} type="submit">{getShippingData.length === 0 ? "Save" : "Use This Address"}</button>
                                     </div>
                                 </div>
@@ -735,7 +687,7 @@ export default function placeOrder() {
                                     </div>
                                     <div className="flex justify-between items-center pt-3">
                                         <div className="flex justify-start items-center gap-4">
-                                            <span className="border border-gray-200 hover:border-red-300 hover:text-red-400 h-9 flex justify-center items-center p-2 rounded text-gray-400 cursor-pointer" onClick={() => setShowBillingData(false)}>Cancel</span>
+                                            <span className="border border-gray-200 hover:border-red-300 hover:text-red-400 h-9 flex justify-center items-center p-2 rounded text-gray-400 cursor-pointer" onClick={() => { getBillingData.length === 0 ? setShowBillingData(true) : setShowBillingData(false) }}>Cancel</span>
                                             <button className={`${getBillingData.length === 0 ? 'w-18' : 'w-44'} border border-blue-400 h-9 flex justify-center items-center p-2 rounded text-blue-400 hover:text-white hover:bg-[#45BA76] hover:border-[#45BA76]`} type="submit">{getBillingData.length === 0 ? "Save" : "Use This Address"}</button>
                                         </div>
                                         {
@@ -794,7 +746,7 @@ export default function placeOrder() {
                                 <p className="text-orange-400 font-medium">₹{totalExpandedAmount}</p>
                             </div>
                             <div className="flex justify-center items-center mt-5">
-                                <button onClick={handlePlaceOrder} className="bg-white w-80 border border-solid border-gray-400 hover:border-green-300 p-3 h-10 flex justify-center items-center hover:text-white hover:bg-green-400 text-gray-600 font-bold rounded">PLACE ORDER</button>
+                                <button onClick={handlePlaceOrder} className={`bg-white w-80 border border-solid border-gray-400 hover:border-green-300 p-3 h-10 flex justify-center items-center hover:text-white hover:bg-green-400 text-gray-600 font-bold rounded ${!getCartData.length && !getBillingData.length && !getPersonalData.length && !getShippingData.length ? 'hover:cursor-not-allowed' : 'cursor-pointer'}`} >PLACE ORDER</button>
                             </div>
                         </div>
                     </div>

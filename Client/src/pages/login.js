@@ -8,6 +8,7 @@ import { ApolloError, useMutation } from '@apollo/client'
 import { CREATE_ADMINS } from '../../Grahpql/mutation'
 import { useRouter } from 'next/router';
 import { notification } from 'antd';
+import Link from 'next/link';
 export default function Login() {
 
     const [formData, setFormData] = useState({
@@ -71,6 +72,10 @@ export default function Login() {
 
     return (
         <>
+            <div className='flex justify-center items-center gap-7 mt-8'>
+                <Link href={'/customerLogin'} className='border border-solid h-10 w-25 p-2 border-violet-400 text-violet-400 hover:bg-violet-50 rounded-md flex justify-center items-center' >Customer Login</Link>
+                <Link href={'/customerRegister'} className='border border-solid h-10 w-25 p-2 border-indigo-400 text-indigo-400 hover:bg-indigo-50 rounded-md flex justify-center items-center'>Customer Register</Link>
+            </div>
             <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8 w-1/2 m-auto mt-10 bg-blue-300 rounded-2xl">
                 <div className="sm:mx-auto sm:w-full sm:max-w-sm">
                     <img
