@@ -7,12 +7,12 @@ import admins from '../model/adminSchema.js';
 import productDetails from '../model/productSchema.js';
 import newOrders from '../model/order.js';
 import customerInformation from '../model/customerSchema.js';
-
 // import Upload from 'graphql-upload/Upload.mjs';
 // import GraphQLUpload from "graphql-upload/GraphQLUpload.js";
 // const {GraphQLUpload}  = require('graphql-upload/GraphQLUpload.js')
 import path from 'path';
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 import fileSchema from '../model/fileSchema.js'
 import mongoose from 'mongoose';
 
@@ -87,7 +87,7 @@ const resolvers = {
         },
     },
     Mutation: {
-        async newCustomer(_, { customerInput }) {
+        async registerCustomer(_, { customerInput }) {
             const hashPassword = await bcrypt.hash(customerInput.password, 10)
             const customer = new customerInformation({
                 name: customerInput.name,
@@ -101,16 +101,20 @@ const resolvers = {
         async customerLogin(_, { loginInput }) {
             const check = await customerInformation.find({ email: loginInput.email });
             if (check.length > 0) {
-                const comparePassword = bcrypt.compare(loginInput.password, check[0].password);
-                if (comparePassword == true) {
-                    console.log("password matched");
+                const comparePassword = await bcrypt.compare(loginInput.password, check[0].password);
+                if (comparePassword) {
+                    const name = check[0].name;
+                    const customerId = check[0]._id;
+                    const token = jwt.sign({ name, customerId }, "secret-key", { expiresIn: '1d' })
+                    // console.log({ token, name, customerId })
+                    return { token, name, customerId };
                 }
                 else {
-                    console.log("password not matched");
+                    throw new Error("Password is not correct");
                 }
             }
-            else{
-                console.log("email not matched")
+            else {
+                throw new Error("Email is not registered");
             }
         },
         async createAdmins(_, { adminsInput: { email, password } }) {
