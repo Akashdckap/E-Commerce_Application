@@ -88,6 +88,7 @@ const resolvers = {
     },
     Mutation: {
         async registerCustomer(_, { customerInput }) {
+            // const verifyUser = await customerInformation.find({})
             const hashPassword = await bcrypt.hash(customerInput.password, 10)
             const customer = new customerInformation({
                 name: customerInput.name,
@@ -95,11 +96,12 @@ const resolvers = {
                 phoneNo: customerInput.phoneNo,
                 password: hashPassword
             });
+            // console.log("verifyUser", verifyUser);
+
             const details = await customer.save();
             return details
         },
         async customerLogin(_, { loginInput }) {
-            // console.log("loginInput-------------------", loginInput);
             const check = await customerInformation.find({ email: loginInput.email });
             if (check.length > 0) {
                 const comparePassword = await bcrypt.compare(loginInput.password, check[0].password);
@@ -107,11 +109,7 @@ const resolvers = {
                     const name = check[0].name;
                     const customerId = check[0]._id;
                     const token = jwt.sign({ name, customerId }, "secret-key", { expiresIn: '1d' })
-                    // console.log({ token, name, customerId })
-                    console.log("name", name);
                     return { token, name, customerId };
-                    // const { token, customerId, name } = data.customerLogin;
-
                 }
                 else {
                     throw new Error("Password is not correct");
