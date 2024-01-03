@@ -9,6 +9,15 @@ export const CREATE_ADMINS = gql`
   }
 `;
 
+export const LOGIN_CUSTOMER = gql`
+  mutation customerLogin($loginInput: customerLoginInput){
+    customerLogin(loginInput: $loginInput){
+      email
+      password
+    }
+  }
+`
+
 export const CREATE_PRODUCTS = gql`
  mutation createProducts($productDatas: productsInput!){
     createProducts(newProducts: $productDatas){
