@@ -6,9 +6,9 @@ import { useRouter } from 'next/router';
 import { notification } from 'antd';
 import Image from 'next/image';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUserCircle, faShoppingCart ,faSignOut,faGreaterThan,faShoppingBag } from '@fortawesome/free-solid-svg-icons';
-import { GET_ALL_PRODUCTS, GET_ALL_PRODUCTS_DATA } from '../../../Grahpql/queries';
-import { useQuery } from '@apollo/client';
+import { faUserCircle, faShoppingCart, faSignOut, faGreaterThan, faShoppingBag } from '@fortawesome/free-solid-svg-icons';
+import { GET_ADD_TO_CART_SINGLE_PRODUCT_DATA, GET_ALL_PRODUCTS_DATA } from '../../../Grahpql/queries';
+import { useLazyQuery, useQuery } from '@apollo/client'
 export default function index() {
     const dispatch = useDispatch();
     const [openProfile, setOpenProfile] = useState(false)
@@ -47,11 +47,15 @@ export default function index() {
         if (getId) {
             setAddToCartId(getId)
         }
-        else{
+        else {
             console.log("Not get the Id to store in cart");
         }
     }
-    console.log("cartId-------",allAddToCartId)
+
+    const { data: getSingleCartData, error: getSingleCartError, loading: getSingleCartLoading } = useLazyQuery(GET_ADD_TO_CART_SINGLE_PRODUCT_DATA, {
+        variables: { ids: allAddToCartId }
+    })
+    console.log("cartData-------",getSingleCartData)
 
     return (
         <>
