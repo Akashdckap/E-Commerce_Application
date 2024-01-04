@@ -150,7 +150,7 @@ export default function ProductList() {
                         }
                     </div>
                 </div>
-                <div className='flex justify-evenly items-center pb-10'>
+                {/* <div className='flex justify-evenly items-center pb-10'>
                     <div>
                         <img className="h-60 rounded-t-lg object-cover" src="https://images.unsplash.com/flagged/photo-1556637640-2c80d3201be8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8c25lYWtlcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60" />
                     </div>
@@ -162,7 +162,7 @@ export default function ProductList() {
                         <p>2999</p>
                         <button>Add to cart</button>
                     </div>
-                </div>
+                </div> */}
             </div>
 
             <section className='h-screen py-12 sm:py-16 lg:py-20 absolute top-0 right-10' style={{ display: openCart ? 'block' : 'none' }}>
