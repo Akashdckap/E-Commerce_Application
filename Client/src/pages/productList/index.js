@@ -28,7 +28,7 @@ export default function ProductList() {
     const [parseIds, { data: getSingleData, error: getSingleError, loading: getSingleLoading }] = useLazyQuery(GET_ADD_TO_CART_SINGLE_PRODUCT_DATA, {
         variables: { ids: allAddToCartId }
     });
-    const { data: getDataError, error: getError, loading: getLoading } = useQuery(GET_ALL_PRODUCTS_DATA);
+    const { data: getData, error: getError, loading: getLoading } = useQuery(GET_ALL_PRODUCTS_DATA);
 
     console.log("allAddToCartId----------------", allAddToCartId);
     const handleAddtoCartBtn = (getId, Qty) => {
@@ -52,8 +52,8 @@ export default function ProductList() {
         // })
     }
     useEffect(() => {
-        if (getDataError && !getLoading) {
-            setgetProductData(getDataError.getAllProductsData);
+        if (getData && !getLoading) {
+            setgetProductData(getData.getAllProductsData);
         }
         console.log("getSingleData-----------", getSingleData);
         if (getSingleData && !getLoading) {
@@ -63,7 +63,7 @@ export default function ProductList() {
         if (getSingleData) return console.log('Loading...');
         if (getSingleError) return console.error('Error fetching data:', getSingleError);
         if (getError) return console.error('Error fetching data:', getSingleError);
-    }, [getError, getDataError, getSingleData]);
+    }, [getError, getData, getSingleData]);
 
     const handleRemoveDataFromLocal = (itemId) => {
         dispatch(removeCartdata(itemId))
