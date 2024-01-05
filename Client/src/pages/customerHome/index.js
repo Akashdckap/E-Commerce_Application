@@ -39,7 +39,18 @@ export default function index() {
         if (productLoading && !productError && !productData) {
             console.log("...error");
         }
+
     }, [productData, productError, productLoading]);
+
+    useEffect(() => {
+        if (Object.keys(loginData).length === 0 || !loginData.token) {
+            router.push('/customerLogin')
+        }
+        else {
+            router.push('/customerHome')
+        }
+    }, [])
+    console.log("loginData----------", loginData.token);
 
     const filteredList = getProductData.filter((item) => {
         return item.productName.toLowerCase().includes(searchText.toLowerCase());
