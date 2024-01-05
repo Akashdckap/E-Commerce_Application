@@ -186,20 +186,11 @@ const typeDefs = gql` #graphql
     input File{
         url: String!
     }
-    type loginResponse{
-        token: String,
-        name: String,
-        customerId: String,
-        email: String,
-        password: String,
-    }
 
     type loginResponse {
-      token: String
-      customerId: String
-      name: String
-      email: String
-      password: String
+        email: String,
+        password: String,
+        token: String,
     }
 
     type Query{

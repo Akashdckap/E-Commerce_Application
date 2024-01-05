@@ -8,6 +8,9 @@ import { customerLoginData } from '@/Reducer/productReducer';
 import { useRouter } from 'next/router';
 import { notification } from 'antd';
 import { useDispatch } from 'react-redux';
+// import { Jwt } from 'jsonwebtoken';
+import Jwt from 'jsonwebtoken';
+
 export default function customerLogin() {
     const router = useRouter();
     const dispatch = useDispatch();
@@ -46,29 +49,21 @@ export default function customerLogin() {
         delete loginError[name]
     };
     const [customerLogin] = useMutation(LOGIN_CUSTOMER);
+    // console.log("customer", customerLogin)
     const handleLoginCustomer = async (e) => {
         e.preventDefault();
         if (validateLoginForm()) {
             console.log("success");
             try {
                 const { data, errors } = await customerLogin({ variables: { loginInput: loginForm } });
-                const { token, customerId, name } = data.customerLogin;
-                dispatch(customerLoginData({ customerId, name, token }));
-                router.push('/customerHome')
+                const { token } = data.customerLogin;
+                const { name, customerId } = Jwt.decode(token)
+                dispatch(customerLoginData({ name, customerId, token }));
                 notification.success({ message: "User successfully logged" })
+                router.push('/customerHome')
             }
             catch (error) {
                 notification.error({ message: error.message })
-                // if (error.message === 'Email is not registered') {
-                //     setLoginError({
-                //         email: error.message
-                //     })
-                // }
-                // if (error.message === "Password is not correct") {
-                //     setLoginError({
-                //         password: error.message,
-                //     })
-                // }
                 console.error(error.message);
             }
         }
