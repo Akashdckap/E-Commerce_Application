@@ -115,7 +115,7 @@ const resolvers = {
                     const name = check[0].name;
                     const customerId = check[0]._id;
                     const token = jwt.sign({ name, customerId }, "secret-key", { expiresIn: '1d' })
-                    return { token, name, customerId };
+                    return { token };
                 }
                 else {
                     throw new Error("Password is not correct");

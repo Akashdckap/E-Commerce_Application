@@ -5,10 +5,11 @@ import { logOutCustomer } from '@/Reducer/productReducer';
 import { useRouter } from 'next/router';
 import { notification } from 'antd';
 import Image from 'next/image';
+import { LOGIN_CUSTOMER } from '../../../Grahpql/mutation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserCircle, faShoppingCart, faSignOut, faGreaterThan, faShoppingBag, faClose, faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { GET_ADD_TO_CART_SINGLE_PRODUCT_DATA, GET_ALL_PRODUCTS_DATA } from '../../../Grahpql/queries';
-import { useLazyQuery, useQuery } from '@apollo/client'
+import { useLazyQuery, useMutation, useQuery } from '@apollo/client'
 import { storeAddToCartProductData, updateCartItemQuantity, removeCartdata, removeAllCartDatas, incrementProductCount, decrementProductCount } from '@/Reducer/productReducer';
 import Link from 'next/link';
 export default function index() {
@@ -29,7 +30,8 @@ export default function index() {
     const [parseIds, { data: getSingleCartData, error: getSingleCartError, loading: getSingleCartLoading }] = useLazyQuery(GET_ADD_TO_CART_SINGLE_PRODUCT_DATA, {
         variables: { ids: allAddToCartId }
     })
-
+    const {data:loginCustomer,error:loginError,loading:loginLoading} = useMutation(LOGIN_CUSTOMER)
+    console.log("loginCustomer",loginCustomer)
     const handleAddtoCartBtn = (getId) => {
         parseIds();
         if (getId) {
