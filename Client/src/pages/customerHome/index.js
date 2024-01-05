@@ -11,7 +11,6 @@ import { GET_ADD_TO_CART_SINGLE_PRODUCT_DATA, GET_ALL_PRODUCTS_DATA } from '../.
 import { useLazyQuery, useQuery } from '@apollo/client'
 import { storeAddToCartProductData, updateCartItemQuantity, removeCartdata, removeAllCartDatas, incrementProductCount, decrementProductCount } from '@/Reducer/productReducer';
 import Link from 'next/link';
-
 export default function index() {
     const dispatch = useDispatch();
     const [openProfile, setOpenProfile] = useState(false)
@@ -74,7 +73,6 @@ export default function index() {
             router.push('/customerHome')
         }
     }, [])
-    // console.log("loginData----------", loginData.token);
 
     const filteredList = getProductData.filter((item) => {
         return item.productName.toLowerCase().includes(searchText.toLowerCase());
@@ -97,7 +95,7 @@ export default function index() {
     }
     const ExpandedAmountarray = getCartData.map((expanded) => expanded.expandedPrice)
     const totalExpandedAmount = ExpandedAmountarray.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
-    // console.log("cartData-------",getSingleCartData)
+
     return (
         <>
             <div>
@@ -124,11 +122,13 @@ export default function index() {
                                     <h1 className='text-gray-600'>{loginData.name}</h1>
                                 </div>
                             </div>
-                            <div className='flex justify-around items-center w-44 bg-white p-2 rounded-md hover:cursor-pointer'>
-                                <FontAwesomeIcon icon={faShoppingBag} className='text-emerald-400' />
-                                <span className="text-emerald-400">My Orders</span>
-                                <FontAwesomeIcon icon={faGreaterThan} className='text-emerald-400 font-mono' />
-                            </div>
+                            <Link href={`/customerHome/myOrders/${loginData.customerId}`}>
+                                <div className='flex justify-around items-center w-44 bg-white p-2 rounded-md hover:cursor-pointer'>
+                                    <FontAwesomeIcon icon={faShoppingBag} className='text-emerald-400' />
+                                    <span className="text-emerald-400">My Orders</span>
+                                    <FontAwesomeIcon icon={faGreaterThan} className='text-emerald-400 font-mono' />
+                                </div>
+                            </Link>
                             <div onClick={logOutUser} className='border cursor-pointer border-solid  flex justify-between w-44 items-center px-4 py-1 text-red-400 hover:text-white hover:bg-red-400 border-red-400 rounded-md'>
                                 <FontAwesomeIcon icon={faSignOut} />
                                 <span>LogOut</span>
