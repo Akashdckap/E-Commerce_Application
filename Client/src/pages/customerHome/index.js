@@ -6,13 +6,15 @@ import { useRouter } from 'next/router';
 import { notification } from 'antd';
 import Image from 'next/image';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUserCircle, faShoppingCart, faSignOut, faGreaterThan, faShoppingBag } from '@fortawesome/free-solid-svg-icons';
+import { faUserCircle, faShoppingCart, faSignOut, faGreaterThan, faShoppingBag, faClose, faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { GET_ADD_TO_CART_SINGLE_PRODUCT_DATA, GET_ALL_PRODUCTS_DATA } from '../../../Grahpql/queries';
 import { useLazyQuery, useQuery } from '@apollo/client'
+import { storeAddToCartProductData, updateCartItemQuantity, removeCartdata, removeAllCartDatas, incrementProductCount, decrementProductCount } from '@/Reducer/productReducer';
 import Link from 'next/link';
 export default function index() {
     const dispatch = useDispatch();
     const [openProfile, setOpenProfile] = useState(false)
+    const [openCart, setCart] = useState()
     const router = useRouter();
     const [getProductData, setgetProductData] = useState([])
     const [searchText, setSearchText] = useState('');
@@ -24,6 +26,22 @@ export default function index() {
 
     const loginData = useSelector(state => state.productDetails.LoginData);
 
+    const [parseIds, { data: getSingleCartData, error: getSingleCartError, loading: getSingleCartLoading }] = useLazyQuery(GET_ADD_TO_CART_SINGLE_PRODUCT_DATA, {
+        variables: { ids: allAddToCartId }
+    })
+
+    const handleAddtoCartBtn = (getId) => {
+        parseIds();
+        if (getId) {
+            setAddToCartId(getId)
+            notification.success({ message: "Successfully added to cart" });
+        }
+        else {
+            console.log("Not get the Id to store in cart");
+            notification.error({ message: "Not added to the cart" })
+        }
+    }
+
     const logOutUser = () => {
         dispatch(logOutCustomer());
         router.push('/customerLogin')
@@ -34,6 +52,9 @@ export default function index() {
         if (productData && !productError && !productLoading) {
             setgetProductData(productData.getAllProductsData)
         }
+        if (getSingleCartData && !getSingleCartLoading && getSingleCartData.addToCartProductData) {
+            dispatch(storeAddToCartProductData(getSingleCartData.addToCartProductData));
+        }
         if (productError && !productData && !productLoading) {
             console.log("...Product Data Error");
         }
@@ -41,7 +62,8 @@ export default function index() {
             console.log("...error");
         }
 
-    }, [productData, productError, productLoading]);
+    }, [productData, productError, productLoading, getSingleCartData]);
+    // console.log("----------------getSingleCartData", getSingleCartData)
 
     useEffect(() => {
         if (Object.keys(loginData).length === 0 || !loginData.token) {
@@ -52,22 +74,28 @@ export default function index() {
         }
     }, [])
 
-
     const filteredList = getProductData.filter((item) => {
         return item.productName.toLowerCase().includes(searchText.toLowerCase());
     });
 
-    const handleAddtoCartBtn = (getId) => {
-        if (getId) {
-            setAddToCartId(getId)
-        }
-        else {
-            console.log("Not get the Id to store in cart");
-        }
+    const handleRemoveDataFromLocal = (itemId) => {
+        dispatch(removeCartdata(itemId))
     }
-    const { data: getSingleCartData, error: getSingleCartError, loading: getSingleCartLoading } = useLazyQuery(GET_ADD_TO_CART_SINGLE_PRODUCT_DATA, {
-        variables: { ids: allAddToCartId }
-    })
+
+    const handleIncrementCount = (productId) => {
+        dispatch(incrementProductCount({ productId }))
+    }
+
+    const handleDecrementCount = (productId) => {
+        dispatch(decrementProductCount({ productId }))
+    }
+    const removeAllCartData = () => {
+        dispatch(removeAllCartDatas())
+        setCart(false)
+    }
+    const ExpandedAmountarray = getCartData.map((expanded) => expanded.expandedPrice)
+    const totalExpandedAmount = ExpandedAmountarray.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+
     return (
         <>
             <div>
@@ -78,7 +106,7 @@ export default function index() {
                             <input type='text' onChange={(e) => setSearchText(e.target.value)} placeholder='Search products' className='h-10 bg-gray-50 border-solid border border-gray-300 text-gray-600 text-sm rounded-lg hover:border-gray-500 focus:border-gray-500 outline-0 ps-5' />
                             <div className='relative bottom-3'>
                                 <p className='relative left-4 top-1 text-white bg-yellow-600 text-base font-medium rounded-full h-6 w-6 flex justify-center items-center'>{getCartData.length}</p>
-                                <FontAwesomeIcon icon={faShoppingCart} className='text-gray-700 hover:text-gray-600 text-2xl cursor-pointer' />
+                                <FontAwesomeIcon onClick={() => setCart(true)} icon={faShoppingCart} className='text-gray-700 hover:text-gray-600 text-2xl cursor-pointer' />
                             </div>
                             <div>
                                 <FontAwesomeIcon icon={faUserCircle} className='text-3xl text-gray-500 hover:cursor-pointer ' onClick={() => !openProfile ? setOpenProfile(true) : setOpenProfile(false)} />
@@ -153,6 +181,96 @@ export default function index() {
                         }
                     </div>
                 </div>
+                <section className='h-screen py-12 sm:py-16 lg:py-20 absolute top-0 right-10' style={{ display: openCart ? 'block' : 'none' }}>
+                    <div className="mx-auto px-4 sm:px-6 lg:px-8">
+                        <div className="mx-auto mt-8 max-w-md md:mt-12">
+                            <div className="rounded-3xl bg-white shadow-lg">
+                                <div className='flex justify-between pl-8 pt-4 pr-8'>
+                                    <h1 className='text-yellow-500'>SHOPPING CART</h1>
+                                    <FontAwesomeIcon onClick={() => setCart(false)} icon={faClose} className='text-xl cursor-pointer hover:text-red-400' />
+                                </div>
+                                <div className="overflow-y-scroll scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-gray-300 max-h-96 p-2">
+                                    {
+                                        getCartData.length > 0 ? (
+                                            getCartData.map((listCartData, index) => {
+                                                return (
+                                                    <div className="flow-root" key={listCartData._id}>
+                                                        <ul className="-my-8">
+                                                            <li className="flex flex-col space-y-1 py-10 text-left sm:flex-row sm:space-x-5 sm:space-y-1">
+                                                                <div className="shrink-0 relative">
+                                                                    <img className="h-24 w-24 max-w-full rounded-lg object-cover" src="https://images.unsplash.com/flagged/photo-1556637640-2c80d3201be8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8c25lYWtlcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60" alt="" />
+                                                                </div>
+                                                                <div className="relative flex flex-1 flex-col justify-between">
+                                                                    <div className="sm:col-gap-3 sm:grid sm:grid-cols-2">
+                                                                        <div className="pr-8 sm:pr-5">
+                                                                            <p className="text-base font-semibold text-gray-600">{listCartData.productName}</p>
+                                                                            {/* <span>{listCartData.category}</span> */}
+                                                                            <p className="mx-0 mt-1 mb-0 text-base text-gray-500">₹{listCartData.price}</p>
+                                                                        </div>
+                                                                        <div className="mt-4 flex items-end justify-between sm:mt-0 sm:items-start sm:justify-end">
+                                                                            <p className="shrink-0 w-20 text-base font-semibold text-gray-700 sm:order-2 sm:ml-8 sm:text-right">₹{listCartData.expandedPrice}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="flex justify-center items-center gap-32">
+                                                                        <div className='flex justify-center items-center gap-3'>
+                                                                            <button disabled={listCartData.count == 1} >
+                                                                                <FontAwesomeIcon icon={faMinus} onClick={() => handleDecrementCount(listCartData._id)} className={`${listCartData.count === 1 ? 'cursor-default' : "cursor-pointer"} border border-solid border-blue-300 font-thin rounded-xl p-1 text-xs`} />
+                                                                            </button>
+                                                                            {
+                                                                                <span className='border border-gray-400 w-10 rounded-sm flex justify-center items-center'>{listCartData.count}</span>
+                                                                                // <input type='text' id={listCartData._id} className='flex justify-center hover:border-blue-300 items-center pl-3.5 border border-gray-400 w-10 rounded-sm' value={listCartData.count} onChange={handleQuantityChange} />
+                                                                            }
+                                                                            <FontAwesomeIcon icon={faPlus} onClick={() => handleIncrementCount(listCartData._id, listCartData.price)} className='cursor-pointer border border-solid border-blue-300 font-thin rounded-xl p-1 text-xs' />
+                                                                        </div>
+                                                                        <button type="submit" onClick={() => handleRemoveDataFromLocal(listCartData._id, listCartData.productName)} className="flex rounded p-2 text-center text-gray-700 transition-all duration-200 ease-in-out focus:shadow hover:text-red-500">
+                                                                            Remove
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                )
+                                            })
+                                        ) : <div>
+                                            <Image
+                                                src="/Images/noCart.png"
+                                                alt="No Carts Found Image"
+                                                style={{ paddingTop: '30px', padding: '50px' }}
+                                                width={400}
+                                                height={200}
+                                            />
+                                        </div>
+                                    }
+                                    {
+                                        getCartData.length > 1 ? (
+                                            <div className='flex justify-end'>
+                                                <span onClick={removeAllCartData} className='cursor-pointer hover:text-red-600'>Remove All</span>
+                                            </div>
+                                        ) : ''
+                                    }
+
+                                </div>
+                                <div className='flex justify-around'>
+                                    <h5>Total Amount: </h5>
+                                    <p>₹{totalExpandedAmount}</p>
+                                </div>
+                                <div className="flex justify-center place-items-center gap-2 pb-8">
+                                    <div className='flex justify-center items-center pt-5'>
+                                        <button type='button' onClick={() => { setCart(false) }} className='bg-transparent  text-blue-700 font-semibold py-2 px-4 border border-blue-500 rounded hover:text-cyan-600 hover:border-cyan-600'>Continue Shopping</button>
+                                    </div>
+                                    <div className='flex justify-center items-center pt-5'>
+                                        <Link href="/cartItems">
+                                            <button type="button" className="items-center justify-center rounded-md bg-orange-500 py-2 px-4 text-sm font-semibold text-white transition-all duration-200 ease-in-out focus:shadow hover:bg-gray-800">
+                                                View Cart
+                                            </button>
+                                        </Link>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
             </div>
         </>
 
