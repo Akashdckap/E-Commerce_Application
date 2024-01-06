@@ -8,9 +8,7 @@ import { customerLoginData } from '@/Reducer/productReducer';
 import { useRouter } from 'next/router';
 import { notification } from 'antd';
 import { useDispatch } from 'react-redux';
-// import { Jwt } from 'jsonwebtoken';
 import Jwt from 'jsonwebtoken';
-
 export default function customerLogin() {
     const router = useRouter();
     const dispatch = useDispatch();
@@ -22,8 +20,6 @@ export default function customerLogin() {
         password: "",
         email: "",
     });
-    // const { data, loading, error } = useQuery(GET_REGISTER_CUSTOMER);
-    // console.log("data--------", data);
     const validateLoginForm = () => {
         let newErrors = { ...loginError };
         let isVaild = true;
@@ -49,7 +45,6 @@ export default function customerLogin() {
         delete loginError[name]
     };
     const [customerLogin] = useMutation(LOGIN_CUSTOMER);
-    // console.log("customer", customerLogin)
     const handleLoginCustomer = async (e) => {
         e.preventDefault();
         if (validateLoginForm()) {
@@ -79,7 +74,6 @@ export default function customerLogin() {
                         <div className='grid justify-center items-center gap-2'>
                             <h2 className='text-indigo-400 text-lg font-normal'>Login Form</h2>
                         </div>
-
                         <div className='grid justify-start items-center gap-1'>
                             <label className='text-violet-400'>Email</label>
                             <input placeholder='Enter the name' onChange={handleChange} value={loginForm.email} name='email' className='border border-solid border-gray-400 h-10 w-72 pl-3 rounded-md hover:border-violet-400 focus:border-violet-400 outline-none text-gray-500' />

@@ -21,8 +21,10 @@ export default function cartItems() {
         dispatch(removeAllCartDatas())
     };
 
+
     const loginData = useSelector(state => state.productDetails.LoginData);
     // const cartData = useSelector(state => state.productDetails.cartData);
+
     // useEffect(() => {
     //     if (Object.keys(loginData).length === 0 || !loginData.token) {
     //         router.push('/customerLogin');
