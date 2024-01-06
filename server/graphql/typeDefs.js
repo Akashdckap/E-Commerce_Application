@@ -187,14 +187,12 @@ const typeDefs = gql` #graphql
     input File{
         url: String!
     }
-    type loginResponse{
-        token: String,
-        name: String,
-        customerId: String,
+
+    type loginResponse {
         email: String,
         password: String,
+        token: String,
     }
-
     type Query{
         getCustomerRegister(id: ID!): customerRegister
         

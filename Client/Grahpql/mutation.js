@@ -15,8 +15,6 @@ export const LOGIN_CUSTOMER = gql`
         email
         password
         token
-        name
-        customerId
     }
   }
 `
