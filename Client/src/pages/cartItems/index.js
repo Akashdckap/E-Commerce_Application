@@ -10,6 +10,8 @@ import { notification } from "antd";
 export default function cartItems() {
     const router = useRouter();
     const cartProducts = useSelector(state => state.productDetails.cartData);
+    const loginData = useSelector(state => state.productDetails.LoginData);
+
     const dispatch = useDispatch()
     const handleRemoveDataFromLocal = (itemId, itemName) => {
         dispatch(removeCartdata(itemId))
@@ -24,6 +26,7 @@ export default function cartItems() {
     //         router.push("/productList")
     //     }
     // }, [cartProducts])
+    console.log("loginData--------------------", loginData);
 
     const expandedAmountarray = cartProducts.map((expanded) => expanded.expandedPrice)
     const totalExpandedAmount = expandedAmountarray.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
@@ -44,9 +47,9 @@ export default function cartItems() {
                 </button></Link> */}
             </div>
 
-            <div className="flex justify-between items-start mt-5 pb-10">
+            <div className="flex justify-between items-start mt-5 pb-10 gap-10">
                 <div>
-                    <table className="table-auto bg-white border border-gray-300 ml-20 border-none rounded">
+                    <table className="table-auto shadow-md bg-white border border-gray-300 ml-20 border-none rounded">
                         <thead className="text-center">
                             <tr>
                                 <th className="py-2 px-4 border-b text-left pl-8 text-indigo-400 font-medium">Item</th>
@@ -102,7 +105,7 @@ export default function cartItems() {
                         </div> : ""
                     }
                 </div>
-                <div className="grid justify-start gap-4 pb-10 pl-10 pr-10 mr-20 bg-white rounded pt-5 shadow-sm p-6 mb-6 border-gray-900">
+                <div className="grid justify-start gap-4 pb-10 pl-10 pr-10 mr-20 bg-white rounded pt-5 shadow-md p-6 mb-6 border-gray-900">
                     <p className="text-green-600 border-b border-gray-400 pb-1">PRICE DETAILS</p>
                     <div className="flex justify-between gap-10">
                         <label className="text-gray-500">Price ({cartProducts.length} - items) :</label>
@@ -117,8 +120,8 @@ export default function cartItems() {
                         <p className="text-gray-600 font-medium">₹{totalExpandedAmount}</p>
                     </div>
                     <div className="grid gap-3 pt-2">
-                        <Link href={`${cartProducts.length === 0 ? '/productList' : '/placeOrder'} `}><button className="bg-slate-600 w-96 hover:bg-slate-500 p-3 h-10 flex justify-center items-center hover:text-green-400 text-white font-medium py-2 px-4 rounded">{cartProducts.length === 0 ? "GO TO HOME" : "PROCEED TO CHECKOUT"}</button></Link>
-                        <Link href={'/productList'}><button className="bg-white w-96 border border-solid border-gray-400 hover:border-orange-300 p-3 h-10 flex justify-center items-center hover:text-orange-400 text-gray-600 font-bold py-2 px-4 rounded">Back to Shop</button></Link>
+                        <Link href={`${Object.keys(loginData).length > 0 ? '/UserPlaceOrder' : '/placeOrder'} `}><button className="bg-slate-600 w-96 hover:bg-slate-500 p-3 h-10 flex justify-center items-center hover:text-green-400 text-white font-medium py-2 px-4 rounded">{cartProducts.length === 0 ? "GO TO HOME" : "PROCEED TO CHECKOUT"}</button></Link>
+                        <Link href={'/customerHome'}><button className="bg-white w-96 border border-solid border-gray-400 hover:border-orange-300 p-3 h-10 flex justify-center items-center hover:text-orange-400 text-gray-600 font-bold py-2 px-4 rounded">Back to Shop</button></Link>
                     </div>
                 </div>
             </div>

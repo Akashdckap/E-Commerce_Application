@@ -16,9 +16,10 @@ const placeOrder = mongoose.Schema({
         expandedPrice: Number,
     }],
     personalDetails: {
-        PersonalName: String,
-        PersonalEmail: String,
-        PersonalPhoneNo: String,
+        name: String,
+        email: String,
+        phoneNo: String,
+        customerId: String,
     },
     shippingAddress: {
         firstName: String,

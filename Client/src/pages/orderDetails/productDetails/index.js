@@ -3,8 +3,6 @@ import React, { useEffect, useState } from "react";
 import { GET_ORDER_PRODUCT_DETAILS } from "../../../../Grahpql/queries";
 import { useQuery } from "@apollo/client";
 import Link from "next/link";
-
-
 export default function ProductDetails() {
     const router = useRouter();
     const { orderId } = router.query;
@@ -13,7 +11,7 @@ export default function ProductDetails() {
     const [shippingData, setShippingData] = useState('');
     const [billingAddress, setBillingDetails] = useState('');
     const [totalPrice, setTotalPrice] = useState('');
-    // console.log(orderId)
+
     const { data: orderData, loading: orderLoading, error: orderError } = useQuery(GET_ORDER_PRODUCT_DETAILS, {
         variables: { id: orderId }
     });
@@ -25,12 +23,11 @@ export default function ProductDetails() {
             setBillingDetails(orderData.getOrderProductDetails.billingAddress);
             setTotalPrice(orderData.getOrderProductDetails.totalPrice)
         }
-        else {
-            console.log('-----------Error order', orderError);
+        if (orderError) {
+            return orderError
         }
 
     }, [orderData, orderLoading, orderError]);
-    console.log(orderDatas.length)
     return (
         <>
             <div>

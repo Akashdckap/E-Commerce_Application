@@ -67,9 +67,9 @@ export default function OrderDetails() {
                                         return (
                                             <tr className="border hover:bg-gray-100 hover:rounded-t-full transition-all duration-300 ease-in-out" key={index}>
                                                 <td className="text-center py-3.5 text-gray-700 font-medium" role="cell">{calculateSI(index)}</td>
-                                                <td className="text-start text-cyan-600">{entireData.personalDetails.PersonalName}</td>
-                                                <td className="text-start text-cyan-600">{entireData.personalDetails.PersonalEmail}</td>
-                                                <td className="text-start text-gray-600">{entireData.personalDetails.PersonalPhoneNo}</td>
+                                                <td className="text-start text-cyan-600">{entireData.personalDetails.name}</td>
+                                                <td className="text-start text-cyan-600">{entireData.personalDetails.email}</td>
+                                                <td className="text-start text-gray-600">{entireData.personalDetails.phoneNo}</td>
                                                 <td className="text-start text-gray-600">{entireData.OrderTime}</td>
                                                 <td className="text-center" ><Link href={`/orderDetails/productDetails/${entireData._id}`}><FontAwesomeIcon icon={faEye} className="hover:text-green-400 text-gray-600" /></Link></td>
                                                 <td className="text-center text-gray-600">₹ {entireData.totalPrice}</td>

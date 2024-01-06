@@ -20,8 +20,11 @@ const ObjectId = mongoose.Types.ObjectId;
 const resolvers = {
     // Upload: GraphQLUpload,
     Query: {
-        getCustomerRegister: async () => {
-            return await (customerInformation.find({}));
+        getCustomerRegister: async (_, { id }) => {
+            // console.log("customer id ------------", req);
+            // const get = customerInformation.findOne({ _id: new ObjectId(id) })
+            // console.log(get);
+            return await (customerInformation.findOne({ _id: new ObjectId(id) }));
         },
         getAllAdmins: async () => {
             return await (admins.find({}));
@@ -93,7 +96,7 @@ const resolvers = {
             const emailExists = await customerInformation.find({ email: customerInput.email })
             // console.log(emailExists.length);
             const hashPassword = await bcrypt.hash(customerInput.password, 10)
-            if (emailExists.length < 1 ) {
+            if (emailExists.length < 1) {
                 const customer = new customerInformation({
                     name: customerInput.name,
                     email: customerInput.email,

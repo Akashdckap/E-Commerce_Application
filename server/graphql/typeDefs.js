@@ -17,7 +17,6 @@ const typeDefs = gql` #graphql
         name: String,
         email: String,
         phoneNo: BigInt,
-        password: String,
     }
     type customerLogin{
         email:String,
@@ -57,9 +56,10 @@ const typeDefs = gql` #graphql
         expandedPrice: Int!,
     }
     input personalDetailsInput{
-        PersonalName: String!,
-        PersonalEmail: String!,
-        PersonalPhoneNo: String!,
+        name: String!,
+        email: String!,
+        phoneNo: BigInt!,
+        customerId: String,
     }
     input shippingAddressInput{
         firstName: String!,
@@ -121,9 +121,10 @@ const typeDefs = gql` #graphql
     }
 
     type personalDetails{
-        PersonalName: String,
-        PersonalEmail: String,
-        PersonalPhoneNo: String,
+        name: String,
+        email: String,
+        phoneNo: BigInt,
+        customerId: String,
     }
 
     type shippingAddress{
@@ -194,16 +195,9 @@ const typeDefs = gql` #graphql
         password: String,
     }
 
-    type loginResponse {
-      token: String
-      customerId: String
-      name: String
-      email: String
-      password: String
-    }
-
     type Query{
-        getCustomerRegister:[customerRegister]
+        getCustomerRegister(id: ID!): customerRegister
+        
         getAllAdmins:[admins]
         getAllProductsData: [products]
         getAllProducts(page:Int!,pageSize:Int!):[products!]!

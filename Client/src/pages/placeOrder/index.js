@@ -7,10 +7,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { useMutation, useQuery } from "@apollo/client";
 import { ORDER_PRODUCT } from "../../../Grahpql/mutation";
 import { removeCartdata, storeShippingAddress, storePersonalDetails, updatePersonalDetails, updateShippingAddress, updateBillingAddress, storeBillingAddress } from "@/Reducer/productReducer";
+
+
 export default function placeOrder() {
-    // const cartProducts = useSelector(state => state.productDetails.cartData);
     const dispatch = useDispatch()
     const getCartData = useSelector(state => state.productDetails.cartData);
+    const getCustomerLocalData = useSelector(state => state.productDetails.LoginData);
 
     const getShippingData = useSelector(state => state.productDetails.shippingData)
     const getBillingData = useSelector(state => state.productDetails.billingData)
@@ -20,16 +22,18 @@ export default function placeOrder() {
     const [showShippingData, setShowShippingData] = useState(true);
     const [showBillingData, setShowBillingData] = useState(true);
 
+    const [isChecked, setIsChecked] = useState(false);
 
     const [personalDetails, setPersonalDetails] = useState({
-        PersonalName: "",
-        PersonalEmail: "",
-        PersonalPhoneNo: "",
+        name: "",
+        email: "",
+        phoneNo: "",
+        customerId: "",
     })
     const [personalDetailsError, setPersonalDetailsError] = useState({
-        PersonalName: "",
-        PersonalEmail: "",
-        PersonalPhoneNo: "",
+        name: "",
+        email: "",
+        phoneNo: "",
     })
     const [shippingDetails, setShippingDetails] = useState({
         firstName: "",
@@ -105,22 +109,22 @@ export default function placeOrder() {
         let newErrors = { ...personalDetailsError };
         let isValid = true;
 
-        if (personalDetails.PersonalName.trim() === "") {
-            newErrors.PersonalName = 'Name is required';
+        if (personalDetails.name.trim() === "") {
+            newErrors.name = 'Name is required';
             isValid = false;
         }
 
-        if (personalDetails.PersonalEmail.trim() === "") {
-            newErrors.PersonalEmail = 'Email is required';
+        if (personalDetails.email.trim() === "") {
+            newErrors.email = 'Email is required';
             isValid = false;
         }
 
-        if (personalDetails.PersonalPhoneNo.trim() === "") {
-            newErrors.PersonalPhoneNo = 'Contact is required';
+        if (personalDetails.phoneNo.trim() === "") {
+            newErrors.phoneNo = 'Contact is required';
             isValid = false;
 
-        } else if (personalDetails.PersonalPhoneNo.length < 9) {
-            newErrors.PersonalPhoneNo = 'Contact number should be 10 numbers';
+        } else if (personalDetails.phoneNo.length < 9) {
+            newErrors.phoneNo = 'Contact number should be 10 numbers';
             isValid = false;
         }
 
@@ -245,8 +249,6 @@ export default function placeOrder() {
         return isVaild;
     }
 
-
-
     const handlePersonalDetailForm = (e) => {
         e.preventDefault();
         if (validatePersonalDetailForm()) {
@@ -296,9 +298,9 @@ export default function placeOrder() {
 
     const editPersonalDetails = () => {
         setPersonalDetails({
-            PersonalName: getPersonalData.PersonalName,
-            PersonalEmail: getPersonalData.PersonalEmail,
-            PersonalPhoneNo: getPersonalData.PersonalPhoneNo,
+            name: getPersonalData.name,
+            email: getPersonalData.email,
+            phoneNo: getPersonalData.phoneNo,
         })
         setShowPersonalData(true)
         // setPersonalDetailForm(true)
@@ -334,6 +336,14 @@ export default function placeOrder() {
         })
         setShowBillingData(true)
     }
+
+    // const handleCheckboxChange = () => {
+    //     // console.log("isChecked-----------------", isChecked);
+    //     // setIsChecked(!isChecked);
+    //     if (!isChecked) {
+    //         handleSameAsShipping();
+    //     }
+    // }
     const handleSameAsShipping = () => {
         setBillingDetails(getShippingData)
         setShowBillingData(false)
@@ -344,15 +354,19 @@ export default function placeOrder() {
     const handlePlaceOrder = async () => {
         try {
             const finalData = getCartData.map(({ _id, __typename, ...rest }) => ({ ...rest, productID: _id }));
+            // const { __typename, _id, ...rest } = data.getCustomerRegister
+            // const personalInfo = { customerId: _id, ...rest };
             const orderedInputData = {
                 orderedProducts: finalData,
                 personalDetails: getPersonalData,
                 shippingAddress: getShippingData,
                 billingAddress: getBillingData
             }
-            if (!orderedInputData.orderedProducts.length || !orderedInputData.personalDetails || !orderedInputData.shippingAddress || !orderedInputData.billingAddress) {
+            // console.log("personalInfo-------------------------", personalInfo);
+            // if (!orderedInputData.orderedProducts.length || !orderedInputData.personalDetails.length || !orderedInputData.shippingAddress.length || !orderedInputData.billingAddress.length) {
+            // }
+            if (getCartData.length === 0 || getBillingData.length === 0 || getShippingData.length === 0 || getPersonalData.length === 0) {
                 notification.error({ message: "Incomplete order data. Please fill in all required information." });
-                return;
             }
             const { data: orderSubmitData, errors: SubmitOrderError } = await (createOrders({
                 variables: {
@@ -405,6 +419,8 @@ export default function placeOrder() {
 
     const expandedAmountarray = getCartData.map((expanded) => expanded.expandedPrice)
     const totalExpandedAmount = expandedAmountarray.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+    console.log("getBillingData.length", getBillingData.length === 0);
+    console.log("getPersonalData.length---------------", getPersonalData.length === 0);
     return (
         <>
             <div className="">
@@ -419,19 +435,18 @@ export default function placeOrder() {
                 <div className="flex justify-start items-center ml-20 mt-5">
                     <h1 className="text-[#575F70] text-lg font-medium">Personal Details</h1>
                 </div>
-                <div className="flex justify-between items-start mt-5 pl-20 pr-5">
+                <div className="flex justify-between items-start mt-5 pl-20 pr-5 gap-10">
                     <div className="grid">
                         <div style={{ display: showPersonalData ? 'none' : 'block' }} >
                             <div onClick={editPersonalDetails} className='flex p-5 w-auto gap-44 hover:border-green-300 justify-between items-center bg-white rounded-md border border-solid' >
                                 <div className="flex justify-start items-center gap-8">
-                                    {/* <input type="radio" onClick={editPersonalDetails} className="border-2 h-5 w-5 border-gray-300 checked:border-green-200 checked:bg-green-500 rounded-full focus:outline-none focus:border-green-200 focus:ring-green-200 active:border-green-500" /> */}
                                     <FontAwesomeIcon icon={faUser} className="text-green-400 text-lg" />
                                     <div className="flex justify-start gap-3">
-                                        <h4 className="text-gray-600">{getPersonalData.PersonalName}</h4>
-                                        <h4 className="text-gray-600">{getPersonalData.PersonalEmail}</h4>
+                                        <h4 className="text-gray-600">{getPersonalData.name}</h4>
+                                        <h4 className="text-gray-600">{getPersonalData.email}</h4>
                                     </div>
                                     <div className="flex justify-start">
-                                        <p className="text-gray-400">{getPersonalData.PersonalPhoneNo}</p>
+                                        <p className="text-gray-400">{getPersonalData.phoneNo}</p>
                                     </div>
                                 </div>
                                 <div className="flex justify-end">
@@ -439,31 +454,31 @@ export default function placeOrder() {
                                 </div>
                             </div>
                         </div>
+
                         <div className="">
                             <form onSubmit={handlePersonalDetailForm} style={{ display: showPersonalData ? "block" : "none" }}>
                                 <div className={`grid justify-start p-10 w-auto gap-4 bg-white rounded-md ${showPersonalData ? 'border-gray-200 border border-solid' : 'border-green-300 border-2 border-solid'}`}>
                                     <div className="flex justify-start items-center gap-3">
-                                        {/* <input type="radio" checked={!showPersonalData} className="border-2 h-5 w-5 border-gray-300 checked:border-green-200 checked:bg-green-500 rounded-full focus:outline-none focus:border-green-200 focus:ring-green-200 active:border-green-500" /> */}
                                         <FontAwesomeIcon icon={faUser} className="text-green-400 text-lg" />
                                         <h4 className="text-gray-700 text-base font-normal">{getPersonalData.length === 0 ? 'Add New Personal Details' : 'Change Personal Details'}</h4>
                                     </div>
                                     <div className="flex justify-between gap-16">
                                         <div className="grid">
                                             <label className="text-[#B9BECB] pl-1 pb-1">Name<span className="pl-1 text-red-400">*</span></label>
-                                            <input placeholder="Enter the name..." onChange={handleChangePersonalDetails} value={personalDetails.PersonalName} name="PersonalName" className="h-10 border border-gray-300 border-solid p-2 text-gray-700 w-72 bg-white rounded-md focus:outline-none focus:border-green-300 hover:border-green-300" />
-                                            {personalDetailsError.PersonalName && <span className="text-red-400">{personalDetailsError.PersonalName}</span>}
+                                            <input placeholder="Enter the name..." onChange={handleChangePersonalDetails} value={personalDetails.name} name="name" className="h-10 border border-gray-300 border-solid p-2 text-gray-700 w-72 bg-white rounded-md focus:outline-none focus:border-green-300 hover:border-green-300" />
+                                            {personalDetailsError.name && <span className="text-red-400">{personalDetailsError.name}</span>}
                                         </div>
                                         <div className="grid">
                                             <label className="text-[#B9BECB] pl-1 pb-1">Email<span className="pl-1 text-red-400">*</span></label>
-                                            <input placeholder="Enter the email..." onChange={handleChangePersonalDetails} value={personalDetails.PersonalEmail} name="PersonalEmail" className="h-10 border border-gray-300 border-solid p-2 text-gray-700 w-72 bg-white rounded-md focus:outline-none focus:border-green-300 hover:border-green-300" />
-                                            {personalDetailsError.PersonalEmail && <span className="text-red-400">{personalDetailsError.PersonalEmail}</span>}
+                                            <input placeholder="Enter the email..." onChange={handleChangePersonalDetails} value={personalDetails.email} name="email" className="h-10 border border-gray-300 border-solid p-2 text-gray-700 w-72 bg-white rounded-md focus:outline-none focus:border-green-300 hover:border-green-300" />
+                                            {personalDetailsError.email && <span className="text-red-400">{personalDetailsError.email}</span>}
                                         </div>
                                     </div>
                                     <div className="flex justify-between item-center gap-16">
                                         <div className="grid">
                                             <label className="text-[#B9BECB] pl-1 pb-1">PhoneNo<span className="pl-1 text-red-400">*</span></label>
-                                            <input placeholder="Enter the phoneno..." onChange={handleChangePersonalDetails} value={personalDetails.PersonalPhoneNo} name="PersonalPhoneNo" className="h-10 border border-gray-300 border-solid p-2 text-gray-700 w-72 bg-white rounded-md focus:outline-none focus:border-green-300 hover:border-green-300" />
-                                            {personalDetailsError.PersonalPhoneNo && <span className="text-red-400">{personalDetailsError.PersonalPhoneNo}</span>}
+                                            <input placeholder="Enter the phoneno..." onChange={handleChangePersonalDetails} value={personalDetails.phoneNo} name="phoneNo" className="h-10 border border-gray-300 border-solid p-2 text-gray-700 w-72 bg-white rounded-md focus:outline-none focus:border-green-300 hover:border-green-300" />
+                                            {personalDetailsError.phoneNo && <span className="text-red-400">{personalDetailsError.phoneNo}</span>}
                                         </div>
                                         <div className="flex justify-between gap-3 mt-8">
                                             <span className="border border-gray-200 hover:border-red-300 hover:text-red-400 h-9 flex justify-center items-center p-2 rounded text-gray-400 cursor-pointer" onClick={() => { getPersonalData.length === 0 ? setShowPersonalData(true) : setShowPersonalData(false) }}>Cancel</span>
@@ -473,6 +488,7 @@ export default function placeOrder() {
                                 </div>
                             </form>
                         </div>
+
                         {/* <div onClick={handleOpenShippingForm} className="flex p-1 gap-5 mt-5 justify-center items-center ml-20 bg-white h-10 w-72 rounded hover:border-orange-400 border hover:bg-orange-50 hover:shadow-lg transition-all duration-300">
                             <FontAwesomeIcon icon={faPlus} className="text-orange-400 cursor-pointer" />
                             <p className="text-orange-400 cursor-pointer">Add a new Shipping address</p>
@@ -482,8 +498,8 @@ export default function placeOrder() {
                             <h1 className="text-[#575F70] text-lg font-medium">Shipping Address</h1>
                         </div>
                         <div style={{ display: showShippingData ? 'none' : 'block' }}>
-                            <div onClick={editShippingDetails} className='flex justify-between w-auto items-center gap-44 hover:border-green-300 mt-5 p-5 bg-white rounded-md border border-solid border-gray-300' >
-                                <div className="flex justify-start items-center gap-8">
+                            <div onClick={editShippingDetails} className='flex shadow-sm justify-between w-auto items-center gap-44 hover:border-green-300 mt-5 p-5 bg-white rounded-md border border-solid border-gray-300' >
+                                <div className="flex justify-evenly items-center gap-x-4">
                                     {/* <input type="radio" onClick={editShippingDetails} className="border-2 h-5 w-5 border-gray-300 checked:border-green-200 checked:bg-green-500 rounded-full focus:outline-none focus:border-green-200 focus:ring-green-200 active:border-green-500" /> */}
                                     <FontAwesomeIcon icon={faShippingFast} className="text-green-400 text-lg" />
                                     <div className="flex">
@@ -592,8 +608,8 @@ export default function placeOrder() {
                             <h1 className="text-[#575F70] text-lg font-medium">Billing Address</h1>
                         </div>
                         <div style={{ display: showBillingData ? 'none' : 'block' }}>
-                            <div onClick={editBillingDetails} className='flex justify-between w-auto items-center gap-44 hover:border-green-300 mt-5 p-5 bg-white rounded-md border border-solid border-gray-300'>
-                                <div className="flex justify-between items-center gap-8">
+                            <div onClick={editBillingDetails} className='flex justify-between shadow-sm w-auto items-center gap-44  hover:border-green-300 mt-5 p-5 bg-white rounded-md border border-solid border-gray-300'>
+                                <div className="flex justify-between items-center gap-x-4">
                                     {/* <input type="radio" onClick={editBillingDetails} className="border-2 h-5 w-5 border-gray-300 checked:border-green-200 checked:bg-green-500 rounded-full focus:outline-none focus:border-green-200 focus:ring-green-200 active:border-green-500" /> */}
                                     <FontAwesomeIcon icon={faShippingFast} className="text-green-400 text-lg" />
                                     <div className="flex">
@@ -607,7 +623,8 @@ export default function placeOrder() {
                                                     ? getBillingData.address.slice(0, 25) + '......'
                                                     : getBillingData && getBillingData.address
                                             }
-                                        </p>                                        <p className="text-gray-400">{getBillingData.district}</p>
+                                        </p>
+                                        <p className="text-gray-400">{getBillingData.district}</p>
                                         <p className="text-gray-400">{getBillingData.pincode}</p>
                                     </div>
                                 </div>
@@ -690,6 +707,11 @@ export default function placeOrder() {
                                             <span className="border border-gray-200 hover:border-red-300 hover:text-red-400 h-9 flex justify-center items-center p-2 rounded text-gray-400 cursor-pointer" onClick={() => { getBillingData.length === 0 ? setShowBillingData(true) : setShowBillingData(false) }}>Cancel</span>
                                             <button className={`${getBillingData.length === 0 ? 'w-18' : 'w-44'} border border-blue-400 h-9 flex justify-center items-center p-2 rounded text-blue-400 hover:text-white hover:bg-[#45BA76] hover:border-[#45BA76]`} type="submit">{getBillingData.length === 0 ? "Save" : "Use This Address"}</button>
                                         </div>
+                                        {/* <div className="flex justify-start items-center gap-3">
+                                            <input type="checkbox" checked={isChecked} onChange={handleCheckboxChange} className="h-5 w-5 bg-slate-600" />
+                                            <p>Same as Shipping Address</p>
+                                        </div> */}
+
                                         {
                                             getShippingData.length !== 0 ?
                                                 <div>
@@ -711,7 +733,7 @@ export default function placeOrder() {
                         </div>
                     </div>
                     <div className="pb-10">
-                        <div className="bg-white w-auto h-full p-5 pb-6 rounded-md border-gray-300 border  hover:border-green-300 border-solid">
+                        <div className="bg-white w-auto shadow-md h-full p-5 pb-6 rounded-md border-gray-300 border  hover:border-green-300 border-solid">
                             <div className="flex justify-center items-center bg-[#F5F7FA] h-10 w-80 m-auto rounded-sm mt-3">
                                 <h3 className="text-[#51596B] font-normal">Order Summary</h3>
                             </div>
@@ -746,7 +768,7 @@ export default function placeOrder() {
                                 <p className="text-orange-400 font-medium">₹{totalExpandedAmount}</p>
                             </div>
                             <div className="flex justify-center items-center mt-5">
-                                <button onClick={handlePlaceOrder} className={`bg-white w-80 border border-solid border-gray-400 hover:border-green-300 p-3 h-10 flex justify-center items-center hover:text-white hover:bg-green-400 text-gray-600 font-bold rounded ${!getCartData.length && !getBillingData.length && !getPersonalData.length && !getShippingData.length ? 'hover:cursor-not-allowed' : 'cursor-pointer'}`} >PLACE ORDER</button>
+                                <button onClick={handlePlaceOrder} className={`bg-white w-80 border border-solid border-gray-400 hover:border-green-300 p-3 h-10 flex justify-center items-center hover:text-white hover:bg-green-400 text-gray-600 font-bold rounded hover:${getCartData.length === 0 || getBillingData.length === 0 || getShippingData.length === 0 || getPersonalData.length === 0 ? 'cursor-not-allowed' : 'cursor-pointer'}`} >PLACE ORDER</button>
                             </div>
                         </div>
                     </div>

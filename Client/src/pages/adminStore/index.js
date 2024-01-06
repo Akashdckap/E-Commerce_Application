@@ -208,7 +208,7 @@ export default function AdminStore() {
                     <input type='file' onChange={handleSingleImage} value={setFile.filename} name='image' />
                     <button onClick={handleUpload} type='submit' className="rounded bg-blue-300 text-white-600 py-2 px-4 border border-green-700">Upload</button>
                 </div>
-                <form onSubmit={handleProductForm} style={{ display: formOpen ? 'block' : 'none' }} className='z-10 absolute bottom-25 ml-20 left-10 w-9/12 bg-emerald-100 p-4 m-auto h-screen rounded'>
+                <form onSubmit={handleProductForm} style={{ display: formOpen ? 'block' : 'none' }} className='z-10 absolute bottom-25 ml-20 left-10 w-9/12 bg-emerald-100 p-4 m-auto h-auto rounded'>
                     <div className="imageContainer">
                         <input type="file" className="block w-full text-red-500
                                 file:mr-4 file:py-2 file:px-4

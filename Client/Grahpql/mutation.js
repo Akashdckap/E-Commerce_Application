@@ -83,9 +83,10 @@ export const ORDER_PRODUCT = gql`
       expandedPrice
     }
     personalDetails {
-      PersonalName
-      PersonalEmail
-      PersonalPhoneNo
+      name
+      email
+      phoneNo
+      customerId
     }
     shippingAddress {
       firstName
