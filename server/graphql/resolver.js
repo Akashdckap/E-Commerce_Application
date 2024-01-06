@@ -7,6 +7,7 @@ import admins from '../model/adminSchema.js';
 import productDetails from '../model/productSchema.js';
 import newOrders from '../model/order.js';
 import customerInformation from '../model/customerSchema.js';
+import cartItems from '../model/cartSchema.js';
 // import Upload from 'graphql-upload/Upload.mjs';
 // import GraphQLUpload from "graphql-upload/GraphQLUpload.js";
 // const {GraphQLUpload}  = require('graphql-upload/GraphQLUpload.js')
@@ -255,7 +256,28 @@ const resolvers = {
                 console.log(err, "create orders error");
                 throw new Error("Failed to create order");
             }
+        },
+
+        async cartItems(_, { productCart }) {
+            const newCart = new cartItems({
+                productName: productCart.productName,
+                quantity: productCart.quantity,
+                category: productCart.category,
+                brand: productCart.brand,
+                price: productCart.price,
+                weight: productCart.weight,
+                color: productCart.color,
+                description: productCart.description,
+                expandedPrice: productCart.expandedPrice,
+                totalPrice: productCart.totalPrice,
+            });
+            const items = await newCart.save();
+            return items;
+        },
+        async updatePrice(_, { id, input }) {
+
         }
+
     }
 }
 
