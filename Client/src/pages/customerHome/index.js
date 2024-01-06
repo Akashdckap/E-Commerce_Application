@@ -27,11 +27,13 @@ export default function index() {
 
     const loginData = useSelector(state => state.productDetails.LoginData);
 
+    console.log(loginData.token);
+
     const [parseIds, { data: getSingleCartData, error: getSingleCartError, loading: getSingleCartLoading }] = useLazyQuery(GET_ADD_TO_CART_SINGLE_PRODUCT_DATA, {
         variables: { ids: allAddToCartId }
     })
-    const {data:loginCustomer,error:loginError,loading:loginLoading} = useMutation(LOGIN_CUSTOMER)
-    console.log("loginCustomer",loginCustomer)
+    const { data: loginCustomer, error: loginError, loading: loginLoading } = useMutation(LOGIN_CUSTOMER)
+    // console.log("loginCustomer", loginCustomer)
     const handleAddtoCartBtn = (getId) => {
         parseIds();
         if (getId) {
@@ -67,14 +69,14 @@ export default function index() {
     }, [productData, productError, productLoading, getSingleCartData]);
     // console.log("----------------getSingleCartData", getSingleCartData)
 
-    useEffect(() => {
-        if (Object.keys(loginData).length === 0 || !loginData.token) {
-            router.push('/customerLogin')
-        }
-        else {
-            router.push('/customerHome')
-        }
-    }, [])
+    // useEffect(() => {
+    //     if (Object.keys(loginData).length === 0 || !loginData.token) {
+    //         router.push('/customerLogin')
+    //     }
+    //     else {
+    //         router.push('/customerHome')
+    //     }
+    // }, [])
 
     const filteredList = getProductData.filter((item) => {
         return item.productName.toLowerCase().includes(searchText.toLowerCase());
@@ -116,7 +118,7 @@ export default function index() {
                         </div>
                     </div>
                     <div style={{ display: openProfile ? 'block' : 'none' }}>
-                        <div className='grid justify-center items-center gap-3 z-10 bg-gray-200 absolute top-24 right-5 py-3 pl-10 w-56 rounded-sm shadow-lg' >
+                        <div>{loginData.token ? <div className='grid justify-center items-center gap-3 z-10 bg-gray-200 absolute top-24 right-5 py-3 pl-10 w-56 rounded-sm shadow-lg'>
                             <div className='flex justify-start items-center gap-5 mr-10 bg-white p-2 w-44 pl-4 rounded-md'>
                                 <Image src={"/Images/Balaprofile.png"} alt="Profile Image" width="40" height="40" className='rounded-full' />
                                 <div>
@@ -124,6 +126,13 @@ export default function index() {
                                     <h1 className='text-gray-600'>{loginData.name}</h1>
                                 </div>
                             </div>
+                            <Link href={'/customerHome/myAccount'}>
+                                <div className='flex justify-around items-center w-44 bg-white p-2 rounded-md hover:cursor-pointer'>
+                                    <FontAwesomeIcon icon={faShoppingBag} className='text-emerald-400' />
+                                    <span className="text-emerald-400">My account</span>
+                                    <FontAwesomeIcon icon={faGreaterThan} className='text-emerald-400 font-mono'/>
+                                </div>
+                            </Link>
                             <Link href={`/customerHome/myOrders/${loginData.customerId}`}>
                                 <div className='flex justify-around items-center w-44 bg-white p-2 rounded-md hover:cursor-pointer'>
                                     <FontAwesomeIcon icon={faShoppingBag} className='text-emerald-400' />
@@ -135,6 +144,16 @@ export default function index() {
                                 <FontAwesomeIcon icon={faSignOut} />
                                 <span>LogOut</span>
                             </div>
+                        </div> :
+                            <div className='grid justify-center items-center gap-3 z-10 bg-gray-200 absolute top-24 right-5 py-3 pl-10 w-56 rounded-sm shadow-lg' >
+                                <Link href={`/customerLogin`}>
+                                    <div className='flex justify-around items-center w-44 bg-white p-2 rounded-md hover:cursor-pointer'>
+                                        <FontAwesomeIcon icon={faShoppingBag} className='text-emerald-400' />
+                                        <span className="text-gray-400">Login</span>
+                                        <FontAwesomeIcon icon={faGreaterThan} className='text-emerald-400 font-mono' />
+                                    </div>
+                                </Link>
+                            </div>}
                         </div>
                     </div>
                 </div>
