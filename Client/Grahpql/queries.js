@@ -67,20 +67,16 @@ export const GET_EDIT_PRODUCT_DATA = gql`
     }
     }
 `
-// export const GET_ADD_TO_CART_SINGLE_PRODUCT_DATA = gql`
-//        query addToCartProductData ($ids: [ID!]!){
-//         addToCartProductData (ids : $ids) {
-//         _id
-//         productName
-//         category
-//         brand
-//         price
-//         weight
-//         color
-//         description
-//      }
-//     }
-// `
+export const GET_CUSTOMER_REGISTER_DATA = gql`
+       query getCustomerRegister($id: ID!) {
+        getCustomerRegister (id: $id) {
+        _id
+        name
+        email
+        phoneNo
+     }
+    }
+`
 export const GET_ADD_TO_CART_SINGLE_PRODUCT_DATA = gql`
        query addToCartProductData ($ids: ID!){
         addToCartProductData (ids : $ids) {
@@ -126,9 +122,10 @@ export const GET_ORDER_PRODUCT_DETAILS = gql`
             expandedPrice,
             }
             personalDetails{
-            PersonalName,
-            PersonalEmail,
-            PersonalPhoneNo,
+            name,
+            email,
+            phoneNo,
+            customerId,
             }
             shippingAddress{
             firstName,
@@ -179,9 +176,9 @@ export const GET_ALL_ORDER_DATA_WITH_PAGE = gql`
             expandedPrice,
             }
             personalDetails{
-            PersonalName,
-            PersonalEmail,
-            PersonalPhoneNo,
+            name,
+            email,
+            phoneNo,
             }
             shippingAddress{
             firstName,

@@ -67,7 +67,6 @@ export default function index() {
         }
 
     }, [productData, productError, productLoading, getSingleCartData]);
-    // console.log("----------------getSingleCartData", getSingleCartData)
 
     // useEffect(() => {
     //     if (Object.keys(loginData).length === 0 || !loginData.token) {
@@ -76,7 +75,7 @@ export default function index() {
     //     else {
     //         router.push('/customerHome')
     //     }
-    // }, [])
+
 
     const filteredList = getProductData.filter((item) => {
         return item.productName.toLowerCase().includes(searchText.toLowerCase());

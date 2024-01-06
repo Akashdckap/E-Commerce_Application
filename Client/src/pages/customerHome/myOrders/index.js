@@ -4,11 +4,10 @@ import React from 'react'
 export default function Myorders() {
     const router = useRouter();
     const { customerId } = router.query
-    console.log("customerId--------------", customerId);
     return (
         <div>
             <div className='flex justify-between items-center px-4 mx-28 py-5 '>
-                <h1 className='text-amber-600 text-xl'>My Orders</h1>
+                <h1 className='text-amber-600 text-xl'>Your Orders (<span className='text-slate-600'>10</span>)</h1>
                 <input type='text' placeholder='Search products...' className='h-10 bg-white border-solid border border-gray-300 text-gray-600 text-base font-normal rounded-md hover:border-gray-400 focus:border-gray-400 outline-0 ps-5' />
             </div>
             <div>
