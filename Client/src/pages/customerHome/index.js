@@ -126,10 +126,9 @@ export default function index() {
                                 </div>
                             </div>
                             <Link href={'/customerHome/myAccount'}>
-                                <div className='flex justify-around items-center w-44 bg-white p-2 rounded-md hover:cursor-pointer'>
-                                    <FontAwesomeIcon icon={faShoppingBag} className='text-emerald-400' />
-                                    <span className="text-emerald-400">My account</span>
-                                    <FontAwesomeIcon icon={faGreaterThan} className='text-emerald-400 font-mono'/>
+                                <div className='flex justify-between items-center border border-solid hover:border-orange-400  w-44 bg-white py-2 px-3 rounded-md hover:cursor-pointer'>
+                                    <span className="text-orange-400">My account</span>
+                                    <FontAwesomeIcon icon={faGreaterThan} className='text-orange-400 font-mono' />
                                 </div>
                             </Link>
                             <Link href={`/customerHome/myOrders/${loginData.customerId}`}>
