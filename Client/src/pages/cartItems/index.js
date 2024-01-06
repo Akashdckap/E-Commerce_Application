@@ -9,6 +9,7 @@ import { notification } from "antd";
 
 export default function cartItems() {
     const router = useRouter();
+
     const cartProducts = useSelector(state => state.productDetails.cartData);
     const dispatch = useDispatch()
     const handleRemoveDataFromLocal = (itemId, itemName) => {
@@ -19,11 +20,15 @@ export default function cartItems() {
         dispatch(removeAllCartDatas())
     };
 
+    const loginData = useSelector(state => state.productDetails.LoginData);
+    const cartData = useSelector(state => state.productDetails.cartData);
     // useEffect(() => {
-    //     if (cartProducts.length < 1) {
-    //         router.push("/productList")
+    //     if (Object.keys(loginData).length === 0 || !loginData.token) {
+    //         router.push('/customerLogin');
+    //     } else {
+    //         router.push('/cartItems');
     //     }
-    // }, [cartProducts])
+    // }, []);
 
     const expandedAmountarray = cartProducts.map((expanded) => expanded.expandedPrice)
     const totalExpandedAmount = expandedAmountarray.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
@@ -35,6 +40,21 @@ export default function cartItems() {
     const handleDecrementCount = (productId) => {
         dispatch(decrementProductCount({ productId }))
     }
+
+    const linkComponent = !loginData.token && cartData ? (
+        <Link href="/productList">
+            <button className="bg-white w-96 border border-solid border-gray-400 hover:border-orange-300 p-3 h-10 flex justify-center items-center hover:text-orange-400 text-gray-600 font-bold py-2 px-4 rounded">
+                Back to Shop
+            </button>
+        </Link>
+    ) : (
+        <Link href="/customerHome">
+            <button className="bg-white w-96 border border-solid border-gray-400 hover:border-orange-300 p-3 h-10 flex justify-center items-center hover:text-orange-400 text-gray-600 font-bold py-2 px-4 rounded">
+                Back to Shop
+            </button>
+        </Link>
+    );
+
     return (
         <>
             <div className="flex justify-start mt-10 ml-20">
@@ -118,7 +138,8 @@ export default function cartItems() {
                     </div>
                     <div className="grid gap-3 pt-2">
                         <Link href={`${cartProducts.length === 0 ? '/productList' : '/placeOrder'} `}><button className="bg-slate-600 w-96 hover:bg-slate-500 p-3 h-10 flex justify-center items-center hover:text-green-400 text-white font-medium py-2 px-4 rounded">{cartProducts.length === 0 ? "GO TO HOME" : "PROCEED TO CHECKOUT"}</button></Link>
-                        <Link href={'/productList'}><button className="bg-white w-96 border border-solid border-gray-400 hover:border-orange-300 p-3 h-10 flex justify-center items-center hover:text-orange-400 text-gray-600 font-bold py-2 px-4 rounded">Back to Shop</button></Link>
+                        <div>{linkComponent}</div>
+                        {/* <button className="bg-white w-96 border border-solid border-gray-400 hover:border-orange-300 p-3 h-10 flex justify-center items-center hover:text-orange-400 text-gray-600 font-bold py-2 px-4 rounded">Back to Shop</button> */}
                     </div>
                 </div>
             </div>
