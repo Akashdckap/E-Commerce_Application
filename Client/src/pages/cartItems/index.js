@@ -11,7 +11,6 @@ export default function cartItems() {
     const router = useRouter();
 
     const cartProducts = useSelector(state => state.productDetails.cartData);
-    const loginData = useSelector(state => state.productDetails.LoginData);
 
     const dispatch = useDispatch()
     const handleRemoveDataFromLocal = (itemId, itemName) => {
@@ -21,6 +20,10 @@ export default function cartItems() {
     const handleRemoveAllItems = () => {
         dispatch(removeAllCartDatas())
     };
+
+
+    const loginData = useSelector(state => state.productDetails.LoginData);
+    // const cartData = useSelector(state => state.productDetails.cartData);
 
     // useEffect(() => {
     //     if (Object.keys(loginData).length === 0 || !loginData.token) {

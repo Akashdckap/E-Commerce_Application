@@ -183,6 +183,35 @@ const typeDefs = gql` #graphql
         products: [products!]!,
         totalCount:Int!
     }  
+    input upDateCartPrice{
+        expandedPrice: Int,
+        totalPrice: Int,
+    }
+    type cartItems{
+        productName: String,
+        quantity: Int,
+        category: String,
+        brand: String,
+        price: Int,
+        weight: Int,
+        color: String,
+        description: String,
+        expandedPrice: Int,
+        totalPrice: Int,
+    }
+
+    input cartItemsInput{
+        productName: String,
+        quantity: Int,
+        category: String,
+        brand: String,
+        price: Int,
+        weight: Int,
+        color: String,
+        description: String,
+        expandedPrice: Int,
+        totalPrice: Int,
+    }
 
     input File{
         url: String!
@@ -216,6 +245,8 @@ const typeDefs = gql` #graphql
         deleteProduct(id: ID!) : Boolean!
         updateProduct(id: ID!, input: updateProductInput): products!
         createOrders(inputs: orderedInput): orders!
+        cartItems(productCart: cartItemsInput): cartItems!
+        updatePrice(id: ID, input:upDateCartPrice): cartItems!
         uploadFile(file: Upload!): String!
     }
 `
