@@ -5,12 +5,13 @@ import { logOutCustomer } from '@/Reducer/productReducer';
 import { useRouter } from 'next/router';
 import { notification } from 'antd';
 import Image from 'next/image';
-import { LOGIN_CUSTOMER } from '../../../Grahpql/mutation';
+import { LOGIN_CUSTOMER, CREATE_CART_ITEMS } from '../../../Grahpql/mutation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserCircle, faShoppingCart, faSignOut, faGreaterThan, faShoppingBag, faClose, faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { GET_ADD_TO_CART_SINGLE_PRODUCT_DATA, GET_ALL_PRODUCTS_DATA } from '../../../Grahpql/queries';
 import { useLazyQuery, useMutation, useQuery } from '@apollo/client'
 import { storeAddToCartProductData, updateCartItemQuantity, removeCartdata, removeAllCartDatas, incrementProductCount, decrementProductCount } from '@/Reducer/productReducer';
+
 import Link from 'next/link';
 export default function index() {
     const dispatch = useDispatch();
@@ -20,21 +21,39 @@ export default function index() {
     const [getProductData, setgetProductData] = useState([])
     const [searchText, setSearchText] = useState('');
     const [allAddToCartId, setAddToCartId] = useState('');
+    const [cartDatas, setCartData] = useState();
 
+    const loginData = useSelector(state => state.productDetails.LoginData);
     const getCartData = useSelector(state => state.productDetails.cartData);
 
     const { data: productData, error: productError, loading: productLoading } = useQuery(GET_ALL_PRODUCTS_DATA);
 
-    const loginData = useSelector(state => state.productDetails.LoginData);
-
-    console.log(loginData.token);
 
     const [parseIds, { data: getSingleCartData, error: getSingleCartError, loading: getSingleCartLoading }] = useLazyQuery(GET_ADD_TO_CART_SINGLE_PRODUCT_DATA, {
         variables: { ids: allAddToCartId }
     })
     const { data: loginCustomer, error: loginError, loading: loginLoading } = useMutation(LOGIN_CUSTOMER)
     // console.log("loginCustomer", loginCustomer)
-    const handleAddtoCartBtn = (getId) => {
+    const handleAddToCartToken = (getProductId) => {
+        const cart = productData.getAllProductsData.find((cart) => { return cart._id == getProductId })
+        const updatObject = {
+            ...cart,
+            productId: cart._id
+        }
+        delete updatObject._id
+        console.log("updatObject--------", updatObject);
+        // setCartData(cart);
+        const { __typename, ...rest } = updatObject
+        // console.log(rest)
+        setCartData(rest)
+    }
+    console.log(cartDatas, "--------");
+    const [storeCartDatas] = useMutation(CREATE_CART_ITEMS, {
+        variables: { userId: loginData.customerId, productCart: cartDatas }
+    })
+    console.log("cartDatas------------------", cartDatas);
+
+    const handleAddtoCartBtn = async (getId) => {
         parseIds();
         if (getId) {
             setAddToCartId(getId)
@@ -51,7 +70,7 @@ export default function index() {
         router.push('/customerLogin')
         notification.success({ message: "User logged out successfully  " })
     }
-
+    console.log(allAddToCartId, "--------------ProductId")
     useEffect(() => {
         if (productData && !productError && !productLoading) {
             setgetProductData(productData.getAllProductsData)
@@ -66,7 +85,7 @@ export default function index() {
             console.log("...error");
         }
 
-    }, [productData, productError, productLoading, getSingleCartData]);
+    }, [productData, productError, productLoading, getSingleCartData, cartDatas]);
 
     // useEffect(() => {
     //     if (Object.keys(loginData).length === 0 || !loginData.token) {
@@ -186,7 +205,7 @@ export default function index() {
                                                 <p>
                                                     <span className="text-3xl font-bold text-slate-900">₹{item.price}</span>
                                                 </p>
-                                                <button onClick={() => handleAddtoCartBtn(item._id)} id={item._id} className="cursor-pointer flex items-center rounded-md bg-slate-900 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-blue-300">
+                                                <button onClick={() => { loginData.token ? handleAddToCartToken(item._id) : handleAddtoCartBtn(item._id) }} id={item._id} className="cursor-pointer flex items-center rounded-md bg-slate-900 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-blue-300">
                                                     <svg xmlns="http://www.w3.org/2000/svg" className="mr-2 h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                                                         <path strokeLinecap="round" strokeLinejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                                                     </svg>

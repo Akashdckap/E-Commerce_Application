@@ -188,31 +188,30 @@ const typeDefs = gql` #graphql
         totalPrice: Int,
     }
     type cartItems{
+        productId: String,
         productName: String,
-        quantity: Int,
         category: String,
         brand: String,
         price: Int,
         weight: Int,
         color: String,
         description: String,
-        expandedPrice: Int,
-        totalPrice: Int,
+    }
+    type cart{
+        userId: ID!,
+        cartItems:[cartItems]!
     }
 
     input cartItemsInput{
+        productId: String,
         productName: String,
-        quantity: Int,
         category: String,
         brand: String,
         price: Int,
         weight: Int,
         color: String,
         description: String,
-        expandedPrice: Int,
-        totalPrice: Int,
     }
-
     input File{
         url: String!
     }
@@ -224,7 +223,6 @@ const typeDefs = gql` #graphql
     }
     type Query{
         getCustomerRegister(id: ID!): customerRegister
-        
         getAllAdmins:[admins]
         getAllProductsData: [products]
         getAllProducts(page:Int!,pageSize:Int!):[products!]!
@@ -235,6 +233,7 @@ const typeDefs = gql` #graphql
         getOrderCount: Int!
         getOrderProductDetails(id: ID!): orders!
         getAllOrderDatas(page:Int!,pageSize:Int!): [orders]!
+        getAddToCart(userId: ID!):cart!
     }
 
     type Mutation{
@@ -245,7 +244,7 @@ const typeDefs = gql` #graphql
         deleteProduct(id: ID!) : Boolean!
         updateProduct(id: ID!, input: updateProductInput): products!
         createOrders(inputs: orderedInput): orders!
-        cartItems(productCart: cartItemsInput): cartItems!
+        cartItems(userId:ID!, productCart: cartItemsInput): cartItems!
         updatePrice(id: ID, input:upDateCartPrice): cartItems!
         uploadFile(file: Upload!): String!
     }
