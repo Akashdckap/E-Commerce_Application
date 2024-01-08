@@ -1,7 +1,7 @@
 import React from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from "@fortawesome/free-solid-svg-icons";
-import { useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { useSelector } from "react-redux";
 import { GET_CUSTOMER_REGISTER_DATA } from "../../../../Grahpql/queries";
 
@@ -10,6 +10,7 @@ function Myaccount() {
     const { data, loading, error } = useQuery(GET_CUSTOMER_REGISTER_DATA, {
         variables: { id: getCustomerLocalData.customerId }
     })
+ 
     return (
         <>
             <div>
