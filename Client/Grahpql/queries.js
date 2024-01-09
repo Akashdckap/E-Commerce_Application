@@ -256,3 +256,21 @@ export const GET_CUSTOMER_SHIPPING_ADDRESS = gql`
       }
     }
 `
+export const GET_CUSTOMER_CART_DATA = gql`
+      query getCustomerCartData($userId: ID!){
+         getCustomerCartData(userId: $userId){
+            _id,
+            productId,
+            productName,
+            description,
+            category,
+            brand,
+            color,
+            weight,
+            price
+            quantity,
+            expandedPrice,
+    }
+}
+
+`

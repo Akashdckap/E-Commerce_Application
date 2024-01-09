@@ -28,7 +28,10 @@ const resolvers = {
             const getAddress = await (customerInformation.findOne({ _id: new ObjectId(id) }));
             return getAddress.shippingAddress
         },
-
+        getCustomerCartData: async (_, { userId }) => {
+            const cartData = await cartSchema.findOne({ userId: new mongoose.Types.ObjectId(userId) })
+            return cartData.cartItems
+        },
 
         getAllAdmins: async () => {
             return await (admins.find({}));
@@ -73,9 +76,7 @@ const resolvers = {
         getAllOrderDatas: async (_, { page, pageSize }) => {
             const skip = (page - 1) * pageSize;
             const orderDatas = await (newOrders.find({}).skip(skip).limit(pageSize));
-            // console.log(orderDatas);
             const formattedOrders = orderDatas.map(order => {
-                // console.log(order)
                 return {
                     ...order._doc,
                     OrderTime: order.createdAt.toLocaleString('en-US', {
@@ -104,6 +105,7 @@ const resolvers = {
             }
         }
     },
+
     Mutation: {
         async registerCustomer(_, { customerInput }) {
             const emailExists = await customerInformation.find({ email: customerInput.email })
@@ -314,28 +316,88 @@ const resolvers = {
             }
         },
 
-        async cartItems(_, { userId, productCart }) {
+        async cartItems(_, { productId, userId, productCart }) {
             try {
                 const cart = await cartSchema.findOne({ userId })
                 if (!cart) {
                     const saveCart = new cartSchema({
                         userId,
-                        cartItems: productCart,
+                        cartItems: { quantity: 1, expandedPrice: productCart.price, ...productCart },
                     })
-                    const items = await saveCart.save();
-                    return items;
+                    await saveCart.save();
+                    return cart.cartItems
                 }
+                else {
+                    const existingItem = cart.cartItems.find((item) => item.productId.toString() === new ObjectId(productId).toString());
 
-                cart.cartItems.push(productCart);
-                await cart.save();
-                return cart.cartItems;
-
+                    if (existingItem) {
+                        existingItem.quantity += 1;
+                        existingItem.expandedPrice += productCart.price;
+                    } else {
+                        cart.cartItems.push({ quantity: 1, expandedPrice: productCart.price, ...productCart });
+                    }
+                    await cart.save();
+                    return cart.cartItems;
+                }
             }
             catch (error) {
-                console.log("error not storing", error)
+                console.log("error not storing the cart data", error)
             }
 
 
+        },
+        async deleteCustomerCartData(_, { userId, cartId }) {
+            try {
+                const result = await cartSchema.updateOne(
+                    { userId: ObjectId(userId) },
+                    { $pull: { cartItems: { _id: ObjectId(cartId) } } }
+                );
+                if (result.modifiedCount > 0) return true
+                return false
+            }
+            catch (error) {
+                console.error(error);
+                return false;
+            }
+        },
+        async deleteAllCustomerCartData(_, { userId }) {
+            try {
+                const removeAllData = await cartSchema.updateOne(
+                    { userId: ObjectId(userId) },
+                    { $set: { cartItems: [] } }
+                )
+                if (removeAllData.modifiedCount > 0) return true
+                return false
+            }
+            catch (error) {
+                console.log(error);
+            }
+        },
+        async incrementCustomerProductQty(_, { productId, userId }) {
+            try {
+                const incrementProductQty = await cartSchema.updateOne(
+                    { userId: ObjectId(userId), 'cartItems._id': ObjectId(productId) },
+                    { $inc: { 'cartItems.$.quantity': +1 } }
+                );
+                if (incrementProductQty.modifiedCount > 0) return true
+                return false
+            }
+            catch (error) {
+                console.log(error);
+            }
+        },
+        async decrementCustomerProductQty(_, { productId, userId }) {
+            try {
+                const incrementProductQty = await cartSchema.updateOne(
+                    { userId: ObjectId(userId), 'cartItems._id': ObjectId(productId) },
+                    { $inc: { 'cartItems.$.quantity': -1 } }
+                );
+                if (incrementProductQty.modifiedCount > 0) return true
+                return false
+            }
+            catch (error) {
+                console.log(error);
+            }
         },
         async updatePrice(_, { id, input }) {
             const updatePrice = new cartItems({

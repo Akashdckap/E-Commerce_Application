@@ -14,7 +14,6 @@ const cartProducts = mongoose.Schema(
             color: String,
             description: String,
             expandedPrice: Number,
-            totalPrice: Number,
         }]
     },
     {

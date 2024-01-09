@@ -33,8 +33,8 @@ export const CREATE_PRODUCTS = gql`
  }
 `
 export const CREATE_CART_ITEMS = gql`
-  mutation cartItems($userId:ID!, $productCart: cartItemsInput!){
-    cartItems(userId: $userId, productCart: $productCart){
+  mutation cartItems($userId:ID!, $productId: ID!, $productCart: cartItemsInput!){
+    cartItems(userId: $userId, productId: $productId, productCart: $productCart){
       productId
       productName
       category
@@ -173,4 +173,25 @@ export const UPDATA_CUSTOMER_SHIPPING_ADDRESS = gql`
       country
     }
   }
+`
+
+export const DELETE_CUSTOMER_CART_DATA = gql`
+   mutation deleteCustomerCartData($cartId: ID! $userId: ID!) {
+      deleteCustomerCartData(cartId: $cartId userId: $userId)
+}
+`
+export const REMOVE_ALL_CUSTOMER_CART_DATA = gql`
+   mutation deleteAllCustomerCartData($userId: ID!) {
+    deleteAllCustomerCartData(userId: $userId)
+}
+`
+export const INCREMENT_CUSTOMER_PRODUCT_QTY = gql`
+   mutation incrementCustomerProductQty($productId: ID! $userId: ID!) {
+    incrementCustomerProductQty(productId: $productId userId: $userId)
+}
+`
+export const DECREMENT_CUSTOMER_PRODUCT_QTY = gql`
+   mutation decrementCustomerProductQty($productId: ID! $userId: ID!) {
+    decrementCustomerProductQty(productId: $productId userId: $userId)
+}
 `
