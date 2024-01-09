@@ -17,6 +17,7 @@ const typeDefs = gql` #graphql
         name: String,
         email: String,
         phoneNo: BigInt,
+        password: String,
     }
     type customerLogin{
         email:String,
@@ -250,10 +251,9 @@ const typeDefs = gql` #graphql
         deleteProduct(id: ID!) : Boolean!
         updateProduct(id: ID!, input: updateProductInput): products!
         createOrders(inputs: orderedInput): orders!
-        cartItems(userId:ID!, productCart: cartItemsInput): cartItems!
+        cartItems(userId:ID!, productCart: cartItemsInput!): cartItems!
         updatePrice(id: ID, input:upDateCartPrice): cartItems!
         uploadFile(file: Upload!): String!
-
         updateCustomerPersonalDetails(id: ID!, input: updateCustomerPersonal) : customerRegister
         addCustomerShippingAddress(id: ID!, input: shippingAddressInput) : shippingAddress
         updateCustomerShippingAddress(id: ID!, input: shippingAddressInput) : shippingAddress

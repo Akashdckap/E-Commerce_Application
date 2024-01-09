@@ -106,8 +106,9 @@ const resolvers = {
     },
     Mutation: {
         async registerCustomer(_, { customerInput }) {
+            // console.log(customerInput);
             const emailExists = await customerInformation.find({ email: customerInput.email })
-            // console.log(emailExists.length);
+            console.log(emailExists.length);
             const hashPassword = await bcrypt.hash(customerInput.password, 10)
             if (emailExists.length < 1) {
                 const customer = new customerInformation({
@@ -314,29 +315,29 @@ const resolvers = {
         },
 
         async cartItems(_, { userId, productCart }) {
-            console.log("productCart------",userId);
-            console.log("productData-------",productCart)
-            
-            // try {
-            //     const cart = await cartSchema.findOne({ userId })
+            console.log("productCart------", userId);
+            console.log("productData-------", productCart)
 
-            //     if (!cart) {
-            //         const saveCart = new cartSchema({
-            //             userId,
-            //             cartItems: productCart,
-            //         })
-            //         const items = await saveCart.save();
-            //         return items;
-            //     }
+            try {
+                const cart = await cartSchema.findOne({ userId })
 
-            //     cart.cartItems.push(productCart);
-            //     await cart.save();
-            //     return cart.cartItems;
+                if (!cart) {
+                    const saveCart = new cartSchema({
+                        userId,
+                        cartItems: productCart,
+                    })
+                    const items = await saveCart.save();
+                    return items;
+                }
 
-            // }
-            // catch (error) {
-            //     console.log("error not storing", error)
-            // }
+                cart.cartItems.push(productCart);
+                await cart.save();
+                return cart.cartItems;
+
+            }
+            catch (error) {
+                console.log("error not storing", error)
+            }
 
 
         },
