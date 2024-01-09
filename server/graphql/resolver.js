@@ -106,8 +106,9 @@ const resolvers = {
     },
     Mutation: {
         async registerCustomer(_, { customerInput }) {
+            // console.log(customerInput);
             const emailExists = await customerInformation.find({ email: customerInput.email })
-            // console.log(emailExists.length);
+            console.log(emailExists.length);
             const hashPassword = await bcrypt.hash(customerInput.password, 10)
             if (emailExists.length < 1) {
                 const customer = new customerInformation({
