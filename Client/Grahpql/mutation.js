@@ -33,8 +33,8 @@ export const CREATE_PRODUCTS = gql`
  }
 `
 export const CREATE_CART_ITEMS = gql`
-  mutation cartItems($userId:ID!, $productCart: cartItemsInput!){
-    cartItems(userId: $userId, productCart: $productCart){
+  mutation cartItems($userId:ID!, $productId: ID!, $productCart: cartItemsInput!){
+    cartItems(userId: $userId, productId: $productId, productCart: $productCart){
       productId
       productName
       category

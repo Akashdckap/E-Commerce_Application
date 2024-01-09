@@ -314,22 +314,29 @@ const resolvers = {
             }
         },
 
-        async cartItems(_, { userId, productCart }) {
+        async cartItems(_, { productId, userId, productCart }) {
             try {
                 const cart = await cartSchema.findOne({ userId })
                 if (!cart) {
                     const saveCart = new cartSchema({
                         userId,
-                        cartItems: productCart,
+                        cartItems: { quantity: 1, expandedPrice: productCart.price, ...productCart },
                     })
-                    const items = await saveCart.save();
-                    return items;
+                    await saveCart.save();
+                    return cart.cartItems
                 }
+                else {
+                    const existingItem = cart.cartItems.find((item) => item.productId.toString() === new ObjectId(productId).toString());
 
-                cart.cartItems.push(productCart);
-                await cart.save();
-                return cart.cartItems;
-
+                    if (existingItem) {
+                        existingItem.quantity += 1;
+                        existingItem.expandedPrice += productCart.price;
+                    } else {
+                        cart.cartItems.push({ quantity: 1, expandedPrice: productCart.price, ...productCart });
+                    }
+                    await cart.save();
+                    return cart.cartItems;
+                }
             }
             catch (error) {
                 console.log("error not storing", error)

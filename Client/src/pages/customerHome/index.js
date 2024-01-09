@@ -44,11 +44,12 @@ export default function index() {
         delete updatObject._id
         const { __typename, ...rest } = updatObject
         try {
-            await (storeCartDatas({ variables: { userId: loginData.customerId, productCart: rest } }))
+            await (storeCartDatas({ variables: { productId: getProductId, userId: loginData.customerId, productCart: rest } }))
         }
         catch (error) {
             console.error("product creation error :", error);
         }
+        console.log("getProductId------", getProductId);
     }
 
 
