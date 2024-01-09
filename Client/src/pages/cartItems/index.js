@@ -6,11 +6,14 @@ import { incrementProductCount, decrementProductCount, removeCartdata, removeAll
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { notification } from "antd";
+import { GET_CART_ITEMS } from "../../../Grahpql/queries";
+import { useQuery } from "@apollo/client";
 
 export default function cartItems() {
     const router = useRouter();
 
     const cartProducts = useSelector(state => state.productDetails.cartData);
+    const loginData = useSelector(state => state.productDetails.LoginData);
 
     const dispatch = useDispatch()
     const handleRemoveDataFromLocal = (itemId, itemName) => {
@@ -21,8 +24,6 @@ export default function cartItems() {
         dispatch(removeAllCartDatas())
     };
 
-
-    const loginData = useSelector(state => state.productDetails.LoginData);
     // const cartData = useSelector(state => state.productDetails.cartData);
 
     // useEffect(() => {
@@ -45,7 +46,7 @@ export default function cartItems() {
         dispatch(decrementProductCount({ productId }))
     }
 
-    const linkComponent = !loginData.token && cartData ? (
+    const linkComponent = !loginData.token && cartProducts ? (
         <Link href="/productList">
             <button className="bg-white w-96 border border-solid border-gray-400 hover:border-orange-300 p-3 h-10 flex justify-center items-center hover:text-orange-400 text-gray-600 font-bold py-2 px-4 rounded">
                 Back to Shop

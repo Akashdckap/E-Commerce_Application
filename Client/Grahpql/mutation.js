@@ -145,7 +145,7 @@ export const UPDATE_CUSTOMER_PERSONAL_DETAILS = gql`
   }
 `
 export const ADD_CUSTOMER_SHIPPING_ADDRESS = gql`
-  mutation addCustomerShippingAddress($id:ID!, $input: shippingAddressInput!){
+  mutation addCustomerShippingAddress($id:ID!, $input: shippingAddressCustomerInput!){
     addCustomerShippingAddress(id: $id, input: $input){
       firstName
       lastName

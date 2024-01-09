@@ -5,8 +5,6 @@ const shippingAddressAndRegisterSchema = mongoose.Schema(
         email: String,
         phoneNo: Number,
         password: String,
-    },
-    {
         Addresses: [{
             firstName: String,
             lastName: String,
@@ -20,7 +18,7 @@ const shippingAddressAndRegisterSchema = mongoose.Schema(
         }]
     },
     {
-        timestamps: true
+        timestamps: true,
     }
 );
 

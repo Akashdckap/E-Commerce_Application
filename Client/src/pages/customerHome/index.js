@@ -56,6 +56,7 @@ export default function index() {
         }
         catch (error) {
             console.error("product creation error :", error);
+            notification.error({message:"Cart is not added Successfully"})
         }
     }
 

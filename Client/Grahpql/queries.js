@@ -74,6 +74,17 @@ export const GET_CUSTOMER_REGISTER_DATA = gql`
         name
         email
         phoneNo
+        Addresses{
+            firstName
+            lastName
+            email
+            phoneNo
+            address
+            district
+            state
+            pincode
+            country
+        }
      }
     }
 `
@@ -106,6 +117,20 @@ export const GET_PRODUCT_DETAILS = gql`
         }
     }
 `
+
+export const GET_CART_ITEMS = gql`
+query getAddToCart($userId: ID!){
+    getAddToCart(userId:$userId){
+        productName
+        category
+        brand
+        price
+        weight
+        color
+        description
+    }
+}`
+
 export const GET_ORDER_PRODUCT_DETAILS = gql`
     query GetOrderProductDetails($id:ID!){
         getOrderProductDetails(id : $id){
