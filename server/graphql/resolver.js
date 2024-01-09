@@ -7,7 +7,7 @@ import admins from '../model/adminSchema.js';
 import productDetails from '../model/productSchema.js';
 import newOrders from '../model/order.js';
 import customerInformation from '../model/customerSchema.js';
-import cartItems from '../model/cartSchema.js';
+import cartSchema from '../model/cartSchema.js';
 // import Upload from 'graphql-upload/Upload.mjs';
 // import GraphQLUpload from "graphql-upload/GraphQLUpload.js";
 // const {GraphQLUpload}  = require('graphql-upload/GraphQLUpload.js')
@@ -94,6 +94,15 @@ const resolvers = {
             const orderCount = await newOrders.countDocuments();
             return orderCount;
         },
+        getAddToCart: async (_, { userId }) => {
+            try {
+                const cart = await cartSchema.findOne({ userId })
+                return cart
+            }
+            catch (error) {
+                console.log(error, "Not getting the cartItems back")
+            }
+        }
     },
     Mutation: {
         async registerCustomer(_, { customerInput }) {
@@ -304,24 +313,40 @@ const resolvers = {
             }
         },
 
-        async cartItems(_, { productCart }) {
-            const newCart = new cartItems({
-                productName: productCart.productName,
-                quantity: productCart.quantity,
-                category: productCart.category,
-                brand: productCart.brand,
-                price: productCart.price,
-                weight: productCart.weight,
-                color: productCart.color,
-                description: productCart.description,
-                expandedPrice: productCart.expandedPrice,
-                totalPrice: productCart.totalPrice,
-            });
-            const items = await newCart.save();
-            return items;
+        async cartItems(_, { userId, productCart }) {
+            console.log("productCart------",userId);
+            console.log("productData-------",productCart)
+            
+            // try {
+            //     const cart = await cartSchema.findOne({ userId })
+
+            //     if (!cart) {
+            //         const saveCart = new cartSchema({
+            //             userId,
+            //             cartItems: productCart,
+            //         })
+            //         const items = await saveCart.save();
+            //         return items;
+            //     }
+
+            //     cart.cartItems.push(productCart);
+            //     await cart.save();
+            //     return cart.cartItems;
+
+            // }
+            // catch (error) {
+            //     console.log("error not storing", error)
+            // }
+
+
         },
         async updatePrice(_, { id, input }) {
-
+            const updatePrice = new cartItems({
+                expandedPrice: input.expandedPrice,
+                totalPrice: input.totalPrice,
+            })
+            const currentValue = await cartItems.findByIdAndUpdate(id, updatePrice, { new: true });
+            return currentValue;
         }
 
     }

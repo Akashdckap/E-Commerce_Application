@@ -32,7 +32,20 @@ export const CREATE_PRODUCTS = gql`
     }
  }
 `
-
+export const CREATE_CART_ITEMS = gql`
+  mutation cartItems($userId:ID!, $productCart: cartItemsInput!){
+    cartItems(userId: $userId, productCart: $productCart){
+      productId
+      productName
+      category
+      brand
+      price
+      weight
+      color
+      description
+    }
+  }
+`
 export const DELETE_PRODUCT = gql`
 mutation DeleteProduct($id: ID!) {
   deleteProduct(id: $id)
