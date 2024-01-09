@@ -53,7 +53,20 @@ const typeDefs = gql` #graphql
         color: String!,
         weight: Int!,
         price: Int!,
-        count: Int!,
+        quantity: Int!,
+        expandedPrice: Int!,
+    }
+    type customerCartData {
+        _id: ID!
+        productId: String!,
+        productName: String!,
+        description: String!,
+        category: String!,
+        brand: String!,
+        color: String!,
+        weight: Int!,
+        price: Int!,
+        quantity: Int!,
         expandedPrice: Int!,
     }
     input personalDetailsInput{
@@ -230,6 +243,8 @@ const typeDefs = gql` #graphql
     type Query{
         getCustomerRegister(id: ID!): customerRegister
         getShippingAddress(id: ID!): shippingAddress
+        getCustomerCartData(userId: ID!): [customerCartData]
+
         getAllAdmins:[admins]
         getAllProductsData: [products]
         getAllProducts(page:Int!,pageSize:Int!):[products!]!
@@ -258,6 +273,10 @@ const typeDefs = gql` #graphql
         updateCustomerPersonalDetails(id: ID!, input: updateCustomerPersonal) : customerRegister
         addCustomerShippingAddress(id: ID!, input: shippingAddressInput) : shippingAddress
         updateCustomerShippingAddress(id: ID!, input: shippingAddressInput) : shippingAddress
+        deleteCustomerCartData(cartId: ID!, userId: ID!): Boolean!
+        deleteAllCustomerCartData(userId: ID!) : Boolean!
+        incrementCustomerProductQty(productId: ID!, userId: ID!) : Boolean!
+        decrementCustomerProductQty(productId: ID!, userId: ID!) : Boolean!
     }
 `
 export default typeDefs;

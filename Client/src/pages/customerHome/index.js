@@ -5,10 +5,10 @@ import { logOutCustomer } from '@/Reducer/productReducer';
 import { useRouter } from 'next/router';
 import { notification } from 'antd';
 import Image from 'next/image';
-import { LOGIN_CUSTOMER, CREATE_CART_ITEMS } from '../../../Grahpql/mutation';
+import { LOGIN_CUSTOMER, CREATE_CART_ITEMS, DELETE_CUSTOMER_CART_DATA, REMOVE_ALL_CUSTOMER_CART_DATA, INCREMENT_CUSTOMER_PRODUCT_QTY, DECREMENT_CUSTOMER_PRODUCT_QTY } from '../../../Grahpql/mutation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserCircle, faShoppingCart, faSignOut, faGreaterThan, faShoppingBag, faClose, faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
-import { GET_ADD_TO_CART_SINGLE_PRODUCT_DATA, GET_ALL_PRODUCTS_DATA } from '../../../Grahpql/queries';
+import { GET_ADD_TO_CART_SINGLE_PRODUCT_DATA, GET_ALL_PRODUCTS_DATA, GET_CUSTOMER_CART_DATA } from '../../../Grahpql/queries';
 import { useLazyQuery, useMutation, useQuery } from '@apollo/client'
 import { storeAddToCartProductData, updateCartItemQuantity, removeCartdata, removeAllCartDatas, incrementProductCount, decrementProductCount } from '@/Reducer/productReducer';
 
@@ -16,12 +16,12 @@ import Link from 'next/link';
 export default function index() {
     const dispatch = useDispatch();
     const [openProfile, setOpenProfile] = useState(false)
-    const [openCart, setCart] = useState()
+    const [openCart, setCart] = useState(false)
     const router = useRouter();
     const [getProductData, setgetProductData] = useState([])
     const [searchText, setSearchText] = useState('');
     const [allAddToCartId, setAddToCartId] = useState('');
-    const [cartDatas, setCartData] = useState();
+    const [customerCartBulkData, setCustomerCartData] = useState([])
 
     const loginData = useSelector(state => state.productDetails.LoginData);
     const getCartData = useSelector(state => state.productDetails.cartData);
@@ -33,8 +33,14 @@ export default function index() {
         variables: { ids: allAddToCartId }
     })
     const { data: loginCustomer, error: loginError, loading: loginLoading } = useMutation(LOGIN_CUSTOMER)
-    // console.log("cartDatas------------------", cartDatas);
+
     const [storeCartDatas] = useMutation(CREATE_CART_ITEMS)
+    const [deleteCustomerCartData] = useMutation(DELETE_CUSTOMER_CART_DATA)
+    const [deleteAllCustomerCartData] = useMutation(REMOVE_ALL_CUSTOMER_CART_DATA)
+    const [incrementCustomerCartQty] = useMutation(INCREMENT_CUSTOMER_PRODUCT_QTY)
+    const [decrementCustomerCartQty] = useMutation(DECREMENT_CUSTOMER_PRODUCT_QTY)
+
+
     const handleAddToCartToken = async (getProductId) => {
         const cart = productData.getAllProductsData.find((cart) => { return cart._id == getProductId })
         const updatObject = {
@@ -45,14 +51,18 @@ export default function index() {
         const { __typename, ...rest } = updatObject
         try {
             await (storeCartDatas({ variables: { productId: getProductId, userId: loginData.customerId, productCart: rest } }))
+            notification.success({ message: "Successfully added to cart" })
+            refetchCustomerCartData();
         }
         catch (error) {
             console.error("product creation error :", error);
         }
-        console.log("getProductId------", getProductId);
     }
 
-
+    const { data: customerCartData, loading: customerCartLoading, error: customerCartError, refetch: refetchCustomerCartData } = useQuery(GET_CUSTOMER_CART_DATA,
+        {
+            variables: { userId: loginData.customerId }
+        })
     const handleAddtoCartBtn = async (getId) => {
         parseIds();
         if (getId) {
@@ -75,6 +85,9 @@ export default function index() {
         if (productData && !productError && !productLoading) {
             setgetProductData(productData.getAllProductsData)
         }
+        if (customerCartData && !customerCartLoading && !customerCartError) {
+            setCustomerCartData(customerCartData.getCustomerCartData)
+        }
         if (getSingleCartData && !getSingleCartLoading && getSingleCartData.addToCartProductData) {
             dispatch(storeAddToCartProductData(getSingleCartData.addToCartProductData));
         }
@@ -85,7 +98,7 @@ export default function index() {
             console.log("...error");
         }
 
-    }, [productData, productError, productLoading, getSingleCartData, cartDatas]);
+    }, [productData, getSingleCartData, customerCartData, customerCartBulkData]);
 
     // useEffect(() => {
     //     if (Object.keys(loginData).length === 0 || !loginData.token) {
@@ -111,13 +124,52 @@ export default function index() {
     const handleDecrementCount = (productId) => {
         dispatch(decrementProductCount({ productId }))
     }
+
+    const handleIncrementQuantity = async (productId) => {
+        try {
+            await incrementCustomerCartQty({ variables: { productId: productId, userId: loginData.customerId } })
+            refetchCustomerCartData();
+        }
+        catch (error) {
+            console.error('Error incrementing the item:', error);
+        }
+    }
+    const handleDecrementQuantity = async (productId) => {
+        try {
+            await decrementCustomerCartQty({ variables: { productId: productId, userId: loginData.customerId } })
+            refetchCustomerCartData();
+        }
+        catch (error) {
+            console.error('Error decrementing the item:', error);
+        }
+    }
+    const removeCustomerCartData = async (productId) => {
+        try {
+            await deleteCustomerCartData({ variables: { cartId: productId, userId: loginData.customerId } })
+            notification.error({ description: "product successfully removed from your cart" })
+            refetchCustomerCartData();
+        }
+        catch (error) {
+            console.error('Error deleting item:', error);
+        }
+    }
+
+    const removeAllCustomerCartData = async () => {
+        try {
+            await deleteAllCustomerCartData({ variables: { userId: loginData.customerId } })
+            // notification.error({ description: "product successfully removed from your cart" })
+            refetchCustomerCartData();
+        }
+        catch (error) {
+            console.error('Error deleting all items:', error);
+        }
+    }
     const removeAllCartData = () => {
         dispatch(removeAllCartDatas())
         setCart(false)
     }
     const ExpandedAmountarray = getCartData.map((expanded) => expanded.expandedPrice)
     const totalExpandedAmount = ExpandedAmountarray.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
-
     return (
         <>
             <div>
@@ -127,7 +179,11 @@ export default function index() {
                         <div className='flex justify-between items-center gap-10'>
                             <input type='text' onChange={(e) => setSearchText(e.target.value)} placeholder='Search products' className='h-10 bg-gray-50 border-solid border border-gray-300 text-gray-600 text-sm rounded-lg hover:border-gray-500 focus:border-gray-500 outline-0 ps-5' />
                             <div className='relative bottom-3'>
-                                <p className='relative left-4 top-1 text-white bg-yellow-600 text-base font-medium rounded-full h-6 w-6 flex justify-center items-center'>{getCartData.length}</p>
+                                <p className='relative left-4 top-1 text-white bg-yellow-600 text-base font-medium rounded-full h-6 w-6 flex justify-center items-center'>
+                                    {
+                                        loginData.token ? (customerCartData && customerCartData.getCustomerCartData.length || 0) : (getCartData.length)
+                                    }
+                                </p>
                                 <FontAwesomeIcon onClick={() => setCart(true)} icon={faShoppingCart} className='text-gray-700 hover:text-gray-600 text-2xl cursor-pointer' />
                             </div>
                             <div>
@@ -225,67 +281,127 @@ export default function index() {
                             <div className="rounded-3xl bg-white shadow-lg">
                                 <div className='flex justify-between pl-8 pt-4 pr-8'>
                                     <h1 className='text-yellow-500'>SHOPPING CART</h1>
-                                    <FontAwesomeIcon onClick={() => setCart(false)} icon={faClose} className='text-xl cursor-pointer hover:text-red-400' />
+                                    <FontAwesomeIcon onClick={() => openCart ? setCart(false) : setCart(true)} icon={faClose} className='text-xl cursor-pointer hover:text-red-400' />
                                 </div>
                                 <div className="overflow-y-scroll scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-gray-300 max-h-96 p-2">
                                     {
-                                        getCartData.length > 0 ? (
-                                            getCartData.map((listCartData, index) => {
-                                                return (
-                                                    <div className="flow-root" key={listCartData._id}>
-                                                        <ul className="-my-8">
-                                                            <li className="flex flex-col space-y-1 py-10 text-left sm:flex-row sm:space-x-5 sm:space-y-1">
-                                                                <div className="shrink-0 relative">
-                                                                    <img className="h-24 w-24 max-w-full rounded-lg object-cover" src="https://images.unsplash.com/flagged/photo-1556637640-2c80d3201be8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8c25lYWtlcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60" alt="" />
-                                                                </div>
-                                                                <div className="relative flex flex-1 flex-col justify-between">
-                                                                    <div className="sm:col-gap-3 sm:grid sm:grid-cols-2">
-                                                                        <div className="pr-8 sm:pr-5">
-                                                                            <p className="text-base font-semibold text-gray-600">{listCartData.productName}</p>
-                                                                            {/* <span>{listCartData.category}</span> */}
-                                                                            <p className="mx-0 mt-1 mb-0 text-base text-gray-500">₹{listCartData.price}</p>
-                                                                        </div>
-                                                                        <div className="mt-4 flex items-end justify-between sm:mt-0 sm:items-start sm:justify-end">
-                                                                            <p className="shrink-0 w-20 text-base font-semibold text-gray-700 sm:order-2 sm:ml-8 sm:text-right">₹{listCartData.expandedPrice}</p>
-                                                                        </div>
+                                        loginData.token ?
+                                            customerCartBulkData.length > 0 ? (
+                                                customerCartBulkData.map((listCartData, index) => {
+                                                    return (
+                                                        <div className="flow-root" key={listCartData._id}>
+                                                            <ul className="-my-8">
+                                                                <li className="flex flex-col space-y-1 py-10 text-left sm:flex-row sm:space-x-5 sm:space-y-1">
+                                                                    <div className="shrink-0 relative">
+                                                                        <img className="h-24 w-24 max-w-full rounded-lg object-cover" src="https://images.unsplash.com/flagged/photo-1556637640-2c80d3201be8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8c25lYWtlcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60" alt="" />
                                                                     </div>
-                                                                    <div className="flex justify-center items-center gap-32">
-                                                                        <div className='flex justify-center items-center gap-3'>
-                                                                            <button disabled={listCartData.count == 1} >
-                                                                                <FontAwesomeIcon icon={faMinus} onClick={() => handleDecrementCount(listCartData._id)} className={`${listCartData.count === 1 ? 'cursor-default' : "cursor-pointer"} border border-solid border-blue-300 font-thin rounded-xl p-1 text-xs`} />
+                                                                    <div className="relative flex flex-1 flex-col justify-between">
+                                                                        <div className="sm:col-gap-3 sm:grid sm:grid-cols-2">
+                                                                            <div className="pr-8 sm:pr-5">
+                                                                                <p className="text-base font-semibold text-gray-600">{listCartData.productName}</p>
+                                                                                <p className="mx-0 mt-1 mb-0 text-base text-gray-500">₹{listCartData.price}</p>
+                                                                            </div>
+                                                                            <div className="mt-4 flex items-end justify-between sm:mt-0 sm:items-start sm:justify-end">
+                                                                                <p className="shrink-0 w-20 text-base font-semibold text-gray-700 sm:order-2 sm:ml-8 sm:text-right">₹{listCartData.expandedPrice}</p>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div className="flex justify-center items-center gap-32">
+                                                                            <div className='flex justify-center items-center gap-3'>
+                                                                                <button disabled={listCartData.quantity == 1} >
+                                                                                    <FontAwesomeIcon icon={faMinus} onClick={() => handleDecrementQuantity(listCartData._id)} className={`${listCartData.quantity === 1 ? 'cursor-default' : "cursor-pointer"} border border-solid border-blue-300 font-thin rounded-xl p-1 text-xs`} />
+                                                                                </button>
+                                                                                {
+                                                                                    <span className='border border-gray-400 w-10 rounded-sm flex justify-center items-center'>{listCartData.quantity}</span>
+                                                                                    // <input type='text' id={listCartData._id} className='flex justify-center hover:border-blue-300 items-center pl-3.5 border border-gray-400 w-10 rounded-sm' value={listCartData.count} onChange={handleQuantityChange} />
+                                                                                }
+                                                                                <FontAwesomeIcon icon={faPlus} onClick={() => handleIncrementQuantity(listCartData._id, listCartData.price)} className='cursor-pointer border border-solid border-blue-300 font-thin rounded-xl p-1 text-xs' />
+                                                                            </div>
+                                                                            <button type="submit" onClick={() => removeCustomerCartData(listCartData._id, listCartData.productName)} className="flex rounded p-2 text-center text-gray-700 transition-all duration-200 ease-in-out focus:shadow hover:text-red-500">
+                                                                                Remove
                                                                             </button>
-                                                                            {
-                                                                                <span className='border border-gray-400 w-10 rounded-sm flex justify-center items-center'>{listCartData.count}</span>
-                                                                                // <input type='text' id={listCartData._id} className='flex justify-center hover:border-blue-300 items-center pl-3.5 border border-gray-400 w-10 rounded-sm' value={listCartData.count} onChange={handleQuantityChange} />
-                                                                            }
-                                                                            <FontAwesomeIcon icon={faPlus} onClick={() => handleIncrementCount(listCartData._id, listCartData.price)} className='cursor-pointer border border-solid border-blue-300 font-thin rounded-xl p-1 text-xs' />
                                                                         </div>
-                                                                        <button type="submit" onClick={() => handleRemoveDataFromLocal(listCartData._id, listCartData.productName)} className="flex rounded p-2 text-center text-gray-700 transition-all duration-200 ease-in-out focus:shadow hover:text-red-500">
-                                                                            Remove
-                                                                        </button>
                                                                     </div>
-                                                                </div>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                )
-                                            })
-                                        ) : <div>
-                                            <Image
-                                                src="/Images/noCart.png"
-                                                alt="No Carts Found Image"
-                                                style={{ paddingTop: '30px', padding: '50px' }}
-                                                width={400}
-                                                height={200}
-                                            />
-                                        </div>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    )
+                                                })
+                                            ) : <div>
+                                                <Image
+                                                    src="/Images/noCart.png"
+                                                    alt="No Carts Found Image"
+                                                    style={{ paddingTop: '30px', padding: '50px' }}
+                                                    width={400}
+                                                    height={200}
+                                                />
+                                            </div>
+                                            :
+                                            getCartData.length > 0 ? (
+                                                getCartData.map((listCartData, index) => {
+                                                    return (
+                                                        <div className="flow-root" key={listCartData._id}>
+                                                            <ul className="-my-8">
+                                                                <li className="flex flex-col space-y-1 py-10 text-left sm:flex-row sm:space-x-5 sm:space-y-1">
+                                                                    <div className="shrink-0 relative">
+                                                                        <img className="h-24 w-24 max-w-full rounded-lg object-cover" src="https://images.unsplash.com/flagged/photo-1556637640-2c80d3201be8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8c25lYWtlcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60" alt="" />
+                                                                    </div>
+                                                                    <div className="relative flex flex-1 flex-col justify-between">
+                                                                        <div className="sm:col-gap-3 sm:grid sm:grid-cols-2">
+                                                                            <div className="pr-8 sm:pr-5">
+                                                                                <p className="text-base font-semibold text-gray-600">{listCartData.productName}</p>
+                                                                                {/* <span>{listCartData.category}</span> */}
+                                                                                <p className="mx-0 mt-1 mb-0 text-base text-gray-500">₹{listCartData.price}</p>
+                                                                            </div>
+                                                                            <div className="mt-4 flex items-end justify-between sm:mt-0 sm:items-start sm:justify-end">
+                                                                                <p className="shrink-0 w-20 text-base font-semibold text-gray-700 sm:order-2 sm:ml-8 sm:text-right">₹{listCartData.expandedPrice}</p>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div className="flex justify-center items-center gap-32">
+                                                                            <div className='flex justify-center items-center gap-3'>
+                                                                                <button disabled={listCartData.count == 1} >
+                                                                                    <FontAwesomeIcon icon={faMinus} onClick={() => handleDecrementCount(listCartData._id)} className={`${listCartData.count === 1 ? 'cursor-default' : "cursor-pointer"} border border-solid border-blue-300 font-thin rounded-xl p-1 text-xs`} />
+                                                                                </button>
+                                                                                {
+                                                                                    <span className='border border-gray-400 w-10 rounded-sm flex justify-center items-center'>{listCartData.count}</span>
+                                                                                    // <input type='text' id={listCartData._id} className='flex justify-center hover:border-blue-300 items-center pl-3.5 border border-gray-400 w-10 rounded-sm' value={listCartData.count} onChange={handleQuantityChange} />
+                                                                                }
+                                                                                <FontAwesomeIcon icon={faPlus} onClick={() => handleIncrementCount(listCartData._id, listCartData.price)} className='cursor-pointer border border-solid border-blue-300 font-thin rounded-xl p-1 text-xs' />
+                                                                            </div>
+                                                                            <button type="submit" onClick={() => handleRemoveDataFromLocal(listCartData._id, listCartData.productName)} className="flex rounded p-2 text-center text-gray-700 transition-all duration-200 ease-in-out focus:shadow hover:text-red-500">
+                                                                                Remove
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    )
+                                                })
+                                            ) : <div>
+                                                <Image
+                                                    src="/Images/noCart.png"
+                                                    alt="No Carts Found Image"
+                                                    style={{ paddingTop: '30px', padding: '50px' }}
+                                                    width={400}
+                                                    height={200}
+                                                />
+                                            </div>
+
                                     }
                                     {
                                         getCartData.length > 1 ? (
                                             <div className='flex justify-end'>
                                                 <span onClick={removeAllCartData} className='cursor-pointer hover:text-red-600'>Remove All</span>
                                             </div>
-                                        ) : ''
+                                        ) : ""
+
+                                    }
+                                    {
+                                        customerCartBulkData.length > 1 ? (
+                                            <div div className='flex justify-end'>
+                                                <span onClick={removeAllCustomerCartData} className='cursor-pointer hover:text-red-600'>Remove All</span>
+                                            </div>
+                                        ) : ""
                                     }
 
                                 </div>
@@ -308,8 +424,8 @@ export default function index() {
                             </div>
                         </div>
                     </div>
-                </section>
-            </div>
+                </section >
+            </div >
         </>
 
     )
