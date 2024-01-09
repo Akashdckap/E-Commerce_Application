@@ -33,25 +33,24 @@ export default function index() {
         variables: { ids: allAddToCartId }
     })
     const { data: loginCustomer, error: loginError, loading: loginLoading } = useMutation(LOGIN_CUSTOMER)
-    // console.log("loginCustomer", loginCustomer)
-    const handleAddToCartToken = (getProductId) => {
+    // console.log("cartDatas------------------", cartDatas);
+    const [storeCartDatas] = useMutation(CREATE_CART_ITEMS)
+    const handleAddToCartToken = async (getProductId) => {
         const cart = productData.getAllProductsData.find((cart) => { return cart._id == getProductId })
         const updatObject = {
             ...cart,
             productId: cart._id
         }
         delete updatObject._id
-        console.log("updatObject--------", updatObject);
-        // setCartData(cart);
         const { __typename, ...rest } = updatObject
-        // console.log(rest)
-        setCartData(rest)
+        try {
+            await (storeCartDatas({ variables: { userId: loginData.customerId, productCart: rest } }))
+        }
+        catch (error) {
+            console.error("product creation error :", error);
+        }
     }
-    console.log(cartDatas, "--------");
-    const [storeCartDatas] = useMutation(CREATE_CART_ITEMS, {
-        variables: { userId: loginData.customerId, productCart: cartDatas }
-    })
-    console.log("cartDatas------------------", cartDatas);
+
 
     const handleAddtoCartBtn = async (getId) => {
         parseIds();
@@ -70,7 +69,7 @@ export default function index() {
         router.push('/customerLogin')
         notification.success({ message: "User logged out successfully  " })
     }
-    console.log(allAddToCartId, "--------------ProductId")
+
     useEffect(() => {
         if (productData && !productError && !productLoading) {
             setgetProductData(productData.getAllProductsData)
