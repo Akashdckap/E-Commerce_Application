@@ -122,4 +122,42 @@ export const CUSTOMER_REGISTER = gql`
     }
    }
 `
-
+export const UPDATE_CUSTOMER_PERSONAL_DETAILS = gql`
+  mutation updateCustomerPersonalDetails($id:ID!, $input: updateCustomerPersonal!){
+    updateCustomerPersonalDetails(id: $id, input: $input){
+      name,
+      email,
+      phoneNo,
+    }
+  }
+`
+export const ADD_CUSTOMER_SHIPPING_ADDRESS = gql`
+  mutation addCustomerShippingAddress($id:ID!, $input: shippingAddressInput!){
+    addCustomerShippingAddress(id: $id, input: $input){
+      firstName
+      lastName
+      email
+      phoneNo
+      address
+      district
+      state
+      pincode
+      country
+    }
+  }
+`
+export const UPDATA_CUSTOMER_SHIPPING_ADDRESS = gql`
+  mutation updateCustomerShippingAddress($id:ID!, $input: shippingAddressInput!){
+    updateCustomerShippingAddress(id: $id, input: $input){
+      firstName
+      lastName
+      email
+      phoneNo
+      address
+      district
+      state
+      pincode
+      country
+    }
+  }
+`

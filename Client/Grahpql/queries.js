@@ -216,3 +216,18 @@ export const GET_REGISTER_CUSTOMER = gql`
       }
     }
 `
+export const GET_CUSTOMER_SHIPPING_ADDRESS = gql`
+    query getShippingAddress($id:ID!) {
+        getShippingAddress (id : $id){
+            firstName,
+            lastName,
+            email,
+            phoneNo,
+            address,
+            district,
+            state,
+            pincode,
+            country,
+      }
+    }
+`

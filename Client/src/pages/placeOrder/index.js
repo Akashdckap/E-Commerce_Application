@@ -419,8 +419,9 @@ export default function placeOrder() {
 
     const expandedAmountarray = getCartData.map((expanded) => expanded.expandedPrice)
     const totalExpandedAmount = expandedAmountarray.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
-    console.log("getBillingData.length", getBillingData.length === 0);
-    console.log("getPersonalData.length---------------", getPersonalData.length === 0);
+
+    // console.log("getBillingData.length", getBillingData.length === 0);
+    // console.log("getPersonalData.length---------------", getPersonalData.length === 0);
     return (
         <>
             <div className="">
