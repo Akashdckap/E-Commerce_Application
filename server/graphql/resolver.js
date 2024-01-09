@@ -314,29 +314,25 @@ const resolvers = {
         },
 
         async cartItems(_, { userId, productCart }) {
-            console.log("productCart------",userId);
-            console.log("productData-------",productCart)
-            
-            // try {
-            //     const cart = await cartSchema.findOne({ userId })
+            try {
+                const cart = await cartSchema.findOne({ userId })
+                if (!cart) {
+                    const saveCart = new cartSchema({
+                        userId,
+                        cartItems: productCart,
+                    })
+                    const items = await saveCart.save();
+                    return items;
+                }
 
-            //     if (!cart) {
-            //         const saveCart = new cartSchema({
-            //             userId,
-            //             cartItems: productCart,
-            //         })
-            //         const items = await saveCart.save();
-            //         return items;
-            //     }
+                cart.cartItems.push(productCart);
+                await cart.save();
+                return cart.cartItems;
 
-            //     cart.cartItems.push(productCart);
-            //     await cart.save();
-            //     return cart.cartItems;
-
-            // }
-            // catch (error) {
-            //     console.log("error not storing", error)
-            // }
+            }
+            catch (error) {
+                console.log("error not storing", error)
+            }
 
 
         },
