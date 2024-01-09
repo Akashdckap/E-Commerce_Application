@@ -22,11 +22,14 @@ const resolvers = {
     // Upload: GraphQLUpload,
     Query: {
         getCustomerRegister: async (_, { id }) => {
-            // console.log("customer id ------------", req);
-            // const get = customerInformation.findOne({ _id: new ObjectId(id) })
-            // console.log(get);
             return await (customerInformation.findOne({ _id: new ObjectId(id) }));
         },
+        getShippingAddress: async (_, { id }) => {
+            const getAddress = await (customerInformation.findOne({ _id: new ObjectId(id) }));
+            return getAddress.shippingAddress
+        },
+
+
         getAllAdmins: async () => {
             return await (admins.find({}));
         },
@@ -118,6 +121,49 @@ const resolvers = {
             }
             else {
                 throw new Error("Email id already exists");
+            }
+        },
+        async updateCustomerPersonalDetails(_, { id, input }) {
+            try {
+                const updatedCustomerPersonal = await customerInformation.findByIdAndUpdate(
+                    id,
+                    input,
+                    { new: true }
+                )
+                if (!updatedCustomerPersonal) {
+                    throw new Error('Customer not found');
+                }
+                return updatedCustomerPersonal
+            }
+            catch (error) {
+                console.error('Error updating Customer personal details:', error);
+                throw new Error('Failed to update Customer details');
+            }
+        },
+        async addCustomerShippingAddress(_, { id, input }) {
+            try {
+                const customer = await customerInformation.findById(id);
+                if (!customer) {
+                    throw new Error('Customer not found');
+                }
+                customer.shippingAddress = input
+                await customer.save();
+                return customer
+            }
+            catch (error) {
+                console.error('Error updating customer address:', error);
+                throw new Error('Failed to update customer address');
+            }
+        },
+        async updateCustomerShippingAddress(_, { id, input }) {
+            try {
+                const updatedCustomerShipping = await customerInformation.findById(id)
+                updatedCustomerShipping.shippingAddress = input
+                return await updatedCustomerShipping.save()
+            }
+            catch (error) {
+                console.error('Error updating Customer shippingAddress:', error);
+                throw new Error('Failed to update Customer shippingAddress');
             }
         },
         async customerLogin(_, { loginInput }) {

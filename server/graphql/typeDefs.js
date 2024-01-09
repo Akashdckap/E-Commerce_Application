@@ -179,6 +179,11 @@ const typeDefs = gql` #graphql
         color: String,
         description: String,
     }
+    input updateCustomerPersonal {
+        name: String,
+        email: String,
+        phoneNo: BigInt,
+    }
     type productPageNation{
         products: [products!]!,
         totalCount:Int!
@@ -223,6 +228,7 @@ const typeDefs = gql` #graphql
     }
     type Query{
         getCustomerRegister(id: ID!): customerRegister
+        getShippingAddress(id: ID!): shippingAddress
         getAllAdmins:[admins]
         getAllProductsData: [products]
         getAllProducts(page:Int!,pageSize:Int!):[products!]!
@@ -247,6 +253,10 @@ const typeDefs = gql` #graphql
         cartItems(userId:ID!, productCart: cartItemsInput): cartItems!
         updatePrice(id: ID, input:upDateCartPrice): cartItems!
         uploadFile(file: Upload!): String!
+
+        updateCustomerPersonalDetails(id: ID!, input: updateCustomerPersonal) : customerRegister
+        addCustomerShippingAddress(id: ID!, input: shippingAddressInput) : shippingAddress
+        updateCustomerShippingAddress(id: ID!, input: shippingAddressInput) : shippingAddress
     }
 `
 export default typeDefs;
