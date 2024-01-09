@@ -97,7 +97,7 @@ const resolvers = {
         getAddToCart: async (_, { userId }) => {
             try {
                 const cart = await cartSchema.findOne({ userId })
-                return cart
+                return cart;
             }
             catch (error) {
                 console.log(error, "Not getting the cartItems back")
@@ -106,7 +106,6 @@ const resolvers = {
     },
     Mutation: {
         async registerCustomer(_, { customerInput }) {
-            // console.log(customerInput);
             const emailExists = await customerInformation.find({ email: customerInput.email })
             console.log(emailExists.length);
             const hashPassword = await bcrypt.hash(customerInput.password, 10)
@@ -142,14 +141,15 @@ const resolvers = {
             }
         },
         async addCustomerShippingAddress(_, { id, input }) {
+            const objectId = new ObjectId(id);
             try {
-                const customer = await customerInformation.findById(id);
-                if (!customer) {
+                const customerId = await customerInformation.findOne({ _id: objectId });
+                if (!customerId) {
                     throw new Error('Customer not found');
                 }
-                customer.shippingAddress = input
-                await customer.save();
-                return customer
+                customerId.Addresses.push(input);
+                await customerId.save();
+                return customerId.shippingAddress
             }
             catch (error) {
                 console.error('Error updating customer address:', error);

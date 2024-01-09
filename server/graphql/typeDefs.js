@@ -12,13 +12,27 @@ const typeDefs = gql` #graphql
         email: String!,
         password: String!,
     }
+    type address{
+        firstName: String,
+        lastName: String,
+        email: String,
+        phoneNo: String!,
+        address: String!,
+        district: String!,
+        state: String!,
+        pincode: String!,
+        country: String!,
+    }
     type customerRegister{
         _id: ID!
         name: String,
         email: String,
         phoneNo: BigInt,
         password: String,
+        Addresses: [address]
     }
+    
+
     type customerLogin{
         email:String,
         password: String,
@@ -62,6 +76,31 @@ const typeDefs = gql` #graphql
         phoneNo: BigInt!,
         customerId: String,
     }
+
+    input shippingAddressCustomerInput{
+        firstName: String!,
+        lastName: String!,
+        email: String!,
+        phoneNo: String!,
+        address: String!,
+        district: String!,
+        state: String!,
+        pincode: String!,
+        country: String!, 
+    }
+
+    type shippingAddressCustomer{
+        firstName: String!,
+        lastName: String!,
+        email: String!,
+        phoneNo: String!,
+        address: String!,
+        district: String!,
+        state: String!,
+        pincode: String!,
+        country: String!, 
+    }
+
     input shippingAddressInput{
         firstName: String!,
         lastName: String!,
@@ -137,7 +176,7 @@ const typeDefs = gql` #graphql
         district: String,
         state: String,
         pincode: String,
-        country: String, 
+        country: String,
     }
 
     type billingAddress{
@@ -255,7 +294,7 @@ const typeDefs = gql` #graphql
         updatePrice(id: ID, input:upDateCartPrice): cartItems!
         uploadFile(file: Upload!): String!
         updateCustomerPersonalDetails(id: ID!, input: updateCustomerPersonal) : customerRegister
-        addCustomerShippingAddress(id: ID!, input: shippingAddressInput) : shippingAddress
+        addCustomerShippingAddress(id: ID!, input: shippingAddressCustomerInput) : shippingAddressCustomer
         updateCustomerShippingAddress(id: ID!, input: shippingAddressInput) : shippingAddress
     }
 `

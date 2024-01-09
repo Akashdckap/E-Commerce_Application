@@ -3,18 +3,34 @@ import { useQuery } from "@apollo/client";
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft, faUser, faDeleteLeft } from '@fortawesome/free-solid-svg-icons'
+import { faArrowLeft, faUser, faDeleteLeft, faEllipsisVertical } from '@fortawesome/free-solid-svg-icons'
 import { GET_CUSTOMER_REGISTER_DATA } from "../../../Grahpql/queries";
 import { removeCartdata } from "@/Reducer/productReducer";
 import { notification } from "antd";
 export default function UserPlaceOrder() {
     const dispatch = useDispatch();
+    const [addresses, setAddresses] = useState([])
+    const [selectEditDelete, setSelectEditDelete] = useState(false);
     const getCustomerLocalData = useSelector(state => state.productDetails.LoginData);
+
     const getCartData = useSelector(state => state.productDetails.cartData);
 
     const { data, loading, error } = useQuery(GET_CUSTOMER_REGISTER_DATA, {
         variables: { id: getCustomerLocalData.customerId }
     })
+    console.log(data, "----------");
+    useEffect(() => {
+        if (data && !loading && !error) {
+            setAddresses(data.getCustomerRegister.Addresses)
+        }
+        if (!data && loading && !error) {
+            console.log("loading......", loading)
+        }
+        if (!data && !loading && error) {
+            console.log("error......", error)
+        }
+    }, [data, loading, error])
+
     const handleRemoveDataFromLocal = (itemId, itemName) => {
         dispatch(removeCartdata(itemId))
         notification.success({ message: `Successfully removed ${itemName} from your cart` })
@@ -24,6 +40,7 @@ export default function UserPlaceOrder() {
     }
     const expandedAmountarray = getCartData.map((expanded) => expanded.expandedPrice)
     const totalExpandedAmount = expandedAmountarray.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+    console.log(selectEditDelete);
     return (
         <>
             <div>
@@ -55,6 +72,38 @@ export default function UserPlaceOrder() {
                                 <div className="flex justify-end">
                                     <span className="text-blue-400  hover:cursor-pointer hover:text-green-500">Change</span>
                                 </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div>{addresses.map((address, index) => {
+                                return (
+                                    <div className="border border-solid bg-white rounded-md my-8 p-3">
+                                        <div className="flex gap-6">
+                                            <input type="radio"></input>
+                                            <p className="text-gray-600">{address.firstName}</p>
+                                            <p className="text-gray-400 border border-gray-200 bg-gray-300 px-1 text-sm">Home</p>
+                                            <p className="text-gray-600">{address.phoneNo}</p>
+                                            <FontAwesomeIcon icon={faEllipsisVertical} onClick={() => setSelectEditDelete(true)} className="text-gray-500 cursor-pointer ml-auto" />
+                                        </div>
+                                        <div>
+                                            <div className="flex gap-2 py-2">
+                                                <p className="text-gray-500">{address.address},</p>
+                                                <p className="text-gray-500">{address.district},</p>
+                                                <p className="text-gray-500">{address.state}</p>
+                                                <span>-</span>
+                                                <p className="text-gray-500">{address.pincode}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )
+                            })}</div>
+                        </div>
+
+                        <div style={{ display: selectEditDelete ? 'block' : 'none' }}>
+                            <div>
+                                <p className="text-gray-700 text-sm">Edit</p>
+                                <p className="text-gray-700 text-sm">Delete</p>
                             </div>
                         </div>
                     </div>

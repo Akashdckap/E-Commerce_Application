@@ -45,9 +45,11 @@ export default function index() {
         const { __typename, ...rest } = updatObject
         try {
             await (storeCartDatas({ variables: { userId: loginData.customerId, productCart: rest } }))
+            notification.success({message:"Added to the cart Successfully"})
         }
         catch (error) {
             console.error("product creation error :", error);
+            notification.error({message:"Cart is not added Successfully"})
         }
     }
 

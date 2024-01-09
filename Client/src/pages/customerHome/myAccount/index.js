@@ -1,14 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faShippingFast } from "@fortawesome/free-solid-svg-icons";
+import { faUser, faShippingFast, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { useQuery } from "@apollo/client";
 import { useSelector } from "react-redux";
 import { GET_CUSTOMER_REGISTER_DATA, GET_CUSTOMER_SHIPPING_ADDRESS } from "../../../../Grahpql/queries";
 import { UPDATE_CUSTOMER_PERSONAL_DETAILS, ADD_CUSTOMER_SHIPPING_ADDRESS, UPDATA_CUSTOMER_SHIPPING_ADDRESS } from "../../../../Grahpql/mutation";
+import Link from "next/link";
 import { useMutation } from "@apollo/client";
+import { useRouter } from "next/router";
 function Myaccount() {
     const [showPersonalData, setShowPersonalData] = useState(false)
     const [showShippingData, setShowShippingData] = useState(false);
+    const router = useRouter();
+
 
     const [personalDetails, setPersonalDetails] = useState({
         name: "",
@@ -43,7 +47,7 @@ function Myaccount() {
         country: ""
     })
     const getCustomerLocalData = useSelector(state => state.productDetails.LoginData);
-
+    console.log(getCustomerLocalData.customerId)
     const { data, loading, error } = useQuery(GET_CUSTOMER_REGISTER_DATA, {
         variables: { id: getCustomerLocalData.customerId }
     })
@@ -234,13 +238,15 @@ function Myaccount() {
         }
     }, [getshippinData]);
     // console.log(getshippinData.getShippingAddress === null);
-
+    const handleBack = () =>{
+        router.push("/customerHome")
+    }
     return (
         <>
             <div>
                 <div className="grid gap-5 ml-28">
                     <div className="flex justify-start items-center mt-5">
-                        <h1 className="text-[#575F70] text-lg font-medium">Personal Details</h1>
+                        <h1 className="text-[#575F70] text-lg font-medium"><FontAwesomeIcon icon={faArrowLeft} className="px-3 hover:cursor-pointer" onClick={handleBack}/>Personal Details</h1>
                     </div>
 
                     <div className="" style={{ display: showPersonalData ? 'none' : 'block' }}>
