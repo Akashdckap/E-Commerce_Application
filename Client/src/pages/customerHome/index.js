@@ -56,7 +56,7 @@ export default function index() {
         }
         catch (error) {
             console.error("product creation error :", error);
-            notification.error({message:"Cart is not added Successfully"})
+            notification.error({ message: "Cart is not added Successfully" })
         }
     }
 
@@ -169,6 +169,9 @@ export default function index() {
         dispatch(removeAllCartDatas())
         setCart(false)
     }
+    const CustomerAmountarray = customerCartBulkData.map((expanded) => expanded.expandedPrice)
+    const CustomerTotalAmount = CustomerAmountarray.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+    // console.log("CustomerTotalAmount----------", CustomerTotalAmount);
     const ExpandedAmountarray = getCartData.map((expanded) => expanded.expandedPrice)
     const totalExpandedAmount = ExpandedAmountarray.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
     return (
@@ -408,7 +411,7 @@ export default function index() {
                                 </div>
                                 <div className='flex justify-around'>
                                     <h5>Total Amount: </h5>
-                                    <p>₹{totalExpandedAmount}</p>
+                                    <p>₹{loginData.token ? CustomerTotalAmount : totalExpandedAmount}</p>
                                 </div>
                                 <div className="flex justify-center place-items-center gap-2 pb-8">
                                     <div className='flex justify-center items-center pt-5'>
