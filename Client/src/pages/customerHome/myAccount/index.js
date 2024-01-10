@@ -8,6 +8,7 @@ import { UPDATE_CUSTOMER_PERSONAL_DETAILS, ADD_CUSTOMER_SHIPPING_ADDRESS, UPDATA
 import Link from "next/link";
 import { useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
+import { notification } from "antd";
 function Myaccount() {
     const [showPersonalData, setShowPersonalData] = useState(false)
     const [showShippingData, setShowShippingData] = useState(false);
@@ -47,7 +48,7 @@ function Myaccount() {
         country: ""
     })
     const getCustomerLocalData = useSelector(state => state.productDetails.LoginData);
-    console.log(getCustomerLocalData.customerId)
+
     const { data, loading, error } = useQuery(GET_CUSTOMER_REGISTER_DATA, {
         variables: { id: getCustomerLocalData.customerId }
     })
@@ -171,7 +172,9 @@ function Myaccount() {
         if (validatePersonalDetailForm()) {
             try {
                 await updateCustomerPersonal({ variables: { id: getCustomerLocalData.customerId, input: personalDetails } })
-                setShowPersonalData(false)
+                notification.success({ message: "Personal detail updated" })
+                // setShowPersonalData(false)
+
             }
             catch (error) {
                 console.log(error);
@@ -221,7 +224,8 @@ function Myaccount() {
         else {
             setShowShippingData(false)
         }
-    }, [getshippinData, showShippingData])
+    }, [getshippinData, showShippingData]);
+
     useEffect(() => {
         if (getshippinData && getshippinData.getShippingAddress) {
             setShippingDetails({
@@ -237,8 +241,8 @@ function Myaccount() {
             })
         }
     }, [getshippinData]);
-    // console.log(getshippinData.getShippingAddress === null);
-    const handleBack = () =>{
+
+    const handleBack = () => {
         router.push("/customerHome")
     }
     return (
@@ -246,10 +250,10 @@ function Myaccount() {
             <div>
                 <div className="grid gap-5 ml-28">
                     <div className="flex justify-start items-center mt-5">
-                        <h1 className="text-[#575F70] text-lg font-medium"><FontAwesomeIcon icon={faArrowLeft} className="px-3 hover:cursor-pointer" onClick={handleBack}/>Personal Details</h1>
+                        <h1 className="text-[#575F70] text-lg font-medium"><FontAwesomeIcon icon={faArrowLeft} className="px-3 hover:cursor-pointer" onClick={handleBack} />Personal Details</h1>
                     </div>
 
-                    <div className="" style={{ display: showPersonalData ? 'none' : 'block' }}>
+                    {/* <div className="" style={{ display: showPersonalData ? 'none' : 'block' }}>
                         <div className={`flex p-5 gap-44 w-7/12 hover:border-green-300 justify-between items-center bg-white rounded-md border border-solid`}>
                             <div className="flex justify-start items-center gap-8">
                                 <FontAwesomeIcon icon={faUser} className="text-green-400 text-lg" />
@@ -265,9 +269,9 @@ function Myaccount() {
                                 <span className="text-blue-400 hover:cursor-pointer hover:text-green-500" onClick={() => setShowPersonalData(true)}>Change</span>
                             </div>
                         </div>
-                    </div>
+                    </div> */}
                     <div className="">
-                        <form onSubmit={handlePersonalDetailForm} style={{ display: showPersonalData ? "block" : "none" }}>
+                        <form onSubmit={handlePersonalDetailForm}>
                             <div className={`grid justify-start p-5 w-7/12 gap-4 bg-white rounded-md  border-gray-200 border border-solid `} >
                                 <div className="flex justify-start items-center gap-3">
                                     <FontAwesomeIcon icon={faUser} className="text-green-400 text-lg" />

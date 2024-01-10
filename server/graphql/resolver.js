@@ -109,7 +109,6 @@ const resolvers = {
     Mutation: {
         async registerCustomer(_, { customerInput }) {
             const emailExists = await customerInformation.find({ email: customerInput.email })
-            console.log(emailExists.length);
             const hashPassword = await bcrypt.hash(customerInput.password, 10)
             if (emailExists.length < 1) {
                 const customer = new customerInformation({
@@ -325,7 +324,7 @@ const resolvers = {
                         cartItems: { quantity: 1, expandedPrice: productCart.price, ...productCart },
                     })
                     await saveCart.save();
-                    return cart.cartItems
+                    return cart
                 }
                 else {
                     const existingItem = cart.cartItems.find((item) => item.productId.toString() === new ObjectId(productId).toString());
@@ -375,12 +374,16 @@ const resolvers = {
         },
         async incrementCustomerProductQty(_, { productId, userId }) {
             try {
-                const incrementProductQty = await cartSchema.updateOne(
-                    { userId: ObjectId(userId), 'cartItems._id': ObjectId(productId) },
-                    { $inc: { 'cartItems.$.quantity': +1 } }
-                );
-                if (incrementProductQty.modifiedCount > 0) return true
-                return false
+                const cart = await cartSchema.findOne({ userId })
+                const getSpecific = cart.cartItems.find((item) => item._id.toString() === new ObjectId(productId).toString());
+                if (getSpecific) {
+                    getSpecific.quantity = getSpecific.quantity + 1;
+                    getSpecific.expandedPrice = getSpecific.price * getSpecific.quantity;
+                    await cart.save();
+                    return true;
+                } else {
+                    console.log('Product not found in the cart.');
+                }
             }
             catch (error) {
                 console.log(error);
@@ -388,12 +391,17 @@ const resolvers = {
         },
         async decrementCustomerProductQty(_, { productId, userId }) {
             try {
-                const incrementProductQty = await cartSchema.updateOne(
-                    { userId: ObjectId(userId), 'cartItems._id': ObjectId(productId) },
-                    { $inc: { 'cartItems.$.quantity': -1 } }
-                );
-                if (incrementProductQty.modifiedCount > 0) return true
-                return false
+                const cart = await cartSchema.findOne({ userId })
+                const getSpecific = cart.cartItems.find((item) => item._id.toString() === new ObjectId(productId).toString());
+                if (getSpecific) {
+                    getSpecific.quantity = getSpecific.quantity - 1;
+                    getSpecific.expandedPrice = getSpecific.price * getSpecific.quantity;
+                    await cart.save();
+                    return true;
+                } else {
+                    console.log('Product not found in the cart.');
+                    return false;
+                }
             }
             catch (error) {
                 console.log(error);
