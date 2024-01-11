@@ -17,6 +17,7 @@ export default function UserPlaceOrder() {
     const { data, loading, error } = useQuery(GET_CUSTOMER_REGISTER_DATA, {
         variables: { id: getCustomerLocalData.customerId }
     })
+    // console.log(addresses.Addresses.firstName,"-----------");
     const { data: customerCartData, loading: customerCartLoading, error: customerCartError, refetch: refetchCustomerCartData } = useQuery(GET_CUSTOMER_CART_DATA,
         {
             variables: { userId: getCustomerLocalData.customerId }
@@ -32,7 +33,9 @@ export default function UserPlaceOrder() {
         if (!data && !loading && error) {
             console.log("error......", error)
         }
-    }, [data, loading, error])
+    }, [data, loading, error]);
+
+    console.log(addresses, "---------")
 
     const [deleteCustomerCartData] = useMutation(DELETE_CUSTOMER_CART_DATA)
     const removeCustomerCartData = async (productId) => {
@@ -74,7 +77,7 @@ export default function UserPlaceOrder() {
                                     <FontAwesomeIcon icon={faUser} className="text-green-400 text-lg" />
                                     <div className="flex justify-start gap-3">
                                         <h4 className="text-gray-600">{data && data.getCustomerRegister.name}</h4>
-                                        <h4 className="text-gray-600">{data && data.getCustomerRegister.email}</h4>
+                                        <h4 className="text-gAddressesray-600">{data && data.getCustomerRegister.email}</h4>
                                     </div>
                                     <div className="flex justify-start">
                                         <p className="text-gray-400">{data && data.getCustomerRegister.phoneNo}</p>
@@ -85,7 +88,7 @@ export default function UserPlaceOrder() {
                                 </div>
                             </div>
                         </div>
-                        <div>
+                        {/* <div>
                             <div>
                                 <h1>Addresses</h1>
                                 <div>
@@ -104,8 +107,8 @@ export default function UserPlaceOrder() {
                                     }
                                 </div>
                             </div>
-                        </div>
-                        {/* <div>
+                        </div> */}
+                        <div>
                             <div>{addresses.map((address, index) => {
                                 return (
                                     <div className="border border-solid bg-white rounded-md my-8 p-3">
@@ -128,14 +131,7 @@ export default function UserPlaceOrder() {
                                     </div>
                                 )
                             })}</div>
-                        </div> */}
-
-                        {/* <div style={{ display: selectEditDelete ? 'block' : 'none' }}>
-                            <div>
-                                <p className="text-gray-700 text-sm">Edit</p>
-                                <p className="text-gray-700 text-sm">Delete</p>
-                            </div>
-                        </div> */}
+                        </div>
                     </div>
                     <div className="pb-10">
                         <div className="bg-white w-auto shadow-md h-full p-5 pb-6 rounded-md border-gray-300 border  hover:border-green-300 border-solid">

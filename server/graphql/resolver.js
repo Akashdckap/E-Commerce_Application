@@ -24,9 +24,10 @@ const resolvers = {
         getCustomerRegister: async (_, { id }) => {
             return await (customerInformation.findOne({ _id: new ObjectId(id) }));
         },
-        getShippingAddress: async (_, { id }) => {
-            const getAddress = await (customerInformation.findOne({ _id: new ObjectId(id) }));
-            return getAddress.shippingAddress
+        getShippingAddress: async (_, { userId, editAddressId }) => {
+            const getAddress = await (customerInformation.findOne({ "_id": new ObjectId(userId), "Addresses._id": new ObjectId(editAddressId) }));
+            // return getAddress.shippingAddress
+            console.log(getAddress)
         },
         getCustomerCartData: async (_, { userId }) => {
             const cartData = await cartSchema.findOne({ userId: new mongoose.Types.ObjectId(userId) })
@@ -157,10 +158,16 @@ const resolvers = {
                 throw new Error('Failed to update customer address');
             }
         },
-        async updateCustomerShippingAddress(_, { id, input }) {
+        async updateCustomerShippingAddress(_, { userId, addressId, input }) {
             try {
-                const updatedCustomerShipping = await customerInformation.findById(id)
-                updatedCustomerShipping.shippingAddress = input
+                const updatedCustomerShipping = await customerInformation.findById(userId)
+
+                if (updatedCustomerShipping) {
+                    const result = await customerInformation.updateOne({ _id: new ObjectId(userId), "Addresses": { $elemMatch: { "_id": new ObjectId(addressId) } } }, { $set: { "Addresses.$": input } })
+                    if (result.modifiedCount > 0) true
+                    else false
+                }
+
                 return await updatedCustomerShipping.save()
             }
             catch (error) {
@@ -330,7 +337,7 @@ const resolvers = {
                     const existingItem = cart.cartItems.find((item) => item.productId.toString() === new ObjectId(productId).toString());
 
                     if (existingItem) {
-                        existingItem.quantity += 1;
+                        existingItem.quantity = existingItem.quantity + 1;
                         existingItem.expandedPrice += productCart.price;
                     } else {
                         cart.cartItems.push({ quantity: 1, expandedPrice: productCart.price, ...productCart });
@@ -357,6 +364,21 @@ const resolvers = {
             catch (error) {
                 console.error(error);
                 return false;
+            }
+        },
+
+        async deleteCustomerAddress(_, { userId, addressId }) {
+            try {
+                const result = await customerInformation.updateOne(
+                    { userId: ObjectId(userId) },
+                    { $pull: { Addresses: { _id: ObjectId(addressId) } } }
+                );
+                if (result.modifiedCount > 0) return true
+                else return false
+            }
+            catch (error) {
+                console.error(error)
+                return false
             }
         },
         async deleteAllCustomerCartData(_, { userId }) {

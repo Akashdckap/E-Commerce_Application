@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faShippingFast, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { faUser, faShippingFast, faArrowLeft, faEllipsisVertical, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { useQuery } from "@apollo/client";
 import { useSelector } from "react-redux";
 import { GET_CUSTOMER_REGISTER_DATA, GET_CUSTOMER_SHIPPING_ADDRESS } from "../../../../Grahpql/queries";
-import { UPDATE_CUSTOMER_PERSONAL_DETAILS, ADD_CUSTOMER_SHIPPING_ADDRESS, UPDATA_CUSTOMER_SHIPPING_ADDRESS } from "../../../../Grahpql/mutation";
+import { UPDATE_CUSTOMER_PERSONAL_DETAILS, ADD_CUSTOMER_SHIPPING_ADDRESS, UPDATE_CUSTOMER_SHIPPING_ADDRESS, DELETE_CUSTOMER_ADDRESS } from "../../../../Grahpql/mutation";
 import Link from "next/link";
 import { useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
@@ -12,6 +12,8 @@ import { notification } from "antd";
 function Myaccount() {
     const [showPersonalData, setShowPersonalData] = useState(false)
     const [showShippingData, setShowShippingData] = useState(false);
+    const [addressesCustomer, setAddressesCustomer] = useState([]);
+    const [editId, setEditId] = useState();
     const router = useRouter();
 
 
@@ -49,16 +51,16 @@ function Myaccount() {
     })
     const getCustomerLocalData = useSelector(state => state.productDetails.LoginData);
 
-    const { data, loading, error } = useQuery(GET_CUSTOMER_REGISTER_DATA, {
+    const { data, loading, error, refetch: refetchAddresses } = useQuery(GET_CUSTOMER_REGISTER_DATA, {
         variables: { id: getCustomerLocalData.customerId }
     })
-    const { data: getshippinData, loading: shippingLoading, error: shippingError } = useQuery(GET_CUSTOMER_SHIPPING_ADDRESS, {
-        variables: { id: getCustomerLocalData.customerId }
-    })
+    // const { data: getshippinData, loading: shippingLoading, error: shippingError } = useQuery(GET_CUSTOMER_SHIPPING_ADDRESS, {
+    //     variables: { id: getCustomerLocalData.customerId }
+    // })
 
-    // console.log("getshippinData----------", getshippinData.getShippingAddress);
+    const [deleteCustomerAddresstData] = useMutation(DELETE_CUSTOMER_ADDRESS)
 
-
+    // console.log("data----------", data);
 
     const validatePersonalDetailForm = () => {
         let newErrors = { ...personalDetailsError };
@@ -150,7 +152,7 @@ function Myaccount() {
     }
     const [updateCustomerPersonal] = useMutation(UPDATE_CUSTOMER_PERSONAL_DETAILS)
     const [addCustomerShipping] = useMutation(ADD_CUSTOMER_SHIPPING_ADDRESS)
-    const [updateCustomerShipping] = useMutation(UPDATA_CUSTOMER_SHIPPING_ADDRESS)
+    const [updateCustomerShippingAddress] = useMutation(UPDATE_CUSTOMER_SHIPPING_ADDRESS)
     const handleChangePersonalDetails = (e) => {
         const { name, value } = e.target;
         setPersonalDetails({
@@ -185,9 +187,11 @@ function Myaccount() {
     const handleShipppingDetails = async (e) => {
         e.preventDefault();
         if (validateShippingForm()) {
-            if (getshippinData && getshippinData.getShippingAddress === null) {
+            if (!editId) {
+
                 try {
                     await addCustomerShipping({ variables: { id: getCustomerLocalData.customerId, input: shippingDetails } })
+                    refetchAddresses()
                     setShowShippingData(false)
                 }
                 catch (error) {
@@ -195,12 +199,16 @@ function Myaccount() {
                 }
             }
             else {
+                console.log(shippingDetails, "---------------shippingDetailsupdate")
                 try {
-                    await updateCustomerShipping({ variables: { id: getCustomerLocalData.customerId, input: shippingDetails } })
+                    await updateCustomerShippingAddress({ variables: { userId: getCustomerLocalData.customerId, addressId: editId, input: shippingDetails } })
                     setShowShippingData(false)
+                    notification.success({ message: "Updated Successfully" })
+                    refetchAddresses()
                 }
                 catch (error) {
-                    console.log(error);
+                    console.log("Not updated", error);
+                    notification.error({ message: "Not updated" })
                 }
             }
 
@@ -213,38 +221,74 @@ function Myaccount() {
                 name: data.getCustomerRegister.name,
                 email: data.getCustomerRegister.email,
                 phoneNo: data.getCustomerRegister.phoneNo,
-            })
+            });
+            setAddressesCustomer(data.getCustomerRegister.Addresses);
         }
     }, [data]);
 
-    useEffect(() => {
-        if (getshippinData && getshippinData.getShippingAddress === null) {
-            setShowShippingData(true)
-        }
-        else {
-            setShowShippingData(false)
-        }
-    }, [getshippinData, showShippingData]);
 
-    useEffect(() => {
-        if (getshippinData && getshippinData.getShippingAddress) {
-            setShippingDetails({
-                firstName: getshippinData.getShippingAddress.firstName,
-                lastName: getshippinData.getShippingAddress.lastName,
-                email: getshippinData.getShippingAddress.email,
-                phoneNo: getshippinData.getShippingAddress.phoneNo,
-                address: getshippinData.getShippingAddress.address,
-                district: getshippinData.getShippingAddress.district,
-                state: getshippinData.getShippingAddress.state,
-                pincode: getshippinData.getShippingAddress.pincode,
-                country: getshippinData.getShippingAddress.country
-            })
-        }
-    }, [getshippinData]);
+
+    // useEffect(() => {
+    //     if (getshippinData && getshippinData.getShippingAddress === null) {
+    //         setShowShippingData(true)
+    //     }
+    //     else {
+    //         setShowShippingData(false)
+    //     }
+    // }, [getshippinData, showShippingData]);
+
+    // useEffect(() => {
+    //     if (getshippinData && getshippinData.getShippingAddress) {
+    //         setShippingDetails({
+    //             firstName: getshippinData.getShippingAddress.firstName,
+    //             lastName: getshippinData.getShippingAddress.lastName,
+    //             email: getshippinData.getShippingAddress.email,
+    //             phoneNo: getshippinData.getShippingAddress.phoneNo,
+    //             address: getshippinData.getShippingAddress.address,
+    //             district: getshippinData.getShippingAddress.district,
+    //             state: getshippinData.getShippingAddress.state,
+    //             pincode: getshippinData.getShippingAddress.pincode,
+    //             country: getshippinData.getShippingAddress.country
+    //         })
+    //     }
+    // }, [getshippinData]);
 
     const handleBack = () => {
         router.push("/customerHome")
     }
+    const removeAddress = async (e) => {
+        try {
+            const addressId = e.target.id;
+            const userId = getCustomerLocalData.customerId;
+            await deleteCustomerAddresstData({ variables: { userId: userId, addressId: addressId } })
+            refetchAddresses();
+            notification.success({ message: "Successfully Deleted" })
+        }
+        catch (error) {
+            console.log("not deleted");
+            notification.error({ message: "Not deleted" })
+        }
+    }
+
+    const editAddress = (editId) => {
+        const editAddress = addressesCustomer.find((edit) => edit._id === editId)
+        // console.log("editAddress", editAddress);
+        setEditId(editAddress._id);
+        setShippingDetails({
+            firstName: editAddress.firstName,
+            lastName: editAddress.lastName,
+            email: editAddress.email,
+            phoneNo: editAddress.phoneNo,
+            address: editAddress.address,
+            district: editAddress.district,
+            state: editAddress.state,
+            country: editAddress.country,
+            pincode: editAddress.pincode,
+        })
+        setShowShippingData(true)
+        // console.log("shippingDetails-------------", shippingDetails);
+    }
+
     return (
         <>
             <div>
@@ -303,36 +347,13 @@ function Myaccount() {
                             </div>
                         </form>
                     </div>
-                    {
-                        getshippinData && getshippinData.getShippingAddress !== null ?
-                            <div style={{ display: showShippingData ? 'none' : 'block' }}>
-                                <div className='flex shadow-sm justify-between w-7/12 items-center hover:border-green-300 mt-5 p-5 bg-white rounded-md border border-solid border-gray-300' >
-                                    <div className="flex justify-evenly items-center gap-x-3">
-                                        <FontAwesomeIcon icon={faShippingFast} className="text-green-400 text-lg" />
-                                        <div className="flex">
-                                            <h4 className="text-gray-600">{shippingDetails.firstName}</h4>
-                                            <h4 className="text-gray-600">{shippingDetails.lastName}</h4>
-                                        </div>
-                                        <div className="flex justify-start gap-2 pl-3">
-                                            <p className="text-gray-400">
-                                                {
-                                                    shippingDetails.address.length > 25
-                                                        ? shippingDetails.address.slice(0, 25) + '....'
-                                                        : shippingDetails.address
-                                                }
-                                            </p>
-                                            <p className="text-gray-400">{shippingDetails.district}</p>
-                                            <p className="text-gray-400">{shippingDetails.pincode}</p>
-                                        </div>
-                                    </div>
-                                    <div className="">
-                                        <button onClick={() => setShowShippingData(true)} className="text-blue-400 hover:text-green-400 hover:cursor-pointer">Change</button>
-                                    </div>
-                                </div>
-                            </div>
-                            : ''
-                    }
-                    <div className="mt-5">
+                    <div>
+                        <div className="flex gap-3" onClick={() => setShowShippingData(true)}>
+                            <FontAwesomeIcon icon={faPlus} className="mt-1 cursor-pointer text-blue-500" />
+                            <h4 className="cursor-pointer text-blue-500 font-medium">Add New Address</h4>
+                        </div>
+                    </div>
+                    <div className="mt-5" >
                         <form onSubmit={handleShipppingDetails} style={{ display: showShippingData ? "block" : "none" }}>
                             <div className={`grid justify-start p-5 w-7/12 gap-4 bg-white border border-solid ${showShippingData ? 'border-gray-200 border border-solid' : 'border-green-300 border-2 border-solid'} rounded-md`}>
                                 <div className="flex justify-start items-center gap-3">
@@ -402,10 +423,40 @@ function Myaccount() {
                                 </div>
                                 <div className="flex justify-start items-center gap-4">
                                     <span className="border border-gray-200 hover:border-red-300 hover:text-red-400 h-9 flex justify-center items-center p-2 rounded text-gray-400 cursor-pointer" onClick={() => setShowShippingData(false)}>Cancel</span>
-                                    <button className={`border border-blue-400 h-9 flex justify-center items-center p-2 rounded text-blue-400 hover:text-white hover:bg-[#45BA76] hover:border-[#45BA76]`} type="submit">{getshippinData && getshippinData.getShippingAddress === null ? "Save" : "Update"}</button>
+                                    <button className={`border border-blue-400 h-9 flex justify-center items-center p-2 rounded text-blue-400 hover:text-white hover:bg-[#45BA76] hover:border-[#45BA76]`} type="submit">{editId ? "Update" : "Save"}</button>
                                 </div>
                             </div>
                         </form>
+                    </div>
+                    <div>
+                        <div>
+                            <div>{addressesCustomer.map((address, index) => {
+                                return (
+                                    <div className="border border-solid bg-white rounded-md my-8 p-3 w-7/12">
+                                        <div className="flex gap-6">
+                                            <input type="radio"></input>
+                                            <p className="text-gray-600">{address.firstName}</p>
+                                            <p className="text-gray-400 border border-gray-200 bg-gray-300 px-1 text-sm">Home</p>
+                                            <p className="text-gray-600">{address.phoneNo}</p>
+                                            <FontAwesomeIcon icon={faEllipsisVertical} className="text-gray-500 cursor-pointer ml-auto" />
+                                        </div>
+                                        <div>
+                                            <div className="flex gap-2 py-2">
+                                                <p className="text-gray-500">{address.address},</p>
+                                                <p className="text-gray-500">{address.district},</p>
+                                                <p className="text-gray-500">{address.state}</p>
+                                                <span>-</span>
+                                                <p className="text-gray-500">{address.pincode}</p>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <button id={address._id} onClick={() => editAddress(address._id)}>Edit</button>
+                                            <button id={address._id} onClick={removeAddress} >Delete</button>
+                                        </div>
+                                    </div>
+                                )
+                            })}</div>
+                        </div>
                     </div>
                 </div>
             </div>
