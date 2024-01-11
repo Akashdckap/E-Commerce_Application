@@ -13,6 +13,7 @@ const typeDefs = gql` #graphql
         password: String!,
     }
     type address{
+        _id: ID,
         firstName: String,
         lastName: String,
         email: String,
@@ -73,7 +74,7 @@ const typeDefs = gql` #graphql
     }
     type customerCartData {
         _id: ID!
-        productId: String!,
+        productID: ID,
         productName: String!,
         description: String!,
         category: String!,
@@ -88,7 +89,7 @@ const typeDefs = gql` #graphql
         name: String!,
         email: String!,
         phoneNo: BigInt!,
-        customerId: String,
+        customerId: ID,
     }
 
     input shippingAddressCustomerInput{
@@ -170,7 +171,7 @@ const typeDefs = gql` #graphql
         color: String,
         weight: Int,
         price: Int,
-        count: Int,
+        quantity: Int,
         expandedPrice: Int,
     }
 
@@ -178,7 +179,7 @@ const typeDefs = gql` #graphql
         name: String,
         email: String,
         phoneNo: BigInt,
-        customerId: String,
+        customerId: ID,
     }
 
     type shippingAddress{
@@ -214,6 +215,11 @@ const typeDefs = gql` #graphql
         OrderTime: Date,
         totalPrice: Int,
     }
+    type customerOrders {
+        _id: ID!,
+        orderedProducts: [orderProduct]!,
+        totalPrice: Int,
+    }
     input customerRegisterInput{
         name: String,
         email:String,
@@ -247,7 +253,7 @@ const typeDefs = gql` #graphql
         totalPrice: Int,
     }
     type cartItems{
-        productId: String,
+        productID: ID,
         productName: String,
         category: String,
         brand: String,
@@ -262,7 +268,7 @@ const typeDefs = gql` #graphql
     }
 
     input cartItemsInput{
-        productId: String,
+        productID: ID,
         productName: String,
         category: String,
         brand: String,
@@ -284,6 +290,8 @@ const typeDefs = gql` #graphql
         getCustomerRegister(id: ID!): customerRegister
         getShippingAddress(userId:ID!, editAddressId:ID!): shippingAddress
         getCustomerCartData(userId: ID!): [customerCartData]
+        getCustomerOrders(userId:ID!): [customerOrders]
+        
         getAllAdmins:[admins]
         getAllProductsData: [products]
         getAllProducts(page:Int!,pageSize:Int!):[products!]!

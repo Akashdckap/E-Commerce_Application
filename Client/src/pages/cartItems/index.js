@@ -185,12 +185,12 @@ export default function cartItems() {
                                                     <td className="py-2 px-4 border-b border-t-0 text-gray-500">₹ {cartData.price}</td>
                                                     <td className="py-2 px-4 border-b border-t-0">
                                                         <div className='flex justify-center items-center gap-3'>
-                                                            <button disabled={cartData.count == 1} >
+                                                            <button disabled={cartData.quantity == 1} >
                                                                 <FontAwesomeIcon icon={faMinus} onClick={() => handleDecrementCount(cartData._id)} className={`${cartData.count === 1 ? 'cursor-default' : "cursor-pointer"} text-gray-500 border border-solid border-blue-300 font-thin rounded-xl p-1 text-xs`} />
                                                             </button>
                                                             {
-                                                                cartData.count > 0 ? (
-                                                                    <span className='border border-gray-400 w-10 rounded-sm flex text-gray-500 justify-center items-center'>{cartData.count}</span>
+                                                                cartData.quantity > 0 ? (
+                                                                    <span className='border border-gray-400 w-10 rounded-sm flex text-gray-500 justify-center items-center'>{cartData.quantity}</span>
                                                                 ) : <span className='border border-gray-400 w-10 rounded-sm flex text-gray-500 justify-center items-center'>0</span>
 
                                                             }

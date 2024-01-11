@@ -35,7 +35,7 @@ export const CREATE_PRODUCTS = gql`
 export const CREATE_CART_ITEMS = gql`
   mutation cartItems($userId:ID!, $productId: ID!, $productCart: cartItemsInput!){
     cartItems(userId: $userId, productId: $productId, productCart: $productCart){
-      productId
+      productID
       productName
       category
       brand
@@ -90,7 +90,7 @@ export const ORDER_PRODUCT = gql`
       color
       weight
       price
-      count
+      quantity
       expandedPrice
     }
     personalDetails {
