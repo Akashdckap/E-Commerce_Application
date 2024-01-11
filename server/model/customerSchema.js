@@ -6,6 +6,10 @@ const shippingAddressAndRegisterSchema = mongoose.Schema(
         phoneNo: Number,
         password: String,
         Addresses: [{
+            _id: {
+                type: mongoose.Schema.Types.ObjectId,
+                default: mongoose.Types.ObjectId,
+            },
             firstName: String,
             lastName: String,
             email: String,

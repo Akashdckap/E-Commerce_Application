@@ -242,15 +242,16 @@ function Myaccount() {
         }
     }, [getshippinData]);
 
-    const handleBack = () => {
-        router.push("/customerHome")
-    }
     return (
         <>
             <div>
                 <div className="grid gap-5 ml-28">
-                    <div className="flex justify-start items-center mt-5">
-                        <h1 className="text-[#575F70] text-lg font-medium"><FontAwesomeIcon icon={faArrowLeft} className="px-3 hover:cursor-pointer" onClick={handleBack} />Personal Details</h1>
+                    <Link href={'/customerHome'} className="flex justify-start items-center gap-2 mt-5">
+                        <FontAwesomeIcon icon={faArrowLeft} className="cursor-pointer text-blue-500" />
+                        <p className="cursor-pointer text-blue-500">Back to Home</p>
+                    </Link>
+                    <div className="flex justify-start items-center">
+                        <h1 className="text-[#575F70] text-lg font-medium">Personal Details</h1>
                     </div>
 
                     {/* <div className="" style={{ display: showPersonalData ? 'none' : 'block' }}>
@@ -337,7 +338,7 @@ function Myaccount() {
                             <div className={`grid justify-start p-5 w-7/12 gap-4 bg-white border border-solid ${showShippingData ? 'border-gray-200 border border-solid' : 'border-green-300 border-2 border-solid'} rounded-md`}>
                                 <div className="flex justify-start items-center gap-3">
                                     <FontAwesomeIcon icon={faShippingFast} className="text-green-400" />
-                                    <h4 className="text-gray-700 text-base font-normal">{showShippingData ? 'Add New Shipping Address' : 'Change Shipping Address'}</h4>
+                                    <h4 className="text-gray-700 text-base font-normal">Address</h4>
                                 </div>
                                 <div className="flex justify-between gap-16">
                                     <div className="grid">

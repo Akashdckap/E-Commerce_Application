@@ -104,7 +104,7 @@ export default function placeOrder() {
         });
         delete billingDetailsError[name]
     }
-
+    console.log("getPersonalData-------------", getPersonalData);
     const validatePersonalDetailForm = () => {
         let newErrors = { ...personalDetailsError };
         let isValid = true;
@@ -362,9 +362,10 @@ export default function placeOrder() {
                 shippingAddress: getShippingData,
                 billingAddress: getBillingData
             }
+            console.log("orderedInputData-----------", orderedInputData);
             // console.log("personalInfo-------------------------", personalInfo);
-            // if (!orderedInputData.orderedProducts.length || !orderedInputData.personalDetails.length || !orderedInputData.shippingAddress.length || !orderedInputData.billingAddress.length) {
-            // }
+            if (!orderedInputData.orderedProducts.length || !orderedInputData.personalDetails.length || !orderedInputData.shippingAddress.length || !orderedInputData.billingAddress.length) {
+            }
             if (getCartData.length === 0 || getBillingData.length === 0 || getShippingData.length === 0 || getPersonalData.length === 0) {
                 notification.error({ message: "Incomplete order data. Please fill in all required information." });
             }
@@ -743,7 +744,7 @@ export default function placeOrder() {
                                             <div key={index} className="flex justify-between items-center gap-x-14 gap-y-10 pt-5">
                                                 <div className="flex justify-start items-center">
                                                     <div>
-                                                        <span className="float-right flex justify-center items-center relative bottom-2 right-3 bg-[#AAB1BC] border-0 h-5 w-5 text-sm rounded-full text-white">{cartItems.count}</span>
+                                                        <span className="float-right flex justify-center items-center relative bottom-2 right-3 bg-[#AAB1BC] border-0 h-5 w-5 text-sm rounded-full text-white">{cartItems.quantity}</span>
                                                         <div className="grid border-gray-300 border-solid border rounded-md">
                                                             <img className="h-24 w-24 max-w-full p-2 rounded-2xl  object-cover" src="https://images.unsplash.com/flagged/photo-1556637640-2c80d3201be8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8c25lYWtlcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60" alt="" />
                                                         </div>

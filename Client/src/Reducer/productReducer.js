@@ -24,10 +24,10 @@ export const productSlice = createSlice({
             const productData = action.payload;
             const productIndex = state.cartData.findIndex((product) => product._id === productData._id);
             if (productIndex !== -1) {
-                state.cartData[productIndex].count = (state.cartData[productIndex].count || 0) + 1;
-                state.cartData[productIndex].expandedPrice = (state.cartData[productIndex].price) * state.cartData[productIndex].count
+                state.cartData[productIndex].quantity = (state.cartData[productIndex].quantity || 0) + 1;
+                state.cartData[productIndex].expandedPrice = (state.cartData[productIndex].price) * state.cartData[productIndex].quantity
             } else {
-                state.cartData.push({ ...productData, count: 1, expandedPrice: productData.price });
+                state.cartData.push({ ...productData, quantity: 1, expandedPrice: productData.price });
             }
         },
 
@@ -38,14 +38,14 @@ export const productSlice = createSlice({
         incrementProductCount: (state, action) => {
             const { productId } = action.payload;
             const productIndex = state.cartData.findIndex(product => product._id === productId)
-            state.cartData[productIndex].count = (state.cartData[productIndex].count || 0) + 1;
-            state.cartData[productIndex].expandedPrice = (state.cartData[productIndex].price) * state.cartData[productIndex].count
+            state.cartData[productIndex].quantity = (state.cartData[productIndex].quantity || 0) + 1;
+            state.cartData[productIndex].expandedPrice = (state.cartData[productIndex].price) * state.cartData[productIndex].quantity
         },
         decrementProductCount: (state, action) => {
             const { productId } = action.payload
             const productIndex = state.cartData.findIndex(product => product._id === productId)
-            state.cartData[productIndex].count = Math.max((state.cartData[productIndex].count || 0) - 1, 1);
-            state.cartData[productIndex].expandedPrice = (state.cartData[productIndex].price) * state.cartData[productIndex].count
+            state.cartData[productIndex].quantity = Math.max((state.cartData[productIndex].quantity || 0) - 1, 1);
+            state.cartData[productIndex].expandedPrice = (state.cartData[productIndex].price) * state.cartData[productIndex].quantity
         },
         removeAllCartDatas: (state) => {
             state.cartData = state.cartData = []

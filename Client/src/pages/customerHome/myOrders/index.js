@@ -1,11 +1,26 @@
 import { useRouter } from 'next/router'
 import React from 'react'
+import Link from 'next/link';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { useQuery } from '@apollo/client';
+import { GET_CUSTOMER_ORDERS } from '../../../../Grahpql/queries';
 
 export default function Myorders() {
     const router = useRouter();
     const { customerId } = router.query
+    console.log("customerId---------", customerId);
+
+    const { data, loading, error } = useQuery(GET_CUSTOMER_ORDERS, {
+        variables: { userId: customerId }
+    })
+    console.log("customerOrders---------------", data);
     return (
         <div>
+            <Link href={'/customerHome'} className="flex justify-start items-center gap-2 mx-32 mt-6">
+                <FontAwesomeIcon icon={faArrowLeft} className="cursor-pointer text-blue-500" />
+                <p className="cursor-pointer text-blue-500">Back to Home</p>
+            </Link>
             <div className='flex justify-between items-center px-4 mx-28 py-5 '>
                 <h1 className='text-amber-600 text-xl'>Your Orders (<span className='text-slate-600'>10</span>)</h1>
                 <input type='text' placeholder='Search products...' className='h-10 bg-white border-solid border border-gray-300 text-gray-600 text-base font-normal rounded-md hover:border-gray-400 focus:border-gray-400 outline-0 ps-5' />

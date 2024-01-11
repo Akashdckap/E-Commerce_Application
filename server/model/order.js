@@ -12,7 +12,7 @@ const placeOrder = mongoose.Schema({
         color: String,
         weight: Number,
         price: Number,
-        count: Number,
+        quantity: Number,
         expandedPrice: Number,
     }],
     personalDetails: {

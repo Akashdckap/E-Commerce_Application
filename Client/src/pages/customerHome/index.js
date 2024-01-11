@@ -45,8 +45,9 @@ export default function index() {
         const cart = productData.getAllProductsData.find((cart) => { return cart._id == getProductId })
         const updatObject = {
             ...cart,
-            productId: cart._id
+            productID: cart._id
         }
+        console.log("updatObject----------", updatObject);
         delete updatObject._id
         const { __typename, ...rest } = updatObject
         try {
@@ -64,6 +65,8 @@ export default function index() {
         {
             variables: { userId: loginData.customerId }
         })
+
+    console.log("customerCartData", customerCartData);
     const handleAddtoCartBtn = async (getId) => {
         parseIds();
         if (getId) {
@@ -362,11 +365,11 @@ export default function index() {
                                                                         </div>
                                                                         <div className="flex justify-center items-center gap-32">
                                                                             <div className='flex justify-center items-center gap-3'>
-                                                                                <button disabled={listCartData.count == 1} >
-                                                                                    <FontAwesomeIcon icon={faMinus} onClick={() => handleDecrementCount(listCartData._id)} className={`${listCartData.count === 1 ? 'cursor-default' : "cursor-pointer"} border border-solid border-blue-300 font-thin rounded-xl p-1 text-xs`} />
+                                                                                <button disabled={listCartData.quantity == 1} >
+                                                                                    <FontAwesomeIcon icon={faMinus} onClick={() => handleDecrementCount(listCartData._id)} className={`${listCartData.quantity === 1 ? 'cursor-default' : "cursor-pointer"} border border-solid border-blue-300 font-thin rounded-xl p-1 text-xs`} />
                                                                                 </button>
                                                                                 {
-                                                                                    <span className='border border-gray-400 w-10 rounded-sm flex justify-center items-center'>{listCartData.count}</span>
+                                                                                    <span className='border border-gray-400 w-10 rounded-sm flex justify-center items-center'>{listCartData.quantity}</span>
                                                                                     // <input type='text' id={listCartData._id} className='flex justify-center hover:border-blue-300 items-center pl-3.5 border border-gray-400 w-10 rounded-sm' value={listCartData.count} onChange={handleQuantityChange} />
                                                                                 }
                                                                                 <FontAwesomeIcon icon={faPlus} onClick={() => handleIncrementCount(listCartData._id, listCartData.price)} className='cursor-pointer border border-solid border-blue-300 font-thin rounded-xl p-1 text-xs' />

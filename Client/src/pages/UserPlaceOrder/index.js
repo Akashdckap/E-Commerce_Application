@@ -3,18 +3,17 @@ import { useQuery } from "@apollo/client";
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft, faUser, faDeleteLeft, faEllipsisVertical } from '@fortawesome/free-solid-svg-icons'
-import { DELETE_CUSTOMER_CART_DATA } from "../../../Grahpql/mutation";
+import { faArrowLeft, faShippingFast, faUser, faDeleteLeft, faEllipsisVertical } from '@fortawesome/free-solid-svg-icons'
+import { DELETE_CUSTOMER_CART_DATA, ORDER_PRODUCT } from "../../../Grahpql/mutation";
 import { GET_CUSTOMER_REGISTER_DATA, GET_CUSTOMER_CART_DATA } from "../../../Grahpql/queries";
 import { useMutation } from "@apollo/client";
 import { notification } from "antd";
 export default function UserPlaceOrder() {
-    const dispatch = useDispatch();
-    const [addresses, setAddresses] = useState([])
-    const [selectEditDelete, setSelectEditDelete] = useState(false);
+    const [selectShippingId, setSelectShippingAddress] = useState()
+    const [selectBillingId, setSelectBillingAddress] = useState()
     const getCustomerLocalData = useSelector(state => state.productDetails.LoginData);
 
-    const { data, loading, error } = useQuery(GET_CUSTOMER_REGISTER_DATA, {
+    const { data: addressesData, loading: addressesLoading, error: addressesError } = useQuery(GET_CUSTOMER_REGISTER_DATA, {
         variables: { id: getCustomerLocalData.customerId }
     })
     const { data: customerCartData, loading: customerCartLoading, error: customerCartError, refetch: refetchCustomerCartData } = useQuery(GET_CUSTOMER_CART_DATA,
@@ -22,19 +21,8 @@ export default function UserPlaceOrder() {
             variables: { userId: getCustomerLocalData.customerId }
         })
 
-    useEffect(() => {
-        if (data && !loading && !error) {
-            setAddresses(data.getCustomerRegister.Addresses)
-        }
-        if (!data && loading && !error) {
-            console.log("loading......", loading)
-        }
-        if (!data && !loading && error) {
-            console.log("error......", error)
-        }
-    }, [data, loading, error])
-
     const [deleteCustomerCartData] = useMutation(DELETE_CUSTOMER_CART_DATA)
+    const [createOrders] = useMutation(ORDER_PRODUCT)
     const removeCustomerCartData = async (productId) => {
         try {
             await deleteCustomerCartData({ variables: { cartId: productId, userId: getCustomerLocalData.customerId } })
@@ -45,13 +33,59 @@ export default function UserPlaceOrder() {
             console.error('Error deleting item:', error);
         }
     }
+    const handlePlaceOrder = async () => {
+        try {
+            const finalData = customerCartData.getCustomerCartData.map(({ _id, __typename, ...rest }) => ({ ...rest }));
 
-    const handlePlaceOrder = () => {
+            if (!selectShippingId) {
+                notification.error({ message: "Please select a shipping address." });
+                return;
+            }
+            const selectedShippingAddress = addressesData.getCustomerRegister.Addresses.find(address => address._id === selectShippingId);
+            const { __typename: shippingTypename, _id: shippingId, ...shippingData } = selectedShippingAddress
 
+            if (!selectBillingId) {
+                notification.error({ message: "Please select a billing address." });
+                return;
+            }
+            const selectedBillingAddress = addressesData.getCustomerRegister.Addresses.find(address => address._id === selectBillingId);
+            const { __typename: billingTypename, _id: billingId, ...billingData } = selectedBillingAddress
+            const orderedInputData = {
+                orderedProducts: finalData,
+                personalDetails: {
+                    name: addressesData.getCustomerRegister.name,
+                    email: addressesData.getCustomerRegister.email,
+                    phoneNo: addressesData.getCustomerRegister.phoneNo,
+                    customerId: addressesData.getCustomerRegister._id
+                },
+                shippingAddress: shippingData,
+                billingAddress: billingData
+            }
+            const { data: orderSubmitData, errors: SubmitOrderError } = await (createOrders({
+                variables: {
+                    inputs: orderedInputData
+                },
+            }));
+            if (SubmitOrderError) {
+                notification.success({ message: "Order Submission error" });
+            }
+            if (orderSubmitData) {
+                notification.success({ message: "Order Submitted" });
+            }
+            return { orderSubmitData, SubmitOrderError }
+        }
+        catch (error) {
+            if (error.graphQLErrors) {
+                console.error("GraphQL Validation Errors:", error.graphQLErrors);
+                notification.error({ message: "Order Submission Error" });
+            }
+            console.error("place order error :", error);
+        }
     }
+
     const CustomerAmountarray = customerCartData && customerCartData.getCustomerCartData.map((expanded) => expanded.expandedPrice)
     const CustomerTotalAmount = CustomerAmountarray ? CustomerAmountarray.reduce((accumulator, currentValue) => accumulator + currentValue, 0) : [];
-
+    console.log("selectShippingId--------------------", selectShippingId);
     return (
         <>
             <div>
@@ -66,18 +100,24 @@ export default function UserPlaceOrder() {
                 <div className="flex justify-start items-center ml-20 mt-5">
                     <h1 className="text-[#575F70] text-lg font-medium">Personal Details</h1>
                 </div>
-                <div className="flex justify-between items-start mt-5 pl-20 pr-5 gap-10">
+                <div className="flex justify-between items-start mt-5 pl-20 pr-5 gap-20 mb-5">
                     <div className="grid">
                         <div>
                             <div className='flex p-5 w-auto gap-44 hover:border-green-300 justify-between items-center bg-white rounded-md border border-solid' >
                                 <div className="flex justify-start items-center gap-8">
                                     <FontAwesomeIcon icon={faUser} className="text-green-400 text-lg" />
                                     <div className="flex justify-start gap-3">
-                                        <h4 className="text-gray-600">{data && data.getCustomerRegister.name}</h4>
-                                        <h4 className="text-gray-600">{data && data.getCustomerRegister.email}</h4>
+                                        <h4 className="text-gray-600">{addressesData && addressesData.getCustomerRegister.name}</h4>
+                                        <h4 className="text-gray-600">
+                                            {
+                                                addressesData && addressesData.getCustomerRegister.email.length > 18
+                                                    ? addressesData.getCustomerRegister.email.slice(0, 18) + '....'
+                                                    : addressesData && addressesData.getCustomerRegister.email
+                                            }
+                                        </h4>
                                     </div>
                                     <div className="flex justify-start">
-                                        <p className="text-gray-400">{data && data.getCustomerRegister.phoneNo}</p>
+                                        <p className="text-gray-400">{addressesData && addressesData.getCustomerRegister.phoneNo}</p>
                                     </div>
                                 </div>
                                 <div className="flex justify-end">
@@ -86,22 +126,51 @@ export default function UserPlaceOrder() {
                             </div>
                         </div>
                         <div>
-                            <div>
-                                <h1>Addresses</h1>
-                                <div>
+                            <div className="flex justify-start items-center mt-5 gap-x-3">
+                                <h1 className="text-[#575F70] text-lg font-medium">Shipping Address</h1>
+                                <FontAwesomeIcon icon={faShippingFast} className="text-green-400 text-lg" />
+                            </div>
+                            <div className="border border-solid border-gray-300 hover:border-gray-400 shadow-sm rounded-md flex justify-start px-7 py-6 flex-wrap items-start gap-x-6 gap-y-4 mt-3">
+                                {
+                                    addressesData && addressesData.getCustomerRegister.Addresses.map((shipping, index) => {
+                                        return (
+                                            <div key={index} onClick={() => setSelectShippingAddress(shipping._id)} className={`${selectShippingId === shipping._id ? 'border-emerald-300 shadow-lg border-2' : 'border-gray-300 shadow-sm'} bg-white grid gap-y-1 border w-52 border-solid  p-3 rounded-md`} >
+                                                <h1 className="text-emerald-300 font-normal text-lg">{shipping.firstName}{shipping.lastName}</h1>
+                                                <p className="text-gray-500">{shipping.phoneNo}</p>
+                                                <p className="w-36 text-gray-400">{shipping.address}</p>
+                                                <p className="text-gray-400">{shipping.district}</p>
+                                                <p className="text-gray-400">{shipping.pincode}</p>
+                                                <p className="text-gray-400">{shipping.country}</p>
+                                            </div>
+                                        )
+                                    })
+                                }
+                            </div>
+                        </div>
+                        <div>
+                            <div className="flex justify-start items-center mt-5 gap-x-3">
+                                <h1 className="text-[#575F70] text-lg font-medium">Billing Address</h1>
+                                <FontAwesomeIcon icon={faShippingFast} className="text-sky-400 text-lg" />
+                            </div>
+                            <div className="border border-solid border-gray-300 hover:border-gray-400 shadow-sm rounded-md mt-3">
+                                <div className="flex justify-start px-7 py-6 flex-wrap items-start gap-x-6 gap-y-4">
                                     {
-                                        addresses.map((address, index) => {
-                                            // console.log(address);
+                                        addressesData && addressesData.getCustomerRegister.Addresses.map((billing, index) => {
                                             return (
-                                                <div>
-                                                    <FontAwesomeIcon icon={faEllipsisVertical}/>
-                                                    <div>
-                                                        <h1>{address.address}</h1>
-                                                    </div>
+                                                <div key={index} onClick={() => setSelectBillingAddress(billing._id)} className={` ${selectBillingId === billing._id ? 'border-sky-400 shadow-lg border-2' : 'border-gray-300 shadow-sm'}bg-white grid gap-y-1 border w-52 border-solid  p-3 rounded-md`} >
+                                                    <h1 className="text-sky-300 font-normal text-lg">{billing.firstName}{billing.lastName}</h1>
+                                                    <p className="text-gray-500">{billing.phoneNo}</p>
+                                                    <p className="w-36 text-gray-400">{billing.address}</p>
+                                                    <p className="text-gray-400">{billing.district}</p>
+                                                    <p className="text-gray-400">{billing.pincode}</p>
+                                                    <p className="text-gray-400">{billing.country}</p>
                                                 </div>
                                             )
                                         })
                                     }
+                                </div>
+                                <div>
+                                    <button onClick={() => setSelectBillingAddress(selectShippingId)} type="submit" className="p-2 ml-7 mb-4 flex justify-center items-center cursor-pointer text-orange-600 bg-white h-10 w-56 rounded hover:border-orange-400 border hover:bg-orange-50 hover:shadow-lg transition-all duration-300">Same as Shipping Address</button>
                                 </div>
                             </div>
                         </div>

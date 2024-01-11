@@ -75,6 +75,7 @@ export const GET_CUSTOMER_REGISTER_DATA = gql`
         email
         phoneNo
         Addresses{
+            _id
             firstName
             lastName
             email
@@ -143,7 +144,7 @@ export const GET_ORDER_PRODUCT_DETAILS = gql`
             color,
             weight,
             price
-            count,
+            quantity,
             expandedPrice,
             }
             personalDetails{
@@ -197,13 +198,14 @@ export const GET_ALL_ORDER_DATA_WITH_PAGE = gql`
             color,
             weight,
             price
-            count,
+            quantity,
             expandedPrice,
             }
             personalDetails{
             name,
             email,
             phoneNo,
+            customerId,
             }
             shippingAddress{
             firstName,
@@ -260,7 +262,7 @@ export const GET_CUSTOMER_CART_DATA = gql`
       query getCustomerCartData($userId: ID!){
          getCustomerCartData(userId: $userId){
             _id,
-            productId,
+            productID,
             productName,
             description,
             category,
@@ -272,5 +274,23 @@ export const GET_CUSTOMER_CART_DATA = gql`
             expandedPrice,
     }
 }
-
+`
+export const GET_CUSTOMER_ORDERS = gql`
+    query getCustomerOrders($userId: ID!){
+        getCustomerOrders(userId : $userId){
+            orderedProducts{
+            productID,
+            productName,
+            description,
+            category,
+            brand,
+            color,
+            weight,
+            price
+            quantity,
+            expandedPrice,
+            }
+            totalPrice
+        }
+    }
 `

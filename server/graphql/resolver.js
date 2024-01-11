@@ -32,6 +32,19 @@ const resolvers = {
             const cartData = await cartSchema.findOne({ userId: new mongoose.Types.ObjectId(userId) })
             return cartData.cartItems
         },
+        getCustomerOrders: async (_, { userId }) => {
+            console.log("userId---------", userId);
+            const customerOrders = await newOrders.find(
+                { "personalDetails.customerId": userId },
+                { orderedProducts: 1, totalPrice: 1, }
+            )
+            return customerOrders
+            // const customerTotalPrice = await newOrders.findOne({ "totalPrice": new mongoose.Types.ObjectId(userId) })
+            // return customerOrders.orderedProducts;
+            // return (customerOrders.totalPrice, customerOrders.totalPrice)
+            // console.log("customerOrders-------------", customerOrders);
+        },
+
 
         getAllAdmins: async () => {
             return await (admins.find({}));
@@ -303,9 +316,7 @@ const resolvers = {
                     billingAddress: inputs.billingAddress,
                     totalPrice,
                 })
-                // const orders = new newOrders(input);
                 const saveOrders = await order.save();
-                // console.log(saveOrders);
                 return saveOrders
 
             }
@@ -324,10 +335,10 @@ const resolvers = {
                         cartItems: { quantity: 1, expandedPrice: productCart.price, ...productCart },
                     })
                     await saveCart.save();
-                    return cart
+                    return saveCart
                 }
                 else {
-                    const existingItem = cart.cartItems.find((item) => item.productId.toString() === new ObjectId(productId).toString());
+                    const existingItem = cart.cartItems.find((item) => item.productID === new ObjectId(productId).toString());
 
                     if (existingItem) {
                         existingItem.quantity += 1;
