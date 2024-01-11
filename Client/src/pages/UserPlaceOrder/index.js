@@ -16,6 +16,7 @@ export default function UserPlaceOrder() {
     const { data: addressesData, loading: addressesLoading, error: addressesError } = useQuery(GET_CUSTOMER_REGISTER_DATA, {
         variables: { id: getCustomerLocalData.customerId }
     })
+    // console.log(addresses.Addresses.firstName,"-----------");
     const { data: customerCartData, loading: customerCartLoading, error: customerCartError, refetch: refetchCustomerCartData } = useQuery(GET_CUSTOMER_CART_DATA,
         {
             variables: { userId: getCustomerLocalData.customerId }
@@ -173,8 +174,8 @@ export default function UserPlaceOrder() {
                                     <button onClick={() => setSelectBillingAddress(selectShippingId)} type="submit" className="p-2 ml-7 mb-4 flex justify-center items-center cursor-pointer text-orange-600 bg-white h-10 w-56 rounded hover:border-orange-400 border hover:bg-orange-50 hover:shadow-lg transition-all duration-300">Same as Shipping Address</button>
                                 </div>
                             </div>
-                        </div>
-                        {/* <div>
+                        </div> */}
+                        <div>
                             <div>{addresses.map((address, index) => {
                                 return (
                                     <div className="border border-solid bg-white rounded-md my-8 p-3">
@@ -197,14 +198,7 @@ export default function UserPlaceOrder() {
                                     </div>
                                 )
                             })}</div>
-                        </div> */}
-
-                        {/* <div style={{ display: selectEditDelete ? 'block' : 'none' }}>
-                            <div>
-                                <p className="text-gray-700 text-sm">Edit</p>
-                                <p className="text-gray-700 text-sm">Delete</p>
-                            </div>
-                        </div> */}
+                        </div>
                     </div>
                     <div className="pb-10">
                         <div className="bg-white w-auto shadow-md h-full p-5 pb-6 rounded-md border-gray-300 border  hover:border-green-300 border-solid">

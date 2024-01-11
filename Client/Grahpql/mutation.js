@@ -159,9 +159,9 @@ export const ADD_CUSTOMER_SHIPPING_ADDRESS = gql`
     }
   }
 `
-export const UPDATA_CUSTOMER_SHIPPING_ADDRESS = gql`
-  mutation updateCustomerShippingAddress($id:ID!, $input: shippingAddressInput!){
-    updateCustomerShippingAddress(id: $id, input: $input){
+export const UPDATE_CUSTOMER_SHIPPING_ADDRESS = gql`
+  mutation updateCustomerShippingAddress($userId:ID! , $addressId: ID!, $input:shippingAddressInput!){
+    updateCustomerShippingAddress(userId: $userId, addressId: $addressId, input:$input ){
       firstName
       lastName
       email
@@ -180,6 +180,12 @@ export const DELETE_CUSTOMER_CART_DATA = gql`
       deleteCustomerCartData(cartId: $cartId userId: $userId)
 }
 `
+export const DELETE_CUSTOMER_ADDRESS= gql`
+  mutation deleteCustomerAddress($userId:ID! $addressId: ID!){
+    deleteCustomerAddress(userId: $userId addressId: $addressId)
+  }
+`
+
 export const REMOVE_ALL_CUSTOMER_CART_DATA = gql`
    mutation deleteAllCustomerCartData($userId: ID!) {
     deleteAllCustomerCartData(userId: $userId)

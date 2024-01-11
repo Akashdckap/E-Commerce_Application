@@ -23,6 +23,7 @@ const typeDefs = gql` #graphql
         state: String!,
         pincode: String!,
         country: String!,
+        _id: ID,
     }
     type customerRegister{
         _id: ID!
@@ -287,10 +288,10 @@ const typeDefs = gql` #graphql
     }
     type Query{
         getCustomerRegister(id: ID!): customerRegister
-        getShippingAddress(id: ID!): shippingAddress
+        getShippingAddress(userId:ID!, editAddressId:ID!): shippingAddress
         getCustomerCartData(userId: ID!): [customerCartData]
         getCustomerOrders(userId:ID!): [customerOrders]
-
+        
         getAllAdmins:[admins]
         getAllProductsData: [products]
         getAllProducts(page:Int!,pageSize:Int!):[products!]!
@@ -312,13 +313,13 @@ const typeDefs = gql` #graphql
         deleteProduct(id: ID!) : Boolean!
         updateProduct(id: ID!, input: updateProductInput): products!
         createOrders(inputs: orderedInput): orders!
-
+        deleteCustomerAddress(userId:ID!, addressId:ID!):Boolean!
         cartItems(userId:ID!, productId:ID! productCart: cartItemsInput): cartItems!
         updatePrice(id: ID, input:upDateCartPrice): cartItems!
         uploadFile(file: Upload!): String!
         updateCustomerPersonalDetails(id: ID!, input: updateCustomerPersonal) : customerRegister
         addCustomerShippingAddress(id: ID!, input: shippingAddressCustomerInput) : shippingAddressCustomer
-        updateCustomerShippingAddress(id: ID!, input: shippingAddressInput) : shippingAddress
+        updateCustomerShippingAddress(userId: ID!, addressId: ID! ,input: shippingAddressInput!) : shippingAddress
         deleteCustomerCartData(cartId: ID!, userId: ID!): Boolean!
         deleteAllCustomerCartData(userId: ID!) : Boolean!
         incrementCustomerProductQty(productId: ID!, userId: ID!) : Boolean!

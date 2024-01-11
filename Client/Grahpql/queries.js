@@ -85,6 +85,7 @@ export const GET_CUSTOMER_REGISTER_DATA = gql`
             state
             pincode
             country
+            _id
         }
      }
     }
@@ -244,8 +245,8 @@ export const GET_REGISTER_CUSTOMER = gql`
     }
 `
 export const GET_CUSTOMER_SHIPPING_ADDRESS = gql`
-    query getShippingAddress($id:ID!) {
-        getShippingAddress (id : $id){
+    query getShippingAddress($userId:ID! $editAddressId:ID!) {
+        getShippingAddress (userId:$userId editAddressId:$editAddressId){
             firstName,
             lastName,
             email,
