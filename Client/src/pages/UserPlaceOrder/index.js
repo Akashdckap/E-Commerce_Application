@@ -174,7 +174,7 @@ export default function UserPlaceOrder() {
                                     <button onClick={() => setSelectBillingAddress(selectShippingId)} type="submit" className="p-2 ml-7 mb-4 flex justify-center items-center cursor-pointer text-orange-600 bg-white h-10 w-56 rounded hover:border-orange-400 border hover:bg-orange-50 hover:shadow-lg transition-all duration-300">Same as Shipping Address</button>
                                 </div>
                             </div>
-                        </div> */}
+                        </div>
                         <div>
                             <div>{addresses.map((address, index) => {
                                 return (
