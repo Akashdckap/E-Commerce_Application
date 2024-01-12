@@ -23,7 +23,6 @@ const typeDefs = gql` #graphql
         state: String!,
         pincode: String!,
         country: String!,
-        _id: ID,
     }
     type customerRegister{
         _id: ID!

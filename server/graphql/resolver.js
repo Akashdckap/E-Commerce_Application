@@ -379,10 +379,12 @@ const resolvers = {
         },
 
         async deleteCustomerAddress(_, { userId, addressId }) {
+            console.log(userId,"----------------userId")
+            console.log(addressId,"--------------addressId")
             try {
                 const result = await customerInformation.updateOne(
-                    { userId: ObjectId(userId) },
-                    { $pull: { Addresses: { _id: ObjectId(addressId) } } }
+                    { _id: new ObjectId(userId) },
+                    { $pull: { Addresses: { _id: new ObjectId(addressId) } } }
                 );
                 if (result.modifiedCount > 0) return true
                 else return false
