@@ -175,6 +175,30 @@ export default function UserPlaceOrder() {
                                 </div>
                             </div>
                         </div>
+                        <div>
+                            <div>{addresses.map((address, index) => {
+                                return (
+                                    <div className="border border-solid bg-white rounded-md my-8 p-3">
+                                        <div className="flex gap-6">
+                                            <input type="radio"></input>
+                                            <p className="text-gray-600">{address.firstName}</p>
+                                            <p className="text-gray-400 border border-gray-200 bg-gray-300 px-1 text-sm">Home</p>
+                                            <p className="text-gray-600">{address.phoneNo}</p>
+                                            <FontAwesomeIcon icon={faEllipsisVertical} onClick={() => setSelectEditDelete(true)} className="text-gray-500 cursor-pointer ml-auto" />
+                                        </div>
+                                        <div>
+                                            <div className="flex gap-2 py-2">
+                                                <p className="text-gray-500">{address.address},</p>
+                                                <p className="text-gray-500">{address.district},</p>
+                                                <p className="text-gray-500">{address.state}</p>
+                                                <span>-</span>
+                                                <p className="text-gray-500">{address.pincode}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )
+                            })}</div>
+                        </div>
                
                     </div>
                     <div className="pb-10">

@@ -371,11 +371,13 @@ const resolvers = {
         },
 
         async deleteCustomerAddress(_, { userId, addressId }) {
+            console.log(userId,"----------------userId")
+            console.log(addressId,"--------------addressId")
             try {
                 const result = await customerInformation.updateOne(
                     { _id: userId },
                     { $pull: { Addresses: { _id: addressId } } }
-                );
+          );
                 if (result.modifiedCount > 0) return true
                 else return false
             }

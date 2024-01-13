@@ -13,6 +13,7 @@ function Myaccount() {
     const [showPersonalData, setShowPersonalData] = useState(false)
     const [showShippingData, setShowShippingData] = useState(false);
     const [addressesCustomer, setAddressesCustomer] = useState([]);
+    const [editDelete, setEditDelete] = useState(false);
     const [editId, setEditId] = useState();
     const router = useRouter();
 
@@ -175,8 +176,7 @@ function Myaccount() {
             try {
                 await updateCustomerPersonal({ variables: { id: getCustomerLocalData.customerId, input: personalDetails } })
                 notification.success({ message: "Personal detail updated" })
-                // setShowPersonalData(false)
-
+                setShowPersonalData(false)
             }
             catch (error) {
                 console.log(error);
@@ -188,26 +188,46 @@ function Myaccount() {
         e.preventDefault();
         if (validateShippingForm()) {
             if (!editId) {
-
                 try {
                     await addCustomerShipping({ variables: { id: getCustomerLocalData.customerId, input: shippingDetails } })
                     refetchAddresses()
                     setShowShippingData(false)
+                    setShippingDetails({
+                        firstName: "",
+                        lastName: "",
+                        email: "",
+                        phoneNo: "",
+                        address: "",
+                        district: "",
+                        state: "",
+                        pincode: "",
+                        country: ""
+                    });
                 }
                 catch (error) {
                     console.log(error);
                 }
             }
             else {
-                console.log(shippingDetails, "---------------shippingDetailsupdate")
+                // console.log(shippingDetails, "---------------shippingDetailsupdate")
                 try {
                     await updateCustomerShippingAddress({ variables: { userId: getCustomerLocalData.customerId, addressId: editId, input: shippingDetails } })
                     setShowShippingData(false)
                     notification.success({ message: "Updated Successfully" })
                     refetchAddresses()
+                    setShippingDetails({
+                        firstName: "",
+                        lastName: "",
+                        email: "",
+                        phoneNo: "",
+                        address: "",
+                        district: "",
+                        state: "",
+                        pincode: "",
+                        country: ""
+                    });
                 }
                 catch (error) {
-                    console.log("Not updated", error);
                     notification.error({ message: "Not updated" })
                 }
             }
@@ -226,39 +246,11 @@ function Myaccount() {
         }
     }, [data]);
 
-
-
-    // useEffect(() => {
-    //     if (getshippinData && getshippinData.getShippingAddress === null) {
-    //         setShowShippingData(true)
-    //     }
-    //     else {
-    //         setShowShippingData(false)
-    //     }
-    // }, [getshippinData, showShippingData]);
-
-    // useEffect(() => {
-    //     if (getshippinData && getshippinData.getShippingAddress) {
-    //         setShippingDetails({
-    //             firstName: getshippinData.getShippingAddress.firstName,
-    //             lastName: getshippinData.getShippingAddress.lastName,
-    //             email: getshippinData.getShippingAddress.email,
-    //             phoneNo: getshippinData.getShippingAddress.phoneNo,
-    //             address: getshippinData.getShippingAddress.address,
-    //             district: getshippinData.getShippingAddress.district,
-    //             state: getshippinData.getShippingAddress.state,
-    //             pincode: getshippinData.getShippingAddress.pincode,
-    //             country: getshippinData.getShippingAddress.country
-    //         })
-    //     }
-    // }, [getshippinData]);
-
-    const handleBack = () => {
-        router.push("/customerHome")
-    }
-    const removeAddress = async (e) => {
+    const removeAddress = async (deleteId) => {
+        
         try {
-            const addressId = e.target.id;
+            const addressId = deleteId;
+            console.log(addressId)
             const userId = getCustomerLocalData.customerId;
             await deleteCustomerAddresstData({ variables: { userId: userId, addressId: addressId } })
             refetchAddresses();
@@ -288,6 +280,8 @@ function Myaccount() {
         setShowShippingData(true)
         // console.log("shippingDetails-------------", shippingDetails);
     }
+
+    
 
     return (
         <>
@@ -436,26 +430,32 @@ function Myaccount() {
                         <div>
                             <div>{addressesCustomer.map((address, index) => {
                                 return (
-                                    <div className="border border-solid bg-white rounded-md my-8 p-3 w-7/12">
-                                        <div className="flex gap-6">
-                                            <input type="radio"></input>
-                                            <p className="text-gray-600">{address.firstName}</p>
-                                            <p className="text-gray-400 border border-gray-200 bg-gray-300 px-1 text-sm">Home</p>
-                                            <p className="text-gray-600">{address.phoneNo}</p>
-                                            <FontAwesomeIcon icon={faEllipsisVertical} className="text-gray-500 cursor-pointer ml-auto" />
-                                        </div>
+                                    <div className="flex justify-between border border-solid bg-white rounded-md my-4 p-3 w-7/12" key={index}>
                                         <div>
+                                            <div className="flex gap-2">
+                                                <p className="text-gray-600">{address.firstName}</p>
+                                                <p className="text-gray-400 border border-gray-200 bg-gray-300 px-1 text-sm">Home</p>
+                                                <p className="text-gray-600">{address.phoneNo}</p>
+                                            </div>
                                             <div className="flex gap-2 py-2">
                                                 <p className="text-gray-500">{address.address},</p>
                                                 <p className="text-gray-500">{address.district},</p>
-                                                <p className="text-gray-500">{address.state}</p>
-                                                <span>-</span>
+                                                <p className="text-gray-500">{address.state} - </p>
                                                 <p className="text-gray-500">{address.pincode}</p>
                                             </div>
                                         </div>
-                                        <div>
-                                            <button id={address._id} onClick={() => editAddress(address._id)}>Edit</button>
-                                            <button id={address._id} onClick={removeAddress} >Delete</button>
+                                        <div className="flex">
+                                            {editDelete === address._id && (
+                                                <div>
+                                                    <div className="grid pr-4 pt-1 gap-2">
+                                                        <button onClick={() => editAddress(address._id)} className="border rounded-md w-16 text-gray-600">Edit</button>
+                                                        <button onClick={() => removeAddress(address._id)} className="border rounded-md w-16 text-gray-600">Delete</button>
+                                                    </div>
+                                                </div>
+                                            )}
+
+
+                                            <FontAwesomeIcon icon={faEllipsisVertical} onClick={() => setEditDelete(editDelete === address._id ? null : address._id)} className="text-gray-500 cursor-pointer ml-auto" />
                                         </div>
                                     </div>
                                 )
@@ -463,7 +463,7 @@ function Myaccount() {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div >
         </>
     )
 }
