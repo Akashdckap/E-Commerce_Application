@@ -34,7 +34,6 @@ const resolvers = {
             return cartData.cartItems
         },
         getCustomerOrders: async (_, { userId }) => {
-            console.log("userId---------", userId);
             const customerOrders = await newOrders.find(
                 { "personalDetails.customerId": userId },
                 { orderedProducts: 1, totalPrice: 1, }
@@ -306,16 +305,8 @@ const resolvers = {
             try {
                 const expandedAmountarray = inputs.orderedProducts.map((expanded) => expanded.expandedPrice)
                 const totalPrice = expandedAmountarray.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
-                //    if(!inputs || inputs.orderedProducts || inputs.orderedProducts.length === 0){
-                //     throw new Error("Invalid input. Ensure 'orderedProducts' is provided and not empty.");
+                await cartSchema.deleteOne({ userId: new ObjectId(inputs.personalDetails.customerId) });
 
-                //    }
-                // console.log("totalExpandedAmount--------------", totalExpandedAmount);
-                // const totalPrice = inputs.orderedProducts.reduce((accumulator, products) => {
-                //     return accumulator + (products.price * products.expandedPrice);
-                // }, 0)
-                // const { orderedProducts, personalDetails, shippingAddress, billingAddress } = inputs;
-                // const totalPrice = orderedProducts.reduce((acc,cuu)=> acc + cuu.price,0)
                 const order = new newOrders({
                     orderedProducts: inputs.orderedProducts,
                     personalDetails: inputs.personalDetails,
@@ -324,6 +315,7 @@ const resolvers = {
                     totalPrice,
                 })
                 const saveOrders = await order.save();
+
                 return saveOrders
 
             }
@@ -342,11 +334,10 @@ const resolvers = {
                         cartItems: { quantity: 1, expandedPrice: productCart.price, ...productCart },
                     })
                     await saveCart.save();
-                    return saveCart
+                    cart = saveCart
                 }
                 else {
-                    const existingItem = cart.cartItems.find((item) => item.productID === new ObjectId(productId).toString());
-
+                    const existingItem = cart.cartItems.find((item) => new ObjectId(item.productID).toString() === new ObjectId(productId).toString());
                     if (existingItem) {
                         existingItem.quantity = existingItem.quantity + 1;
                         existingItem.expandedPrice += productCart.price;
@@ -356,6 +347,7 @@ const resolvers = {
                     await cart.save();
                     return cart.cartItems;
                 }
+                return cart.cartItems;
             }
             catch (error) {
                 console.log("error not storing the cart data", error)
@@ -381,8 +373,8 @@ const resolvers = {
         async deleteCustomerAddress(_, { userId, addressId }) {
             try {
                 const result = await customerInformation.updateOne(
-                    { userId: ObjectId(userId) },
-                    { $pull: { Addresses: { _id: ObjectId(addressId) } } }
+                    { _id: userId },
+                    { $pull: { Addresses: { _id: addressId } } }
                 );
                 if (result.modifiedCount > 0) return true
                 else return false

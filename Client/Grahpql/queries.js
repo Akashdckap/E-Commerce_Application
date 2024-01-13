@@ -279,6 +279,7 @@ export const GET_CUSTOMER_CART_DATA = gql`
 export const GET_CUSTOMER_ORDERS = gql`
     query getCustomerOrders($userId: ID!){
         getCustomerOrders(userId : $userId){
+            _id
             orderedProducts{
             productID,
             productName,
