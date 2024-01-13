@@ -40,6 +40,11 @@ export default function index() {
     const [incrementCustomerCartQty] = useMutation(INCREMENT_CUSTOMER_PRODUCT_QTY)
     const [decrementCustomerCartQty] = useMutation(DECREMENT_CUSTOMER_PRODUCT_QTY)
 
+    const { data: customerCartData, loading: customerCartLoading, error: customerCartError, refetch: refetchCustomerCartData } = useQuery(GET_CUSTOMER_CART_DATA,
+        {
+            variables: { userId: loginData.customerId }
+        })
+
 
     const handleAddToCartToken = async (getProductId) => {
         const cart = productData.getAllProductsData.find((cart) => { return cart._id == getProductId })
@@ -47,7 +52,6 @@ export default function index() {
             ...cart,
             productID: cart._id
         }
-        console.log("updatObject----------", updatObject);
         delete updatObject._id
         const { __typename, ...rest } = updatObject
         try {
@@ -60,11 +64,6 @@ export default function index() {
             notification.error({ message: "Cart is not added Successfully" })
         }
     }
-
-    const { data: customerCartData, loading: customerCartLoading, error: customerCartError, refetch: refetchCustomerCartData } = useQuery(GET_CUSTOMER_CART_DATA,
-        {
-            variables: { userId: loginData.customerId }
-        })
 
     console.log("customerCartData", customerCartData);
     const handleAddtoCartBtn = async (getId) => {
@@ -172,6 +171,9 @@ export default function index() {
         dispatch(removeAllCartDatas())
         setCart(false)
     }
+    const myOrders = () => {
+        router.push("/customerHome/myOrders")
+    }
     const CustomerAmountarray = customerCartBulkData.map((expanded) => expanded.expandedPrice)
     const CustomerTotalAmount = CustomerAmountarray.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
     // console.log("CustomerTotalAmount----------", CustomerTotalAmount);
@@ -213,13 +215,13 @@ export default function index() {
                                     <FontAwesomeIcon icon={faGreaterThan} className='text-orange-400 font-mono' />
                                 </div>
                             </Link>
-                            <Link href={`/customerHome/myOrders/${loginData.customerId}`}>
-                                <div className='flex justify-around items-center w-44 bg-white p-2 rounded-md hover:cursor-pointer'>
-                                    <FontAwesomeIcon icon={faShoppingBag} className='text-emerald-400' />
-                                    <span className="text-emerald-400">My Orders</span>
-                                    <FontAwesomeIcon icon={faGreaterThan} className='text-emerald-400 font-mono' />
-                                </div>
-                            </Link>
+                            {/* <Link href={`/customerHome/myOrders/${loginData.customerId}`}> */}
+                            <div onClick={myOrders} className='flex justify-around items-center w-44 bg-white p-2 rounded-md hover:cursor-pointer'>
+                                <FontAwesomeIcon icon={faShoppingBag} className='text-emerald-400' />
+                                <span className="text-emerald-400">My Orders</span>
+                                <FontAwesomeIcon icon={faGreaterThan} className='text-emerald-400 font-mono' />
+                            </div>
+                            {/* </Link> */}
                             <div onClick={logOutUser} className='border cursor-pointer border-solid  flex justify-between w-44 items-center px-4 py-1 text-red-400 hover:text-white hover:bg-red-400 border-red-400 rounded-md'>
                                 <FontAwesomeIcon icon={faSignOut} />
                                 <span>LogOut</span>
