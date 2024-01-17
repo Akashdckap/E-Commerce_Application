@@ -3,8 +3,8 @@ import EditProduct from '.'
 
 export default function productId() {
     return (
-        <div>
+        <>
             <EditProduct />
-        </div>
+        </>
     )
 }

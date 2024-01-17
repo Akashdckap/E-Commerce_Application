@@ -2,11 +2,10 @@ import { useMutation, useQuery } from '@apollo/client'
 import Link from 'next/link'
 import React, { useState } from 'react'
 import { GET_REGISTER_CUSTOMER } from '../../Grahpql/queries'
-
+import { toast } from 'react-toastify';
 import { LOGIN_CUSTOMER } from '../../Grahpql/mutation';
 import { customerLoginData } from '@/Reducer/productReducer';
 import { useRouter } from 'next/router';
-import { notification } from 'antd';
 import { useDispatch } from 'react-redux';
 import Jwt from 'jsonwebtoken';
 export default function customerLogin() {
@@ -54,11 +53,17 @@ export default function customerLogin() {
                 const { token } = data.customerLogin;
                 const { name, customerId } = Jwt.decode(token)
                 dispatch(customerLoginData({ name, customerId, token }));
-                notification.success({ message: "User successfully logged" })
+                toast.success("User successfully logged", {
+                    position: 'top-right',
+                    autoClose: 3000,
+                })
                 router.push('/customerHome')
             }
             catch (error) {
-                notification.error({ message: error.message })
+                toast.error(error.message, {
+                    position: 'top-right',
+                    autoClose: 3000,
+                })
                 console.error(error.message);
             }
         }

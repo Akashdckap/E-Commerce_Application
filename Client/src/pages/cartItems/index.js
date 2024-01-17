@@ -6,7 +6,7 @@ import { incrementProductCount, decrementProductCount, removeCartdata, removeAll
 import { useRouter } from "next/router";
 import { useMutation } from "@apollo/client";
 import Link from "next/link";
-import { notification } from "antd";
+import { toast } from "react-toastify";
 import { REMOVE_ALL_CUSTOMER_CART_DATA, DELETE_CUSTOMER_CART_DATA, INCREMENT_CUSTOMER_PRODUCT_QTY, DECREMENT_CUSTOMER_PRODUCT_QTY } from "../../../Grahpql/mutation";
 import { GET_CART_ITEMS, GET_CUSTOMER_CART_DATA } from "../../../Grahpql/queries";
 import { useQuery } from "@apollo/client";
@@ -22,8 +22,11 @@ export default function cartItems() {
         })
     const dispatch = useDispatch()
     const handleRemoveDataFromLocal = (itemId, itemName) => {
-        dispatch(removeCartdata(itemId))
-        notification.success({ message: `Successfully removed ${itemName} from your cart` })
+        dispatch(removeCartdata(itemId));
+        toast.success(`Successfully removed ${itemName} from your cart`, {
+            position: 'top-right',
+            autoClose: 3000,
+        });
     }
     const handleRemoveAllItems = () => {
         dispatch(removeAllCartDatas())
@@ -69,7 +72,10 @@ export default function cartItems() {
     const removeCustomerCartData = async (productId) => {
         try {
             await deleteCustomerCartData({ variables: { cartId: productId, userId: loginData.customerId } })
-            notification.success({ description: "product successfully removed from your cart" })
+            toast.success('Successfully removed item from your cart', {
+                position: 'top-right',
+                autoClose: 3000,
+            });
             refetchCustomerCartData();
         }
         catch (error) {

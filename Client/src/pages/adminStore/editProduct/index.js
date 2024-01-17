@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useMutation, useQuery } from '@apollo/client'
 import { useRouter } from 'next/router'
-import { notification } from 'antd'
+import { toast } from 'react-toastify'
 import { GET_EDIT_PRODUCT_DATA } from '../../../../Grahpql/queries'
 import { UPDATE_PRODUCT } from '../../../../Grahpql/mutation'
 
@@ -32,7 +32,6 @@ export default function EditProduct() {
             setDescription(getData.getEditProductData.description)
         }
     }, [getData])
-    console.log(getData)
     const [updateProduct] = useMutation(UPDATE_PRODUCT)
 
     const handleUpdateProductForm = async (e) => {
@@ -48,32 +47,16 @@ export default function EditProduct() {
         }
         try {
             await updateProduct({ variables: { id: productId, input: updateFormData } })
-            notification.success({ description: "product successfully updated" })
+            toast.success("product successfully updated", {
+                position: 'top-right',
+                autoClose: 3000
+            })
             router.push("/adminStore")
         }
         catch (error) {
             console.error('Error updating product:', error.message);
         }
     }
-    console.log("price--------", price);
-    console.log("weight--------", weight);
-    // data.getEditProductData.map((item, index) => {
-    //     console.log(item);
-    // })
-    // const product = getData.map((item)=>{
-    //     return item
-    // })
-    // useEffect(() => {
-
-    //     const product = getData.getEditProductData
-    // }, [getData])
-    // console.log(typeof getData);
-    // console.log(getData.getEditProductData.bra);
-    // console.log(product);
-    // console.log(data);
-    // console.log(product);
-    // console.log(error);
-
     return (
         <>
             <div className='flex justify-evenly items-center p-3 gap-80'>
@@ -85,21 +68,11 @@ export default function EditProduct() {
                     <div>
                         <h1 className='flex justify-center items-center'>Edit product</h1>
                     </div>
-                    {/* <div className="imageContainer">
-                    <input type="file" className="block w-full text-red-500
-                                file:mr-4 file:py-2 file:px-4
-                                file:rounded-full file:border-0
-                                file:text-sm file:font-semibold
-                                file:bg-violet-50 file:text-blue-400
-                                hover:file:bg-violet-100" value={setImage.image} onChange={handleChangeFile} name='image' />
-                </div> */}
                     <div className='flex items-center justify-evenly p-2'>
                         <div>
                             <label>Product name</label>
                             <input type='text' value={productName} onChange={(e) => setProductName(e.target.value)} placeholder="Enter the product name..." name='productName' className="mt-2 placeholder:text-slate-400 block bg-white w-80 border border-slate-300 rounded-md py-2 pl-4 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm" />
                         </div>
-                        {/* {productErrors.productName && <span className="text-red-600">{productErrors.productName}</span>} */}
-
                         <div>
                             <label>Category</label>
                             <select name="category" value={category} onChange={(e) => setCategory(e.target.value)} className="mt-2 placeholder:text-slate-400 block bg-white w-80 border border-slate-300 rounded-md py-2 pl-5 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm">

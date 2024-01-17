@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { logOutCustomer } from '@/Reducer/productReducer';
 import { useRouter } from 'next/router';
-import { notification } from 'antd';
+import { toast } from 'react-toastify';
 import Image from 'next/image';
 import { LOGIN_CUSTOMER, CREATE_CART_ITEMS, DELETE_CUSTOMER_CART_DATA, REMOVE_ALL_CUSTOMER_CART_DATA, INCREMENT_CUSTOMER_PRODUCT_QTY, DECREMENT_CUSTOMER_PRODUCT_QTY } from '../../../Grahpql/mutation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -56,32 +56,45 @@ export default function index() {
         const { __typename, ...rest } = updatObject
         try {
             await (storeCartDatas({ variables: { productId: getProductId, userId: loginData.customerId, productCart: rest } }))
-            notification.success({ message: "Successfully added to cart" })
+            toast.success("Successfully added to cart", {
+                position: 'top-center',
+                autoClose: 3000,
+            })
             refetchCustomerCartData();
         }
         catch (error) {
             console.error("product creation error :", error);
-            notification.error({ message: "Cart is not added Successfully" })
+            toast.error("Cart is not added Successfully", {
+                position: 'top-center',
+                autoClose: 3000,
+            })
         }
     }
 
-    console.log("customerCartData", customerCartData);
     const handleAddtoCartBtn = async (getId) => {
         parseIds();
         if (getId) {
             setAddToCartId(getId)
-            notification.success({ message: "Successfully added to cart" });
+            toast.success("Successfully added to cart", {
+                position: 'top-center',
+                autoClose: 3000,
+            })
         }
         else {
-            console.log("Not get the Id to store in cart");
-            notification.error({ message: "Not added to the cart" })
+            toast.error("Not added to the cart", {
+                position: 'top-center',
+                autoClose: 3000,
+            })
         }
     }
 
     const logOutUser = () => {
         dispatch(logOutCustomer());
         router.push('/customerLogin')
-        notification.success({ message: "User logged out successfully  " })
+        toast.success("User logged out successfully", {
+            position: 'top-right',
+            autoClose: 3000,
+        })
     }
 
     useEffect(() => {
@@ -149,7 +162,10 @@ export default function index() {
     const removeCustomerCartData = async (productId) => {
         try {
             await deleteCustomerCartData({ variables: { cartId: productId, userId: loginData.customerId } })
-            notification.error({ description: "product successfully removed from your cart" })
+            toast.success("product successfully removed from your cart", {
+                position: 'top-right',
+                autoClose: 3000,
+            });
             refetchCustomerCartData();
         }
         catch (error) {
@@ -160,7 +176,6 @@ export default function index() {
     const removeAllCustomerCartData = async () => {
         try {
             await deleteAllCustomerCartData({ variables: { userId: loginData.customerId } })
-            // notification.error({ description: "product successfully removed from your cart" })
             refetchCustomerCartData();
         }
         catch (error) {
@@ -176,7 +191,7 @@ export default function index() {
     }
     const CustomerAmountarray = customerCartBulkData.map((expanded) => expanded.expandedPrice)
     const CustomerTotalAmount = CustomerAmountarray.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
-    // console.log("CustomerTotalAmount----------", CustomerTotalAmount);
+
     const ExpandedAmountarray = getCartData.map((expanded) => expanded.expandedPrice)
     const totalExpandedAmount = ExpandedAmountarray.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
     return (

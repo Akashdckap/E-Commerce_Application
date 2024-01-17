@@ -1,13 +1,10 @@
 
 import React, { useEffect, useState } from 'react'
-// import { useMutation } from '@apollo/client'
-
-// import React, { StrictMode, useEffect, useState } from 'react'
 import { ApolloError, useMutation } from '@apollo/client'
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { CREATE_ADMINS } from '../../Grahpql/mutation'
 import { useRouter } from 'next/router';
-import { notification } from 'antd';
 import Link from 'next/link';
 export default function Login() {
 
@@ -59,11 +56,17 @@ export default function Login() {
             }
             catch (error) {
                 if (error.message == "Successfully") {
-                    notification.success({ description: "successfully logged" })
+                    toast.success("successfully logged", {
+                        position: 'top-right',
+                        autoClose: 3000,
+                    })
                     router.push("/adminStore")
                 }
                 else {
-                    notification.error({ description: "Invalid Email" })
+                    toast.error("Invalid Email", {
+                        position: 'top-right',
+                        autoClose: 3000,
+                    })
                     router.push("/login")
                 }
             }

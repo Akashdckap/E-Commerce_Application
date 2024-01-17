@@ -2,6 +2,7 @@ import Link from 'next/link'
 import React, { useState } from 'react'
 import { CUSTOMER_REGISTER } from '../../Grahpql/mutation';
 import { useMutation } from '@apollo/client';
+import { toast } from 'react-toastify';
 import { notification } from 'antd';
 import { useRouter } from 'next/router';
 
@@ -70,12 +71,17 @@ export default function customerRegister() {
         if (validateRegisterForm()) {
             try {
                 await (registerCustomer({ variables: { customerInput: registerForm } }));
-                notification.success({ message: "Registered successfully" })
+                toast.error("Registered successfully", {
+                    position: 'top-right',
+                    autoClose: 3000,
+                })
                 router.push('/customerLogin')
             }
             catch (error) {
-                console.log(error.message);
-                notification.error({ message: error.message })
+                toast.error(error.message, {
+                    position: 'top-right',
+                    autoClose: 3000,
+                });
                 router.push('/customerRegister')
             }
         }

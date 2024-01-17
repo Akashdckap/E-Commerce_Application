@@ -4,8 +4,7 @@ import { useQuery, useMutation } from "@apollo/client";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faLessThan, faGreaterThan, faStreetView, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
-import { notification } from "antd";
-
+import { toast } from "react-toastify";
 export default function OrderDetails() {
     const [pageSize, setPageSize] = useState(10)
     const [currentPage, setCurrentPage] = useState(1)
