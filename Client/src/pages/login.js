@@ -20,16 +20,25 @@ export default function Login() {
         password: '',
     });
     const [registerFormData, setRegisterFormData] = useState({
-        name:"",
-        email:"",
-        phoneNo:"",
-        password:""
-    })
+        name: "",
+        email: "",
+        phoneNo: "",
+        password: ""
+    });
+    const [isVisible, setIsVisible] = useState(true)
+
+    const showRegisterForm = () => {
+        setIsVisible(false)
+    }
+    const showLoginForm = () => {
+        setIsVisible(true)
+    }
+
     const [registerFormDataErrors, setRegisterFormDataErrors] = useState({
-        name:"",
-        email:"",
-        phoneNo:"",
-        password:""
+        name: "",
+        email: "",
+        phoneNo: "",
+        password: ""
     })
 
     const router = useRouter()
@@ -63,9 +72,9 @@ export default function Login() {
         delete errors[name]
     };
     const [createAdmins, { data, loading, error }] = useMutation(CREATE_ADMINS)
-    const handleSubmitRegister = async (e) =>{
+    const handleSubmitRegister = async (e) => {
         e.preventDefault()
-        
+
     }
 
     const handleSubmit = async (e) => {
@@ -93,7 +102,7 @@ export default function Login() {
                 <Link href={'/customerLogin'} className='border border-solid h-10 w-25 p-2 border-violet-400 text-violet-400 hover:bg-violet-50 rounded-md flex justify-center items-center' >Customer Login</Link>
                 <Link href={'/customerRegister'} className='border border-solid h-10 w-25 p-2 border-indigo-400 text-indigo-400 hover:bg-indigo-50 rounded-md flex justify-center items-center'>Customer Register</Link>
             </div>
-            <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8 w-1/2 m-auto mt-10 bg-blue-300 rounded-2xl">
+            <div className={`flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8 w-1/2 m-auto mt-10 bg-blue-300 rounded-2xl ${isVisible ? '' : 'hidden'}`}>
                 <div className="sm:mx-auto sm:w-full sm:max-w-sm">
                     <img
                         className="mx-auto h-10 w-auto"
@@ -104,7 +113,7 @@ export default function Login() {
                         Login your account
                     </h2>
                 </div>
-                <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+                <div className={`mt-10 sm:mx-auto sm:w-full sm:max-w-sm`}>
                     {error && <p>Error: {error.message}</p>}
                     <form className="space-y-6" onSubmit={handleSubmit} >
                         <div>
@@ -146,12 +155,13 @@ export default function Login() {
                             <button type="submit" className="flex justify-center w-1/2 m-auto rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                                 Light it up
                             </button>
+                            <p className='ml-24'>Don't have account <button className='text-blue-600' onClick={showRegisterForm}>Register</button></p>
                         </div>
                     </form>
                 </div>
             </div>
             {/* Register form */}
-            <div>
+            <div className={`${isVisible ? 'hidden' : ''}`}>
                 <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8 w-1/2 m-auto mt-10 bg-blue-300 rounded-2xl">
                     <div className="sm:mx-auto sm:w-full sm:max-w-sm">
                         <img
@@ -236,6 +246,7 @@ export default function Login() {
                                 <button type="submit" className="flex justify-center w-1/2 m-auto rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                                     Register
                                 </button>
+                                <p className='ml-24'>already have account <button className='text-blue-600' onClick={showLoginForm}>Login</button></p>
                             </div>
                         </form>
                     </div>
