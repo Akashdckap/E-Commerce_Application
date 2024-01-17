@@ -206,9 +206,11 @@ const resolvers = {
                 throw new Error("Email is not registered");
             }
         },
-        async createAdmins(_, { adminsInput: { email, password } }) {
+        async createAdmins(_, { adminsInput: { name, email, phoneNo, password } }) {
             const newUsers = new admins({
+                name:name,
                 email: email,
+                phoneNo:phoneNo,
                 password: password
             });
             const emailList = await admins.find({ email: newUsers.email });
@@ -272,10 +274,6 @@ const resolvers = {
                 const stream = createReadStream();
                 const __dirname = path.dirname(new URL(import.meta.url).pathname)
                 const pathName = path.join(__dirname, `../../Client/public/Images`, filename);
-                // await stream.pipe(fs.createWriteStream(pathName))
-                // return {
-                //     url: `http://localhost:4000/Images/${filename}`
-                // }
                 const writeStream = fs.createWriteStream(pathName);
                 await new Promise((resolve, reject) => {
                     stream
@@ -283,7 +281,6 @@ const resolvers = {
                         .on('finish', resolve)
                         .on('error', reject);
                 });
-                // console.log(pathName)
                 const buffer = fs.readFileSync(pathName);
 
                 const fileDocument = new fileSchema({ filename, data: buffer });
@@ -292,12 +289,10 @@ const resolvers = {
                 fs.unlinkSync(pathName);
 
                 return (`file ${filename} uploaded Successfully`)
-                // return { success:true, message: `Image upload successfully`};
             }
             catch (error) {
                 console.log("catch error----------------", error);
                 throw new Error('Failed to upload File');
-                // return {success:false, message: 'Failed to upload image'}
             }
 
         },
@@ -306,16 +301,6 @@ const resolvers = {
             try {
                 const expandedAmountarray = inputs.orderedProducts.map((expanded) => expanded.expandedPrice)
                 const totalPrice = expandedAmountarray.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
-                //    if(!inputs || inputs.orderedProducts || inputs.orderedProducts.length === 0){
-                //     throw new Error("Invalid input. Ensure 'orderedProducts' is provided and not empty.");
-
-                //    }
-                // console.log("totalExpandedAmount--------------", totalExpandedAmount);
-                // const totalPrice = inputs.orderedProducts.reduce((accumulator, products) => {
-                //     return accumulator + (products.price * products.expandedPrice);
-                // }, 0)
-                // const { orderedProducts, personalDetails, shippingAddress, billingAddress } = inputs;
-                // const totalPrice = orderedProducts.reduce((acc,cuu)=> acc + cuu.price,0)
                 const order = new newOrders({
                     orderedProducts: inputs.orderedProducts,
                     personalDetails: inputs.personalDetails,
@@ -379,8 +364,6 @@ const resolvers = {
         },
 
         async deleteCustomerAddress(_, { userId, addressId }) {
-            console.log(userId,"----------------userId")
-            console.log(addressId,"--------------addressId")
             try {
                 const result = await customerInformation.updateOne(
                     { _id: new ObjectId(userId) },
