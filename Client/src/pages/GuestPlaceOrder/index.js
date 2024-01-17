@@ -1,6 +1,6 @@
 import { faArrowLeft, faDeleteLeft, faInbox, faL, faLessThan, faPerson, faPlus, faRemove, faSection, faSeedling, faShare, faShareAlt, faShareNodes, faShareSquare, faShippingFast, faTrash, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { notification } from "antd";
+import { toast } from "react-toastify";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -288,7 +288,10 @@ export default function placeOrder() {
     }
     const handleRemoveDataFromLocal = (itemId, itemName) => {
         dispatch(removeCartdata(itemId))
-        notification.success({ message: `Successfully removed ${itemName} from your cart` })
+        toast.success(`Successfully removed ${itemName} from your cart`, {
+            position: 'top-right',
+            autoClose: 3000
+        })
     }
 
 
@@ -367,7 +370,10 @@ export default function placeOrder() {
             if (!orderedInputData.orderedProducts.length || !orderedInputData.personalDetails.length || !orderedInputData.shippingAddress.length || !orderedInputData.billingAddress.length) {
             }
             if (getCartData.length === 0 || getBillingData.length === 0 || getShippingData.length === 0 || getPersonalData.length === 0) {
-                notification.error({ message: "Incomplete order data. Please fill in all required information." });
+                toast.error("Incomplete order data. Please fill in all required information.", {
+                    position: 'top-right',
+                    autoClose: 3000
+                })
             }
             const { data: orderSubmitData, errors: SubmitOrderError } = await (createOrders({
                 variables: {
@@ -375,17 +381,27 @@ export default function placeOrder() {
                 },
             }));
             if (SubmitOrderError) {
+                toast.error("Order Submission error", {
+                    position: 'top-right',
+                    autoClose: 3000
+                })
                 notification.success({ message: "Order Submission error" });
             }
             if (orderSubmitData) {
-                notification.success({ message: "Order Submitted" });
+                toast.success("Order Submitted", {
+                    position: 'top-right',
+                    autoClose: 3000
+                })
             }
             return { orderSubmitData, SubmitOrderError }
         }
         catch (error) {
             if (error.graphQLErrors) {
                 console.error("GraphQL Validation Errors:", error.graphQLErrors);
-                notification.error({ message: "Order Submission Error" });
+                toast.error("Order Submission error", {
+                    position: 'top-right',
+                    autoClose: 3000
+                })
             }
             console.error("place order error :", error);
         }

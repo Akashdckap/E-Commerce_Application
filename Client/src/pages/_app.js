@@ -1,6 +1,7 @@
 import '@/styles/globals.css'
 import { ApolloClient, InMemoryCache, ApolloProvider, createHttpLink } from '@apollo/client'
-
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
 import { Provider } from 'react-redux'
 import { default as productSlice } from '@/Reducer/productReducer'
 import localStorageMiddleware from '@/MiddleWare/Middelware'
@@ -60,6 +61,7 @@ export default function App({ Component, pageProps }) {
   return <>
     <Provider store={store}>
       <ApolloProvider client={client}>
+        <ToastContainer />
         <Component {...pageProps} />
       </ApolloProvider>
     </Provider>

@@ -7,7 +7,7 @@ import { faArrowLeft, faShippingFast, faUser, faDeleteLeft, faEllipsisVertical }
 import { DELETE_CUSTOMER_CART_DATA, ORDER_PRODUCT } from "../../../Grahpql/mutation";
 import { GET_CUSTOMER_REGISTER_DATA, GET_CUSTOMER_CART_DATA } from "../../../Grahpql/queries";
 import { useMutation } from "@apollo/client";
-import { notification } from "antd";
+import { toast } from "react-toastify";
 export default function UserPlaceOrder() {
     const [selectShippingId, setSelectShippingAddress] = useState()
     const [selectBillingId, setSelectBillingAddress] = useState()
@@ -27,7 +27,10 @@ export default function UserPlaceOrder() {
     const removeCustomerCartData = async (productId) => {
         try {
             await deleteCustomerCartData({ variables: { cartId: productId, userId: getCustomerLocalData.customerId } })
-            notification.success({ description: "product successfully removed from your cart" })
+            toast.success("product successfully removed from your cart", {
+                position: 'top-right',
+                autoClose: 3000,
+            })
             refetchCustomerCartData();
         }
         catch (error) {
@@ -39,14 +42,20 @@ export default function UserPlaceOrder() {
             const finalData = customerCartData.getCustomerCartData.map(({ _id, __typename, ...rest }) => ({ ...rest }));
 
             if (!selectShippingId) {
-                notification.error({ message: "Please select a shipping address." });
+                toast.error("Please select a shipping address.", {
+                    position: 'top-right',
+                    autoClose: 3000,
+                })
                 return;
             }
             const selectedShippingAddress = addressesData.getCustomerRegister.Addresses.find(address => address._id === selectShippingId);
             const { __typename: shippingTypename, _id: shippingId, ...shippingData } = selectedShippingAddress
 
             if (!selectBillingId) {
-                notification.error({ message: "Please select a billing address." });
+                toast.error("Please select a billing address.", {
+                    position: 'top-right',
+                    autoClose: 3000,
+                })
                 return;
             }
             const selectedBillingAddress = addressesData.getCustomerRegister.Addresses.find(Billaddress => Billaddress._id === selectBillingId);
@@ -68,17 +77,26 @@ export default function UserPlaceOrder() {
                 },
             }));
             if (SubmitOrderError) {
-                notification.success({ message: "Order Submission error" });
+                toast.error("Order Submission error", {
+                    position: 'top-right',
+                    autoClose: 3000,
+                });
             }
             if (orderSubmitData) {
-                notification.success({ message: "Order Submitted" });
+                toast.success("Order Submitted", {
+                    position: 'top-right',
+                    autoClose: 3000,
+                });
             }
             return { orderSubmitData, SubmitOrderError }
         }
         catch (error) {
             if (error.graphQLErrors) {
                 console.error("GraphQL Validation Errors:", error.graphQLErrors);
-                notification.error({ message: "Order Submission Error" });
+                toast.error("Order Submission Error", {
+                    position: 'top-right',
+                    autoClose: 3000,
+                });
             }
             console.error("place order error :", error);
         }
@@ -86,7 +104,7 @@ export default function UserPlaceOrder() {
 
     const CustomerAmountarray = customerCartData && customerCartData.getCustomerCartData.map((expanded) => expanded.expandedPrice)
     const CustomerTotalAmount = CustomerAmountarray ? CustomerAmountarray.reduce((accumulator, currentValue) => accumulator + currentValue, 0) : [];
-    console.log("selectShippingId--------------------", selectShippingId);
+   
     return (
         <>
             <div>
@@ -175,31 +193,6 @@ export default function UserPlaceOrder() {
                                 </div>
                             </div>
                         </div>
-                        {/* <div>
-                            <div>{addresses.map((address, index) => {
-                                return (
-                                    <div className="border border-solid bg-white rounded-md my-8 p-3">
-                                        <div className="flex gap-6">
-                                            <input type="radio"></input>
-                                            <p className="text-gray-600">{address.firstName}</p>
-                                            <p className="text-gray-400 border border-gray-200 bg-gray-300 px-1 text-sm">Home</p>
-                                            <p className="text-gray-600">{address.phoneNo}</p>
-                                            <FontAwesomeIcon icon={faEllipsisVertical} onClick={() => setSelectEditDelete(true)} className="text-gray-500 cursor-pointer ml-auto" />
-                                        </div>
-                                        <div>
-                                            <div className="flex gap-2 py-2">
-                                                <p className="text-gray-500">{address.address},</p>
-                                                <p className="text-gray-500">{address.district},</p>
-                                                <p className="text-gray-500">{address.state}</p>
-                                                <span>-</span>
-                                                <p className="text-gray-500">{address.pincode}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                )
-                            })}</div>
-                        </div> */}
-               
                     </div>
                     <div className="pb-10">
                         <div className="bg-white w-auto shadow-md h-full p-5 pb-6 rounded-md border-gray-300 border  hover:border-green-300 border-solid">
