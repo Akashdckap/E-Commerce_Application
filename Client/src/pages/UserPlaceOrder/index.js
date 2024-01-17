@@ -175,7 +175,7 @@ export default function UserPlaceOrder() {
                                 </div>
                             </div>
                         </div>
-                        <div>
+                        {/* <div>
                             <div>{addresses.map((address, index) => {
                                 return (
                                     <div className="border border-solid bg-white rounded-md my-8 p-3">
@@ -198,7 +198,7 @@ export default function UserPlaceOrder() {
                                     </div>
                                 )
                             })}</div>
-                        </div>
+                        </div> */}
                
                     </div>
                     <div className="pb-10">
