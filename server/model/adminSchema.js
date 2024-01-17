@@ -2,8 +2,10 @@
 import mongoose from "mongoose"
 
 const userRegistration = mongoose.Schema({
+    name:String,
     email:String,
-    password:String
+    password:String,
+    phoneNo:Number,
 },{
     timestamps:true
 })
