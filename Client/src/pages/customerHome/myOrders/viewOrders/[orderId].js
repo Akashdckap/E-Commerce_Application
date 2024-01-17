@@ -1,10 +1,10 @@
-import React from 'react'
-import Myorders from '.'
 
+import React from 'react'
+import ViewOrders from '.';
 export default function OrderId() {
     return (
         <div>
-            <Myorders />
+            <ViewOrders />
         </div>
     )
 }

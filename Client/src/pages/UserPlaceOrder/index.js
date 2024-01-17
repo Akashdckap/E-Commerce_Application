@@ -49,7 +49,7 @@ export default function UserPlaceOrder() {
                 notification.error({ message: "Please select a billing address." });
                 return;
             }
-            const selectedBillingAddress = addressesData.getCustomerRegister.Addresses.find(address => address._id === selectBillingId);
+            const selectedBillingAddress = addressesData.getCustomerRegister.Addresses.find(Billaddress => Billaddress._id === selectBillingId);
             const { __typename: billingTypename, _id: billingId, ...billingData } = selectedBillingAddress
             const orderedInputData = {
                 orderedProducts: finalData,
@@ -199,6 +199,7 @@ export default function UserPlaceOrder() {
                                 )
                             })}</div>
                         </div>
+               
                     </div>
                     <div className="pb-10">
                         <div className="bg-white w-auto shadow-md h-full p-5 pb-6 rounded-md border-gray-300 border  hover:border-green-300 border-solid">
