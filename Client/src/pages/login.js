@@ -16,6 +16,28 @@ export default function Login() {
         email: '',
         password: '',
     });
+    const [registerFormData, setRegisterFormData] = useState({
+        name: "",
+        email: "",
+        phoneNo: "",
+        password: ""
+    });
+    const [isVisible, setIsVisible] = useState(true)
+
+    const showRegisterForm = () => {
+        setIsVisible(false)
+    }
+    const showLoginForm = () => {
+        setIsVisible(true)
+    }
+
+    const [registerFormDataErrors, setRegisterFormDataErrors] = useState({
+        name: "",
+        email: "",
+        phoneNo: "",
+        password: ""
+    })
+
     const router = useRouter()
     const validate = () => {
         let newErrors = { ...errors };
@@ -47,6 +69,10 @@ export default function Login() {
         delete errors[name]
     };
     const [createAdmins, { data, loading, error }] = useMutation(CREATE_ADMINS)
+    const handleSubmitRegister = async (e) => {
+        e.preventDefault()
+
+    }
 
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -79,7 +105,7 @@ export default function Login() {
                 <Link href={'/customerLogin'} className='border border-solid h-10 w-25 p-2 border-violet-400 text-violet-400 hover:bg-violet-50 rounded-md flex justify-center items-center' >Customer Login</Link>
                 <Link href={'/customerRegister'} className='border border-solid h-10 w-25 p-2 border-indigo-400 text-indigo-400 hover:bg-indigo-50 rounded-md flex justify-center items-center'>Customer Register</Link>
             </div>
-            <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8 w-1/2 m-auto mt-10 bg-blue-300 rounded-2xl">
+            <div className={`flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8 w-1/2 m-auto mt-10 bg-blue-300 rounded-2xl ${isVisible ? '' : 'hidden'}`}>
                 <div className="sm:mx-auto sm:w-full sm:max-w-sm">
                     <img
                         className="mx-auto h-10 w-auto"
@@ -90,7 +116,7 @@ export default function Login() {
                         Login your account
                     </h2>
                 </div>
-                <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+                <div className={`mt-10 sm:mx-auto sm:w-full sm:max-w-sm`}>
                     {error && <p>Error: {error.message}</p>}
                     <form className="space-y-6" onSubmit={handleSubmit} >
                         <div>
@@ -132,11 +158,103 @@ export default function Login() {
                             <button type="submit" className="flex justify-center w-1/2 m-auto rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                                 Light it up
                             </button>
+                            <p className='ml-24'>Don't have account <button className='text-blue-600' onClick={showRegisterForm}>Register</button></p>
                         </div>
                     </form>
                 </div>
             </div>
-            {/* </> */}
+            {/* Register form */}
+            <div className={`${isVisible ? 'hidden' : ''}`}>
+                <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8 w-1/2 m-auto mt-10 bg-blue-300 rounded-2xl">
+                    <div className="sm:mx-auto sm:w-full sm:max-w-sm">
+                        <img
+                            className="mx-auto h-10 w-auto"
+                            src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
+                            alt="Your Company"
+                        />
+                        <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+                            Register for account
+                        </h2>
+                    </div>
+                    <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+                        {error && <p>Error: {error.message}</p>}
+                        <form className="space-y-6" onSubmit={handleSubmitRegister} >
+                            <div>
+                                <label htmlFor="name" className="block text-sm font-medium leading-6 text-gray-900">
+                                    Name
+                                </label>
+                                <div className="mt-2">
+                                    <input
+                                        id="name"
+                                        name="name"
+                                        type="name"
+                                        autoComplete="name"
+                                        value={registerFormData.name} placeholder='Enter a name' onChange={handleChange}
+                                        className="block pl-3 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                    />
+                                </div>
+                                {errors.name && <span className="text-red-600">{errors.name}</span>}
+                            </div>
+                            <div>
+                                <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
+                                    Email address
+                                </label>
+                                <div className="mt-2">
+                                    <input
+                                        id="email"
+                                        name="email"
+                                        type="email"
+                                        autoComplete="email"
+                                        value={registerFormData.email} placeholder='Enter a email' onChange={handleChange}
+                                        className="block pl-3 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                    />
+                                </div>
+                                {errors.email && <span className="text-red-600">{errors.email}</span>}
+                            </div>
+                            <div>
+                                <label htmlFor="phoneNo" className="block text-sm font-medium leading-6 text-gray-900">
+                                    PhoneNo
+                                </label>
+                                <div className="mt-2">
+                                    <input
+                                        id="phoneNo"
+                                        name="phoneNo"
+                                        type="phoneNo"
+                                        autoComplete="phoneNo"
+                                        value={registerFormData.phoneNo} placeholder='Enter a phoneNo' onChange={handleChange}
+                                        className="block pl-3 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                    />
+                                </div>
+                                {errors.phoneNo && <span className="text-red-600">{errors.phoneNo}</span>}
+                            </div>
+                            <div>
+                                <div className="flex items-center justify-between">
+                                    <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
+                                        Password
+                                    </label>
+                                </div>
+                                <div className="mt-2">
+                                    <input
+                                        id="password"
+                                        name="password"
+                                        type="password"
+                                        autoComplete="current-password"
+                                        value={registerFormData.password} placeholder='Enter a password' onChange={handleChange}
+                                        className="block pl-3 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                    />
+                                </div>
+                                {errors.password && <span className="text-red-600">{errors.password}</span>}
+                            </div>
+                            <div>
+                                <button type="submit" className="flex justify-center w-1/2 m-auto rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                                    Register
+                                </button>
+                                <p className='ml-24'>already have account <button className='text-blue-600' onClick={showLoginForm}>Login</button></p>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </>
     )
 }

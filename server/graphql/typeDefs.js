@@ -9,7 +9,9 @@ const typeDefs = gql` #graphql
 
     type admins{
         _id: ID!,
+        name:String!,
         email: String!,
+        phoneNo: Int!,
         password: String!,
     }
     type address{
@@ -55,7 +57,9 @@ const typeDefs = gql` #graphql
     }
 
     input adminsInput{
+        name:String!,
         email:String!,
+        phoneNo:Int!,
         password:String!,
     }
 
