@@ -8,7 +8,7 @@ import { UPDATE_CUSTOMER_PERSONAL_DETAILS, ADD_CUSTOMER_SHIPPING_ADDRESS, UPDATE
 import Link from "next/link";
 import { useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
-import { notification } from "antd";
+import { toast } from "react-toastify";
 function Myaccount() {
     const [showPersonalData, setShowPersonalData] = useState(false)
     const [showShippingData, setShowShippingData] = useState(false);
@@ -175,7 +175,11 @@ function Myaccount() {
         if (validatePersonalDetailForm()) {
             try {
                 await updateCustomerPersonal({ variables: { id: getCustomerLocalData.customerId, input: personalDetails } })
-                notification.success({ message: "Personal detail updated" })
+                toast.success("Personal detail updated", {
+                    position: 'top-right',
+                    autoClose: 3000,
+                })
+                
                 setShowPersonalData(false)
             }
             catch (error) {
@@ -190,6 +194,10 @@ function Myaccount() {
             if (!editId) {
                 try {
                     await addCustomerShipping({ variables: { id: getCustomerLocalData.customerId, input: shippingDetails } })
+                    toast.success("Address added Successfully", {
+                        position: 'top-right',
+                        autoClose: 3000,
+                    })
                     refetchAddresses()
                     setShowShippingData(false)
                     setShippingDetails({
@@ -213,7 +221,10 @@ function Myaccount() {
                 try {
                     await updateCustomerShippingAddress({ variables: { userId: getCustomerLocalData.customerId, addressId: editId, input: shippingDetails } })
                     setShowShippingData(false)
-                    notification.success({ message: "Updated Successfully" })
+                    toast.success("Updated Successfully", {
+                        position: 'top-right',
+                        autoClose: 3000,
+                    })
                     refetchAddresses()
                     setShippingDetails({
                         firstName: "",
@@ -247,14 +258,17 @@ function Myaccount() {
     }, [data]);
 
     const removeAddress = async (deleteId) => {
-        
+
         try {
             const addressId = deleteId;
             console.log(addressId)
             const userId = getCustomerLocalData.customerId;
             await deleteCustomerAddresstData({ variables: { userId: userId, addressId: addressId } })
             refetchAddresses();
-            notification.success({ message: "Successfully Deleted" })
+            toast.success("Successfully Deleted", {
+                position: 'top-right',
+                autoClose: 3000,
+            })
         }
         catch (error) {
             console.log("not deleted");
@@ -281,7 +295,7 @@ function Myaccount() {
         // console.log("shippingDetails-------------", shippingDetails);
     }
 
-    
+
 
     return (
         <>

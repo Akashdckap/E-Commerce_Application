@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
-// import { Upload, notification } from 'antd';
+
 import Link from 'next/link';
 import { CREATE_PRODUCTS, DELETE_PRODUCT, UPLOAD_FILE } from '../../../Grahpql/mutation';
 
 import { GET_ALL_PRODUCTS, GET_ALL_PRODUCTS_DATA, GET_TOTAL_PRODUCT_COUNT, ORDER_COUNT } from '../../../Grahpql/queries';
-
+import { toast } from 'react-toastify';
 import { useMutation, useQuery } from '@apollo/client';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faEye, faGreaterThan, faL, faLessThan, faSlash, faTrash } from '@fortawesome/free-solid-svg-icons';
@@ -110,7 +110,10 @@ export default function AdminStore() {
         if (validate()) {
             try {
                 await (createProducts({ variables: { productDatas: productData } }));
-                notification.success({ description: "product successfully added" })
+                toast.success("product successfully added", {
+                    position: 'top-right',
+                    autoClose: 3000,
+                })
                 setFormOpen(false)
             }
             catch (error) {
@@ -174,7 +177,10 @@ export default function AdminStore() {
         const id = router.query.deleteId
         try {
             await deleteProduct({ variables: { id } })
-            notification.error({ description: "product successfully deleted" })
+            toast.success("product successfully deleted", {
+                position: 'top-right',
+                autoClose: 3000,
+            })
         }
         catch (error) {
             console.error('Error deleting item:', error);
