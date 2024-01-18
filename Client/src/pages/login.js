@@ -7,7 +7,7 @@ import { ApolloError, useMutation } from '@apollo/client'
 
 import { CREATE_ADMINS } from '../../Grahpql/mutation'
 import { useRouter } from 'next/router';
-import { notification } from 'antd';
+// import { notification } from 'antd';
 import Link from 'next/link';
 export default function Login() {
 
