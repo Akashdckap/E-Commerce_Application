@@ -8,6 +8,7 @@ import Image from 'next/image';
 import { LOGIN_CUSTOMER, CREATE_CART_ITEMS, DELETE_CUSTOMER_CART_DATA, REMOVE_ALL_CUSTOMER_CART_DATA, INCREMENT_CUSTOMER_PRODUCT_QTY, DECREMENT_CUSTOMER_PRODUCT_QTY } from '../../../Grahpql/mutation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserCircle, faShoppingCart, faSignOut, faGreaterThan, faShoppingBag, faClose, faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { SolidUser } from '@heroicons/react/solid'
 import { GET_ADD_TO_CART_SINGLE_PRODUCT_DATA, GET_ALL_PRODUCTS_DATA, GET_CUSTOMER_CART_DATA } from '../../../Grahpql/queries';
 import { useLazyQuery, useMutation, useQuery } from '@apollo/client'
 import { storeAddToCartProductData, updateCartItemQuantity, removeCartdata, removeAllCartDatas, incrementProductCount, decrementProductCount } from '@/Reducer/productReducer';
@@ -208,7 +209,8 @@ export default function index() {
                                         loginData.token ? (customerCartData && customerCartData.getCustomerCartData.length || 0) : (getCartData.length)
                                     }
                                 </p>
-                                <FontAwesomeIcon onClick={() => setCart(true)} icon={faShoppingCart} className='text-gray-700 hover:text-gray-600 text-2xl cursor-pointer' />
+                                    <FontAwesomeIcon onClick={() => setCart(true)} icon={faShoppingCart} className='text-gray-700 hover:text-gray-600 text-2xl cursor-pointer' />
+                                {/* <SolidUser className="w-6 h-6" /> */}
                             </div>
                             <div>
                                 <FontAwesomeIcon icon={faUserCircle} className='text-3xl text-gray-500 hover:cursor-pointer ' onClick={() => !openProfile ? setOpenProfile(true) : setOpenProfile(false)} />
