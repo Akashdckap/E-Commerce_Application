@@ -32,7 +32,6 @@ export default function index() {
     const [parseIds, { data: getSingleCartData, error: getSingleCartError, loading: getSingleCartLoading }] = useLazyQuery(GET_ADD_TO_CART_SINGLE_PRODUCT_DATA, {
         variables: { ids: allAddToCartId }
     })
-    const { data: loginCustomer, error: loginError, loading: loginLoading } = useMutation(LOGIN_CUSTOMER)
 
     const [storeCartDatas] = useMutation(CREATE_CART_ITEMS)
     const [deleteCustomerCartData] = useMutation(DELETE_CUSTOMER_CART_DATA)
@@ -45,7 +44,6 @@ export default function index() {
             variables: { userId: loginData.customerId }
         })
 
-
     const handleAddToCartToken = async (getProductId) => {
         const cart = productData.getAllProductsData.find((cart) => { return cart._id == getProductId })
         const updatObject = {
@@ -55,15 +53,23 @@ export default function index() {
         delete updatObject._id
         const { __typename, ...rest } = updatObject
         try {
-            await (storeCartDatas({ variables: { productId: getProductId, userId: loginData.customerId, productCart: rest } }))
-            toast.success("Successfully added to cart", {
-                position: 'top-center',
-                autoClose: 3000,
-            })
-            refetchCustomerCartData();
+            const { data } = await storeCartDatas({ variables: { productId: getProductId, userId: loginData.customerId, productCart: rest } })
+            if (data.cartItems.quantity > 1) {
+                refetchCustomerCartData();
+                toast.success(`You changed the ${data.cartItems.productName} quantity to ${data.cartItems.quantity}.`, {
+                    position: 'top-center',
+                    autoClose: 3000,
+                })
+            }
+            else {
+                refetchCustomerCartData();
+                toast.success("Item added to your cart", {
+                    position: 'top-center',
+                    autoClose: 3000,
+                })
+            }
         }
         catch (error) {
-            console.error("product creation error :", error);
             toast.error("Cart is not added Successfully", {
                 position: 'top-center',
                 autoClose: 3000,
@@ -143,7 +149,11 @@ export default function index() {
 
     const handleIncrementQuantity = async (productId) => {
         try {
-            await incrementCustomerCartQty({ variables: { productId: productId, userId: loginData.customerId } })
+            const { data } = await incrementCustomerCartQty({ variables: { productId: productId, userId: loginData.customerId } })
+            toast.success(`You increased the quantity of the ${data.incrementCustomerProductQty.productName} to ${data.incrementCustomerProductQty.quantity}.`, {
+                position: 'top-center',
+                autoClose: 3000,
+            })
             refetchCustomerCartData();
         }
         catch (error) {
@@ -152,7 +162,11 @@ export default function index() {
     }
     const handleDecrementQuantity = async (productId) => {
         try {
-            await decrementCustomerCartQty({ variables: { productId: productId, userId: loginData.customerId } })
+            const { data } = await decrementCustomerCartQty({ variables: { productId: productId, userId: loginData.customerId } })
+            toast.success(`You reduced the quantity of the ${data.decrementCustomerProductQty.productName} to ${data.decrementCustomerProductQty.quantity}.`, {
+                position: 'top-center',
+                autoClose: 3000,
+            })
             refetchCustomerCartData();
         }
         catch (error) {

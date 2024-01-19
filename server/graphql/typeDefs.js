@@ -17,7 +17,7 @@ const typeDefs = gql` #graphql
         firstName: String,
         lastName: String,
         email: String,
-        phoneNo: String!,
+        phoneNo: BigInt!,
         address: String!,
         district: String!,
         state: String!,
@@ -95,7 +95,7 @@ const typeDefs = gql` #graphql
         firstName: String!,
         lastName: String!,
         email: String!,
-        phoneNo: String!,
+        phoneNo: BigInt!,
         address: String!,
         district: String!,
         state: String!,
@@ -108,7 +108,7 @@ const typeDefs = gql` #graphql
         lastName: String!,
         email: String!,
         phoneNo: String!,
-        address: String!,
+        address: BigInt!,
         district: String!,
         state: String!,
         pincode: String!,
@@ -119,7 +119,7 @@ const typeDefs = gql` #graphql
         firstName: String!,
         lastName: String!,
         email: String!,
-        phoneNo: String!,
+        phoneNo: BigInt!,
         address: String!,
         district: String!,
         state: String!,
@@ -130,7 +130,7 @@ const typeDefs = gql` #graphql
         firstName: String!,
         lastName: String!,
         email: String!,
-        phoneNo: String!,
+        phoneNo: BigInt!,
         address: String!,
         district: String!,
         state: String!,
@@ -185,7 +185,7 @@ const typeDefs = gql` #graphql
         firstName: String,
         lastName: String,
         email: String,
-        phoneNo: String,
+        phoneNo: BigInt,
         address: String,
         district: String,
         state: String,
@@ -197,7 +197,7 @@ const typeDefs = gql` #graphql
         firstName: String,
         lastName: String,
         email: String,
-        phoneNo: String,
+        phoneNo: BigInt,
         address: String,
         district: String,
         state: String,
@@ -313,7 +313,7 @@ const typeDefs = gql` #graphql
         updateProduct(id: ID!, input: updateProductInput): products!
         createOrders(inputs: orderedInput): orders!
         deleteCustomerAddress(userId:ID!, addressId:ID!):Boolean!
-        cartItems(userId:ID!, productId:ID! productCart: cartItemsInput): cartItems!
+        cartItems(userId:ID!, productId:ID! productCart: cartItemsInput): orderProduct!
         updatePrice(id: ID, input:upDateCartPrice): cartItems!
         uploadFile(file: Upload!): String!
         updateCustomerPersonalDetails(id: ID!, input: updateCustomerPersonal) : customerRegister
@@ -321,8 +321,8 @@ const typeDefs = gql` #graphql
         updateCustomerShippingAddress(userId: ID!, addressId: ID! ,input: shippingAddressInput!) : shippingAddress
         deleteCustomerCartData(cartId: ID!, userId: ID!): Boolean!
         deleteAllCustomerCartData(userId: ID!) : Boolean!
-        incrementCustomerProductQty(productId: ID!, userId: ID!) : Boolean!
-        decrementCustomerProductQty(productId: ID!, userId: ID!) : Boolean!
+        incrementCustomerProductQty(productId: ID!, userId: ID!) : orderProduct!
+        decrementCustomerProductQty(productId: ID!, userId: ID!) : orderProduct!
     }
 `
 export default typeDefs;
