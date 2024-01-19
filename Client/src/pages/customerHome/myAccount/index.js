@@ -116,7 +116,7 @@ function Myaccount() {
             newErrors.email = 'Email is required';
             isVaild = false;
         }
-        if (shippingDetails.phoneNo.trim() === "") {
+        if (shippingDetails.phoneNo === "") {
             newErrors.phoneNo = 'Contact is required';
             isVaild = false;
         }
@@ -179,7 +179,7 @@ function Myaccount() {
                     position: 'top-right',
                     autoClose: 3000,
                 })
-                
+
                 setShowPersonalData(false)
             }
             catch (error) {
@@ -217,7 +217,6 @@ function Myaccount() {
                 }
             }
             else {
-                // console.log(shippingDetails, "---------------shippingDetailsupdate")
                 try {
                     await updateCustomerShippingAddress({ variables: { userId: getCustomerLocalData.customerId, addressId: editId, input: shippingDetails } })
                     setShowShippingData(false)
@@ -237,6 +236,7 @@ function Myaccount() {
                         pincode: "",
                         country: ""
                     });
+                    setEditId('');
                 }
                 catch (error) {
                     notification.error({ message: "Not updated" })
@@ -245,7 +245,6 @@ function Myaccount() {
 
         }
     }
-    // console.log("getshippinData-----------------", getshippinData.getShippingAddress.length === 0);
     useEffect(() => {
         if (data && data.getCustomerRegister) {
             setPersonalDetails({
@@ -278,7 +277,6 @@ function Myaccount() {
 
     const editAddress = (editId) => {
         const editAddress = addressesCustomer.find((edit) => edit._id === editId)
-        // console.log("editAddress", editAddress);
         setEditId(editAddress._id);
         setShippingDetails({
             firstName: editAddress.firstName,
@@ -292,9 +290,8 @@ function Myaccount() {
             pincode: editAddress.pincode,
         })
         setShowShippingData(true)
-        // console.log("shippingDetails-------------", shippingDetails);
     }
-
+    console.log("editId------", editId);
 
 
     return (
