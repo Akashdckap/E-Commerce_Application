@@ -43,6 +43,8 @@ export const CREATE_CART_ITEMS = gql`
       weight
       color
       description
+      quantity
+      expandedPrice
     }
   }
 `
@@ -193,11 +195,33 @@ export const REMOVE_ALL_CUSTOMER_CART_DATA = gql`
 `
 export const INCREMENT_CUSTOMER_PRODUCT_QTY = gql`
    mutation incrementCustomerProductQty($productId: ID! $userId: ID!) {
-    incrementCustomerProductQty(productId: $productId userId: $userId)
+    incrementCustomerProductQty(productId: $productId userId: $userId){
+      productName
+      productID
+      description
+      category
+      brand
+      color
+      weight
+      price
+      quantity
+      expandedPrice
+    }
 }
 `
 export const DECREMENT_CUSTOMER_PRODUCT_QTY = gql`
    mutation decrementCustomerProductQty($productId: ID! $userId: ID!) {
-    decrementCustomerProductQty(productId: $productId userId: $userId)
+    decrementCustomerProductQty(productId: $productId userId: $userId){
+      productName
+      productID
+      description
+      category
+      brand
+      color
+      weight
+      price
+      quantity
+      expandedPrice
+    }
 }
 `

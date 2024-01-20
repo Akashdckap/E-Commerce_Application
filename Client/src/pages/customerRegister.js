@@ -3,8 +3,9 @@ import React, { useState } from 'react'
 import { CUSTOMER_REGISTER } from '../../Grahpql/mutation';
 import { useMutation } from '@apollo/client';
 import { toast } from 'react-toastify';
-import { notification } from 'antd';
+// import { notification } from 'antd';
 import { useRouter } from 'next/router';
+
 
 export default function customerRegister() {
     const router = useRouter();

@@ -16,9 +16,10 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import fileSchema from '../model/fileSchema.js'
 import mongoose from 'mongoose';
-import { create } from 'domain';
+import { ApolloError } from 'apollo-server-fastify';
 
 const ObjectId = mongoose.Types.ObjectId;
+
 const resolvers = {
     // Upload: GraphQLUpload,
     Query: {
@@ -333,7 +334,6 @@ const resolvers = {
             try {
                 const expandedAmountarray = inputs.orderedProducts.map((expanded) => expanded.expandedPrice)
                 const totalPrice = expandedAmountarray.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
-                await cartSchema.deleteOne({ userId: new ObjectId(inputs.personalDetails.customerId) });
 
                 const order = new newOrders({
                     orderedProducts: inputs.orderedProducts,
@@ -343,7 +343,9 @@ const resolvers = {
                     totalPrice,
                 })
                 const saveOrders = await order.save();
-
+                if (inputs.personalDetails.customerId == " ") {
+                    await cartSchema.deleteOne({ userId: inputs.personalDetails.customerId });
+                }
                 return saveOrders
 
             }
@@ -363,12 +365,26 @@ const resolvers = {
                     })
                     await saveCart.save();
                     cart = saveCart
+                    return cart.cartItems;
                 }
                 else {
                     const existingItem = cart.cartItems.find((item) => new ObjectId(item.productID).toString() === new ObjectId(productId).toString());
                     if (existingItem) {
                         existingItem.quantity = existingItem.quantity + 1;
-                        existingItem.expandedPrice += productCart.price;
+                        existingItem.expandedPrice = existingItem.quantity * productCart.price;
+                        await cartSchema.updateOne(
+                            {
+                                userId,
+                                'cartItems.productID': existingItem.productID,
+                            },
+                            {
+                                $set: {
+                                    'cartItems.$.quantity': existingItem.quantity,
+                                    'cartItems.$.expandedPrice': existingItem.expandedPrice,
+                                },
+                            },
+                        )
+                        return existingItem
                     } else {
                         cart.cartItems.push({ quantity: 1, expandedPrice: productCart.price, ...productCart });
                     }
@@ -433,7 +449,7 @@ const resolvers = {
                     getSpecific.quantity = getSpecific.quantity + 1;
                     getSpecific.expandedPrice = getSpecific.price * getSpecific.quantity;
                     await cart.save();
-                    return true;
+                    return getSpecific;
                 } else {
                     console.log('Product not found in the cart.');
                 }
@@ -450,7 +466,7 @@ const resolvers = {
                     getSpecific.quantity = getSpecific.quantity - 1;
                     getSpecific.expandedPrice = getSpecific.price * getSpecific.quantity;
                     await cart.save();
-                    return true;
+                    return getSpecific;
                 } else {
                     console.log('Product not found in the cart.');
                     return false;

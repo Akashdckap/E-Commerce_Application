@@ -8,7 +8,9 @@ import { DELETE_CUSTOMER_CART_DATA, ORDER_PRODUCT } from "../../../Grahpql/mutat
 import { GET_CUSTOMER_REGISTER_DATA, GET_CUSTOMER_CART_DATA } from "../../../Grahpql/queries";
 import { useMutation } from "@apollo/client";
 import { toast } from "react-toastify";
+import { useRouter } from "next/router";
 export default function UserPlaceOrder() {
+    const router = useRouter()
     const [selectShippingId, setSelectShippingAddress] = useState()
     const [selectBillingId, setSelectBillingAddress] = useState()
     const getCustomerLocalData = useSelector(state => state.productDetails.LoginData);
@@ -81,12 +83,14 @@ export default function UserPlaceOrder() {
                     position: 'top-right',
                     autoClose: 3000,
                 });
+                router.push("/UserPlaceOrder")
             }
             if (orderSubmitData) {
                 toast.success("Order Submitted", {
                     position: 'top-right',
                     autoClose: 3000,
                 });
+                router.push("/orderSubmitted")
             }
             return { orderSubmitData, SubmitOrderError }
         }
@@ -104,7 +108,7 @@ export default function UserPlaceOrder() {
 
     const CustomerAmountarray = customerCartData && customerCartData.getCustomerCartData.map((expanded) => expanded.expandedPrice)
     const CustomerTotalAmount = CustomerAmountarray ? CustomerAmountarray.reduce((accumulator, currentValue) => accumulator + currentValue, 0) : [];
-   
+
     return (
         <>
             <div>
