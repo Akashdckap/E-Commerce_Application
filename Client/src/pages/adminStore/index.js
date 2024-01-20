@@ -130,9 +130,6 @@ export default function AdminStore() {
 
     const { data: orderCount, loading: CountLoading, error: countError } = useQuery(ORDER_COUNT)
 
-    // if (OrderData && OrderData.getAllOrders) {
-    //     console.log("OrderData----------------", OrderData.getAllOrders.length);
-    // }
     useEffect(() => {
 
     }, [pageSize])
@@ -168,9 +165,8 @@ export default function AdminStore() {
     };
 
     const startItem = (currentPage - 1) * pageSize + 1;
-    // console.log("startItem-----------", startItem);
+  
     const endItem = Math.min(currentPage * pageSize, countProductData);
-    // console.log("endItem-----------", endItem);
 
     const handleDeleteProduct = async (e) => {
         e.preventDefault()

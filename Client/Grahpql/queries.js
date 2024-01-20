@@ -280,19 +280,58 @@ export const GET_CUSTOMER_ORDERS = gql`
     query getCustomerOrders($userId: ID!){
         getCustomerOrders(userId : $userId){
             _id
-            orderedProducts{
-            productID,
-            productName,
-            description,
-            category,
-            brand,
-            color,
-            weight,
-            price
-            quantity,
-            expandedPrice,
+            shippingAddress{
+                firstName,
+                lastName,
+                email,
+                phoneNo,
+                address,
+                district,
+                state,
+                pincode,
+                country,
             }
-            totalPrice
+            billingAddress{
+                firstName,
+                lastName,
+                email,
+                phoneNo,
+                address,
+                district,
+                state,
+                pincode,
+                country,
+            }
+            orderedProducts{
+                productID,
+                productName,
+                description,
+                category,
+                brand,
+                color,
+                weight,
+                price
+                quantity,
+                expandedPrice,
+            }
+            totalPrice,
+            orderTime,
+        }
+    }
+`
+
+export const GET_PERSONAL_DETAILS_ORDER = gql`
+    query getCustomerPersonalDetails($userId: ID!){
+        getCustomerPersonalDetails(userId: $userId){
+            personalDetails{
+                name,
+                email,
+                phoneNo,
+                customerId
+            },
+            _id,
+            totalPrice,
+            orderTime,
         }
     }
 `
