@@ -179,10 +179,10 @@ const typeDefs = gql` #graphql
     }
 
     type personalDetails{
-        name: String,
-        email: String,
-        phoneNo: BigInt,
-        customerId: ID,
+        name: String!,
+        email: String!,
+        phoneNo: BigInt!,
+        customerId: ID!,
     }
 
     type shippingAddress{
@@ -220,8 +220,18 @@ const typeDefs = gql` #graphql
     }
     type customerOrders {
         _id: ID!,
+        shippingAddress: shippingAddress!,
+        billingAddress: billingAddress!,
         orderedProducts: [orderProduct]!,
         totalPrice: Int,
+        orderTime: Date,
+    }
+
+    type customerPersonalDetails{
+        personalDetails: personalDetails!,
+        _id: ID!,
+        totalPrice: Int!,
+        orderTime: Date!,
     }
     input customerRegisterInput{
         name: String,
@@ -294,7 +304,7 @@ const typeDefs = gql` #graphql
         getShippingAddress(userId:ID!, editAddressId:ID!): shippingAddress
         getCustomerCartData(userId: ID!): [customerCartData]
         getCustomerOrders(userId:ID!): [customerOrders]
-        
+        getCustomerPersonalDetails(userId: ID!): [customerPersonalDetails]
         getAllAdmins:[admins]
         getAllProductsData: [products]
         getAllProducts(page:Int!,pageSize:Int!):[products!]!

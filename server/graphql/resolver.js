@@ -37,17 +37,49 @@ const resolvers = {
         },
         getCustomerOrders: async (_, { userId }) => {
             const customerOrders = await newOrders.find(
-                { "personalDetails.customerId": userId },
-                { orderedProducts: 1, totalPrice: 1, }
-            )
-            return customerOrders
-            // const customerTotalPrice = await newOrders.findOne({ "totalPrice": new mongoose.Types.ObjectId(userId) })
-            // return customerOrders.orderedProducts;
-            // return (customerOrders.totalPrice, customerOrders.totalPrice)
-            // console.log("customerOrders-------------", customerOrders);
+                { _id :new ObjectId(userId) },
+                { orderedProducts: 1, totalPrice: 1, createdAt: 1, billingAddress: 1, shippingAddress:1 }
+            );
+            const formatTime = customerOrders.map((orderValue) => {
+                const { createdAt, ...rest } = orderValue._doc;
+                return {
+                    ...rest,
+                    orderTime: new Date(createdAt).toLocaleString('en-US', {
+                        month: "short",
+                        day: 'numeric',
+                        hour: 'numeric',
+                        minute: 'numeric',
+                        hour12: true,
+                    })
+                }
+            })
+            // console.log("order-----------",formatTime)
+            return formatTime
         },
+        getCustomerPersonalDetails: async (_, { userId }) => {
+            const personDetails = await newOrders.find(
+                { "personalDetails.customerId": userId },
+                { "personalDetails": 1, totalPrice: 1, createdAt: 1 }
+            )
+            // const personDetailsArray = await personDetails.toArray();
 
-
+            // console.log("personDetails-----------",personDetails);
+            const formatCreateTime = personDetails.map((orderPersonal) => {
+                const { createdAt, ...rest } = orderPersonal._doc
+                return {
+                    ...rest,
+                    orderTime: new Date(createdAt).toLocaleString('en-US', {
+                        month: "short",
+                        day: 'numeric',
+                        hour: 'numeric',
+                        minute: 'numeric',
+                        hour12: true,
+                    })
+                }
+            });
+            // console.log(formatCreateTime);
+            return formatCreateTime;
+        },
         getAllAdmins: async () => {
             return await (admins.find({}));
         },
@@ -209,9 +241,9 @@ const resolvers = {
         },
         async createAdmins(_, { adminsInput: { name, email, phoneNo, password } }) {
             const newUsers = new admins({
-                name:name,
+                name: name,
                 email: email,
-                phoneNo:phoneNo,
+                phoneNo: phoneNo,
                 password: password
             });
             const emailList = await admins.find({ email: newUsers.email });
