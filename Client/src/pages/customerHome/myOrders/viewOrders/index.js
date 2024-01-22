@@ -13,26 +13,27 @@ export default function ViewOrders() {
     const { data: customerOrders, loading: customerLoading, error: customerError } = useQuery(GET_CUSTOMER_ORDERS, {
         variables: { userId: orderId }
     });
+
     // const orderedList = customerOrders && customerOrders.getCustomerOrders.find((orders) => orders._id === orderId)
     // console.log("orderedProducts--------", orderedList && orderedList.orderedProducts);
     return (
         <>
-            <div className='flex justify-between items-center px-4 mx-28 py-5 '>
+            {/* <div className='flex justify-between items-center px-4 mx-28 py-5 '>
+                <h1 className='text-amber-600 text-xl'>Your Orders (<span className='text-slate-600'>{orderedList && orderedList.orderedProducts.length}</span>)</h1>
                 <Link href={'/customerHome/myOrders'} className="flex justify-start items-center gap-2">
                     <FontAwesomeIcon icon={faArrowLeft} className="cursor-pointer text-blue-500" />
                     <p className="cursor-pointer text-blue-500">Back to Orders</p>
                 </Link>
+                className="border border-gray-300 rounded-md hover:border-green-300 border-solid bg-slate-300"
+            </div> */}
             <div className='flex'>
                 <div className="my-2 mx-10">
                     <div>
                         <h2 className="leading leading-loose text-3xl text-gray-700 ">Ordered Products - {customerOrders && customerOrders.getCustomerOrders.length}</h2>
                     </div>
                     <table>
-            <div>
-                <div>
-                    <table className="border border-gray-400 rounded-md hover:border-green-300">
                         <thead>
-                            <tr className="border border-gray-300 rounded-md hover:border-green-300 border-solid bg-slate-300">
+                            <tr className='bg-teal-100 border rounded-md'>
                                 <th className='px-5 py-2 text-blue-400'>S.no</th>
                                 <th className='px-5 py-2 text-blue-400'>Product Name</th>
                                 <th className='px-5 py-2 text-blue-400'>Category</th>
