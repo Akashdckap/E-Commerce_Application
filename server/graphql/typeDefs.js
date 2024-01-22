@@ -294,6 +294,8 @@ const typeDefs = gql` #graphql
         getShippingAddress(userId:ID!, editAddressId:ID!): shippingAddress
         getCustomerCartData(userId: ID!): [customerCartData]
         getCustomerOrders(userId:ID!): [customerOrders]
+
+        getGuestOrders:[customerOrders]
         
         getAllAdmins:[admins]
         getAllProductsData: [products]

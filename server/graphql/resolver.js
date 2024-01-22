@@ -46,8 +46,11 @@ const resolvers = {
             // return (customerOrders.totalPrice, customerOrders.totalPrice)
             // console.log("customerOrders-------------", customerOrders);
         },
-
-
+        getGuestOrders: async () => {
+            const guestOrders = await newOrders.find({ "personalDetails.customerId": "" });
+            return guestOrders
+            // console.log("guestOrders-----------", guestOrders);
+        },
         getAllAdmins: async () => {
             return await (admins.find({}));
         },
@@ -209,9 +212,9 @@ const resolvers = {
         },
         async createAdmins(_, { adminsInput: { name, email, phoneNo, password } }) {
             const newUsers = new admins({
-                name:name,
+                name: name,
                 email: email,
-                phoneNo:phoneNo,
+                phoneNo: phoneNo,
                 password: password
             });
             const emailList = await admins.find({ email: newUsers.email });
