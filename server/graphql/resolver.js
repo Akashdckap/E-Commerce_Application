@@ -16,7 +16,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import fileSchema from '../model/fileSchema.js'
 import mongoose from 'mongoose';
-import { ApolloError } from 'apollo-server-fastify';
+// import { ApolloError } from 'apollo-server-fastify';
 
 const ObjectId = mongoose.Types.ObjectId;
 

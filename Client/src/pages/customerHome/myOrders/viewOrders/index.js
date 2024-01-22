@@ -13,20 +13,17 @@ export default function ViewOrders() {
     const { data: customerOrders, loading: customerLoading, error: customerError } = useQuery(GET_CUSTOMER_ORDERS, {
         variables: { userId: orderId }
     });
-    // console.log("---------",customerOrders.getCustomerOrders)
+    console.log("---------", customerOrders && customerOrders.getCustomerOrders)
     // const orderedList = customerOrders && customerOrders.getCustomerOrders.find((orders) => orders._id === orderId)
     // console.log("orderedProducts--------", orderedList && orderedList.orderedProducts);
     return (
         <>
             <div className='flex justify-between items-center px-4 mx-28 py-5 '>
-                <h1 className='text-amber-600 text-xl'>Your Products (<span className='text-slate-600'>{orderedList && orderedList.orderedProducts.length}</span>)</h1>
-            {/* <div className='flex justify-between items-center px-4 mx-28 py-5 '>
-                <h1 className='text-amber-600 text-xl'>Your Orders (<span className='text-slate-600'>{orderedList && orderedList.orderedProducts.length}</span>)</h1>
                 <Link href={'/customerHome/myOrders'} className="flex justify-start items-center gap-2">
                     <FontAwesomeIcon icon={faArrowLeft} className="cursor-pointer text-blue-500" />
                     <p className="cursor-pointer text-blue-500">Back to Orders</p>
                 </Link>
-            </div> */}
+            </div>
             <div>
                 <div>
                     <table className="border border-gray-400 rounded-md hover:border-green-300">
