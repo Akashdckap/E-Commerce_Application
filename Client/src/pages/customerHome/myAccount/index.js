@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faShippingFast, faArrowLeft, faEllipsisVertical, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faUser, faShippingFast, faArrowLeft, faEllipsisVertical, faPlus, faFileEdit, faEdit, faDeleteLeft, faRemove, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { useQuery } from "@apollo/client";
 import { useSelector } from "react-redux";
 import { GET_CUSTOMER_REGISTER_DATA, GET_CUSTOMER_SHIPPING_ADDRESS } from "../../../../Grahpql/queries";
@@ -16,6 +16,7 @@ function Myaccount() {
     const [editDelete, setEditDelete] = useState(false);
     const [editId, setEditId] = useState();
     const router = useRouter();
+    const componentRef = useRef();
 
 
     const [personalDetails, setPersonalDetails] = useState({
@@ -245,6 +246,21 @@ function Myaccount() {
 
         }
     }
+    // useEffect(() => {
+    //     const handleClickOutside = (e) => {
+    //         if (componentRef.current && !componentRef.current.contains(e.target)) {
+    //             setEditId(false);
+    //         }
+    //         else {
+    //             setEditId(true)
+    //         }
+    //     };
+    //     window.addEventListener('click', handleClickOutside);
+    //     return () => {
+    //         window.removeEventListener('click', handleClickOutside);
+    //     }
+    // }, [editId]);
+
     useEffect(() => {
         if (data && data.getCustomerRegister) {
             setPersonalDetails({
@@ -293,7 +309,41 @@ function Myaccount() {
     }
     console.log("editId------", editId);
 
+    const cancelAddressForm = () => {
+        setShowShippingData(false)
+        setShippingDetailsError({
+            firstName: "",
+            lastName: "",
+            email: "",
+            phoneNo: "",
+            address: "",
+            district: "",
+            state: "",
+            pincode: "",
+            country: ""
+        })
+    }
+    const handleAddNewAddressBtn = () => {
+        setShippingDetails({
+            firstName: "",
+            lastName: "",
+            email: "",
+            phoneNo: "",
+            address: "",
+            district: "",
+            state: "",
+            pincode: "",
+            country: ""
+        })
+        setEditId('')
+        if (!showShippingData) {
+            setShowShippingData(true)
+        }
+        else {
+            setShowShippingData(false)
+        }
 
+    }
     return (
         <>
             <div>
@@ -356,15 +406,15 @@ function Myaccount() {
                             </div>
                         </form>
                     </div>
-                    <div>
-                        <div className="flex gap-3" onClick={() => setShowShippingData(true)}>
-                            <FontAwesomeIcon icon={faPlus} className="mt-1 cursor-pointer text-blue-500" />
-                            <h4 className="cursor-pointer text-blue-500 font-medium">Add New Address</h4>
-                        </div>
+                    {/* <div className="border border-solid border-green-400 flex hover:bg-green-400 hover:text-white justify-center w-52 items-center py-1.5  rounded-sm"> */}
+                    <div className="border border-solid gap-3 group border-green-400 flex hover:cursor-pointer hover:bg-green-400 hover:text-white justify-center w-52 items-center py-1.5  rounded-sm" onClick={handleAddNewAddressBtn}>
+                        <FontAwesomeIcon icon={faPlus} className="text-green-400 group-hover:text-white" />
+                        <h4 className="font-normal text-green-400 group-hover:text-white">Add New Address</h4>
                     </div>
+                    {/* </div> */}
                     <div className="mt-5" >
                         <form onSubmit={handleShipppingDetails} style={{ display: showShippingData ? "block" : "none" }}>
-                            <div className={`grid justify-start p-5 w-7/12 gap-4 bg-white border border-solid ${showShippingData ? 'border-gray-200 border border-solid' : 'border-green-300 border-2 border-solid'} rounded-md`}>
+                            <div className={`${editId ? 'absolute inset-x-60 inset-y-28 h-screen shadow-xl' : ''} grid justify-start p-5 w-7/12 gap-4 bg-white border-green-300 border border-solid rounded-md`}>
                                 <div className="flex justify-start items-center gap-3">
                                     <FontAwesomeIcon icon={faShippingFast} className="text-green-400" />
                                     <h4 className="text-gray-700 text-base font-normal">Address</h4>
@@ -431,48 +481,44 @@ function Myaccount() {
                                     </div>
                                 </div>
                                 <div className="flex justify-start items-center gap-4">
-                                    <span className="border border-gray-200 hover:border-red-300 hover:text-red-400 h-9 flex justify-center items-center p-2 rounded text-gray-400 cursor-pointer" onClick={() => setShowShippingData(false)}>Cancel</span>
+                                    <span className="border border-gray-200 hover:border-red-300 hover:text-red-400 h-9 flex justify-center items-center p-2 rounded text-gray-400 cursor-pointer" onClick={cancelAddressForm}>Cancel</span>
                                     <button className={`border border-blue-400 h-9 flex justify-center items-center p-2 rounded text-blue-400 hover:text-white hover:bg-[#45BA76] hover:border-[#45BA76]`} type="submit">{editId ? "Update" : "Save"}</button>
                                 </div>
                             </div>
                         </form>
                     </div>
-                    <div>
-                        <div>
-                            <div>{addressesCustomer.map((address, index) => {
-                                return (
-                                    <div className="flex justify-between border border-solid bg-white rounded-md my-4 p-3 w-7/12" key={index}>
-                                        <div>
-                                            <div className="flex gap-2">
-                                                <p className="text-gray-600">{address.firstName}</p>
-                                                <p className="text-gray-400 border border-gray-200 bg-gray-300 px-1 text-sm">Home</p>
-                                                <p className="text-gray-600">{address.phoneNo}</p>
-                                            </div>
-                                            <div className="flex gap-2 py-2">
-                                                <p className="text-gray-500">{address.address},</p>
-                                                <p className="text-gray-500">{address.district},</p>
-                                                <p className="text-gray-500">{address.state} - </p>
-                                                <p className="text-gray-500">{address.pincode}</p>
-                                            </div>
+
+                    <div className="mb-20">
+                        {addressesCustomer.map((address, index) => {
+                            return (
+                                <div className="flex justify-between border border-solid bg-teal-50 hover:border-teal-200 rounded-md my-4 p-3 w-7/12" key={index}>
+                                    <div>
+                                        <div className="flex gap-2">
+                                            <p className="text-gray-600">{address.firstName}</p>
+                                            <p className="text-gray-400 border border-gray-200 bg-gray-300 px-1 text-sm">Home</p>
+                                            <p className="text-gray-600">{address.phoneNo}</p>
                                         </div>
-                                        <div className="flex">
-                                            {editDelete === address._id && (
-                                                <div>
-                                                    <div className="grid pr-4 pt-1 gap-2">
-                                                        <button onClick={() => editAddress(address._id)} className="border rounded-md w-16 text-gray-600">Edit</button>
-                                                        <button onClick={() => removeAddress(address._id)} className="border rounded-md w-16 text-gray-600">Delete</button>
-                                                    </div>
-                                                </div>
-                                            )}
-
-
-                                            <FontAwesomeIcon icon={faEllipsisVertical} onClick={() => setEditDelete(editDelete === address._id ? null : address._id)} className="text-gray-500 cursor-pointer ml-auto" />
+                                        <div className="flex gap-2 py-2">
+                                            <p className="text-gray-500">{address.address},</p>
+                                            <p className="text-gray-500">{address.district},</p>
+                                            <p className="text-gray-500">{address.state} - </p>
+                                            <p className="text-gray-500">{address.pincode}</p>
                                         </div>
                                     </div>
-                                )
-                            })}</div>
-                        </div>
-                    </div>
+                                    <div className="flex">
+                                        {editDelete === address._id && (
+                                            <div className="grid gap-2 bg-teal-50 items-center mr-3 px-2 rounded-md shadow-sm hover:shadow-xl border border-solid border-green-100">
+                                                <FontAwesomeIcon icon={faEdit} onClick={() => { editAddress(address._id), setEditDelete(false) }} className="text-green-400 hover:cursor-pointer" />
+                                                <FontAwesomeIcon icon={faTrash} onClick={() => { removeAddress(address._id), setEditDelete(false) }} className="text-red-400 hover:cursor-pointer" />
+                                                {/* <button onClick={() => editAddress(address._id)} className="border rounded-md w-16 text-gray-600">Edit</button>
+                                                <button onClick={() => removeAddress(address._id)} className="border rounded-md w-16 text-gray-600">Delete</button> */}
+                                            </div>
+                                        )}
+                                        <FontAwesomeIcon icon={faEllipsisVertical} onClick={() => setEditDelete(editDelete === address._id ? null : address._id)} className="actionIcon text-gray-500 cursor-pointer ml-auto hover:text-teal-500" />
+                                    </div>
+                                </div>
+                            )
+                        })}</div>
                 </div>
             </div >
         </>

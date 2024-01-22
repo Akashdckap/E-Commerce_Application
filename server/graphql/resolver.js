@@ -60,10 +60,7 @@ const resolvers = {
             const personDetails = await newOrders.find(
                 { "personalDetails.customerId": userId },
                 { "personalDetails": 1, totalPrice: 1, createdAt: 1 }
-            )
-            // const personDetailsArray = await personDetails.toArray();
-
-            // console.log("personDetails-----------",personDetails);
+            ) 
             const formatCreateTime = personDetails.map((orderPersonal) => {
                 const { createdAt, ...rest } = orderPersonal._doc
                 return {
@@ -79,6 +76,14 @@ const resolvers = {
             });
             // console.log(formatCreateTime);
             return formatCreateTime;
+            // const customerTotalPrice = await newOrders.findOne({ "totalPrice": new mongoose.Types.ObjectId(userId) })
+            // return customerOrders.orderedProducts;
+            // return (customerOrders.totalPrice, customerOrders.totalPrice)
+            // console.log("customerOrders-------------", customerOrders);
+        },
+        getGuestOrders: async () => {
+            const guestOrders = await newOrders.find({ "personalDetails.customerId": "" });
+            return guestOrders
         },
         getAllAdmins: async () => {
             return await (admins.find({}));

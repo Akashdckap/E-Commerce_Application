@@ -335,3 +335,23 @@ export const GET_PERSONAL_DETAILS_ORDER = gql`
         }
     }
 `
+export const GET_GUEST_ORDERS = gql`
+    query {
+        getCustomerOrders{
+            _id
+            orderedProducts{
+            productID,
+            productName,
+            description,
+            category,
+            brand,
+            color,
+            weight,
+            price
+            quantity,
+            expandedPrice,
+            }
+            totalPrice
+    }
+    }
+`

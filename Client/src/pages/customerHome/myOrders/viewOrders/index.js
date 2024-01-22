@@ -18,6 +18,8 @@ export default function ViewOrders() {
     // console.log("orderedProducts--------", orderedList && orderedList.orderedProducts);
     return (
         <>
+            <div className='flex justify-between items-center px-4 mx-28 py-5 '>
+                <h1 className='text-amber-600 text-xl'>Your Products (<span className='text-slate-600'>{orderedList && orderedList.orderedProducts.length}</span>)</h1>
             {/* <div className='flex justify-between items-center px-4 mx-28 py-5 '>
                 <h1 className='text-amber-600 text-xl'>Your Orders (<span className='text-slate-600'>{orderedList && orderedList.orderedProducts.length}</span>)</h1>
                 <Link href={'/customerHome/myOrders'} className="flex justify-start items-center gap-2">

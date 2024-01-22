@@ -26,10 +26,10 @@ export default function UserPlaceOrder() {
 
     const [deleteCustomerCartData] = useMutation(DELETE_CUSTOMER_CART_DATA)
     const [createOrders] = useMutation(ORDER_PRODUCT)
-    const removeCustomerCartData = async (productId) => {
+    const removeCustomerCartData = async (productId, productName) => {
         try {
             await deleteCustomerCartData({ variables: { cartId: productId, userId: getCustomerLocalData.customerId } })
-            toast.success("product successfully removed from your cart", {
+            toast.success(`${productName} removed from your cart`, {
                 position: 'top-right',
                 autoClose: 3000,
             })
@@ -54,7 +54,7 @@ export default function UserPlaceOrder() {
             const { __typename: shippingTypename, _id: shippingId, ...shippingData } = selectedShippingAddress
 
             if (!selectBillingId) {
-                toast.error("Please select a billing address.", {
+                toast.error("Please select a billing address or .", {
                     position: 'top-right',
                     autoClose: 3000,
                 })

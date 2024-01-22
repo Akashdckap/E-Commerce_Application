@@ -23,12 +23,16 @@ export default function cartItems() {
     const dispatch = useDispatch()
     const handleRemoveDataFromLocal = (itemId, itemName) => {
         dispatch(removeCartdata(itemId));
-        toast.success(`Successfully removed ${itemName} from your cart`, {
+        toast.success(`${itemName} removed  from your cart`, {
             position: 'top-right',
             autoClose: 3000,
         });
     }
     const handleRemoveAllItems = () => {
+        toast.success("Your cart is currently empty now.", {
+            position: 'top-right',
+            autoClose: 3000,
+        });
         dispatch(removeAllCartDatas())
     };
 
@@ -48,21 +52,35 @@ export default function cartItems() {
     const totalExpandedAmount = expandedAmountarray.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
 
     const handleIncrementCount = (productId) => {
+        const incrementData = cartProducts.find((cart) => cart._id === productId)
+        toast.success(`You increased the quantity of the ${incrementData.productName} to ${incrementData.quantity + 1}.`, {
+            position: 'top-center',
+            autoClose: 3000,
+        })
         dispatch(incrementProductCount({ productId }))
     }
 
     const handleDecrementCount = (productId) => {
-        dispatch(decrementProductCount({ productId }))
+        const decrementData = cartProducts.find((cart) => cart._id === productId)
+        toast.success(`You decreased the quantity of the ${decrementData.productName} to ${decrementData.quantity - 1}.`, {
+            position: 'top-center',
+            autoClose: 3000,
+        });
+        dispatch(decrementProductCount({ productId }));
     }
 
     const [deleteCustomerCartData] = useMutation(DELETE_CUSTOMER_CART_DATA)
     const [deleteAllCustomerCartData] = useMutation(REMOVE_ALL_CUSTOMER_CART_DATA)
     const [incrementCustomerCartQty] = useMutation(INCREMENT_CUSTOMER_PRODUCT_QTY)
     const [decrementCustomerCartQty] = useMutation(DECREMENT_CUSTOMER_PRODUCT_QTY)
+
     const removeAllCustomerCartData = async () => {
         try {
-            await deleteAllCustomerCartData({ variables: { userId: loginData.customerId } })
-            // notification.error({ description: "product successfully removed from your cart" })
+            await deleteAllCustomerCartData({ variables: { userId: loginData.customerId } });
+            toast.success("Your cart is currently empty now.", {
+                position: 'top-right',
+                autoClose: 3000,
+            });
             refetchCustomerCartData();
         }
         catch (error) {
@@ -84,7 +102,11 @@ export default function cartItems() {
     }
     const handleIncrementQuantity = async (productId) => {
         try {
-            await incrementCustomerCartQty({ variables: { productId: productId, userId: loginData.customerId } })
+            const { data } = await incrementCustomerCartQty({ variables: { productId: productId, userId: loginData.customerId } })
+            toast.success(`You increased the quantity of the ${data.incrementCustomerProductQty.productName} to ${data.incrementCustomerProductQty.quantity}.`, {
+                position: 'top-center',
+                autoClose: 3000,
+            })
             refetchCustomerCartData();
         }
         catch (error) {
@@ -93,7 +115,11 @@ export default function cartItems() {
     }
     const handleDecrementQuantity = async (productId) => {
         try {
-            await decrementCustomerCartQty({ variables: { productId: productId, userId: loginData.customerId } })
+            const { data } = await decrementCustomerCartQty({ variables: { productId: productId, userId: loginData.customerId } })
+            toast.success(`You reduced the quantity of the ${data.decrementCustomerProductQty.productName} to ${data.decrementCustomerProductQty.quantity}.`, {
+                position: 'top-center',
+                autoClose: 3000,
+            })
             refetchCustomerCartData();
         }
         catch (error) {

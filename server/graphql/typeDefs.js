@@ -303,8 +303,11 @@ const typeDefs = gql` #graphql
         getCustomerRegister(id: ID!): customerRegister
         getShippingAddress(userId:ID!, editAddressId:ID!): shippingAddress
         getCustomerCartData(userId: ID!): [customerCartData]
-        getCustomerOrders(userId:ID!): [customerOrders]
+        getCustomerOrders(userId:ID!): [customerOrders
+
+        getGuestOrders:[customerOrders]
         getCustomerPersonalDetails(userId: ID!): [customerPersonalDetails]
+
         getAllAdmins:[admins]
         getAllProductsData: [products]
         getAllProducts(page:Int!,pageSize:Int!):[products!]!
