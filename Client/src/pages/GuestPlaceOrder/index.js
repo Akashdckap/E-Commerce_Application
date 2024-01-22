@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useMutation, useQuery } from "@apollo/client";
 import { ORDER_PRODUCT } from "../../../Grahpql/mutation";
 import { removeCartdata, storeShippingAddress, storePersonalDetails, updatePersonalDetails, updateShippingAddress, updateBillingAddress, storeBillingAddress } from "@/Reducer/productReducer";
+import { useRouter } from "next/router";
 
 
 export default function placeOrder() {
@@ -23,6 +24,7 @@ export default function placeOrder() {
     const [showBillingData, setShowBillingData] = useState(true);
 
     const [isChecked, setIsChecked] = useState(false);
+    const router = useRouter();
 
     const [personalDetails, setPersonalDetails] = useState({
         name: "",
@@ -288,7 +290,7 @@ export default function placeOrder() {
     }
     const handleRemoveDataFromLocal = (itemId, itemName) => {
         dispatch(removeCartdata(itemId))
-        toast.success(`Successfully removed ${itemName} from your cart`, {
+        toast.success(`${itemName} removed from your cart`, {
             position: 'top-right',
             autoClose: 3000
         })
@@ -365,10 +367,6 @@ export default function placeOrder() {
                 shippingAddress: getShippingData,
                 billingAddress: getBillingData
             }
-            console.log("orderedInputData-----------", orderedInputData);
-            // console.log("personalInfo-------------------------", personalInfo);
-            if (!orderedInputData.orderedProducts.length || !orderedInputData.personalDetails.length || !orderedInputData.shippingAddress.length || !orderedInputData.billingAddress.length) {
-            }
             if (getCartData.length === 0 || getBillingData.length === 0 || getShippingData.length === 0 || getPersonalData.length === 0) {
                 toast.error("Incomplete order data. Please fill in all required information.", {
                     position: 'top-right',
@@ -386,12 +384,14 @@ export default function placeOrder() {
                     autoClose: 3000
                 })
                 notification.success({ message: "Order Submission error" });
+                router.push("/GuestPlaceOrder")
             }
             if (orderSubmitData) {
                 toast.success("Order Submitted", {
                     position: 'top-right',
                     autoClose: 3000
                 })
+                router.push("/orderSubmitted")
             }
             return { orderSubmitData, SubmitOrderError }
         }

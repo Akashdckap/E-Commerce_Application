@@ -72,7 +72,7 @@ export default function customerRegister() {
         if (validateRegisterForm()) {
             try {
                 await (registerCustomer({ variables: { customerInput: registerForm } }));
-                toast.error("Registered successfully", {
+                toast.success("Registered successfully", {
                     position: 'top-right',
                     autoClose: 3000,
                 })

@@ -29,7 +29,7 @@ export default function index() {
 
     const { data: productData, error: productError, loading: productLoading } = useQuery(GET_ALL_PRODUCTS_DATA);
 
-
+    console.log("allAddToCartId-----------",allAddToCartId);
     const [parseIds, { data: getSingleCartData, error: getSingleCartError, loading: getSingleCartLoading }] = useLazyQuery(GET_ADD_TO_CART_SINGLE_PRODUCT_DATA, {
         variables: { ids: allAddToCartId }
     })
@@ -78,17 +78,29 @@ export default function index() {
         }
     }
 
-    const handleAddtoCartBtn = async (getId) => {
+    const handleAddtoCartBtn = async (getId, productName) => {
         parseIds();
         if (getId) {
             setAddToCartId(getId)
-            toast.success("Successfully added to cart", {
-                position: 'top-center',
-                autoClose: 3000,
-            })
+            console.log("firstTime-----------", allAddToCartId);
+            // const cartData = getCartData.find((cart) => cart._id === getId)
+            // if (cartData === undefined) {
+            //     console.log("firstTime-----------", allAddToCartId);
+            //     toast.success(`Item added to your cart: ${productName}`, {
+            //         position: 'top-center',
+            //         autoClose: 3000,
+            //     })
+            // }
+            // else {
+            //     console.log("already-----------", allAddToCartId);
+                // toast.success(`You increased the quantity of the ${cartData.productName} to ${cartData.quantity}.`, {
+                //     position: 'top-center',
+                //     autoClose: 3000,
+                // })
+            // }
         }
         else {
-            toast.error("Not added to the cart", {
+            toast.error("Cart is not added Successfully", {
                 position: 'top-center',
                 autoClose: 3000,
             })
@@ -136,15 +148,29 @@ export default function index() {
         return item.productName.toLowerCase().includes(searchText.toLowerCase());
     });
 
-    const handleRemoveDataFromLocal = (itemId) => {
+    const handleRemoveDataFromLocal = (itemId, productName) => {
         dispatch(removeCartdata(itemId))
+        toast.success(`${productName} removed from your cart`, {
+            position: 'top-right',
+            autoClose: 3000,
+        });
     }
 
     const handleIncrementCount = (productId) => {
+        const incrementData = getCartData.find((cart) => cart._id === productId)
+        toast.success(`You increased the quantity of the ${incrementData.productName} to ${incrementData.quantity + 1}.`, {
+            position: 'top-center',
+            autoClose: 3000,
+        })
         dispatch(incrementProductCount({ productId }))
     }
 
     const handleDecrementCount = (productId) => {
+        const decrementData = getCartData.find((cart) => cart._id === productId)
+        toast.success(`You decreased the quantity of the ${decrementData.productName} to ${decrementData.quantity - 1}.`, {
+            position: 'top-center',
+            autoClose: 3000,
+        })
         dispatch(decrementProductCount({ productId }))
     }
 
@@ -190,7 +216,11 @@ export default function index() {
 
     const removeAllCustomerCartData = async () => {
         try {
-            await deleteAllCustomerCartData({ variables: { userId: loginData.customerId } })
+            await deleteAllCustomerCartData({ variables: { userId: loginData.customerId } });
+            toast.success("Your cart is currently empty now.", {
+                position: 'top-right',
+                autoClose: 3000,
+            });
             refetchCustomerCartData();
         }
         catch (error) {
@@ -198,6 +228,10 @@ export default function index() {
         }
     }
     const removeAllCartData = () => {
+        toast.success("Your cart is currently empty now.", {
+            position: 'top-right',
+            autoClose: 3000,
+        });
         dispatch(removeAllCartDatas())
         setCart(false)
     }
@@ -223,8 +257,7 @@ export default function index() {
                                         loginData.token ? (customerCartData && customerCartData.getCustomerCartData.length || 0) : (getCartData.length)
                                     }
                                 </p>
-                                    <FontAwesomeIcon onClick={() => setCart(true)} icon={faShoppingCart} className='text-gray-700 hover:text-gray-600 text-2xl cursor-pointer' />
-                                {/* <SolidUser className="w-6 h-6" /> */}
+                                <FontAwesomeIcon onClick={() => setCart(true)} icon={faShoppingCart} className='text-gray-700 hover:text-gray-600 text-2xl cursor-pointer' />
                             </div>
                             <div>
                                 <FontAwesomeIcon icon={faUserCircle} className='text-3xl text-gray-500 hover:cursor-pointer ' onClick={() => !openProfile ? setOpenProfile(true) : setOpenProfile(false)} />
@@ -247,7 +280,7 @@ export default function index() {
                                 </div>
                             </Link>
                             {/* <Link href={`/customerHome/myOrders/${loginData.customerId}`}> */}
-                            <div onClick={myOrders} className='flex justify-around items-center w-44 bg-white p-2 rounded-md hover:cursor-pointer'>
+                            <div onClick={myOrders} className='flex border border-solid hover:border-emerald-400 justify-around items-center w-44 bg-white p-2 rounded-md hover:cursor-pointer'>
                                 <FontAwesomeIcon icon={faShoppingBag} className='text-emerald-400' />
                                 <span className="text-emerald-400">My Orders</span>
                                 <FontAwesomeIcon icon={faGreaterThan} className='text-emerald-400 font-mono' />
@@ -258,11 +291,16 @@ export default function index() {
                                 <span>LogOut</span>
                             </div>
                         </div> :
-                            <div className='grid justify-center items-center gap-3 z-10 bg-gray-200 absolute top-24 right-5 py-3 pl-10 w-56 rounded-sm shadow-lg' >
+                            <div className='z-10 bg-gray-200 grid gap-y-3 items-center justify-center  absolute top-24 right-5 py-3 w-56 rounded-sm shadow-lg' >
+                                <div onClick={myOrders} className='flex border border-solid hover:border-emerald-400 justify-around items-center w-44 bg-white p-2 rounded-md hover:cursor-pointer'>
+                                    <FontAwesomeIcon icon={faShoppingBag} className='text-emerald-400' />
+                                    <span className="text-emerald-400">My Orders</span>
+                                    <FontAwesomeIcon icon={faGreaterThan} className='text-emerald-400 font-mono' />
+                                </div>
                                 <Link href={`/customerLogin`}>
-                                    <div className='flex justify-around items-center w-44 bg-white p-2 rounded-md hover:cursor-pointer'>
+                                    <div className='flex justify-around items-center w-44 bg-white p-2 border border-solid hover:border-emerald-400 rounded-md hover:cursor-pointer'>
                                         <FontAwesomeIcon icon={faShoppingBag} className='text-emerald-400' />
-                                        <span className="text-gray-400">Login</span>
+                                        <span className="text-emerald-400">Login</span>
                                         <FontAwesomeIcon icon={faGreaterThan} className='text-emerald-400 font-mono' />
                                     </div>
                                 </Link>
@@ -301,7 +339,7 @@ export default function index() {
                                                 <p>
                                                     <span className="text-3xl font-bold text-slate-900">₹{item.price}</span>
                                                 </p>
-                                                <button onClick={() => { loginData.token ? handleAddToCartToken(item._id) : handleAddtoCartBtn(item._id) }} id={item._id} className="cursor-pointer flex items-center rounded-md bg-slate-900 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-blue-300">
+                                                <button onClick={() => { loginData.token ? handleAddToCartToken(item._id, item.productName) : handleAddtoCartBtn(item._id, item.productName) }} id={item._id} className="cursor-pointer flex items-center rounded-md bg-slate-900 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-blue-300">
                                                     <svg xmlns="http://www.w3.org/2000/svg" className="mr-2 h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                                                         <path strokeLinecap="round" strokeLinejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                                                     </svg>
