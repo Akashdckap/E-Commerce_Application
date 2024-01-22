@@ -38,7 +38,7 @@ export default function ProductDetails() {
                         </div>
                         <table className="border border-gray-400 rounded-md hover:border-green-300">
                             <thead>
-                                <tr className="border border-gray-300 rounded-md hover:border-green-300 border-solid bg-slate-300  ">
+                                <tr className="border border-gray-300 rounded-md hover:border-green-300 border-solid bg-slate-300">
                                     <th className="px-5 py-2 text-blue-400">S.No</th>
                                     <th className="px-5 py-2 text-blue-400">Product Name</th>
                                     <th className="px-5 py-2 text-blue-400">Category</th>
