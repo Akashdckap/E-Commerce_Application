@@ -68,7 +68,7 @@ export default function Login() {
         });
         delete errors[name]
     };
-    const [createAdmins, { data, loading, error }] = useMutation(CREATE_ADMINS)
+    const [createAdmins] = useMutation(CREATE_ADMINS)
     const handleSubmitRegister = async (e) => {
         e.preventDefault()
 
@@ -117,7 +117,7 @@ export default function Login() {
                     </h2>
                 </div>
                 <div className={`mt-10 sm:mx-auto sm:w-full sm:max-w-sm`}>
-                    {error && <p>Error: {error.message}</p>}
+                    {/* {error && <p>Error: {error.message}</p>} */}
                     <form className="space-y-6" onSubmit={handleSubmit} >
                         <div>
                             <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
@@ -177,7 +177,7 @@ export default function Login() {
                         </h2>
                     </div>
                     <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-                        {error && <p>Error: {error.message}</p>}
+                        {/* {error && <p>Error: {error.message}</p>} */}
                         <form className="space-y-6" onSubmit={handleSubmitRegister} >
                             <div>
                                 <label htmlFor="name" className="block text-sm font-medium leading-6 text-gray-900">
