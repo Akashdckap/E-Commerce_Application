@@ -143,11 +143,10 @@ export default function index() {
     //         router.push('/customerHome')
     //     }
 
-
     const filteredList = getProductData.filter((item) => {
         return item.productName.toLowerCase().includes(searchText.toLowerCase());
     });
-
+    // console.log(getProductData,"--------------");
     const handleRemoveDataFromLocal = (itemId, productName) => {
         dispatch(removeCartdata(itemId))
         toast.success(`${productName} removed from your cart`, {
@@ -279,13 +278,11 @@ export default function index() {
                                     <FontAwesomeIcon icon={faGreaterThan} className='text-orange-400 font-mono' />
                                 </div>
                             </Link>
-                            {/* <Link href={`/customerHome/myOrders/${loginData.customerId}`}> */}
                             <div onClick={myOrders} className='flex border border-solid hover:border-emerald-400 justify-around items-center w-44 bg-white p-2 rounded-md hover:cursor-pointer'>
                                 <FontAwesomeIcon icon={faShoppingBag} className='text-emerald-400' />
                                 <span className="text-emerald-400">My Orders</span>
                                 <FontAwesomeIcon icon={faGreaterThan} className='text-emerald-400 font-mono' />
                             </div>
-                            {/* </Link> */}
                             <div onClick={logOutUser} className='border cursor-pointer border-solid  flex justify-between w-44 items-center px-4 py-1 text-red-400 hover:text-white hover:bg-red-400 border-red-400 rounded-md'>
                                 <FontAwesomeIcon icon={faSignOut} />
                                 <span>LogOut</span>
