@@ -8,41 +8,51 @@ import { toast } from "react-toastify";
 export default function OrderDetails() {
     const [pageSize, setPageSize] = useState(10)
     const [currentPage, setCurrentPage] = useState(1)
-    const [countOrderData, setCountOrderData] = useState(null)
-    const [totalPages, setTotalPages] = useState(null);
-    // const [balance, setBalance] = useState(0);
+    const [totalPages, setTotalPages] = useState();
+    const [orderedData, setOrderedData] = useState([]);
 
-    const { data: orderedProducts, loading: dataLoading, error: dataError } = useQuery(GET_ALL_ORDER_DATA_WITH_PAGE, {
+    const { data: orderedProducts, loading: dataLoading, error: dataError, fetchMore } = useQuery(GET_ALL_ORDER_DATA_WITH_PAGE, {
         variables: { page: currentPage, pageSize: pageSize }
-    })
-    // console.log(orderedProducts,"------prop")
-    // console.log(orderedProducts.getAllOrderDatas,"------------------order")
-    // const orderProp = orderedProducts.getAllOrderDatas.map((items)=>{
-    //     console.log(items.personalDetails)
-    // })
+    });
+
     const { data: orderCount, loading: CountLoading, error: countError } = useQuery(ORDER_COUNT)
 
     const nextPage = () => {
         setCurrentPage(currentPage + 1);
+        fetchMore({
+            variables: { page: currentPage + 1, pageSize }
+        })
     };
 
     const prevPage = () => {
         if (currentPage > 1) {
             setCurrentPage(currentPage - 1)
         }
+        fetchMore({
+            variables: { page: currentPage - 1, pageSize },
+        });
     };
+
     const calculateSI = (index) => {
         return (currentPage - 1) * pageSize + index + 1;
     };
+
     useEffect(() => {
-        if (orderedProducts && orderedProducts.getAllOrderDatas && orderCount && orderCount.getOrderCount) {
-            setCountOrderData(orderCount.getOrderCount)
-            setTotalPages(Math.ceil(countOrderData / pageSize));
+        if (orderCount && !CountLoading) {
+            const totalItemCount = orderCount.getOrderCount || 0;
+            setTotalPages(Math.ceil(totalItemCount / pageSize));
         }
-    }, [orderedProducts, countOrderData, orderCount, pageSize, currentPage]);
+        if (orderedProducts && !dataLoading) {
+            setOrderedData(orderedProducts.getAllOrderDatas)
+        }
+
+        if (currentPage > totalPages) {
+            setCurrentPage(totalPages)
+        }
+    }, [orderCount, orderedProducts, orderedData, dataLoading, totalPages]);
 
     const startItem = (currentPage - 1) * pageSize + 1;
-    const endItem = Math.min(currentPage * pageSize, countOrderData);
+    const endItem = Math.min(currentPage * pageSize, orderCount && orderCount.getOrderCount);
 
     return (
         <>
@@ -67,7 +77,7 @@ export default function OrderDetails() {
                             </thead>
                             <tbody>
                                 {
-                                    orderedProducts && orderedProducts.getAllOrderDatas && orderedProducts.getAllOrderDatas.map((entireData, index) => {
+                                    orderedData.map((entireData, index) => {
                                         return (
                                             <tr className="border hover:bg-gray-100 hover:rounded-t-full transition-all duration-300 ease-in-out" key={index}>
                                                 <td className="text-center py-3.5 text-gray-700 font-medium" role="cell">{calculateSI(index)}</td>
@@ -86,7 +96,7 @@ export default function OrderDetails() {
                     </div>
                     <div className='flex justify-between pr-4 items-center pt-5'>
                         <div>
-                            <p className='text-gray-700 text-base pl-4'>Showing {startItem} to {endItem} of {countOrderData} results</p>
+                            <p className='text-gray-700 text-base pl-4'>Showing {startItem} to {endItem} of {orderCount && orderCount.getOrderCount} results</p>
                         </div>
                         <div className="flex justify-between items-center gap-8">
                             <div className="border border-solid border-teal-600 rounded-md flex justify-between items-center h-9 w-32 gap-3 p-2">
@@ -100,11 +110,11 @@ export default function OrderDetails() {
                                 </select>
                             </div>
                             <div className='flex gap-4 items-center justify-center'>
-                                <FontAwesomeIcon icon={faLessThan} onClick={prevPage} disabled={currentPage === 1} className='hover:text-white border border-gray-300 hover:bg-black focus:outline-none focus:ring-4 focus:ring-gray-200 font-semibold rounded-lg text-sm px-2.5 py-1.5 dark:bg-transparent dark:text-blue-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700' style={{ cursor: currentPage <= 1 ? 'not-allowed' : 'pointer' }} />
+                                <button disabled={currentPage === 1}><FontAwesomeIcon icon={faLessThan} onClick={prevPage} className='hover:text-white border border-gray-300 hover:bg-black focus:outline-none focus:ring-4 focus:ring-gray-200 font-semibold rounded-lg text-sm px-2.5 py-1.5 dark:bg-transparent dark:text-blue-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700' style={{ cursor: currentPage == 1 ? 'not-allowed' : 'pointer', opacity: currentPage === 1 ? 0.5 : 1, }} /></button>
                                 <span className='bg-cyan-400 border border-teal-500 hover:bg-cyan-300 text-white font-bold py-1.5 px-3.5 rounded-full'>{currentPage}</span>
                                 {/* <input value={currentPage} type="number" onChange={(e) => setCurrentPage(parseInt(e.target.value, currentPage))} className='bg-cyan-400 flex justify-center items-center outline-0 border border-teal-500 hover:bg-cyan-300 text-white font-bold py-1.5 px-3.5 rounded-full' /> */}
                                 {/* {console.log("currentPage-------------------------", currentPage)} */}
-                                <button disabled={currentPage === totalPages}><FontAwesomeIcon onClick={nextPage} icon={faGreaterThan} className='hover:text-white border border-gray-300 focus:outline-none focus:ring-4 focus:ring-gray-200 font-semibold rounded-lg text-sm px-2.5 py-1.5 dark:bg-transparent dark:text-blue-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700' style={{ cursor: currentPage === totalPages ? 'not-allowed' : 'pointer' }} /></button>
+                                <button disabled={currentPage === totalPages}><FontAwesomeIcon onClick={nextPage} icon={faGreaterThan} className='hover:text-white border border-gray-300 focus:outline-none focus:ring-4 focus:ring-gray-200 font-semibold rounded-lg text-sm px-2.5 py-1.5 dark:bg-transparent dark:text-blue-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700' style={{ cursor: currentPage === totalPages ? 'not-allowed' : 'pointer', opacity: currentPage === totalPages ? 0.5 : 1, }} /></button>
                             </div>
                         </div>
                     </div>

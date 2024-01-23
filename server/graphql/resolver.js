@@ -162,10 +162,13 @@ const resolvers = {
             return order;
         },
         getAllOrderDatas: async (_, { page, pageSize }) => {
-            const skip = (page - 1) * pageSize;
-            const orderDatas = await (newOrders.find({}).skip(skip).limit(pageSize));
-            const formattedOrders = orderDatas.map(order => {
-                return {
+            try {
+                // if (page < 1) {
+                //     throw new Error("Invalid pageSize. It must be 1 or greater.");
+                // }
+                const skip = (page - 1) * pageSize;
+                const orderDatas = await newOrders.find({}).skip(skip).limit(pageSize);
+                const formattedOrders = orderDatas.map(order => ({
                     ...order._doc,
                     OrderTime: order.createdAt.toLocaleString('en-US', {
                         month: 'short',
@@ -174,10 +177,14 @@ const resolvers = {
                         minute: 'numeric',
                         hour12: true,
                     }),
-                };
-            });
-            return formattedOrders;
-
+                }));
+                // console.log("formattedOrders-------------",formattedOrders);
+                return formattedOrders;
+            }
+            catch (error) {
+                console.error("Error fetching all orders:", error);
+                throw new Error("An error occurred while fetching all orders.");
+            }
         },
 
         getOrderCount: async () => {
