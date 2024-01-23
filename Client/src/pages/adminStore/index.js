@@ -26,12 +26,7 @@ export default function AdminStore() {
     const [pageSize, setPageSize] = useState(5)
     const [currentPage, setCurrentPage] = useState(1)
     const [getProductData, setgetProductData] = useState([])
-
-    const [getAllProductdata, getAllProductData] = useState([])
-    const [countProductData, getCountProductData] = useState()
-    // const pageSize = 5;
-    const [totalPages, setTotalPages] = useState(null);
-    const [deletePopUpOpen, setdeletePopUpOpen] = useState(false);
+    const [totalPages, setTotalPages] = useState();
     const [image, setImage] = useState('');
 
     const [productData, setProductData] = useState({
@@ -56,13 +51,31 @@ export default function AdminStore() {
     function validate() {
         let newErrors = { ...productErrors };
         let isVaild = true;
-        if (productData.productName === "" && productData.category === "" && productData.brand === "" && productData.price === "" && productData.weight === "" && productData.color === "" && productData.description === "") {
+        if (productData.productName === "") {
             newErrors.productName = 'product name is required';
+            isVaild = false;
+        }
+        if (productData.category === "") {
             newErrors.category = 'category is required';
+            isVaild = false;
+        }
+        if (productData.brand === "") {
             newErrors.brand = 'brand is required';
+            isVaild = false;
+        }
+        if (productData.price === "") {
             newErrors.price = 'price is required';
+            isVaild = false;
+        }
+        if (productData.weight === "") {
             newErrors.weight = 'weight is required';
+            isVaild = false;
+        }
+        if (productData.color === "") {
             newErrors.color = 'color is required';
+            isVaild = false;
+        }
+        if (productData.description === "") {
             newErrors.description = 'description is required';
             isVaild = false;
         }
@@ -83,46 +96,58 @@ export default function AdminStore() {
         const file = e.target.files[0];
     }
 
-    const [file, setFile] = useState(null);
-    const [uploadFile] = useMutation(UPLOAD_FILE)
+    // const [file, setFile] = useState(null);
+    // const [uploadFile] = useMutation(UPLOAD_FILE)
 
-    const handleSingleImage = async (e) => {
-        const selectedFile = e.target.files[0];
-        // console.log("targeted-----------",selectedFile);
-        setFile(selectedFile);
-    }
-    console.log("checking file----------------", file);
-    const handleUpload = async () => {
-        // console.log("upload--------",file)
-        try {
-            if (!file) {
-                console.log("No file is here")
-            }
-            else {
-                const result = await uploadFile({
-                    variables: { file: file },
-                })
-                console.log("variables------", result.data.uploadFile.message)
-            }
+    // const handleSingleImage = async (e) => {
+    //     const selectedFile = e.target.files[0];
+    //     // console.log("targeted-----------",selectedFile);
+    //     setFile(selectedFile);
+    // }
+    // console.log("checking file----------------", file);
+    // const handleUpload = async () => {
+    //     // console.log("upload--------",file)
+    //     try {
+    //         if (!file) {
+    //             console.log("No file is here")
+    //         }
+    //         else {
+    //             const result = await uploadFile({
+    //                 variables: { file: file },
+    //             })
+    //             console.log("variables------", result.data.uploadFile.message)
+    //         }
 
-        }
-        catch (error) {
-            console.log("upload file----------------", file);
-            console.log('Error in uploading Image', error)
-        }
-    }
+    //     }
+    //     catch (error) {
+    //         // console.log("upload file----------------", file);
+    //         console.log('Error in uploading Image', error)
+    //     }
+    // }
 
-    const [createProducts, { data, loading, error }] = useMutation(CREATE_PRODUCTS)
+    const [createProducts] = useMutation(CREATE_PRODUCTS)
     const [deleteProduct] = useMutation(DELETE_PRODUCT)
-
+    const { data: getData, error: getError, loading: getLoading, fetchMore, refetch: refetchProducts } = useQuery(GET_ALL_PRODUCTS, {
+        variables: { page: currentPage, pageSize: pageSize },
+    });
     const handleProductForm = async (e) => {
         e.preventDefault()
         if (validate()) {
             try {
                 await (createProducts({ variables: { productDatas: productData } }));
+                refetchCountOfProduct();
                 toast.success("product successfully added", {
                     position: 'top-right',
                     autoClose: 3000,
+                })
+                setProductData({
+                    productName: "",
+                    category: "",
+                    brand: "",
+                    price: "",
+                    weight: "",
+                    color: "",
+                    description: ""
                 })
                 setFormOpen(false)
             }
@@ -131,59 +156,54 @@ export default function AdminStore() {
             }
         }
     }
-    const { data: getData, error: getError, loading: getLoading } = useQuery(GET_ALL_PRODUCTS, {
-        variables: { page: currentPage, pageSize: pageSize },
-    });
-    const { data: getAllData, error: getAllError, loading: getAllLoading } = useQuery(GET_ALL_PRODUCTS_DATA);
-    const { loading: getCountLoading, error: getCountError, data: getCountData } = useQuery(GET_TOTAL_PRODUCT_COUNT);
-    // const { data: orderData, loading: orderLoading, error: orderError } = useQuery(ALL_ORDERED_PRODUCTS);
 
+    const { data: getCountData, loading: getCountLoading, error: getCountError, refetch: refetchCountOfProduct } = useQuery(GET_TOTAL_PRODUCT_COUNT);
     const { data: orderCount, loading: CountLoading, error: countError } = useQuery(ORDER_COUNT)
 
     useEffect(() => {
-
-    }, [pageSize])
-    useEffect(() => {
-        if (getData && !getLoading && getAllData && !getAllLoading && getCountData) {
-            getAllProductData(getAllData.getAllProductsData);
+        if (getData && !getLoading) {
             setgetProductData(getData.getAllProducts);
-            setTotalPages(Math.ceil(countProductData / pageSize));
-            getCountProductData(getCountData.getTotalProductCount);
         }
-        if (getLoading || getCountLoading) {
-            console.log('Loading...');
+        if (getCountData && !getCountLoading) {
+            const totalItemCount = getCountData.getTotalProductCount || 0;
+            setTotalPages(Math.ceil(totalItemCount / pageSize));
         }
-        if (getError || getCountError) {
-            console.error('Error fetching data:', getError);
+        if (currentPage > totalPages) {
+            setCurrentPage(totalPages)
         }
-
-    }, [currentPage, getProductData, totalPages, getCountData, getData])
-
-    console.log("pageSize--------------------", pageSize);
+    }, [currentPage, getCountData, getData, getProductData]);
+    console.log("pageSize------", pageSize);
 
     const nextPage = () => {
         setCurrentPage(currentPage + 1);
+        fetchMore({
+            variables: { page: currentPage + 1, pageSize }
+        })
     };
 
     const prevPage = () => {
         if (currentPage > 1) {
             setCurrentPage(currentPage - 1)
+            fetchMore({
+                variables: { page: currentPage - 1, pageSize },
+            });
         }
+
     };
     const calculateSI = (index) => {
         return (currentPage - 1) * pageSize + index + 1;
     };
 
     const startItem = (currentPage - 1) * pageSize + 1;
-  
-    const endItem = Math.min(currentPage * pageSize, countProductData);
 
-    const handleDeleteProduct = async (e) => {
-        e.preventDefault()
-        const id = router.query.deleteId
+    const endItem = Math.min(currentPage * pageSize, getCountData && getCountData.getTotalProductCount);
+
+    const handleDeleteProduct = async (productId) => {
         try {
-            await deleteProduct({ variables: { id } })
-            toast.success("product successfully deleted", {
+            await deleteProduct({ variables: { id: productId } });
+            refetchProducts();
+            refetchCountOfProduct();
+            toast.success("Successfully removed the product", {
                 position: 'top-right',
                 autoClose: 3000,
             })
@@ -191,15 +211,7 @@ export default function AdminStore() {
         catch (error) {
             console.error('Error deleting item:', error);
         }
-        setdeletePopUpOpen(false)
-        router.push("/adminStore")
     }
-    const closeDeletePopUp = () => {
-        router.push("/adminStore");
-        setdeletePopUpOpen(false)
-    }
-
-
     return (
         <>
             <div className='flex justify-between p-10'>
@@ -217,11 +229,11 @@ export default function AdminStore() {
                 </div>
             </div>
             <div>
-                <div>
+                {/* <div>
                     <h1>upload File</h1>
                     <input type='file' onChange={handleSingleImage} value={setFile.filename} name='image' />
                     <button onClick={handleUpload} type='submit' className="rounded bg-blue-300 text-white-600 py-2 px-4 border border-green-700">Upload</button>
-                </div>
+                </div> */}
                 <form onSubmit={handleProductForm} style={{ display: formOpen ? 'block' : 'none' }} className='z-10 absolute bottom-25 ml-20 left-10 w-9/12 bg-emerald-100 p-4 m-auto h-auto rounded'>
                     <div className="imageContainer">
                         <input type="file" className="block w-full text-red-500
@@ -237,54 +249,6 @@ export default function AdminStore() {
                             <input type='text' value={productData.productName} onChange={handleChange} placeholder="Enter the product name..." name='productName' className="mt-2 placeholder:text-slate-400 block bg-white w-80 border border-slate-300 rounded-md py-2 pl-4 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm" />
                             {productErrors.productName ? <span className="text-red-600">{productErrors.productName}</span> : ""}
                         </div>
-                        {/* <Listbox value={selected} onChange={setSelected}>
-                            <div className="relative mt-1">
-                                <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
-                                    <span className="block truncate">{selected.name}</span>
-                                    <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-                                        <ChevronUpDownIcon
-                                            className="h-5 w-5 text-gray-400"
-                                            aria-hidden="true"
-                                        />
-                                    </span>
-                                </Listbox.Button>
-                                <Transition
-                                    as={Fragment}
-                                    leave="transition ease-in duration-100"
-                                    leaveFrom="opacity-100"
-                                    leaveTo="opacity-0"
-                                >
-                                    <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm">
-                                        {people.map((person, personIdx) => (
-                                            <Listbox.Option
-                                                key={personIdx}
-                                                className={({ active }) =>
-                                                    `relative cursor-default select-none py-2 pl-10 pr-4 ${active ? 'bg-amber-100 text-amber-900' : 'text-gray-900'
-                                                    }`
-                                                }
-                                                value={person}
-                                            >
-                                                {({ selected }) => (
-                                                    <>
-                                                        <span
-                                                            className={`block truncate ${selected ? 'font-medium' : 'font-normal'
-                                                                }`}
-                                                        >
-                                                            {person.name}
-                                                        </span>
-                                                        {selected ? (
-                                                            <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600">
-                                                                <CheckIcon className="h-5 w-5" aria-hidden="true" />
-                                                            </span>
-                                                        ) : null}
-                                                    </>
-                                                )}
-                                            </Listbox.Option>
-                                        ))}
-                                    </Listbox.Options>
-                                </Transition>
-                            </div>
-                        </Listbox> */}
                         <div>
                             <label>Category <span className='text-red-500'>*</span></label>
                             <select name="category" value={productData.category} onChange={handleChange} id='Category' className="mt-2 placeholder:text-slate-400 block bg-white w-80 border border-slate-300 rounded-md py-2 pl-5 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm">
@@ -404,7 +368,7 @@ export default function AdminStore() {
                                             {item.brand}
                                         </td>
                                         <td className="text-base px-6 py-9 text-blue-500 flex items-center justify-items-center gap-4">
-                                            <Link href={`/adminStore/${item._id}`}><FontAwesomeIcon icon={faTrash} onClick={() => setdeletePopUpOpen(true)} className='text-base text-red-400 cursor-pointer' id={item._id} /></Link>
+                                            <FontAwesomeIcon icon={faTrash} onClick={() => handleDeleteProduct(item._id)} className='text-base text-red-400 cursor-pointer' id={item._id} />
                                             <Link href={`/adminStore/editProduct/${item._id}`}><FontAwesomeIcon icon={faEdit} className='text-base text-green-400 cursor-pointer' id={item._id} /></Link>
                                         </td>
                                         <td className="px-6 py-4 text-base text-blue-500">
@@ -419,7 +383,7 @@ export default function AdminStore() {
 
                 <div className='flex justify-between gap-6 items-center pr-5 pt-5'>
                     <div>
-                        <p className='text-gray-700 text-base'>Showing {startItem} to {endItem} of {countProductData} results</p>
+                        <p className='text-gray-700 text-base'>Showing {startItem} to {endItem} of {getCountData && getCountData.getTotalProductCount} results</p>
                     </div>
                     <div className='flex justify-between items-center gap-8'>
                         <div className="border border-solid border-blue-400 rounded-md flex justify-between items-center h-9 w-32 gap-3 p-2">
@@ -441,7 +405,7 @@ export default function AdminStore() {
                     </div>
                 </div>
             </div >
-            <form onSubmit={handleDeleteProduct}>
+            {/* <form onSubmit={handleDeleteProduct}>
                 <div className='absolute inset-0 flex mt-20 items-center justify-center m-auto w-2/6 px-4 py-5 rounded' style={{ display: deletePopUpOpen ? "block" : "none" }}>
                     <div className='bg-blue-200 p-8 shadow-lg rounded-lg grid gap-4'>
                         <div>
@@ -454,7 +418,7 @@ export default function AdminStore() {
                         </div>
                     </div>
                 </div>
-            </form>
+            </form> */}
         </>
     )
 }

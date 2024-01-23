@@ -64,7 +64,6 @@ const resolvers = {
                 { "personalDetails.customerId": userId },
                 { "personalDetails": 1, totalPrice: 1, createdAt: 1 }
             ).skip(skip).limit(pageSize)
-
             const formatCreateTime = personDetails.map((orderPersonal) => {
                 const { createdAt, ...rest } = orderPersonal._doc
                 return {
@@ -86,8 +85,36 @@ const resolvers = {
             // console.log("customerOrders-------------", customerOrders);
         },
         getGuestOrders: async () => {
-            const guestOrders = await newOrders.find({ "personalDetails.customerId": "" });
-            return guestOrders
+            try {
+                const guestOrders = await newOrders.find(
+                    { "personalDetails.customerId": '' },
+                    {
+                        personalDetails: 1,
+                        _id: 1,
+                        totalPrice: 1,
+                        createdAt: 1,
+                    }
+                )
+                const formatCreateTime = guestOrders.map((guestOrder) => {
+                    const { createdAt, ...rest } = guestOrder._doc
+                    return {
+                        ...rest,
+                        orderTime: new Date(createdAt).toLocaleString('en-US', {
+                            month: "short",
+                            day: 'numeric',
+                            hour: 'numeric',
+                            minute: 'numeric',
+                            hour12: true,
+                        })
+                    }
+                });
+                return formatCreateTime
+            }
+            catch (error) {
+                console.error('Error fetching guest orders:', error);
+                throw new Error('Error fetching guest orders');
+            }
+
         },
         getAllAdmins: async () => {
             return await (admins.find({}));
@@ -103,10 +130,15 @@ const resolvers = {
             return await (productDetails.find({}))
         },
         getAllProducts: async (_, { page, pageSize }) => {
-
-            const skip = (page - 1) * pageSize;
-            const products = await (productDetails.find({}).skip(skip).limit(pageSize));
-            return products;
+            try {
+                const skip = (page - 1) * pageSize;
+                const products = await (productDetails.find({}).skip(skip).limit(pageSize));
+                return products;
+            }
+            catch (error) {
+                console.error("Error fetching products:", error);
+                throw new Error("An error occurred while fetching products.");
+            }
         },
         getTotalProductCount: async () => {
             const totalCount = await productDetails.countDocuments();
@@ -284,10 +316,10 @@ const resolvers = {
                 ...res._doc
             }
         },
-        async deleteProduct(parent, { id }) {
+        async deleteProduct(_, { id }) {
             try {
-                const result = await productDetails.deleteOne({ _id: new ObjectId(id) });
-                return result
+                await productDetails.deleteOne({ _id: new ObjectId(id) });
+                return true
             }
             catch (error) {
                 console.error(error);

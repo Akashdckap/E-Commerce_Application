@@ -56,13 +56,13 @@ export default function OrderDetails() {
                         <table className="w-full rounded-md overflow-hidden border border-solid border-gray-400">
                             <thead>
                                 <tr className="bg-slate-300">
-                                    <th scope="col" className="text-center text-gray-700  px-6 py-4">S.No</th>
-                                    <th scope="col" className="text-start text-gray-700">Name</th>
-                                    <th scope="col" className="text-start text-gray-700">Email</th>
-                                    <th scope="col" className="text-start text-gray-700">PhoneNo</th>
-                                    <th scope="col" className="text-start text-gray-700">Order Time</th>
-                                    <th scope="col" className="text-center text-gray-700">View Products</th>
-                                    <th scope="col" className="text-center text-gray-700">Total price</th>
+                                    <th scope="col" className="text-center text-gray-500  px-6 py-4">S.No</th>
+                                    <th scope="col" className="text-start text-gray-500">Name</th>
+                                    <th scope="col" className="text-start text-gray-500">Email</th>
+                                    <th scope="col" className="text-start text-gray-500">PhoneNo</th>
+                                    <th scope="col" className="text-start text-gray-500">Order Time</th>
+                                    <th scope="col" className="text-center text-gray-500">View Products</th>
+                                    <th scope="col" className="text-center text-gray-500">Total price</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -75,7 +75,7 @@ export default function OrderDetails() {
                                                 <td className="text-start text-cyan-600">{entireData.personalDetails.email}</td>
                                                 <td className="text-start text-gray-600">{entireData.personalDetails.phoneNo}</td>
                                                 <td className="text-start text-gray-600">{entireData.OrderTime}</td>
-                                                <td className="text-center" ><Link href={`/orderDetails/productDetails/${entireData._id}`}><FontAwesomeIcon icon={faEye} className="hover:text-green-400 text-gray-600" /></Link></td>
+                                                <td className="text-center" ><Link href={`/orderDetails/productDetails/${entireData._id}`}><FontAwesomeIcon icon={faEye} className="hover:text-cyan-400 text-gray-600" /></Link></td>
                                                 <td className="text-center text-gray-600">₹ {entireData.totalPrice}</td>
                                             </tr>
                                         )
