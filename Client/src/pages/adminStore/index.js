@@ -172,7 +172,7 @@ export default function AdminStore() {
             setCurrentPage(totalPages)
         }
     }, [currentPage, getCountData, getData, getProductData]);
-    console.log("pageSize------", pageSize);
+    // console.log("pageSize------", pageSize);
 
     const nextPage = () => {
         setCurrentPage(currentPage + 1);

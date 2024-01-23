@@ -4,24 +4,17 @@ import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faEye, faLessThan, faGreaterThan } from '@fortawesome/free-solid-svg-icons';
 import { useQuery } from '@apollo/client';
-import { GET_CUSTOMER_ORDERS, GET_GUEST_ORDERS, GET_PERSONAL_DETAILS_ORDER } from '../../../../Grahpql/queries';
+import { GET_CUSTOMER_ORDERS, GET_GUEST_ORDERS, GET_PERSONAL_DETAILS_ORDER, ORDER_COUNT } from '../../../../Grahpql/queries';
 import { useSelector } from 'react-redux';
 export default function Myorders() {
     const router = useRouter();
     const loginData = useSelector(state => state.productDetails.LoginData);
-    // console.log("loginData.customerId--------",);
-    // if (loginData.customerId === undefined) {
     const { data: customerOrders, loading: customerLoading, error: customerError } = useQuery(GET_CUSTOMER_ORDERS, {
         variables: { userId: loginData?.customerId || '' },
         skip: !loginData.customerId,
     });
     const { data: guestOrders, loading, error } = useQuery(GET_GUEST_ORDERS)
-    console.log("guest orders----", guestOrders);
-    // }
-    // else {
 
-
-    // }
     const [pageSize, setPageSize] = useState(10)
     const [currentPage, setCurrentPage] = useState(1)
     const [searchText, setSearchText] = useState("");
@@ -30,8 +23,6 @@ export default function Myorders() {
     });
 
     const { data: orderCount, loading: orderLoading, error: orderError } = useQuery(ORDER_COUNT)
-    // console.log(customerPersonalDetails.getCustomerPersonalDetails[0].personalDetails,"--------")
-
     const personalData = customerPersonalDetails && customerPersonalDetails.getCustomerPersonalDetails.map((personal) => {
         return personal;
     })
