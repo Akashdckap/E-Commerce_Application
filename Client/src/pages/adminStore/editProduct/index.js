@@ -9,7 +9,7 @@ export default function EditProduct() {
     const router = useRouter()
     const { productId } = router.query
 
-    const { data: getData, loading, error } = useQuery(GET_EDIT_PRODUCT_DATA, {
+    const { data: getData, loading, error, refetch } = useQuery(GET_EDIT_PRODUCT_DATA, {
         variables: { id: productId }
     })
 
@@ -46,8 +46,9 @@ export default function EditProduct() {
             description: description
         }
         try {
-            await updateProduct({ variables: { id: productId, input: updateFormData } })
-            toast.success("product successfully updated", {
+            await updateProduct({ variables: { id: productId, input: updateFormData } });
+            refetch();
+            toast.success("Product successfully updated", {
                 position: 'top-right',
                 autoClose: 3000
             })

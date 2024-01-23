@@ -152,10 +152,6 @@ export default function ViewOrders() {
                     </div>
                 </div>
             </div>
-            <div>
-
-            </div>
-
             {/* <div className='grid gap-4'>
                 {
                     customerOrders && customerOrders.getCustomerOrders.map((item, index) => (

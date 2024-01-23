@@ -182,7 +182,7 @@ const typeDefs = gql` #graphql
         name: String!,
         email: String!,
         phoneNo: BigInt!,
-        customerId: ID!,
+        customerId: ID,
     }
 
     type shippingAddress{
@@ -305,8 +305,10 @@ const typeDefs = gql` #graphql
         getCustomerCartData(userId: ID!): [customerCartData]
         getCustomerOrders(userId:ID!): [customerOrders]
 
-        getGuestOrders:[customerOrders]
+
+        getGuestOrders: [customerPersonalDetails]
         getCustomerPersonalDetails(userId: ID!,page:Int!,pageSize:Int!): [customerPersonalDetails]
+
 
         getAllAdmins:[admins]
         getAllProductsData: [products]

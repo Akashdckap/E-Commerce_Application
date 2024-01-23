@@ -29,7 +29,7 @@ export default function index() {
 
     const { data: productData, error: productError, loading: productLoading } = useQuery(GET_ALL_PRODUCTS_DATA);
 
-    console.log("allAddToCartId-----------",allAddToCartId);
+    console.log("allAddToCartId-----------", allAddToCartId);
     const [parseIds, { data: getSingleCartData, error: getSingleCartError, loading: getSingleCartLoading }] = useLazyQuery(GET_ADD_TO_CART_SINGLE_PRODUCT_DATA, {
         variables: { ids: allAddToCartId }
     })
@@ -93,10 +93,10 @@ export default function index() {
             // }
             // else {
             //     console.log("already-----------", allAddToCartId);
-                // toast.success(`You increased the quantity of the ${cartData.productName} to ${cartData.quantity}.`, {
-                //     position: 'top-center',
-                //     autoClose: 3000,
-                // })
+            // toast.success(`You increased the quantity of the ${cartData.productName} to ${cartData.quantity}.`, {
+            //     position: 'top-center',
+            //     autoClose: 3000,
+            // })
             // }
         }
         else {
@@ -309,7 +309,7 @@ export default function index() {
                     </div>
                 </div>
                 <div className='ml-6'>
-                    <div className='z-0 flex w-auto justify-start item-center flex-wrap flex-row'>
+                    <div className='z-0 grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1  w-auto justify-start item-center flex-wrap flex-row'>
                         {
                             filteredList.length > 0 ? (
                                 filteredList.map((item, index) =>
