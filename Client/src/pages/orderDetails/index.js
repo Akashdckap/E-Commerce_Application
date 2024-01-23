@@ -15,7 +15,7 @@ export default function OrderDetails() {
     const { data: orderedProducts, loading: dataLoading, error: dataError } = useQuery(GET_ALL_ORDER_DATA_WITH_PAGE, {
         variables: { page: currentPage, pageSize: pageSize }
     })
-
+    // console.log(orderedProducts,"------prop")
     // console.log(orderedProducts.getAllOrderDatas,"------------------order")
     // const orderProp = orderedProducts.getAllOrderDatas.map((items)=>{
     //     console.log(items.personalDetails)
@@ -109,7 +109,6 @@ export default function OrderDetails() {
                         </div>
                     </div>
                 </div>
-
             </div>
         </>
     )

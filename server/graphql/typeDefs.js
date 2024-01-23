@@ -305,8 +305,10 @@ const typeDefs = gql` #graphql
         getCustomerCartData(userId: ID!): [customerCartData]
         getCustomerOrders(userId:ID!): [customerOrders]
 
+
         getGuestOrders: [customerPersonalDetails]
-        getCustomerPersonalDetails(userId: ID!): [customerPersonalDetails]
+        getCustomerPersonalDetails(userId: ID!,page:Int!,pageSize:Int!): [customerPersonalDetails]
+
 
         getAllAdmins:[admins]
         getAllProductsData: [products]

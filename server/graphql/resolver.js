@@ -56,11 +56,14 @@ const resolvers = {
             // console.log("order-----------",formatTime)
             return formatTime
         },
-        getCustomerPersonalDetails: async (_, { userId }) => {
+        getCustomerPersonalDetails: async (_, { userId, page, pageSize }) => {
+            // console.log(page, "-------page")
+            // console.log(pageSize, "-------pageSize")
+            const skip = (page - 1) * pageSize;
             const personDetails = await newOrders.find(
                 { "personalDetails.customerId": userId },
                 { "personalDetails": 1, totalPrice: 1, createdAt: 1 }
-            )
+            ).skip(skip).limit(pageSize)
             const formatCreateTime = personDetails.map((orderPersonal) => {
                 const { createdAt, ...rest } = orderPersonal._doc
                 return {
@@ -174,6 +177,7 @@ const resolvers = {
                 };
             });
             return formattedOrders;
+
         },
 
         getOrderCount: async () => {

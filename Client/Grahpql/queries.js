@@ -321,8 +321,8 @@ export const GET_CUSTOMER_ORDERS = gql`
 `
 
 export const GET_PERSONAL_DETAILS_ORDER = gql`
-    query getCustomerPersonalDetails($userId: ID!){
-        getCustomerPersonalDetails(userId: $userId){
+    query getCustomerPersonalDetails($userId: ID!, $page:Int!, $pageSize:Int!){
+        getCustomerPersonalDetails(userId: $userId, page:$page, pageSize: $pageSize){
             personalDetails{
                 name,
                 email,
