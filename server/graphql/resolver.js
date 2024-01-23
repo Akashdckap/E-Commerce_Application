@@ -281,24 +281,25 @@ const resolvers = {
                 throw new Error("Email is not registered");
             }
         },
-        async createAdmins(_, { adminsInput: { name, email, phoneNo, password } }) {
+        async createAdmins(_, { adminsInput }) {
+            // console.log("adminsInput-----",adminsInput);
             const newUsers = new admins({
-                name: name,
-                email: email,
-                phoneNo: phoneNo,
-                password: password
+                name: adminsInput.name,
+                email: adminsInput.email,
+                phoneNo: adminsInput.phoneNo,
+                password: adminsInput.password,
             });
+
             const emailList = await admins.find({ email: newUsers.email });
-            if (emailList) {
-                if (emailList[0].password == newUsers.password) {
-                    throw new Error("Successfully")
-                }
-                else {
-                    throw new Error("Incorrect Password")
+            try {
+                if (emailList.length == 0) {
+                    const saveAdmin = await newUsers.save();
+                    return saveAdmin
                 }
             }
-            else {
-                throw new Error("Email Id not exists");
+            catch (error) {
+                throw new Error("Already registered")
+                // console.log(error)
             }
         },
         async createProducts(_, { newProducts: { productName, category, brand, price, weight, color, description } }) {

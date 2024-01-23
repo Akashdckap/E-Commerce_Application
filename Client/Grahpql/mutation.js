@@ -1,9 +1,11 @@
 import { useQuery, gql, useMutation } from "@apollo/client";
 
 export const CREATE_ADMINS = gql`
-  mutation createAdmins($input: adminsInput!) {
-    createAdmins(adminsInput: $input) {
+  mutation createAdmins($adminsInput: adminsInput!) {
+    createAdmins(adminsInput: $adminsInput) {
+      name
       email
+      phoneNo
       password
     }
   }
@@ -182,7 +184,7 @@ export const DELETE_CUSTOMER_CART_DATA = gql`
       deleteCustomerCartData(cartId: $cartId userId: $userId)
 }
 `
-export const DELETE_CUSTOMER_ADDRESS= gql`
+export const DELETE_CUSTOMER_ADDRESS = gql`
   mutation deleteCustomerAddress($userId:ID! $addressId: ID!){
     deleteCustomerAddress(userId: $userId addressId: $addressId)
   }
