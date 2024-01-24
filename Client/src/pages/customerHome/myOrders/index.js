@@ -45,6 +45,7 @@ export default function Myorders() {
     const endItem = Math.min(currentPage * pageSize, orderCount && orderCount.getOrderCount)
     const totalPages = Math.ceil(orderCount && orderCount.getOrderCount / pageSize)
     return (
+      </>
         <div>
             <div>
                 <div className='grid grid-cols-3 items-center'>
@@ -102,28 +103,30 @@ export default function Myorders() {
                     </table>
                 </div>
                 <div className='flex justify-between pr-4 items-center pb-2'>
-                    <div>
-                        <p className='pl-16 text-gray-700 '>Showing {startItem} to {endItem} of {orderCount && orderCount.getOrderCount} results</p>
-                    </div>
-                    <div className='flex justify-between items-center gap-8'>
-                        <div className="border border-solid border-teal-600 rounded-md flex justify-between items-center h-9 w-32 gap-3 p-2">
-                            <p className="text-gray-800">Show :</p>
-                            <select className="pl-3 outline-0 bg-transparent" onChange={(e) => setPageSize(parseInt(e.target.value))}>
-                                <option value="10">10</option>
-                                <option value="15">15</option>
-                                <option value="20">20</option>
-                                <option value="25">25</option>
-                                <option value="30">30</option>
-                            </select>
+                    <div className='flex justify-between pr-4 items-center pb-2'>
+                        <div>
+                            <p className='pl-16 text-gray-700 '>Showing {startItem} to {endItem} of {orderCount && orderCount.getOrderCount} results</p>
                         </div>
-                        <div className='flex gap-4 items-center mx-16 justify-end'>
-                            <button className='border px-1 border-gray-400 rounded-md w-8 hover:bg-teal-100'><FontAwesomeIcon icon={faLessThan} onClick={prevPage} disabled={currentPage === 1} style={{ cursor: currentPage <= 1 ? 'not-allowed' : 'pointer' }} /></button>
-                            <span className='bg-teal-200 border border-teal-500 hover:bg-teal-100 font-bold py-1 px-3.5 rounded-full'>{currentPage}</span>
-                            <button className={`border px-1 border-gray-400 rounded-md w-8 hover:bg-teal-100 `}><FontAwesomeIcon icon={faGreaterThan} onClick={nextPage} disabled={currentPage === totalPages} style={{ cursor: currentPage === totalPages ? 'not-allowed' : 'pointer' }} /></button>
+                        <div className='flex justify-between items-center gap-8'>
+                            <div className="border border-solid border-teal-600 rounded-md flex justify-between items-center h-9 w-32 gap-3 p-2">
+                                <p className="text-gray-800">Show :</p>
+                                <select className="pl-3 outline-0 bg-transparent" onChange={(e) => setPageSize(parseInt(e.target.value))}>
+                                    <option value="10">10</option>
+                                    <option value="15">15</option>
+                                    <option value="20">20</option>
+                                    <option value="25">25</option>
+                                    <option value="30">30</option>
+                                </select>
+                            </div>
+                            <div className='flex gap-4 items-center mx-16 justify-end'>
+                                <button className='border px-1 border-gray-400 rounded-md w-8 hover:bg-teal-100'><FontAwesomeIcon icon={faLessThan} onClick={prevPage} disabled={currentPage === 1} style={{ cursor: currentPage <= 1 ? 'not-allowed' : 'pointer' }} /></button>
+                                <span className='bg-teal-200 border border-teal-500 hover:bg-teal-100 font-bold py-1 px-3.5 rounded-full'>{currentPage}</span>
+                                <button className={`border px-1 border-gray-400 rounded-md w-8 hover:bg-teal-100 `}><FontAwesomeIcon icon={faGreaterThan} onClick={nextPage} disabled={currentPage === totalPages} style={{ cursor: currentPage === totalPages ? 'not-allowed' : 'pointer' }} /></button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div >
+            </div >
+        </>
     )
 }
