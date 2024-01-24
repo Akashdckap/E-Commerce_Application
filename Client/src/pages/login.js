@@ -68,11 +68,34 @@ export default function Login() {
         });
         delete errors[name]
     };
+    const handleRegister = (e) => {
+        const { name, value } = e.target;
+        setRegisterFormData({
+            ...registerFormData,
+            [name]: value,
+        })
+        delete errors[name]
+    }
+
     const [createAdmins] = useMutation(CREATE_ADMINS)
     const handleSubmitRegister = async (e) => {
         e.preventDefault()
+        try {
+            await createAdmins({ variables: { adminsInput: registerFormData } })
+            toast.success("Registered successfully", {
+                position: 'top-right',
+                autoClose: 3000,
+            })
+        }
+        catch(error){
+            toast.error("Already Registered Email",{
+                position: 'top-right',
+                autoClose: 3000,
+            })
+        }
 
     }
+
 
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -189,7 +212,7 @@ export default function Login() {
                                         name="name"
                                         type="name"
                                         autoComplete="name"
-                                        value={registerFormData.name} placeholder='Enter a name' onChange={handleChange}
+                                        value={registerFormData.name} placeholder='Enter a name' onChange={handleRegister}
                                         className="block pl-3 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                     />
                                 </div>
@@ -205,7 +228,7 @@ export default function Login() {
                                         name="email"
                                         type="email"
                                         autoComplete="email"
-                                        value={registerFormData.email} placeholder='Enter a email' onChange={handleChange}
+                                        value={registerFormData.email} placeholder='Enter a email' onChange={handleRegister}
                                         className="block pl-3 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                     />
                                 </div>
@@ -221,7 +244,7 @@ export default function Login() {
                                         name="phoneNo"
                                         type="phoneNo"
                                         autoComplete="phoneNo"
-                                        value={registerFormData.phoneNo} placeholder='Enter a phoneNo' onChange={handleChange}
+                                        value={registerFormData.phoneNo} placeholder='Enter a phoneNo' onChange={handleRegister}
                                         className="block pl-3 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                     />
                                 </div>
@@ -239,7 +262,7 @@ export default function Login() {
                                         name="password"
                                         type="password"
                                         autoComplete="current-password"
-                                        value={registerFormData.password} placeholder='Enter a password' onChange={handleChange}
+                                        value={registerFormData.password} placeholder='Enter a password' onChange={handleRegister}
                                         className="block pl-3 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                     />
                                 </div>

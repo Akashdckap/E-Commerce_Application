@@ -8,10 +8,10 @@ const typeDefs = gql` #graphql
     scalar BigInt
 
     type admins{
-        _id: ID!,
-        name:String!,
+        # _id: ID!,
+        name: String!,
         email: String!,
-        phoneNo: Int!,
+        phoneNo: BigInt!,
         password: String!,
     }
     type address{
@@ -59,7 +59,7 @@ const typeDefs = gql` #graphql
     input adminsInput{
         name:String!,
         email:String!,
-        phoneNo:Int!,
+        phoneNo:BigInt!,
         password:String!,
     }
 
@@ -304,12 +304,8 @@ const typeDefs = gql` #graphql
         getShippingAddress(userId:ID!, editAddressId:ID!): shippingAddress
         getCustomerCartData(userId: ID!): [customerCartData]
         getCustomerOrders(userId:ID!): [customerOrders]
-
-
         getGuestOrders: [customerPersonalDetails]
         getCustomerPersonalDetails(userId: ID!,page:Int!,pageSize:Int!): [customerPersonalDetails]
-
-
         getAllAdmins:[admins]
         getAllProductsData: [products]
         getAllProducts(page:Int!,pageSize:Int!):[products!]!
