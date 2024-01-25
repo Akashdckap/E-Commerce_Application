@@ -347,7 +347,7 @@ function Myaccount() {
     }
     return (
         <>
-            <div className="grid gap-5 ml-28">
+            <div className="grid gap-5 ml-28 overflow-y-scroll custom-scroll scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-gray-300 max-h-screen p-2 mr-1">
                 <Link href={'/customerHome'} className="flex justify-start items-center gap-2 mt-5">
                     <FontAwesomeIcon icon={faArrowLeft} className="cursor-pointer text-blue-500" />
                     <p className="cursor-pointer text-blue-500">Back to Home</p>
@@ -492,7 +492,7 @@ function Myaccount() {
                             <div className="">
                                 {addressesCustomer.map((address, index) => {
                                     return (
-                                        <div className="flex justify-between border border-solid bg-teal-50 hover:border-teal-200 rounded-md my-4 gap-x-72 p-3 w-auto" key={index}>
+                                        <div className="flex justify-between border border-solid bg-teal-50 hover:border-teal-200 rounded-md my-4 gap-x-80 p-3 w-auto" key={index}>
                                             <div>
                                                 <div className="flex gap-2">
                                                     <p className="text-gray-600">{address.firstName}</p>

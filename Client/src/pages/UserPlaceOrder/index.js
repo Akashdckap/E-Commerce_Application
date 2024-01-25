@@ -111,7 +111,7 @@ export default function UserPlaceOrder() {
 
     return (
         <>
-            <div>
+            <div className="overflow-y-scroll custom-scroll scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-gray-300 max-h-screen p-2 mr-1 rounded-2xl">
                 <div className="flex justify-between ml-20 mt-10 gap-20 pr-16">
                     <div className="flex justify-around gap-80">
                         <Link href={'/cartItems'} className="flex justify-center items-center gap-2">
@@ -153,21 +153,23 @@ export default function UserPlaceOrder() {
                                 <h1 className="text-[#575F70] text-lg font-medium">Shipping Address</h1>
                                 <FontAwesomeIcon icon={faShippingFast} className="text-green-400 text-lg" />
                             </div>
-                            <div className="border border-solid border-gray-300 hover:border-gray-400 shadow-sm rounded-md flex justify-start px-7 py-6 flex-wrap items-start gap-x-6 gap-y-4 mt-3">
-                                {
-                                    addressesData && addressesData.getCustomerRegister.Addresses.map((shipping, index) => {
-                                        return (
-                                            <div key={index} onClick={() => setSelectShippingAddress(shipping._id)} className={`${selectShippingId === shipping._id ? 'border-emerald-300 shadow-lg border-2' : 'border-gray-300 shadow-sm'} bg-white grid gap-y-1 border w-52 border-solid  p-3 rounded-md`} >
-                                                <h1 className="text-emerald-300 font-normal text-lg">{shipping.firstName}{shipping.lastName}</h1>
-                                                <p className="text-gray-500">{shipping.phoneNo}</p>
-                                                <p className="w-36 text-gray-400">{shipping.address}</p>
-                                                <p className="text-gray-400">{shipping.district}</p>
-                                                <p className="text-gray-400">{shipping.pincode}</p>
-                                                <p className="text-gray-400">{shipping.country}</p>
-                                            </div>
-                                        )
-                                    })
-                                }
+                            <div className="">
+                                <div className="border border-solid border-gray-300 hover:border-gray-400 shadow-sm rounded-md flex  flex-wrap justify-center px-2 py-6 items-start gap-x-4 gap-y-4 mt-3">
+                                    {
+                                        addressesData && addressesData.getCustomerRegister.Addresses.map((shipping, index) => {
+                                            return (
+                                                <div key={index} onClick={() => setSelectShippingAddress(shipping._id)} className={`${selectShippingId === shipping._id ? 'border-emerald-300 shadow-lg border-2' : 'border-gray-300 shadow-sm'} bg-white grid gap-y-1 border w-52 border-solid  p-3 rounded-md`} >
+                                                    <h1 className="text-emerald-300 font-normal text-lg">{shipping.firstName}{shipping.lastName}</h1>
+                                                    <p className="text-gray-500">{shipping.phoneNo}</p>
+                                                    <p className="w-36 text-gray-400">{shipping.address}</p>
+                                                    <p className="text-gray-400">{shipping.district}</p>
+                                                    <p className="text-gray-400">{shipping.pincode}</p>
+                                                    <p className="text-gray-400">{shipping.country}</p>
+                                                </div>
+                                            )
+                                        })
+                                    }
+                                </div>
                             </div>
                         </div>
                         <div>
@@ -176,7 +178,7 @@ export default function UserPlaceOrder() {
                                 <FontAwesomeIcon icon={faShippingFast} className="text-sky-400 text-lg" />
                             </div>
                             <div className="border border-solid border-gray-300 hover:border-gray-400 shadow-sm rounded-md mt-3">
-                                <div className="flex justify-start px-7 py-6 flex-wrap items-start gap-x-6 gap-y-4">
+                                <div className="flex justify-center px-2 py-6 flex-wrap items-start gap-x-4 gap-y-4">
                                     {
                                         addressesData && addressesData.getCustomerRegister.Addresses.map((billing, index) => {
                                             return (
@@ -192,8 +194,8 @@ export default function UserPlaceOrder() {
                                         })
                                     }
                                 </div>
-                                <div>
-                                    <button onClick={() => setSelectBillingAddress(selectShippingId)} type="submit" className="p-2 ml-7 mb-4 flex justify-center items-center cursor-pointer text-orange-600 bg-white h-10 w-56 rounded hover:border-orange-400 border hover:bg-orange-50 hover:shadow-lg transition-all duration-300">Same as Shipping Address</button>
+                                <div className="grid justify-start items-start mb-4 ml-2">
+                                    <button onClick={() => setSelectBillingAddress(selectShippingId)} type="submit" className="p-2 flex justify-center items-center cursor-pointer text-orange-600 bg-white h-10 w-56 rounded hover:border-orange-400 border hover:bg-orange-50 hover:shadow-lg transition-all duration-300">Same as Shipping Address</button>
                                 </div>
                             </div>
                         </div>
@@ -203,7 +205,7 @@ export default function UserPlaceOrder() {
                             <div className="flex justify-center items-center bg-[#F5F7FA] h-10 w-80 m-auto rounded-sm mt-3">
                                 <h3 className="text-[#51596B] font-normal">Order Summary</h3>
                             </div>
-                            <div className="grid justify-center items-center mt-3">
+                            <div className="grid justify-center items-center mt-3 overflow-y-scroll custom-scroll scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-gray-300 max-h-screen p-2 rounded-2xl">
                                 {
                                     customerCartData && customerCartData.getCustomerCartData.map((cartItems, index) => {
                                         return (
@@ -229,7 +231,7 @@ export default function UserPlaceOrder() {
                                     })
                                 }
                             </div>
-                            <div className="flex justify-between items-center mt-5 w-80 gap-2  border-b border-solid border-gray-300 p-2 border-t">
+                            <div className="flex justify-center items-center mt-5 w-auto gap-x-36 mx-4 border-b border-solid border-gray-300 p-2 border-t">
                                 <label className="text-gray-700 font-medium">Total Amount :</label>
                                 <p className="text-orange-400 font-medium">₹{CustomerTotalAmount}</p>
                             </div>

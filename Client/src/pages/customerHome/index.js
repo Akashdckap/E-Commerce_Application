@@ -29,7 +29,6 @@ export default function index() {
 
     const { data: productData, error: productError, loading: productLoading } = useQuery(GET_ALL_PRODUCTS_DATA);
 
-    console.log("allAddToCartId-----------", allAddToCartId);
     const [parseIds, { data: getSingleCartData, error: getSingleCartError, loading: getSingleCartLoading }] = useLazyQuery(GET_ADD_TO_CART_SINGLE_PRODUCT_DATA, {
         variables: { ids: allAddToCartId }
     })
@@ -82,7 +81,7 @@ export default function index() {
         parseIds();
         if (getId) {
             setAddToCartId(getId)
-            console.log("firstTime-----------", allAddToCartId);
+            // console.log("firstTime-----------", allAddToCartId);
             // const cartData = getCartData.find((cart) => cart._id === getId)
             // if (cartData === undefined) {
             //     console.log("firstTime-----------", allAddToCartId);
@@ -244,9 +243,9 @@ export default function index() {
     const totalExpandedAmount = ExpandedAmountarray.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
     return (
         <>
-            <div>
+            <div className='overflow-y-scroll custom-scroll scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-gray-300 max-h-screen p-2 mr-1'>
                 <div>
-                    <div className='flex justify-between p-10'>
+                    <div className='flex justify-between px-14 py-2'>
                         <h1>Welcome to our site <span className='text-sky-400'>{loginData.name}</span></h1>
                         <div className='flex justify-between items-center gap-10'>
                             <input type='text' onChange={(e) => setSearchText(e.target.value)} placeholder='Search products' className='h-10 bg-gray-50 border-solid border border-gray-300 text-gray-600 text-sm rounded-lg hover:border-gray-500 focus:border-gray-500 outline-0 ps-5' />
@@ -256,7 +255,7 @@ export default function index() {
                                         loginData.token ? (customerCartData && customerCartData.getCustomerCartData.length || 0) : (getCartData.length)
                                     }
                                 </p>
-                                <FontAwesomeIcon onClick={() => setCart(true)} icon={faShoppingCart} className='text-gray-700 hover:text-gray-600 text-2xl cursor-pointer' />
+                                <FontAwesomeIcon onClick={() => !openCart ? setCart(true) : setCart(false)} icon={faShoppingCart} className='text-gray-700 hover:text-gray-600 text-2xl cursor-pointer' />
                             </div>
                             <div>
                                 <FontAwesomeIcon icon={faUserCircle} className='text-3xl text-gray-500 hover:cursor-pointer ' onClick={() => !openProfile ? setOpenProfile(true) : setOpenProfile(false)} />
@@ -264,7 +263,7 @@ export default function index() {
                         </div>
                     </div>
                     <div style={{ display: openProfile ? 'block' : 'none' }}>
-                        <div>{loginData.token ? <div className='grid justify-center items-center gap-3 z-10 bg-gray-200 absolute top-24 right-5 py-3 pl-10 w-56 rounded-sm shadow-lg'>
+                        <div>{loginData.token ? <div className='grid justify-center items-center gap-3 z-10 bg-gray-200 absolute top-20 right-20 py-3 pl-10 w-56 rounded-md shadow-2xl'>
                             <div className='flex justify-start items-center gap-5 mr-10 bg-white p-2 w-44 pl-4 rounded-md'>
                                 <Image src={"/Images/Balaprofile.png"} alt="Profile Image" width="40" height="40" className='rounded-full' />
                                 <div>
@@ -305,12 +304,161 @@ export default function index() {
                         </div>
                     </div>
                 </div>
-                <div className='ml-6'>
-                    <div className='z-0 grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1  w-auto justify-start item-center flex-wrap flex-row'>
+                <section className='py-12 sm:py-16 lg:py-20 absolute bottom-0 top-0 z-10 right-14' style={{ display: openCart ? 'block' : 'none' }}>
+                    {/* <div className="mx-auto px-4 sm:px-6 lg:px-8">
+                        <div className="mx-auto mt-8 max-w-md md:mt-12"> */}
+                    <div className="rounded-xl bg-white shadow-2xl">
+                        <div className='flex justify-between border-b-2 px-4 py-2'>
+                            <h1 className='text-yellow-500'>SHOPPING CART</h1>
+                            <FontAwesomeIcon onClick={() => openCart ? setCart(false) : setCart(true)} icon={faClose} className='text-xl cursor-pointer hover:text-red-400' />
+                        </div>
+                        <div className="overflow-y-scroll custom-scroll scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-gray-300 max-h-96 px-4 py-2 mr-1">
+                            {
+                                loginData.token ?
+                                    customerCartBulkData.length > 0 ? (
+                                        customerCartBulkData.map((listCartData, index) => {
+                                            return (
+                                                <div className="flow-root" key={listCartData._id}>
+                                                    <ul className="-my-8">
+                                                        <li className="flex flex-col space-y-1 py-10 text-left sm:flex-row sm:space-x-5 sm:space-y-1">
+                                                            <div className="shrink-0 relative">
+                                                                <img className="h-24 w-24 max-w-full rounded-lg object-cover" src="https://images.unsplash.com/flagged/photo-1556637640-2c80d3201be8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8c25lYWtlcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60" alt="" />
+                                                            </div>
+                                                            <div className="relative flex flex-1 flex-col justify-between">
+                                                                <div className="sm:col-gap-3 sm:grid sm:grid-cols-2">
+                                                                    <div className="pr-8 sm:pr-5">
+                                                                        <p className="text-base font-semibold text-gray-600">{listCartData.productName}</p>
+                                                                        <p className="mx-0 mt-1 mb-0 text-base text-gray-500">₹{listCartData.price}</p>
+                                                                    </div>
+                                                                    <div className="mt-4 flex items-end justify-between sm:mt-0 sm:items-start sm:justify-end">
+                                                                        <p className="shrink-0 w-20 text-base font-semibold text-gray-700 sm:order-2 sm:ml-8 sm:text-right">₹{listCartData.expandedPrice}</p>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="flex justify-center items-center gap-36">
+                                                                    <div className='flex justify-center items-center gap-2'>
+                                                                        {/* <button disabled={listCartData.quantity == 1} > */}
+                                                                            <FontAwesomeIcon icon={faMinus} onClick={() => handleDecrementQuantity(listCartData._id)} className={`${listCartData.quantity === 1 ? 'cursor-default' : "cursor-pointer"} border border-solid border-blue-300 font-thin rounded-xl p-1 text-xs`} />
+                                                                        {/* </button> */}
+                                                                        {
+                                                                            <span className='border border-gray-400 w-10 rounded-sm flex justify-center items-center'>{listCartData.quantity}</span>
+                                                                        }
+                                                                        <FontAwesomeIcon icon={faPlus} onClick={() => handleIncrementQuantity(listCartData._id, listCartData.price)} className='cursor-pointer border border-solid border-blue-300 font-thin rounded-xl p-1 text-xs' />
+                                                                    </div>
+                                                                    <button type="submit" onClick={() => removeCustomerCartData(listCartData._id, listCartData.productName)} className="text-gray-600 transition-all duration-200 ease-in-out focus:shadow hover:text-red-400">
+                                                                        Remove
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            )
+                                        })
+                                    ) : <div>
+                                        <Image
+                                            src="/Images/noCart.png"
+                                            alt="No Carts Found Image"
+                                            style={{ paddingTop: '30px', padding: '50px' }}
+                                            width={400}
+                                            height={200}
+                                        />
+                                    </div>
+                                    :
+                                    getCartData.length > 0 ? (
+                                        getCartData.map((listCartData, index) => {
+                                            return (
+                                                <div className="flow-root" key={listCartData._id}>
+                                                    <ul className="-my-8">
+                                                        <li className="flex flex-col space-y-1 py-10 text-left sm:flex-row sm:space-x-5 sm:space-y-1">
+                                                            <div className="shrink-0 relative">
+                                                                <img className="h-24 w-24 max-w-full rounded-lg object-cover" src="https://images.unsplash.com/flagged/photo-1556637640-2c80d3201be8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8c25lYWtlcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60" alt="" />
+                                                            </div>
+                                                            <div className="relative flex flex-1 flex-col justify-between">
+                                                                <div className="sm:col-gap-3 sm:grid sm:grid-cols-2">
+                                                                    <div className="pr-8 sm:pr-5">
+                                                                        <p className="text-base font-semibold text-gray-600">{listCartData.productName}</p>
+                                                                        {/* <span>{listCartData.category}</span> */}
+                                                                        <p className="mx-0 mt-1 mb-0 text-base text-gray-500">₹{listCartData.price}</p>
+                                                                    </div>
+                                                                    <div className="mt-4 flex items-end justify-between sm:mt-0 sm:items-start sm:justify-end">
+                                                                        <p className="shrink-0 w-20 text-base font-semibold text-gray-700 sm:order-2 sm:ml-8 sm:text-right">₹{listCartData.expandedPrice}</p>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="flex justify-center items-center gap-32">
+                                                                    <div className='flex justify-center items-center gap-3'>
+                                                                        <button disabled={listCartData.quantity == 1} >
+                                                                            <FontAwesomeIcon icon={faMinus} onClick={() => handleDecrementCount(listCartData._id)} className={`${listCartData.quantity === 1 ? 'cursor-default' : "cursor-pointer"} border border-solid border-blue-300 font-thin rounded-xl p-1 text-xs`} />
+                                                                        </button>
+                                                                        {
+                                                                            <span className='border border-gray-400 w-10 rounded-sm flex justify-center items-center'>{listCartData.quantity}</span>
+                                                                            // <input type='text' id={listCartData._id} className='flex justify-center hover:border-blue-300 items-center pl-3.5 border border-gray-400 w-10 rounded-sm' value={listCartData.count} onChange={handleQuantityChange} />
+                                                                        }
+                                                                        <FontAwesomeIcon icon={faPlus} onClick={() => handleIncrementCount(listCartData._id, listCartData.price)} className='cursor-pointer border border-solid border-blue-300 font-thin rounded-xl p-1 text-xs' />
+                                                                    </div>
+                                                                    <button type="submit" onClick={() => handleRemoveDataFromLocal(listCartData._id, listCartData.productName)} className="flex rounded p-2 text-center text-gray-700 transition-all duration-200 ease-in-out focus:shadow hover:text-red-500">
+                                                                        Remove
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            )
+                                        })
+                                    ) : <div>
+                                        <Image
+                                            src="/Images/noCart.png"
+                                            alt="No Carts Found Image"
+                                            style={{ paddingTop: '30px', padding: '50px' }}
+                                            width={400}
+                                            height={200}
+                                        />
+                                    </div>
+
+                            }
+                            {
+                                getCartData.length > 1 ? (
+                                    <div className='flex justify-end'>
+                                        <span onClick={removeAllCartData} className='cursor-pointer hover:text-red-600'>Remove All</span>
+                                    </div>
+                                ) : ""
+
+                            }
+                            {
+                                customerCartBulkData.length > 1 ? (
+                                    <div div className='flex justify-end'>
+                                        <span onClick={removeAllCustomerCartData} className='cursor-pointer hover:text-red-600'>Remove All</span>
+                                    </div>
+                                ) : ""
+                            }
+
+                        </div>
+                        <div className='flex justify-between place-items-center px-10 pt-3'>
+                            <h2 className='text-gray-500'>Total Amount: </h2>
+                            <h1 className='text-emerald-800 font-medium'>₹{loginData.token ? CustomerTotalAmount : totalExpandedAmount}</h1>
+                        </div>
+                        <div className="flex justify-between place-items-center px-10 pb-6">
+                            <div className='flex justify-center items-center pt-5'>
+                                <button type='button' onClick={() => { setCart(false) }} className='bg-transparent  text-blue-700 font-semibold py-2 px-4 border border-blue-500 rounded hover:text-cyan-600 hover:border-cyan-600'>Continue Shopping</button>
+                            </div>
+                            <div className='flex justify-center items-center pt-5'>
+                                <Link href="/cartItems">
+                                    <button type="button" className="items-center justify-center rounded-md bg-orange-500 py-2 px-4 text-sm font-semibold text-white transition-all duration-200 ease-in-out focus:shadow hover:bg-gray-800">
+                                        View Cart
+                                    </button>
+                                </Link>
+                            </div>
+                        </div>
+                    </div>
+                    {/* </div>
+                    </div> */}
+                </section>
+                <div className=''>
+                    <div className='z-0 grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 w-auto gap-y-10 justify-start item-center flex-wrap flex-row'>
                         {
                             filteredList.length > 0 ? (
                                 filteredList.map((item, index) =>
-                                    <div key={index} className="relative m-10 w-full max-w-xs overflow-hidden rounded-lg bg-white shadow-md">
+                                    <div key={index} className="relative mx-10 my-2 w-full max-w-xs overflow-hidden rounded-lg bg-white shadow-md">
                                         <a>
                                             <img className="h-60 rounded-t-lg object-cover" src="https://images.unsplash.com/flagged/photo-1556637640-2c80d3201be8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8c25lYWtlcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60" alt="product image" />
                                         </a>
@@ -350,156 +498,7 @@ export default function index() {
                         }
                     </div>
                 </div>
-                <section className='h-screen py-12 sm:py-16 lg:py-20 absolute top-0 right-10' style={{ display: openCart ? 'block' : 'none' }}>
-                    <div className="mx-auto px-4 sm:px-6 lg:px-8">
-                        <div className="mx-auto mt-8 max-w-md md:mt-12">
-                            <div className="rounded-3xl bg-white shadow-lg">
-                                <div className='flex justify-between pl-8 pt-4 pr-8'>
-                                    <h1 className='text-yellow-500'>SHOPPING CART</h1>
-                                    <FontAwesomeIcon onClick={() => openCart ? setCart(false) : setCart(true)} icon={faClose} className='text-xl cursor-pointer hover:text-red-400' />
-                                </div>
-                                <div className="overflow-y-scroll scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-gray-300 max-h-96 p-2">
-                                    {
-                                        loginData.token ?
-                                            customerCartBulkData.length > 0 ? (
-                                                customerCartBulkData.map((listCartData, index) => {
-                                                    return (
-                                                        <div className="flow-root" key={listCartData._id}>
-                                                            <ul className="-my-8">
-                                                                <li className="flex flex-col space-y-1 py-10 text-left sm:flex-row sm:space-x-5 sm:space-y-1">
-                                                                    <div className="shrink-0 relative">
-                                                                        <img className="h-24 w-24 max-w-full rounded-lg object-cover" src="https://images.unsplash.com/flagged/photo-1556637640-2c80d3201be8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8c25lYWtlcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60" alt="" />
-                                                                    </div>
-                                                                    <div className="relative flex flex-1 flex-col justify-between">
-                                                                        <div className="sm:col-gap-3 sm:grid sm:grid-cols-2">
-                                                                            <div className="pr-8 sm:pr-5">
-                                                                                <p className="text-base font-semibold text-gray-600">{listCartData.productName}</p>
-                                                                                <p className="mx-0 mt-1 mb-0 text-base text-gray-500">₹{listCartData.price}</p>
-                                                                            </div>
-                                                                            <div className="mt-4 flex items-end justify-between sm:mt-0 sm:items-start sm:justify-end">
-                                                                                <p className="shrink-0 w-20 text-base font-semibold text-gray-700 sm:order-2 sm:ml-8 sm:text-right">₹{listCartData.expandedPrice}</p>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div className="flex justify-center items-center gap-32">
-                                                                            <div className='flex justify-center items-center gap-3'>
-                                                                                <button disabled={listCartData.quantity == 1} >
-                                                                                    <FontAwesomeIcon icon={faMinus} onClick={() => handleDecrementQuantity(listCartData._id)} className={`${listCartData.quantity === 1 ? 'cursor-default' : "cursor-pointer"} border border-solid border-blue-300 font-thin rounded-xl p-1 text-xs`} />
-                                                                                </button>
-                                                                                {
-                                                                                    <span className='border border-gray-400 w-10 rounded-sm flex justify-center items-center'>{listCartData.quantity}</span>
-                                                                                    // <input type='text' id={listCartData._id} className='flex justify-center hover:border-blue-300 items-center pl-3.5 border border-gray-400 w-10 rounded-sm' value={listCartData.count} onChange={handleQuantityChange} />
-                                                                                }
-                                                                                <FontAwesomeIcon icon={faPlus} onClick={() => handleIncrementQuantity(listCartData._id, listCartData.price)} className='cursor-pointer border border-solid border-blue-300 font-thin rounded-xl p-1 text-xs' />
-                                                                            </div>
-                                                                            <button type="submit" onClick={() => removeCustomerCartData(listCartData._id, listCartData.productName)} className="flex rounded p-2 text-center text-gray-700 transition-all duration-200 ease-in-out focus:shadow hover:text-red-500">
-                                                                                Remove
-                                                                            </button>
-                                                                        </div>
-                                                                    </div>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                    )
-                                                })
-                                            ) : <div>
-                                                <Image
-                                                    src="/Images/noCart.png"
-                                                    alt="No Carts Found Image"
-                                                    style={{ paddingTop: '30px', padding: '50px' }}
-                                                    width={400}
-                                                    height={200}
-                                                />
-                                            </div>
-                                            :
-                                            getCartData.length > 0 ? (
-                                                getCartData.map((listCartData, index) => {
-                                                    return (
-                                                        <div className="flow-root" key={listCartData._id}>
-                                                            <ul className="-my-8">
-                                                                <li className="flex flex-col space-y-1 py-10 text-left sm:flex-row sm:space-x-5 sm:space-y-1">
-                                                                    <div className="shrink-0 relative">
-                                                                        <img className="h-24 w-24 max-w-full rounded-lg object-cover" src="https://images.unsplash.com/flagged/photo-1556637640-2c80d3201be8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8c25lYWtlcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60" alt="" />
-                                                                    </div>
-                                                                    <div className="relative flex flex-1 flex-col justify-between">
-                                                                        <div className="sm:col-gap-3 sm:grid sm:grid-cols-2">
-                                                                            <div className="pr-8 sm:pr-5">
-                                                                                <p className="text-base font-semibold text-gray-600">{listCartData.productName}</p>
-                                                                                {/* <span>{listCartData.category}</span> */}
-                                                                                <p className="mx-0 mt-1 mb-0 text-base text-gray-500">₹{listCartData.price}</p>
-                                                                            </div>
-                                                                            <div className="mt-4 flex items-end justify-between sm:mt-0 sm:items-start sm:justify-end">
-                                                                                <p className="shrink-0 w-20 text-base font-semibold text-gray-700 sm:order-2 sm:ml-8 sm:text-right">₹{listCartData.expandedPrice}</p>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div className="flex justify-center items-center gap-32">
-                                                                            <div className='flex justify-center items-center gap-3'>
-                                                                                <button disabled={listCartData.quantity == 1} >
-                                                                                    <FontAwesomeIcon icon={faMinus} onClick={() => handleDecrementCount(listCartData._id)} className={`${listCartData.quantity === 1 ? 'cursor-default' : "cursor-pointer"} border border-solid border-blue-300 font-thin rounded-xl p-1 text-xs`} />
-                                                                                </button>
-                                                                                {
-                                                                                    <span className='border border-gray-400 w-10 rounded-sm flex justify-center items-center'>{listCartData.quantity}</span>
-                                                                                    // <input type='text' id={listCartData._id} className='flex justify-center hover:border-blue-300 items-center pl-3.5 border border-gray-400 w-10 rounded-sm' value={listCartData.count} onChange={handleQuantityChange} />
-                                                                                }
-                                                                                <FontAwesomeIcon icon={faPlus} onClick={() => handleIncrementCount(listCartData._id, listCartData.price)} className='cursor-pointer border border-solid border-blue-300 font-thin rounded-xl p-1 text-xs' />
-                                                                            </div>
-                                                                            <button type="submit" onClick={() => handleRemoveDataFromLocal(listCartData._id, listCartData.productName)} className="flex rounded p-2 text-center text-gray-700 transition-all duration-200 ease-in-out focus:shadow hover:text-red-500">
-                                                                                Remove
-                                                                            </button>
-                                                                        </div>
-                                                                    </div>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                    )
-                                                })
-                                            ) : <div>
-                                                <Image
-                                                    src="/Images/noCart.png"
-                                                    alt="No Carts Found Image"
-                                                    style={{ paddingTop: '30px', padding: '50px' }}
-                                                    width={400}
-                                                    height={200}
-                                                />
-                                            </div>
 
-                                    }
-                                    {
-                                        getCartData.length > 1 ? (
-                                            <div className='flex justify-end'>
-                                                <span onClick={removeAllCartData} className='cursor-pointer hover:text-red-600'>Remove All</span>
-                                            </div>
-                                        ) : ""
-
-                                    }
-                                    {
-                                        customerCartBulkData.length > 1 ? (
-                                            <div div className='flex justify-end'>
-                                                <span onClick={removeAllCustomerCartData} className='cursor-pointer hover:text-red-600'>Remove All</span>
-                                            </div>
-                                        ) : ""
-                                    }
-
-                                </div>
-                                <div className='flex justify-around'>
-                                    <h5>Total Amount: </h5>
-                                    <p>₹{loginData.token ? CustomerTotalAmount : totalExpandedAmount}</p>
-                                </div>
-                                <div className="flex justify-center place-items-center gap-2 pb-8">
-                                    <div className='flex justify-center items-center pt-5'>
-                                        <button type='button' onClick={() => { setCart(false) }} className='bg-transparent  text-blue-700 font-semibold py-2 px-4 border border-blue-500 rounded hover:text-cyan-600 hover:border-cyan-600'>Continue Shopping</button>
-                                    </div>
-                                    <div className='flex justify-center items-center pt-5'>
-                                        <Link href="/cartItems">
-                                            <button type="button" className="items-center justify-center rounded-md bg-orange-500 py-2 px-4 text-sm font-semibold text-white transition-all duration-200 ease-in-out focus:shadow hover:bg-gray-800">
-                                                View Cart
-                                            </button>
-                                        </Link>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section >
             </div >
         </>
 
