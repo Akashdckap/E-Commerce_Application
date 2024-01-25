@@ -84,8 +84,9 @@ const resolvers = {
             // return (customerOrders.totalPrice, customerOrders.totalPrice)
             // console.log("customerOrders-------------", customerOrders);
         },
-        getGuestOrders: async () => {
+        getGuestOrders: async (_, { page, pageSize }) => {
             try {
+                const skip = (page - 1) * pageSize;
                 const guestOrders = await newOrders.find(
                     { "personalDetails.customerId": '' },
                     {
@@ -94,7 +95,7 @@ const resolvers = {
                         totalPrice: 1,
                         createdAt: 1,
                     }
-                )
+                ).skip(skip).limit(pageSize)
                 const formatCreateTime = guestOrders.map((guestOrder) => {
                     const { createdAt, ...rest } = guestOrder._doc
                     return {
@@ -143,6 +144,24 @@ const resolvers = {
         getTotalProductCount: async () => {
             const totalCount = await productDetails.countDocuments();
             return totalCount;
+        },
+        getCustomerOrderCount: async (_, { userId }) => {
+            try {
+                const orderCustomerCount = await newOrders.countDocuments({ "personalDetails.customerId": userId });
+                return orderCustomerCount
+            }
+            catch (error) {
+                console.error("Error counting orders:", error);
+            }
+        },
+        getGuestOrderCount: async () => {
+            try {
+                const orderGuestCount = await newOrders.countDocuments({ "personalDetails.customerId": "" });
+                return orderGuestCount
+            }
+            catch (error) {
+                console.error("Error counting orders:", error);
+            }
         },
 
         addToCartProductData: async (_, { ids }) => {

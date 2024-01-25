@@ -45,10 +45,10 @@ export default function OrderDetails() {
         if (orderedProducts && !dataLoading) {
             setOrderedData(orderedProducts.getAllOrderDatas)
         }
-
         if (currentPage > totalPages) {
             setCurrentPage(totalPages)
         }
+
     }, [orderCount, orderedProducts, orderedData, dataLoading, totalPages]);
 
     const startItem = (currentPage - 1) * pageSize + 1;
@@ -56,7 +56,7 @@ export default function OrderDetails() {
 
     return (
         <>
-            <div>
+            <div className="overflow-y-scroll custom-scroll scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-gray-300 max-h-screen p-2 mr-1 rounded-2xl">
                 <div className="py-10 px-16">
                     <div className="flex justify-between items-center pr-4">
                         <h1 className="text-start pl-4 text-2xl text-orange-400">Order Details</h1>
@@ -112,8 +112,6 @@ export default function OrderDetails() {
                             <div className='flex gap-4 items-center justify-center'>
                                 <button disabled={currentPage === 1}><FontAwesomeIcon icon={faLessThan} onClick={prevPage} className='hover:text-white border border-gray-300 hover:bg-black focus:outline-none focus:ring-4 focus:ring-gray-200 font-semibold rounded-lg text-sm px-2.5 py-1.5 dark:bg-transparent dark:text-blue-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700' style={{ cursor: currentPage == 1 ? 'not-allowed' : 'pointer', opacity: currentPage === 1 ? 0.5 : 1, }} /></button>
                                 <span className='bg-cyan-400 border border-teal-500 hover:bg-cyan-300 text-white font-bold py-1.5 px-3.5 rounded-full'>{currentPage}</span>
-                                {/* <input value={currentPage} type="number" onChange={(e) => setCurrentPage(parseInt(e.target.value, currentPage))} className='bg-cyan-400 flex justify-center items-center outline-0 border border-teal-500 hover:bg-cyan-300 text-white font-bold py-1.5 px-3.5 rounded-full' /> */}
-                                {/* {console.log("currentPage-------------------------", currentPage)} */}
                                 <button disabled={currentPage === totalPages}><FontAwesomeIcon onClick={nextPage} icon={faGreaterThan} className='hover:text-white border border-gray-300 focus:outline-none focus:ring-4 focus:ring-gray-200 font-semibold rounded-lg text-sm px-2.5 py-1.5 dark:bg-transparent dark:text-blue-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700' style={{ cursor: currentPage === totalPages ? 'not-allowed' : 'pointer', opacity: currentPage === totalPages ? 0.5 : 1, }} /></button>
                             </div>
                         </div>
