@@ -27,7 +27,7 @@ export default function Myorders() {
     const filterSearch = personalData && personalData.filter((item) => {
         return item.orderTime.toLowerCase().includes(searchText.toLowerCase());
     })
-
+    // console.log("orderCount------", orderCount);
     const nextPage = () => {
         setCurrentPage(currentPage + 1);
     }
@@ -52,7 +52,7 @@ export default function Myorders() {
                         <p>Welcome to orders page <span className='text-teal-600'>{loginData.name}</span></p>
                     </div>
                     <div className='ml-48'>
-                        <input type='text' className='bg-white h-10 border rounded-md p-3 m-4' onChange={(e)=>setSearchText(e.target.value) } placeholder='Search'></input>
+                        <input type='text' className='bg-white h-10 border rounded-md p-3 m-4' onChange={(e) => setSearchText(e.target.value)} placeholder='Search'></input>
                     </div>
                     <div className='ml-56'>
                         <Link href={'/customerHome'} className="flex items-center gap-2">
