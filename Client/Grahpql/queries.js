@@ -335,9 +335,19 @@ export const GET_PERSONAL_DETAILS_ORDER = gql`
         }
     }
 `
+export const GET_CUSTOMER_PERSONAL_ORDER_COUNT = gql`
+    query getCustomerOrderCount($userId: ID!){
+        getCustomerOrderCount(userId: $userId)
+    }
+`
+export const GET_GUEST_PERSONAL_ORDER_COUNT = gql`
+    query getGuestOrderCount{
+        getGuestOrderCount
+    }
+`
 export const GET_GUEST_ORDERS = gql`
-    query {
-        getGuestOrders{
+    query getGuestOrders($page:Int!, $pageSize:Int!){
+        getGuestOrders(page:$page, pageSize: $pageSize){
             _id,
             totalPrice,
             orderTime,
@@ -347,7 +357,6 @@ export const GET_GUEST_ORDERS = gql`
                 phoneNo,
                 customerId
             },
-        
           }
     }
 `

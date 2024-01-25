@@ -243,7 +243,7 @@ export default function index() {
     const totalExpandedAmount = ExpandedAmountarray.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
     return (
         <>
-            <div className='overflow-y-scroll custom-scroll scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-gray-300 max-h-screen p-2'>
+            <div className='overflow-y-scroll custom-scroll scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-gray-300 max-h-screen p-2 mr-1'>
                 <div>
                     <div className='flex justify-between px-14 py-2'>
                         <h1>Welcome to our site <span className='text-sky-400'>{loginData.name}</span></h1>
@@ -312,7 +312,7 @@ export default function index() {
                             <h1 className='text-yellow-500'>SHOPPING CART</h1>
                             <FontAwesomeIcon onClick={() => openCart ? setCart(false) : setCart(true)} icon={faClose} className='text-xl cursor-pointer hover:text-red-400' />
                         </div>
-                        <div className="overflow-y-scroll custom-scroll scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-gray-300 max-h-96 px-4 py-2">
+                        <div className="overflow-y-scroll custom-scroll scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-gray-300 max-h-96 px-4 py-2 mr-1">
                             {
                                 loginData.token ?
                                     customerCartBulkData.length > 0 ? (

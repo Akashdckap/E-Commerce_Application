@@ -439,7 +439,7 @@ export default function placeOrder() {
 
     return (
         <>
-            <div className="">
+            <div className="overflow-y-scroll custom-scroll scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-gray-300 max-h-screen p-2 mr-1 rounded-2xl">
                 <div className="flex justify-between ml-20 mt-10 gap-20 pr-16">
                     <div className="flex justify-around gap-80">
                         <Link href={'/cartItems'} className="flex justify-center items-center gap-2">

@@ -304,7 +304,7 @@ const typeDefs = gql` #graphql
         getShippingAddress(userId:ID!, editAddressId:ID!): shippingAddress
         getCustomerCartData(userId: ID!): [customerCartData]
         getCustomerOrders(userId:ID!): [customerOrders]
-        getGuestOrders: [customerPersonalDetails]
+        getGuestOrders(page:Int!, pageSize:Int!): [customerPersonalDetails]
         getCustomerPersonalDetails(userId: ID!,page:Int!,pageSize:Int!): [customerPersonalDetails]
         getAllAdmins:[admins]
         getAllProductsData: [products]
@@ -314,6 +314,10 @@ const typeDefs = gql` #graphql
         getProductDetails(id: ID!):products
         addToCartProductData(ids: ID!): products
         getOrderCount: Int!
+
+        getCustomerOrderCount(userId:ID!): Int!
+        getGuestOrderCount: Int!
+
         getOrderProductDetails(id: ID!): orders!
         getAllOrderDatas(page:Int!,pageSize:Int!): [orders]!
         getAddToCart(userId: ID!):cart!
