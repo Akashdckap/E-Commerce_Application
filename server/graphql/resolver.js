@@ -3,6 +3,8 @@
 // const path = require('path')
 // const fs = require('fs')
 // const mongoose = require("mongoose");
+// const { ApolloError } = require('apollo-server');
+// import { ApolloError } from 'apollo-server';
 import admins from '../model/adminSchema.js';
 import productDetails from '../model/productSchema.js';
 import newOrders from '../model/order.js';
@@ -16,6 +18,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import fileSchema from '../model/fileSchema.js'
 import mongoose from 'mongoose';
+import { error } from 'console';
 // import { ApolloError } from 'apollo-server-fastify';
 
 const ObjectId = mongoose.Types.ObjectId;
@@ -428,7 +431,6 @@ const resolvers = {
                     await cartSchema.deleteOne({ userId: inputs.personalDetails.customerId });
                 }
                 return saveOrders
-
             }
             catch (err) {
                 console.log(err, "create orders error");
@@ -543,14 +545,14 @@ const resolvers = {
             try {
                 const cart = await cartSchema.findOne({ userId })
                 const getSpecific = cart.cartItems.find((item) => item._id.toString() === new ObjectId(productId).toString());
-                if (getSpecific) {
+                if (getSpecific.quantity <= 1) {
+                    // throw new Error("Decreasing the default value")
+                    console.log("Decreasing the default value")
+                } else {
                     getSpecific.quantity = getSpecific.quantity - 1;
                     getSpecific.expandedPrice = getSpecific.price * getSpecific.quantity;
                     await cart.save();
                     return getSpecific;
-                } else {
-                    console.log('Product not found in the cart.');
-                    return false;
                 }
             }
             catch (error) {
