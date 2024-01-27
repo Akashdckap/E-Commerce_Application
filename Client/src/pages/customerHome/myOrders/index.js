@@ -15,10 +15,10 @@ export default function Myorders() {
     const [searchText, setSearchText] = useState("");
     const [totalPages, setTotalPages] = useState();
 
-
     const { data: customerPersonalDetails, loading: customerPersonalLoading, error: customerPersonalError } = useQuery(GET_PERSONAL_DETAILS_ORDER, {
         variables: { userId: loginData.customerId, page: currentPage, pageSize: pageSize },
     });
+    
     const { data: guestOrders, loading: guestLoading, error: guestError } = useQuery(GET_GUEST_ORDERS, {
         variables: { page: currentPage, pageSize: pageSize }
     })
@@ -37,6 +37,7 @@ export default function Myorders() {
     const { data: orderCount, loading: orderLoading, error: orderError } = useQuery(GET_CUSTOMER_PERSONAL_ORDER_COUNT, {
         variables: { userId: loginData.customerId }
     });
+
     const { data: guestOrderCount, loading: guestOrderLoading, error: guestOrderError } = useQuery(GET_GUEST_PERSONAL_ORDER_COUNT)
 
     useEffect(() => {
@@ -93,7 +94,6 @@ export default function Myorders() {
                     </div>
                 </div>
                 <h1 className='text-amber-600 text-xl pl-16'>Your Orders</h1>
-
                 <div className='mx-16 mt-4 bg-stone-100 rounded-md border border-solid mb-10 shadow-sm'>
                     <table className="w-full rounded-md overflow-hidden border border-solid border-green-600 min-h-[200px]">
                         <thead>
@@ -103,7 +103,6 @@ export default function Myorders() {
                                 <th scope="col" className="text-center text-gray-700 py-3.5">Email</th>
                                 <th scope="col" className="text-center text-gray-700 py-3.5">PhoneNo</th>
                                 <th scope="col" className="text-center text-gray-700 py-3.5">OrderTime</th>
-                                {/* <th scope="col" className="text-center text-gray-700 py-3.5">Status</th> */}
                                 <th scope="col" className="text-center text-gray-700 py-3.5">View Product</th>
                                 <th scope="col" className="text-center text-gray-700 py-3.5">Total Price</th>
                             </tr>
@@ -119,10 +118,10 @@ export default function Myorders() {
                                                 <td className="text-center text-gray-700 font-medium px-10" role="cell">{orders.personalDetails.email}</td>
                                                 <td className="text-center text-gray-700 font-medium px-10" role="cell">{orders.personalDetails.phoneNo}</td>
                                                 <td className="text-center text-gray-700 font-medium" role="cell">{orders.orderTime}</td>
-                                                {/* <td className="text-center text-gray-700 font-medium px-10" role="cell">Delivered</td> */}
                                                 <td className="text-center" role="cell"><Link href={`/customerHome/myOrders/viewOrders/${orders._id}`}><FontAwesomeIcon icon={faEye} className='text-base text-gray-700 cursor-pointer hover:text-teal-500' /></Link></td>
                                                 <td className="text-center text-gray-700 font-medium px-10" role="cell">₹ {orders.totalPrice}</td>
-                                            </tr>)
+                                            </tr>
+                                        )
                                     })
                                 ) :
                                     (<tr className='flex mt-20 items-center justify-center mb-24 m-auto w-2/6 px-4 py-5'>
