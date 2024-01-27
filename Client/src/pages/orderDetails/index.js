@@ -19,18 +19,18 @@ export default function OrderDetails() {
 
     const nextPage = () => {
         setCurrentPage(currentPage + 1);
-        fetchMore({
-            variables: { page: currentPage + 1, pageSize }
-        })
+        // fetchMore({
+        //     variables: { page: currentPage + 1, pageSize }
+        // })
     };
 
     const prevPage = () => {
         if (currentPage > 1) {
             setCurrentPage(currentPage - 1)
         }
-        fetchMore({
-            variables: { page: currentPage - 1, pageSize },
-        });
+        // fetchMore({
+        //     variables: { page: currentPage - 1, pageSize },
+        // });
     };
 
     const calculateSI = (index) => {

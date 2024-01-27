@@ -154,7 +154,7 @@ export default function UserPlaceOrder() {
                                 <FontAwesomeIcon icon={faShippingFast} className="text-green-400 text-lg" />
                             </div>
                             <div className="">
-                                <div className="border border-solid border-gray-300 hover:border-gray-400 shadow-sm rounded-md flex  flex-wrap justify-center px-2 py-6 items-start gap-x-4 gap-y-4 mt-3">
+                                <div className="border border-solid border-gray-300 hover:border-gray-400 shadow-sm rounded-md flex flex-wrap justify-center py-6 items-start gap-x-4 gap-y-4 mt-3">
                                     {
                                         addressesData && addressesData.getCustomerRegister.Addresses.map((shipping, index) => {
                                             return (
@@ -177,70 +177,70 @@ export default function UserPlaceOrder() {
                                 <h1 className="text-[#575F70] text-lg font-medium">Billing Address</h1>
                                 <FontAwesomeIcon icon={faShippingFast} className="text-sky-400 text-lg" />
                             </div>
-                            <div className="border border-solid border-gray-300 hover:border-gray-400 shadow-sm rounded-md mt-3">
-                                <div className="flex justify-center px-2 py-6 flex-wrap items-start gap-x-4 gap-y-4">
-                                    {
-                                        addressesData && addressesData.getCustomerRegister.Addresses.map((billing, index) => {
-                                            return (
-                                                <div key={index} onClick={() => setSelectBillingAddress(billing._id)} className={` ${selectBillingId === billing._id ? 'border-sky-400 shadow-lg border-2' : 'border-gray-300 shadow-sm'}bg-white grid gap-y-1 border w-52 border-solid  p-3 rounded-md`} >
-                                                    <h1 className="text-sky-300 font-normal text-lg">{billing.firstName}{billing.lastName}</h1>
-                                                    <p className="text-gray-500">{billing.phoneNo}</p>
-                                                    <p className="w-36 text-gray-400">{billing.address}</p>
-                                                    <p className="text-gray-400">{billing.district}</p>
-                                                    <p className="text-gray-400">{billing.pincode}</p>
-                                                    <p className="text-gray-400">{billing.country}</p>
-                                                </div>
-                                            )
-                                        })
-                                    }
-                                </div>
-                                <div className="grid justify-start items-start mb-4 ml-2">
-                                    <button onClick={() => setSelectBillingAddress(selectShippingId)} type="submit" className="p-2 flex justify-center items-center cursor-pointer text-orange-600 bg-white h-10 w-56 rounded hover:border-orange-400 border hover:bg-orange-50 hover:shadow-lg transition-all duration-300">Same as Shipping Address</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="pb-10">
-                        <div className="bg-white w-auto shadow-md h-full p-5 pb-6 rounded-md border-gray-300 border  hover:border-green-300 border-solid">
-                            <div className="flex justify-center items-center bg-[#F5F7FA] h-10 w-80 m-auto rounded-sm mt-3">
-                                <h3 className="text-[#51596B] font-normal">Order Summary</h3>
-                            </div>
-                            <div className="grid justify-center items-center mt-3 overflow-y-scroll custom-scroll scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-gray-300 max-h-screen p-2 rounded-2xl">
+                            {/* <div className=" w-auto border border-solid border-gray-300 hover:border-gray-400 shadow-sm rounded-md mt-3"> */}
+                            <div className="border border-solid border-gray-300 hover:border-gray-400 shadow-sm rounded-md flex flex-wrap justify-center py-6 items-start gap-x-4 gap-y-4 mt-3">
                                 {
-                                    customerCartData && customerCartData.getCustomerCartData.map((cartItems, index) => {
+                                    addressesData && addressesData.getCustomerRegister.Addresses.map((billing, index) => {
                                         return (
-                                            <div key={index} className="flex justify-between items-center gap-x-14 gap-y-10 pt-5">
-                                                <div className="flex justify-start items-center">
-                                                    <div>
-                                                        <span className="float-right flex justify-center items-center relative bottom-2 right-3 bg-[#AAB1BC] border-0 h-5 w-5 text-sm rounded-full text-white">{cartItems.quantity}</span>
-                                                        <div className="grid border-gray-300 border-solid border rounded-md">
-                                                            <img className="h-24 w-24 max-w-full p-2 rounded-2xl  object-cover" src="https://images.unsplash.com/flagged/photo-1556637640-2c80d3201be8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8c25lYWtlcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60" alt="" />
-                                                        </div>
-                                                    </div>
-                                                    <div className="grid justify-start">
-                                                        <h4 className="text-[#949AAA]">{cartItems.productName}</h4>
-                                                        <p className="text-[#C3C8D3]">{cartItems.category}</p>
-                                                    </div>
-                                                </div>
-                                                <div className="gird justify-start items-center">
-                                                    <p className="text-gray-500">₹{cartItems.expandedPrice}</p>
-                                                    <FontAwesomeIcon onClick={() => removeCustomerCartData(cartItems._id, cartItems.productName)} icon={faDeleteLeft} className="text-red-300 hover:cursor-pointer hover:text-red-400" />
-                                                </div>
+                                            <div key={index} onClick={() => setSelectBillingAddress(billing._id)} className={` ${selectBillingId === billing._id ? 'border-sky-400 shadow-lg border-2' : 'border-gray-300 shadow-sm'}bg-white grid gap-y-1 border w-52 border-solid  p-3 rounded-md`} >
+                                                <h1 className="text-sky-300 font-normal text-lg">{billing.firstName}{billing.lastName}</h1>
+                                                <p className="text-gray-500">{billing.phoneNo}</p>
+                                                <p className="w-36 text-gray-400">{billing.address}</p>
+                                                <p className="text-gray-400">{billing.district}</p>
+                                                <p className="text-gray-400">{billing.pincode}</p>
+                                                <p className="text-gray-400">{billing.country}</p>
                                             </div>
                                         )
                                     })
                                 }
                             </div>
-                            <div className="flex justify-center items-center mt-5 w-auto gap-x-36 mx-4 border-b border-solid border-gray-300 p-2 border-t">
-                                <label className="text-gray-700 font-medium">Total Amount :</label>
-                                <p className="text-orange-400 font-medium">₹{CustomerTotalAmount}</p>
+                            <div className="grid justify-start items-start mt-4">
+                                <button onClick={() => setSelectBillingAddress(selectShippingId)} type="submit" className="p-2 flex justify-center items-center cursor-pointer text-orange-600 bg-white h-10 w-56 rounded hover:border-orange-400 border hover:bg-orange-50 hover:shadow-lg transition-all duration-300">Same as Shipping Address</button>
                             </div>
-                            <div className="flex justify-center items-center mt-5">
-                                <button onClick={handlePlaceOrder} className={`bg-white w-80 border border-solid border-gray-400 hover:border-green-300 p-3 h-10 flex justify-center items-center hover:text-white hover:bg-green-400 text-gray-600 font-bold rounded cursor-pointer}`} >PLACE ORDER</button>
-                            </div>
+                            {/* </div> */}
+                        </div>
+                    </div>
+                    {/* <div className="pb-10"> */}
+                    <div className="bg-white w-auto shadow-md h-full p-5 pb-6 rounded-md border-gray-300 border  hover:border-green-300 border-solid">
+                        <div className="flex justify-center items-center bg-[#F5F7FA] h-10 w-80 m-auto rounded-sm mt-3">
+                            <h3 className="text-[#51596B] font-normal">Order Summary</h3>
+                        </div>
+                        <div className="grid justify-center items-center mt-3 overflow-y-scroll custom-scroll scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-gray-300 max-h-screen p-2 rounded-2xl">
+                            {
+                                customerCartData && customerCartData.getCustomerCartData.map((cartItems, index) => {
+                                    return (
+                                        <div key={index} className="flex justify-between items-center gap-x-14 gap-y-10 pt-5">
+                                            <div className="flex justify-start items-center">
+                                                <div>
+                                                    <span className="float-right flex justify-center items-center relative bottom-2 right-3 bg-[#AAB1BC] border-0 h-5 w-5 text-sm rounded-full text-white">{cartItems.quantity}</span>
+                                                    <div className="grid border-gray-300 border-solid border rounded-md">
+                                                        <img className="h-24 w-24 max-w-full p-2 rounded-2xl  object-cover" src="https://images.unsplash.com/flagged/photo-1556637640-2c80d3201be8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8c25lYWtlcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60" alt="" />
+                                                    </div>
+                                                </div>
+                                                <div className="grid justify-start">
+                                                    <h4 className="text-[#949AAA]">{cartItems.productName}</h4>
+                                                    <p className="text-[#C3C8D3]">{cartItems.category}</p>
+                                                </div>
+                                            </div>
+                                            <div className="gird justify-start items-center">
+                                                <p className="text-gray-500">₹{cartItems.expandedPrice}</p>
+                                                <FontAwesomeIcon onClick={() => removeCustomerCartData(cartItems._id, cartItems.productName)} icon={faDeleteLeft} className="text-red-300 hover:cursor-pointer hover:text-red-400" />
+                                            </div>
+                                        </div>
+                                    )
+                                })
+                            }
+                        </div>
+                        <div className="flex justify-center items-center mt-5 w-auto gap-x-36 mx-4 border-b border-solid border-gray-300 p-2 border-t">
+                            <label className="text-gray-700 font-medium">Total Amount :</label>
+                            <p className="text-orange-400 font-medium">₹{CustomerTotalAmount}</p>
+                        </div>
+                        <div className="flex justify-center items-center mt-5">
+                            <button onClick={handlePlaceOrder} className={`bg-white w-80 border border-solid border-gray-400 hover:border-green-300 p-3 h-10 flex justify-center items-center hover:text-white hover:bg-green-400 text-gray-600 font-bold rounded cursor-pointer}`} >PLACE ORDER</button>
                         </div>
                     </div>
                 </div>
+                {/* </div> */}
             </div>
         </>
     )

@@ -29,6 +29,7 @@ export const GET_ALL_PRODUCTS_DATA = gql`
             weight
             color
             description
+            updatedAt
         }
     }
 `

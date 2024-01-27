@@ -132,6 +132,18 @@ const resolvers = {
 
         getAllProductsData: async () => {
             return await (productDetails.find({}))
+            // const formattedUpdatedAt = allOrders.map(order => ({
+            //     ...order._doc,
+            //     OrderTime: order.updatedAt.toLocaleString('en-US', {
+            //         month: 'short',
+            //         day: 'numeric',
+            //         hour: 'numeric',
+            //         minute: 'numeric',
+            //         hour12: true,
+            //     }),
+            // }));
+            // // console.log("formattedOrders-------------",formattedOrders);
+            // return formattedUpdatedAt;
         },
         getAllProducts: async (_, { page, pageSize }) => {
             try {
@@ -436,7 +448,7 @@ const resolvers = {
                     })
                     await saveCart.save();
                     cart = saveCart
-                    return cart.cartItems;
+                    return cart;
                 }
                 else {
                     const existingItem = cart.cartItems.find((item) => new ObjectId(item.productID).toString() === new ObjectId(productId).toString());

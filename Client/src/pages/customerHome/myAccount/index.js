@@ -15,7 +15,8 @@ function Myaccount() {
     const [addressesCustomer, setAddressesCustomer] = useState([]);
     const [editDelete, setEditDelete] = useState(false);
     const [editId, setEditId] = useState();
-    const [activeSection, setActiveSection] = useState('profile');
+    const [activeSection, setActiveSection] = useState('address');
+    const [isHovered, setIsHovered] = useState(null);
     const router = useRouter();
     const componentRef = useRef();
 
@@ -345,6 +346,14 @@ function Myaccount() {
         }
 
     }
+    const handleMouseEnter = (addressID) => {
+        setIsHovered(addressID)
+        // setIsHovered((prevAddressID) => (prevAddressID === addressID ? null : addressID));
+    };
+
+    const handleMouseLeave = () => {
+        setIsHovered(null);
+    };
     return (
         <>
             <div className="grid gap-5 ml-28 overflow-y-scroll custom-scroll scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-gray-300 max-h-screen p-2 mr-1">
@@ -415,7 +424,7 @@ function Myaccount() {
                             </div>
                             <div className="mt-5" >
                                 <form onSubmit={handleShipppingDetails} style={{ display: showShippingData ? "block" : "none" }}>
-                                    <div className={`${editId ? 'absolute inset-x-60 inset-y-28 h-screen shadow-xl' : ''} grid justify-start p-5 w-auto gap-4 bg-white border-green-300 border border-solid rounded-md`}>
+                                    <div className={`${editId ? 'absolute inset-x-52 inset-y-10 px-10 h-screen shadow-xl' : ''} grid justify-st p-5 mx-20 gap-4 bg-white border-green-300 border border-solid rounded-md`}>
                                         <div className="flex justify-start items-center gap-3">
                                             <FontAwesomeIcon icon={faShippingFast} className="text-green-400" />
                                             <h4 className="text-gray-700 text-base font-normal">Address</h4>
@@ -489,10 +498,10 @@ function Myaccount() {
                                 </form>
                             </div>
 
-                            <div className="">
+                            <div className="grid grid-cols-2 flex-wrap gap-x-4 justify-between" >
                                 {addressesCustomer.map((address, index) => {
                                     return (
-                                        <div className="flex justify-between border border-solid bg-teal-50 hover:border-teal-200 rounded-md my-4 gap-x-80 p-3 w-auto" key={index}>
+                                        <div onMouseEnter={() => handleMouseEnter(address._id)} onMouseLeave={handleMouseLeave} className="flex justify-between items-center border border-solid bg-teal-50 hover:border-teal-200 rounded-md my-4 p-3 gap-x-2 w-auto" key={index}>
                                             <div>
                                                 <div className="flex gap-2">
                                                     <p className="text-gray-600">{address.firstName}</p>
@@ -500,23 +509,33 @@ function Myaccount() {
                                                     <p className="text-gray-600">{address.phoneNo}</p>
                                                 </div>
                                                 <div className="flex gap-2 py-2">
-                                                    <p className="text-gray-500">{address.address},</p>
+                                                    <p className="text-gray-500">{
+                                                        address.address.length > 15 ?
+                                                            `${address.address.slice(0, 15)}....` : address.address
+                                                    },</p>
                                                     <p className="text-gray-500">{address.district},</p>
                                                     <p className="text-gray-500">{address.state} - </p>
                                                     <p className="text-gray-500">{address.pincode}</p>
                                                 </div>
                                             </div>
-                                            <div className="flex">
-                                                {editDelete === address._id && (
-                                                    <div className="grid gap-2 bg-teal-50 items-center mr-3 px-2 rounded-md shadow-sm hover:shadow-xl border border-solid border-green-100">
-                                                        <FontAwesomeIcon icon={faEdit} onClick={() => { editAddress(address._id), setEditDelete(false) }} className="text-green-400 hover:cursor-pointer" />
-                                                        <FontAwesomeIcon icon={faTrash} onClick={() => { removeAddress(address._id), setEditDelete(false) }} className="text-red-400 hover:cursor-pointer" />
-                                                        {/* <button onClick={() => editAddress(address._id)} className="border rounded-md w-16 text-gray-600">Edit</button>
-                                                <button onClick={() => removeAddress(address._id)} className="border rounded-md w-16 text-gray-600">Delete</button> */}
-                                                    </div>
-                                                )}
-                                                <FontAwesomeIcon icon={faEllipsisVertical} onClick={() => setEditDelete(editDelete === address._id ? null : address._id)} className="actionIcon text-gray-500 cursor-pointer ml-auto hover:text-teal-500" />
+                                            <div className="flex" style={{ visibility: isHovered === address._id ? 'visible' : 'hidden' }} >
+                                                <div className="grid gap-y-6 items-center">
+                                                    <FontAwesomeIcon icon={faEdit} onClick={() => { editAddress(address._id), setEditDelete(false) }} className="text-green-400 hover:cursor-pointer" />
+                                                    <FontAwesomeIcon icon={faTrash} onClick={() => { removeAddress(address._id), setEditDelete(false) }} className="text-red-400 hover:cursor-pointer" />
+                                                </div>
+                                                {/* <FontAwesomeIcon icon={faEllipsisVertical} onClick={() => setEditDelete(editDelete === address._id ? null : address._id)} className="actionIcon text-gray-500 cursor-pointer hover:text-teal-500" /> */}
                                             </div>
+                                            {/* <div className="flex">
+                                                {/* {editDelete === address._id && ( */}
+                                            {/* <div style={{ display: editDelete === address._id ? 'block' : 'none' }} className="flex gap-4 bg-teal-50 items-center px-4 rounded-md shadow-sm hover:shadow-xl border border-solid border-green-100"> */}
+                                            {/* <FontAwesomeIcon icon={faEdit} onClick={() => { editAddress(address._id), setEditDelete(false) }} className="text-green-400 hover:cursor-pointer" /> */}
+                                            {/* <FontAwesomeIcon icon={faTrash} onClick={() => { removeAddress(address._id), setEditDelete(false) }} className="text-red-400 hover:cursor-pointer" /> */}
+                                            {/* <button onClick={() => editAddress(address._id)} className="border rounded-md w-16 text-gray-600">Edit</button>
+                                                <button onClick={() => removeAddress(address._id)} className="border rounded-md w-16 text-gray-600">Delete</button> */}
+                                            {/* </div> */}
+                                            {/* <FontAwesomeIcon icon={faEllipsisVertical} onClick={() => setEditDelete(editDelete === address._id ? null : address._id)} className="actionIcon text-gray-500 cursor-pointer hover:text-teal-500" /> */}
+                                            {/* )} */}
+                                            {/* </div>  */}
                                         </div>
                                     )
                                 })}
