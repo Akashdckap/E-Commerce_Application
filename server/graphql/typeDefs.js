@@ -49,6 +49,7 @@ const typeDefs = gql` #graphql
         weight: Int,
         description: String,
         color: String,
+        updatedAt: Date!
     }
 
     type images{
