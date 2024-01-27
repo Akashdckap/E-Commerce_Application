@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { logOutCustomer } from '@/Reducer/productReducer';
 import { useRouter } from 'next/router';
+import { formatDistanceToNow } from 'date-fns';
 import { toast } from 'react-toastify';
 import Image from 'next/image';
 import { LOGIN_CUSTOMER, CREATE_CART_ITEMS, DELETE_CUSTOMER_CART_DATA, REMOVE_ALL_CUSTOMER_CART_DATA, INCREMENT_CUSTOMER_PRODUCT_QTY, DECREMENT_CUSTOMER_PRODUCT_QTY } from '../../../Grahpql/mutation';
@@ -15,6 +16,7 @@ import { storeAddToCartProductData, updateCartItemQuantity, removeCartdata, remo
 
 import Link from 'next/link';
 export default function index() {
+    // const timeAgo = formatDistanceToNow(date, { addSuffix: true });
     const dispatch = useDispatch();
     const [openProfile, setOpenProfile] = useState(false)
     const [openCart, setCart] = useState(false)
@@ -29,9 +31,7 @@ export default function index() {
 
     const { data: productData, error: productError, loading: productLoading } = useQuery(GET_ALL_PRODUCTS_DATA);
 
-    const [parseIds, { data: getSingleCartData, error: getSingleCartError, loading: getSingleCartLoading }] = useLazyQuery(GET_ADD_TO_CART_SINGLE_PRODUCT_DATA, {
-        variables: { ids: allAddToCartId }
-    })
+    const [getSingleCartDatas, { data: getSingleCartData, error: getSingleCartError, loading: getSingleCartLoading }] = useLazyQuery(GET_ADD_TO_CART_SINGLE_PRODUCT_DATA);
 
     const [storeCartDatas] = useMutation(CREATE_CART_ITEMS)
     const [deleteCustomerCartData] = useMutation(DELETE_CUSTOMER_CART_DATA)
@@ -78,31 +78,27 @@ export default function index() {
     }
 
     const handleAddtoCartBtn = async (getId, productName) => {
-        parseIds();
-        if (getId) {
-            setAddToCartId(getId)
-            // console.log("firstTime-----------", allAddToCartId);
-            // const cartData = getCartData.find((cart) => cart._id === getId)
-            // if (cartData === undefined) {
-            //     console.log("firstTime-----------", allAddToCartId);
-            //     toast.success(`Item added to your cart: ${productName}`, {
-            //         position: 'top-center',
-            //         autoClose: 3000,
-            //     })
-            // }
-            // else {
-            //     console.log("already-----------", allAddToCartId);
-            // toast.success(`You increased the quantity of the ${cartData.productName} to ${cartData.quantity}.`, {
-            //     position: 'top-center',
-            //     autoClose: 3000,
-            // })
-            // }
+        try {
+            const { data } = await getSingleCartDatas({
+                variables: { ids: getId }
+            });
+            dispatch(storeAddToCartProductData(data.addToCartProductData))
+            const alreadyExits = getCartData.find((cart) => cart._id === getId);
+            if (alreadyExits) {
+                toast.success(`You changed the ${alreadyExits.productName} quantity to ${alreadyExits.quantity + 1}.`, {
+                    position: 'top-center',
+                    autoClose: 3000,
+                })
+            }
+            else {
+                toast.success("Item added to your cart", {
+                    position: 'top-center',
+                    autoClose: 3000,
+                })
+            }
         }
-        else {
-            toast.error("Cart is not added Successfully", {
-                position: 'top-center',
-                autoClose: 3000,
-            })
+        catch (error) {
+            console.error("Error fetching data from Apollo server", error);
         }
     }
 
@@ -122,9 +118,6 @@ export default function index() {
         if (customerCartData && !customerCartLoading && !customerCartError) {
             setCustomerCartData(customerCartData.getCustomerCartData)
         }
-        if (getSingleCartData && !getSingleCartLoading && getSingleCartData.addToCartProductData) {
-            dispatch(storeAddToCartProductData(getSingleCartData.addToCartProductData));
-        }
         if (productError && !productData && !productLoading) {
             console.log("...Product Data Error");
         }
@@ -134,18 +127,11 @@ export default function index() {
 
     }, [productData, getSingleCartData, customerCartData, customerCartBulkData]);
 
-    // useEffect(() => {
-    //     if (Object.keys(loginData).length === 0 || !loginData.token) {
-    //         router.push('/customerLogin')
-    //     }
-    //     else {
-    //         router.push('/customerHome')
-    //     }
 
     const filteredList = getProductData.filter((item) => {
         return item.productName.toLowerCase().includes(searchText.toLowerCase());
     });
-    // console.log(getProductData,"--------------");
+
     const handleRemoveDataFromLocal = (itemId, productName) => {
         dispatch(removeCartdata(itemId))
         toast.success(`${productName} removed from your cart`, {
@@ -236,6 +222,7 @@ export default function index() {
     const myOrders = () => {
         router.push("/customerHome/myOrders")
     }
+    console.log("filteredList--------------------", filteredList);
     const CustomerAmountarray = customerCartBulkData.map((expanded) => expanded.expandedPrice)
     const CustomerTotalAmount = CustomerAmountarray.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
 
@@ -304,9 +291,7 @@ export default function index() {
                         </div>
                     </div>
                 </div>
-                <section className='py-12 sm:py-16 lg:py-20 absolute bottom-0 top-0 z-10 right-14' style={{ display: openCart ? 'block' : 'none' }}>
-                    {/* <div className="mx-auto px-4 sm:px-6 lg:px-8">
-                        <div className="mx-auto mt-8 max-w-md md:mt-12"> */}
+                <section className='overflow-y-hidden py-12 sm:py-16 lg:py-20 absolute bottom-0 top-0 z-10 right-14' style={{ display: openCart ? 'block' : 'none' }}>
                     <div className="rounded-xl bg-white shadow-2xl">
                         <div className='flex justify-between border-b-2 px-4 py-2'>
                             <h1 className='text-yellow-500'>SHOPPING CART</h1>
@@ -337,7 +322,7 @@ export default function index() {
                                                                 <div className="flex justify-center items-center gap-36">
                                                                     <div className='flex justify-center items-center gap-2'>
                                                                         {/* <button disabled={listCartData.quantity == 1} > */}
-                                                                            <FontAwesomeIcon icon={faMinus} onClick={() => handleDecrementQuantity(listCartData._id)} className={`${listCartData.quantity === 1 ? 'cursor-default' : "cursor-pointer"} border border-solid border-blue-300 font-thin rounded-xl p-1 text-xs`} />
+                                                                        <FontAwesomeIcon icon={faMinus} onClick={() => handleDecrementQuantity(listCartData._id)} className={`${listCartData.quantity === 1 ? 'cursor-default' : "cursor-pointer"} border border-solid border-blue-300 font-thin rounded-xl p-1 text-xs`} />
                                                                         {/* </button> */}
                                                                         {
                                                                             <span className='border border-gray-400 w-10 rounded-sm flex justify-center items-center'>{listCartData.quantity}</span>
@@ -450,8 +435,6 @@ export default function index() {
                             </div>
                         </div>
                     </div>
-                    {/* </div>
-                    </div> */}
                 </section>
                 <div className=''>
                     <div className='z-0 grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 w-auto gap-y-10 justify-start item-center flex-wrap flex-row'>
@@ -489,6 +472,9 @@ export default function index() {
                                                         <path strokeLinecap="round" strokeLinejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                                                     </svg>
                                                     Add to cart</button>
+                                            </div>
+                                            <div>
+                                                <p>{formatDistanceToNow(item.updatedAt)}</p>
                                             </div>
                                         </div>
                                     </div>

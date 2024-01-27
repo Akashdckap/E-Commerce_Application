@@ -23,11 +23,11 @@ export const productSlice = createSlice({
         storeAddToCartProductData: (state, action) => {
             const productData = action.payload;
             const productIndex = state.cartData.findIndex((product) => product._id === productData._id);
-            if (productIndex !== -1) {
+            if (productIndex === -1) {
+                state.cartData.push({ ...productData, quantity: 1, expandedPrice: productData.price });
+            } else {
                 state.cartData[productIndex].quantity = (state.cartData[productIndex].quantity || 0) + 1;
                 state.cartData[productIndex].expandedPrice = (state.cartData[productIndex].price) * state.cartData[productIndex].quantity
-            } else {
-                state.cartData.push({ ...productData, quantity: 1, expandedPrice: productData.price });
             }
         },
 
