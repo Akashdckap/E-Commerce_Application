@@ -145,90 +145,92 @@ export default function Myorders() {
                 <div className='flex justify-between items-center mb-10'>
                     <div>
                         <p className='pl-16 text-gray-700 '>Showing {startItem} to {endItem} of {loginData.customerId === undefined ? guestOrderCount && guestOrderCount.getGuestOrderCount : orderCount && orderCount.getCustomerOrderCount} results</p>
-                {/* <h1 className='text-amber-600 text-xl pl-16'>Your Orders</h1> */}
-                <div className='flex items-start justify-between mx-14'>
-                    <div className='grid justify-start gap-y-2'>
-                        <h1 className={`${activeSection === 'order' ? 'text-orange-500' : 'text-gray-500'}`}>My Orders</h1>
-                        {
-                            loginData.customerId !== undefined ?
-                                <Link href={'/customerHome/myAccount'} className='text-gray-500'>My Account</Link>
-                                : ''
-                        }
-                    </div>
-                    <div className='grid' style={{ display: activeSection === "order" ? 'block' : 'none' }}>
-                        <div className='bg-stone-100 rounded-md border border-solid mb-10 shadow-sm'>
-                            <table className="w-full rounded-md overflow-hidden border border-solid border-green-600 min-h-[200px]">
-                                <thead>
-                                    <tr className="bg-teal-100">
-                                        <th scope="col" className="text-center text-gray-700 py-3.5 px-7">S.No</th>
-                                        <th scope="col" className="text-center text-gray-700 py-3.5">Name</th>
-                                        <th scope="col" className="text-center text-gray-700 py-3.5">Email</th>
-                                        <th scope="col" className="text-center text-gray-700 py-3.5">PhoneNo</th>
-                                        <th scope="col" className="text-center text-gray-700 py-3.5">OrderTime</th>
-                                        {/* <th scope="col" className="text-center text-gray-700 py-3.5">Status</th> */}
-                                        <th scope="col" className="text-center text-gray-700 py-3.5">View Product</th>
-                                        <th scope="col" className="text-center text-gray-700 py-3.5">Total Price</th>
-                                    </tr>
-                                </thead>
-                                <tbody className='w-full'>
-                                    {
-                                        filterCustomerPersonal.length > 0 ? (
-                                            filterCustomerPersonal.map((orders, index) => {
-                                                return (
-                                                    <tr className="border hover:bg-white hover:rounded-t-full border-b-gray-300 transition-all duration-300 ease-in-out" key={index}>
-                                                        <td className="text-center text-gray-700 font-medium" role="cell">{calculateSI(index)}</td>
-                                                        <td className="text-center text-gray-700 font-medium py-3 px-10" role="cell">{
-                                                            orders.personalDetails.name.length > 13 ?
-                                                                `${orders.personalDetails.name.slice(0, 13)}....` :
-                                                                orders.personalDetails.name
-                                                        }</td>
-                                                        <td data-tooltip-content={orders.personalDetails.email} className="text-center text-gray-700 font-medium px-10" role="cell">{
-                                                            orders.personalDetails.email.length > 17 ?
-                                                                `${orders.personalDetails.email.slice(0, 17)}....` :
-                                                                orders.personalDetails.email
-
-                                                        }</td>
-                                                        <td className="text-center text-gray-700 font-medium px-10" role="cell">{orders.personalDetails.phoneNo}</td>
-                                                        <td className="text-center text-gray-700 font-medium" role="cell">{orders.orderTime}</td>
-                                                        {/* <td className="text-center text-gray-700 font-medium px-10" role="cell">Delivered</td> */}
-                                                        <td className="text-center" role="cell"><Link href={`/customerHome/myOrders/viewOrders/${orders._id}`}><FontAwesomeIcon icon={faEye} className='text-base text-gray-700 cursor-pointer hover:text-teal-500' /></Link></td>
-                                                        <td className="text-center text-gray-700 font-medium px-10" role="cell">₹ {orders.totalPrice}</td>
-                                                    </tr>)
-                                            })
-                                        ) :
-                                            (<tr className='flex w-2/6 mt-20 items-center justify-center mb-24 m-auto px-4 py-5'>
-                                                <td className='text-red-500 mb-10' colSpan='7'>{searchText} Not found</td>
+                        {/* <h1 className='text-amber-600 text-xl pl-16'>Your Orders</h1> */}
+                        <div className='flex items-start justify-between mx-14'>
+                            <div className='grid justify-start gap-y-2'>
+                                <h1 className={`${activeSection === 'order' ? 'text-orange-500' : 'text-gray-500'}`}>My Orders</h1>
+                                {
+                                    loginData.customerId !== undefined ?
+                                        <Link href={'/customerHome/myAccount'} className='text-gray-500'>My Account</Link>
+                                        : ''
+                                }
+                            </div>
+                            <div className='grid' style={{ display: activeSection === "order" ? 'block' : 'none' }}>
+                                <div className='bg-stone-100 rounded-md border border-solid mb-10 shadow-sm'>
+                                    <table className="w-full rounded-md overflow-hidden border border-solid border-green-600 min-h-[200px]">
+                                        <thead>
+                                            <tr className="bg-teal-100">
+                                                <th scope="col" className="text-center text-gray-700 py-3.5 px-7">S.No</th>
+                                                <th scope="col" className="text-center text-gray-700 py-3.5">Name</th>
+                                                <th scope="col" className="text-center text-gray-700 py-3.5">Email</th>
+                                                <th scope="col" className="text-center text-gray-700 py-3.5">PhoneNo</th>
+                                                <th scope="col" className="text-center text-gray-700 py-3.5">OrderTime</th>
+                                                {/* <th scope="col" className="text-center text-gray-700 py-3.5">Status</th> */}
+                                                <th scope="col" className="text-center text-gray-700 py-3.5">View Product</th>
+                                                <th scope="col" className="text-center text-gray-700 py-3.5">Total Price</th>
                                             </tr>
-                                            )
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
-                        <div className='flex justify-between items-center mb-10'>
-                            <div>
-                                <p className='text-gray-700'>Showing {startItem} to {endItem} of {loginData.customerId === undefined ? guestOrderCount && guestOrderCount.getGuestOrderCount : orderCount && orderCount.getCustomerOrderCount} results</p>
-                            </div>
-                            <div className='flex justify-between items-center gap-8'>
-                                <div className="border border-solid border-teal-600 rounded-md flex justify-between items-center h-9 w-32 gap-3 p-2">
-                                    <p className="text-gray-800">Show :</p>
-                                    <select className="pl-3 outline-0 bg-transparent" onChange={(e) => setPageSize(parseInt(e.target.value))}>
-                                        <option value="10">10</option>
-                                        <option value="15">15</option>
-                                        <option value="20">20</option>
-                                        <option value="25">25</option>
-                                        <option value="30">30</option>
-                                    </select>
+                                        </thead>
+                                        <tbody className='w-full'>
+                                            {
+                                                filterCustomerPersonal.length > 0 ? (
+                                                    filterCustomerPersonal.map((orders, index) => {
+                                                        return (
+                                                            <tr className="border hover:bg-white hover:rounded-t-full border-b-gray-300 transition-all duration-300 ease-in-out" key={index}>
+                                                                <td className="text-center text-gray-700 font-medium" role="cell">{calculateSI(index)}</td>
+                                                                <td className="text-center text-gray-700 font-medium py-3 px-10" role="cell">{
+                                                                    orders.personalDetails.name.length > 13 ?
+                                                                        `${orders.personalDetails.name.slice(0, 13)}....` :
+                                                                        orders.personalDetails.name
+                                                                }</td>
+                                                                <td data-tooltip-content={orders.personalDetails.email} className="text-center text-gray-700 font-medium px-10" role="cell">{
+                                                                    orders.personalDetails.email.length > 17 ?
+                                                                        `${orders.personalDetails.email.slice(0, 17)}....` :
+                                                                        orders.personalDetails.email
+
+                                                                }</td>
+                                                                <td className="text-center text-gray-700 font-medium px-10" role="cell">{orders.personalDetails.phoneNo}</td>
+                                                                <td className="text-center text-gray-700 font-medium" role="cell">{orders.orderTime}</td>
+                                                                <td className="text-center" role="cell"><Link href={`/customerHome/myOrders/viewOrders/${orders._id}`}><FontAwesomeIcon icon={faEye} className='text-base text-gray-700 cursor-pointer hover:text-teal-500' /></Link></td>
+                                                                <td className="text-center text-gray-700 font-medium px-10" role="cell">₹ {orders.totalPrice}</td>
+                                                            </tr>)
+                                                    })
+                                                ) :
+                                                    (<tr className='flex w-2/6 mt-20 items-center justify-center mb-24 m-auto px-4 py-5'>
+                                                        <td className='text-red-500 mb-10' colSpan='7'>{searchText} Not found</td>
+                                                    </tr>
+                                                    )
+                                            }
+                                        </tbody>
+                                    </table>
                                 </div>
-                                <div className='flex gap-4 items-center justify-end'>
-                                    <button disabled={currentPage === 1} ><FontAwesomeIcon icon={faLessThan} onClick={prevPage} style={{ cursor: currentPage <= 1 ? 'not-allowed' : 'pointer' }} className='border px-1.5 py-1.5 border-gray-400 rounded-md w-8 hover:bg-teal-100' /></button>
-                                    <span className='bg-teal-200 border border-teal-500 hover:bg-teal-100 font-bold py-1 px-3.5 rounded-full'>{currentPage}</span>
-                                    <button disabled={currentPage === totalPages} ><FontAwesomeIcon icon={faGreaterThan} onClick={nextPage} style={{ cursor: currentPage === totalPages ? 'not-allowed' : 'pointer' }} className={`border px-1.5 py-1.5 border-gray-400 rounded-md w-8 hover:bg-teal-100 `} /></button>
+                                <div className='flex justify-between items-center mb-10'>
+                                    <div>
+                                        <p className='text-gray-700'>Showing {startItem} to {endItem} of {loginData.customerId === undefined ? guestOrderCount && guestOrderCount.getGuestOrderCount : orderCount && orderCount.getCustomerOrderCount} results</p>
+                                    </div>
+                                    <div className='flex justify-between items-center gap-8'>
+                                        <div className="border border-solid border-teal-600 rounded-md flex justify-between items-center h-9 w-32 gap-3 p-2">
+                                            <p className="text-gray-800">Show :</p>
+                                            <select className="pl-3 outline-0 bg-transparent" onChange={(e) => setPageSize(parseInt(e.target.value))}>
+                                                <option value="10">10</option>
+                                                <option value="15">15</option>
+                                                <option value="20">20</option>
+                                                <option value="25">25</option>
+                                                <option value="30">30</option>
+                                            </select>
+                                        </div>
+                                        <div className='flex gap-4 items-center justify-end'>
+                                            <button disabled={currentPage === 1} ><FontAwesomeIcon icon={faLessThan} onClick={prevPage} style={{ cursor: currentPage <= 1 ? 'not-allowed' : 'pointer' }} className='border px-1.5 py-1.5 border-gray-400 rounded-md w-8 hover:bg-teal-100' /></button>
+                                            <span className='bg-teal-200 border border-teal-500 hover:bg-teal-100 font-bold py-1 px-3.5 rounded-full'>{currentPage}</span>
+                                            <button disabled={currentPage === totalPages} ><FontAwesomeIcon icon={faGreaterThan} onClick={nextPage} style={{ cursor: currentPage === totalPages ? 'not-allowed' : 'pointer' }} className={`border px-1.5 py-1.5 border-gray-400 rounded-md w-8 hover:bg-teal-100 `} /></button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div >
                 </div>
-            </div >
+            </div>
         </>
+
     )
 }

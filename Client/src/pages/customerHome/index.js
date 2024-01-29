@@ -80,10 +80,10 @@ export default function index() {
             }
         }
         catch (error) {
-            toast.error("Cart is not added Successfully", {
-                position: 'top-center',
-                autoClose: 3000,
-            })
+            // toast.error("Cart is not added Successfully", {
+            //     position: 'top-center',
+            //     autoClose: 3000,
+            // })
         }
     }
 
