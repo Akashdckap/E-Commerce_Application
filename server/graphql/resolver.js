@@ -438,7 +438,10 @@ const resolvers = {
             }
         },
 
-        async cartItems(_, { productId, userId, productCart }) {
+        async cartItems(_, { userId, productId, productCart }) {
+            console.log("productCart-------", productCart);
+            console.log("userId-------", userId);
+            console.log("productId-------", productId);
             try {
                 const cart = await cartSchema.findOne({ userId })
                 if (!cart) {
