@@ -16,26 +16,24 @@ import { storeAddToCartProductData, updateCartItemQuantity, removeCartdata, remo
 
 import Link from 'next/link';
 export default function index() {
-    // const timeAgo = formatDistanceToNow(date, { addSuffix: true });
     const dispatch = useDispatch();
     const [openProfile, setOpenProfile] = useState(false)
     const [openCart, setCart] = useState(false)
     const router = useRouter();
     const [getProductData, setgetProductData] = useState([])
     const [searchText, setSearchText] = useState('');
-    const [allAddToCartId, setAddToCartId] = useState('');
     const [customerCartBulkData, setCustomerCartData] = useState([])
-    // const [isDivVisible, setIsDivVisible] = useState(true);
+
     const divRef = useRef(null);
     const loginData = useSelector(state => state.productDetails.LoginData);
     const getCartData = useSelector(state => state.productDetails.cartData);
     const { data: productData, error: productError, loading: productLoading } = useQuery(GET_ALL_PRODUCTS_DATA);
 
-    const handleClickOutSide = (e) => {
-        if (divRef.current && !divRef.current.contains(e.target)) {
-            setCart(false)
-        }
-    }
+    // const handleClickOutSide = (e) => {
+    //     if (divRef.current && !divRef.current.contains(e.target)) {
+    //         setCart(false)
+    //     }
+    // }
     const handleButtonClick = () => {
         setCart(!openCart)
     }
@@ -52,18 +50,14 @@ export default function index() {
         {
             variables: { userId: loginData.customerId }
         })
-    // console.log(customerCartError,"------------")
 
     const handleAddToCartToken = async (getProductId) => {
         const cart = productData.getAllProductsData.find((cart) => { return cart._id == getProductId })
-        const updatObject = {
-            ...cart,
-            productID: cart._id
-        }
-        delete updatObject._id
-        const { __typename, ...rest } = updatObject
+        const { __typename, updatedAt, _id: productID, ...cartData } = { ...cart, productID: cart._id }
+
         try {
-            const { data } = await storeCartDatas({ variables: { productId: getProductId, userId: loginData.customerId, productCart: rest } })
+            const { data } = await storeCartDatas({ variables: { userId: loginData.customerId, productId: getProductId, productCart: cartData } })
+
             if (data.cartItems.quantity > 1) {
                 refetchCustomerCartData();
                 toast.success(`You changed the ${data.cartItems.productName} quantity to ${data.cartItems.quantity}.`, {
@@ -80,10 +74,10 @@ export default function index() {
             }
         }
         catch (error) {
-            // toast.error("Cart is not added Successfully", {
-            //     position: 'top-center',
-            //     autoClose: 3000,
-            // })
+            toast.error(error, {
+                position: 'top-center',
+                autoClose: 3000,
+            })
         }
     }
 
@@ -135,10 +129,10 @@ export default function index() {
         if (productLoading && !productError && !productData) {
             console.log("...error");
         }
-        document.addEventListener('mousedown', handleClickOutSide);
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutSide)
-        }
+        // document.addEventListener('mousedown', handleClickOutSide);
+        // return () => {
+        //     document.removeEventListener('mousedown', handleClickOutSide)
+        // }
     }, [productData, getSingleCartData, customerCartData, customerCartBulkData]);
 
     const filteredList = getProductData.filter((item) => {
@@ -239,7 +233,7 @@ export default function index() {
     const myOrders = () => {
         router.push("/customerHome/myOrders")
     }
-    console.log("filteredList--------------------", filteredList);
+
     const CustomerAmountarray = customerCartBulkData.map((expanded) => expanded.expandedPrice)
     const CustomerTotalAmount = CustomerAmountarray.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
 
@@ -309,7 +303,7 @@ export default function index() {
                     </div>
                 </div>
                 <div>
-                    <section className={`py-12 sm:py-16 lg:py-20 absolute bottom-0 top-0 z-10 right-14 ${ openCart ? 'block' : 'hidden'}`}>
+                    <section className={`py-12 sm:py-16 lg:py-20 absolute bottom-0 top-0 z-10 right-14 ${openCart ? 'block' : 'hidden'}`}>
                         {/* <div className="mx-auto px-4 sm:px-6 lg:px-8">
                         <div className="mx-auto mt-8 max-w-md md:mt-12"> */}
                         <div className="rounded-xl bg-white shadow-2xl">
