@@ -308,6 +308,12 @@ const typeDefs = gql` #graphql
         password: String,
         token: String,
     }
+    type File {
+    filename: String!
+    mimetype: String!
+    encoding: String!
+  }
+
     type Query{
         getCustomerRegister(id: ID!): customerRegister
         getShippingAddress(userId:ID!, editAddressId:ID!): shippingAddress
@@ -333,6 +339,7 @@ const typeDefs = gql` #graphql
     }
 
     type Mutation{
+        singleUpload(file: Upload!): File
         registerCustomer(customerInput: customerRegisterInput):customerRegister!
         customerLogin(loginInput: customerLoginInput): loginResponse!
         createAdmins(adminsInput: adminsInput): admins!

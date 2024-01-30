@@ -232,10 +232,10 @@ export default function AdminStore() {
                 <div>
                     {/* <div>
                     <h1>upload File</h1>
-                    <input type='file' onChange={handleSingleImage} value={setFile.filename} name='image' />
+                <input type='file' onChange={handleSingleImage} value={setFile.filename} name='image' />
                     <button onClick={handleUpload} type='submit' className="rounded bg-blue-300 text-white-600 py-2 px-4 border border-green-700">Upload</button>
                 </div> */}
-                    <form onSubmit={handleProductForm} style={{ display: formOpen ? 'block' : 'none' }} className='z-10 absolute bottom-25 ml-20 left-10 w-9/12 bg-emerald-100 p-4 m-auto h-auto rounded'>
+                    <form onSubmit={handleProductForm} style={{ display: formOpen ? 'block' : 'none' }} className='z-10 absolute ml-32 bottom-5 w-9/12 bg-emerald-100 p-4 h-auto rounded'>
                         <div className="imageContainer">
                             <input type="file" className="block w-full text-red-500
                                 file:mr-4 file:py-2 file:px-4
@@ -294,7 +294,7 @@ export default function AdminStore() {
                                 {productErrors.color ? <span className="text-red-600">{productErrors.color}</span> : ""}
                             </div>
                         </div>
-                        <div className='flex items-center justify-evenly p-2'>
+                        <div className='flex items-center justify-between mx-24 p-2'>
                             <div>
                                 <label>Description <span className='text-red-500'>*</span></label>
                                 <textarea value={productData.description} onChange={handleChange} name='description' className='w-80 mt-2 placeholder:text-slate-400 block bg-white border border-slate-300 rounded-md py-2 pl-4 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm' placeholder='Write something......'>

@@ -69,6 +69,10 @@ export default function index() {
             variables: { userId: loginData.customerId }
         })
 
+    // useEffect(() => {
+    //     refetchCustomerCartData();
+    // }, [])
+
     const handleAddToCartToken = async (getProductId) => {
         const cart = productData.getAllProductsData.find((cart) => { return cart._id == getProductId })
         const { __typename, updatedAt, _id: productID, ...cartData } = { ...cart, productID: cart._id }
@@ -137,14 +141,9 @@ export default function index() {
         if (productData && !productError && !productLoading) {
             setgetProductData(productData.getAllProductsData)
         }
-        if (customerCartData && !customerCartLoading && !customerCartError) {
-            setCustomerCartData(customerCartData.getCustomerCartData)
-        }
-        if (productError && !productData && !productLoading) {
-            console.log("...Product Data Error");
-        }
-        if (productLoading && !productError && !productData) {
-            console.log("...error");
+        if (customerCartData && !customerCartLoading) {
+            setCustomerCartData(customerCartData.getCustomerCartData);
+            refetchCustomerCartData();
         }
         document.addEventListener('mousedown', handleClickOutSide);
         document.addEventListener('mousedown', handleClickOutSideProfile);
@@ -331,7 +330,7 @@ export default function index() {
                                 <h1 className='text-yellow-500'>SHOPPING CART</h1>
                                 <FontAwesomeIcon onClick={() => openCart ? setCart(false) : setCart(true)} icon={faClose} className='text-xl cursor-pointer hover:text-red-400' />
                             </div>
-                            <div className="overflow-y-scroll custom-scroll scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-gray-300 max-h-96 px-4 py-2 mr-1">
+                            <div className="overflow-y-scroll custom-scroll scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-gray-300 max-h-96 py-2">
                                 {
                                     loginData.token ?
                                         customerCartBulkData.length > 0 ? (
@@ -339,7 +338,7 @@ export default function index() {
                                                 return (
                                                     <div className="flow-root" key={listCartData._id}>
                                                         <ul className="-my-8">
-                                                            <li className="flex flex-col space-y-1 py-10 text-left sm:flex-row sm:space-x-5 sm:space-y-1">
+                                                            <li className="flex flex-col px-2 space-y-1 py-10 text-left sm:flex-row sm:space-x-5 sm:space-y-1">
                                                                 <div className="shrink-0 relative">
                                                                     <img className="h-24 w-24 max-w-full rounded-lg object-cover" src="https://images.unsplash.com/flagged/photo-1556637640-2c80d3201be8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8c25lYWtlcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60" alt="" />
                                                                 </div>
@@ -353,7 +352,7 @@ export default function index() {
                                                                             <p className="shrink-0 w-20 text-base font-semibold text-gray-700 sm:order-2 sm:ml-8 sm:text-right">₹{listCartData.expandedPrice}</p>
                                                                         </div>
                                                                     </div>
-                                                                    <div className="flex justify-center items-center gap-36">
+                                                                    <div className="flex justify-between items-center">
                                                                         <div className='flex justify-center items-center gap-2'>
                                                                             {/* <button disabled={listCartData.quantity == 1} > */}
                                                                             <FontAwesomeIcon icon={faMinus} onClick={() => handleDecrementQuantity(listCartData._id)} className={`${listCartData.quantity === 1 ? 'cursor-default' : "cursor-pointer"} border border-solid border-blue-300 font-thin rounded-xl p-1 text-xs`} />

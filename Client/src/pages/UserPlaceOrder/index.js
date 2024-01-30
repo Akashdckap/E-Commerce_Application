@@ -174,8 +174,13 @@ export default function UserPlaceOrder() {
                         </div>
                         <div>
                             <div className="flex justify-start items-center mt-5 gap-x-3">
-                                <h1 className="text-[#575F70] text-lg font-medium">Billing Address</h1>
-                                <FontAwesomeIcon icon={faShippingFast} className="text-sky-400 text-lg" />
+                                <div className="flex">
+                                    <h1 className="text-[#575F70] text-lg font-medium">Billing Address</h1>
+                                    <FontAwesomeIcon icon={faShippingFast} className="text-sky-400 text-lg" />
+                                </div>
+                                <div>
+
+                                </div>
                             </div>
                             {/* <div className=" w-auto border border-solid border-gray-300 hover:border-gray-400 shadow-sm rounded-md mt-3"> */}
                             <div className="border border-solid border-gray-300 hover:border-gray-400 shadow-sm rounded-md flex flex-wrap justify-center py-6 items-start gap-x-4 gap-y-4 mt-3">

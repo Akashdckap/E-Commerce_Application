@@ -15,7 +15,7 @@ function Myaccount() {
     const [addressesCustomer, setAddressesCustomer] = useState([]);
     const [editDelete, setEditDelete] = useState(false);
     const [editId, setEditId] = useState();
-    const [activeSection, setActiveSection] = useState('address');
+    const [activeSection, setActiveSection] = useState('profile');
     const [isHovered, setIsHovered] = useState(null);
     const router = useRouter();
     const componentRef = useRef();
@@ -363,21 +363,25 @@ function Myaccount() {
                 <div className="flex gap-x-10 gap-y-5 items-start justify-start">
                     <div className="grid gap-y-4">
 
-                        <div className={`flex items-center justify-center px-3 py-3 gap-4  border border-solid rounded-md ${activeSection === "profile" || 'address' ? 'border-orange-400 bg-white' : 'border-gray-500 bg-stone-200'}`}>
+                        {/* <div className={`flex items-center justify-center px-3 py-3 gap-4  border border-solid rounded-md ${activeSection === "profile" || 'address' ? 'border-orange-400 bg-white' : 'border-gray-500 bg-stone-200'}`}>
                             <FontAwesomeIcon icon={faUser} className={`${activeSection === "profile" || 'address' ? 'text-orange-400' : 'text-gray-500'}`} />
                             <p className={`${activeSection === "profile" || 'address' ? 'text-orange-400' : 'text-gray-500'}`}>ACCOUNT SETTING</p>
+                        </div> */}
+                        <div className="grid gap-y-4">
+                            <p onClick={() => setActiveSection('profile')} className={`hover:cursor-pointer hover:text-orange-400 pl-2  ${activeSection === "profile" ? 'text-orange-400 border border-solid flex justify-center items-center bg-amber-50 border-orange-400 px-2 py-1.5 rounded-md' : 'text-gray-500  border-0'}`}>Personal Information</p>
+                            <p onClick={() => setActiveSection('address')} className={`hover:cursor-pointer hover:text-orange-400 pl-2 ${activeSection === "address" ? 'text-orange-400 border border-solid flex justify-start items-start bg-amber-50 border-orange-400 px-2 py-1.5 rounded-md' : 'text-gray-500  border-0'}`}>Address</p>
+                            <Link href={'/customerHome/myOrders'} className="">
+                                <p className="text-gray-500 hover:cursor-pointer hover:text-orange-400 pl-2">My Orders</p>
+                            </Link>
                         </div>
-                        <div className="grid pl-12 gap-y-2">
-                            <p onClick={() => setActiveSection('profile')} className={`hover:cursor-pointer ${activeSection === "profile" ? 'text-orange-400' : 'text-gray-500'}`}>Personal Information</p>
-                            <p onClick={() => setActiveSection('address')} className={`hover:cursor-pointer ${activeSection === "address" ? 'text-orange-400' : 'text-gray-500'}`}>Address</p>
-                        </div>
-                        <Link href={'/customerHome/myOrders'}>
+
+                        {/* <Link href={'/customerHome/myOrders'}>
                             <div className="flex items-center  justify-between px-3 py-3 gap-8 bg-gray-200 border border-solid rounded-md">
                                 <FontAwesomeIcon icon={faShoppingBag} className="text-gray-500" />
                                 <p className="text-gray-500">MY ORDERS</p>
                                 <FontAwesomeIcon icon={faGreaterThan} className="text-gray-500" />
                             </div>
-                        </Link>
+                        </Link> */}
                     </div>
                     <div>
                         <div style={{ display: activeSection === "profile" ? 'block' : 'none' }}>
@@ -409,7 +413,7 @@ function Myaccount() {
                                             {personalDetailsError.phoneNo && <span className="text-red-400">{personalDetailsError.phoneNo}</span>}
                                         </div>
                                         <div className="flex justify-between gap-3 mt-8">
-                                            <span className="border border-gray-200 hover:border-red-300 hover:text-red-400 h-9 flex justify-center items-center p-2 rounded text-gray-400 cursor-pointer" onClick={() => setShowPersonalData(false)}>Cancel</span>
+                                            {/* <span className="border border-gray-200 hover:border-red-300 hover:text-red-400 h-9 flex justify-center items-center p-2 rounded text-gray-400 cursor-pointer" onClick={() => setShowPersonalData(false)}>Cancel</span> */}
                                             <button className={`border border-blue-400 h-9 flex justify-center items-center p-2 rounded text-blue-400 hover:text-white hover:bg-[#45BA76] hover:border-[#45BA76]`} type="submit">Update</button>
                                         </div>
                                     </div>
