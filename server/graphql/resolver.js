@@ -237,6 +237,11 @@ const resolvers = {
     },
 
     Mutation: {
+        singleUpload: async (_, { file }) => {
+            // const { createReadStream, filename, mimetype, encoding } = await file;
+            console.log("filename-----------", file);
+        },
+
         async registerCustomer(_, { customerInput }) {
             const emailExists = await customerInformation.find({ email: customerInput.email })
             const hashPassword = await bcrypt.hash(customerInput.password, 10)
@@ -323,7 +328,6 @@ const resolvers = {
             }
         },
         async createAdmins(_, { adminsInput }) {
-            // console.log("adminsInput-----",adminsInput);
             const newUsers = new admins({
                 name: adminsInput.name,
                 email: adminsInput.email,
@@ -427,7 +431,8 @@ const resolvers = {
                     totalPrice,
                 })
                 const saveOrders = await order.save();
-                if (inputs.personalDetails.customerId == " ") {
+                const { customerId } = inputs.personalDetails;
+                if (customerId) {
                     await cartSchema.deleteOne({ userId: inputs.personalDetails.customerId });
                 }
                 return saveOrders

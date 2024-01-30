@@ -18,8 +18,6 @@ export default function Myorders() {
     const [searchText, setSearchText] = useState("");
     const [totalPages, setTotalPages] = useState();
 
-
-
     const { data: customerPersonalDetails, loading: customerPersonalLoading, error: customerPersonalError, refetch: refetchCustomerData } = useQuery(GET_PERSONAL_DETAILS_ORDER, {
         variables: { userId: loginData.customerId, page: currentPage, pageSize: pageSize },
     });
@@ -29,15 +27,14 @@ export default function Myorders() {
     })
 
     let filterCustomerPersonal;
-    if (loginData.customerId !== undefined) {
-        filterCustomerPersonal = customerPersonalData.filter((item) => {
-            return item.orderTime.toLowerCase().includes(searchText.toLowerCase());
-        });
-    } else {
-        filterCustomerPersonal = guestPersonalData.filter((item) => {
-            return item.orderTime.toLowerCase().includes(searchText.toLowerCase());
-        });
-    }
+    const dataToFilter = loginData.customerId !== undefined ? customerPersonalData : guestPersonalData;
+
+    filterCustomerPersonal = dataToFilter.filter((item) => {
+        const formattedOrderTime = item.orderTime.toLowerCase().replace(/\s/g, '');
+        const formattedSearchText = searchText.toLowerCase().replace(/\s/g, '');
+        return formattedOrderTime.includes(formattedSearchText);
+    });
+
 
     const { data: orderCount, loading: orderLoading, error: orderError, refetch: refetchCustomerOrderCount } = useQuery(GET_CUSTOMER_PERSONAL_ORDER_COUNT, {
         variables: { userId: loginData.customerId }
@@ -105,11 +102,11 @@ export default function Myorders() {
                     </div>
                 </div>
                 <div className='flex items-start justify-between mx-14'>
-                    <div className='grid justify-start gap-y-2'>
-                        <h1 className={`${activeSection === 'order' ? 'text-orange-500' : 'text-gray-500'}`}>My Orders</h1>
+                    <div className='grid justify-start gap-y-3'>
+                        <h1 className={`${activeSection === 'order' ? 'text-orange-400 border border-solid flex justify-center items-center bg-amber-50 border-orange-400 px-2  py-1 rounded-md' : 'text-gray-500 border-0'}`}>My Orders</h1>
                         {
                             loginData.customerId !== undefined ?
-                                <Link href={'/customerHome/myAccount'} className='text-gray-500'>My Account</Link>
+                                <Link href={'/customerHome/myAccount'} className='text-gray-500 hover:text-orange-400 pl-2'>My Account</Link>
                                 : ''
                         }
                     </div>
@@ -154,9 +151,10 @@ export default function Myorders() {
                                                     </tr>)
                                             })
                                         ) :
-                                            (<tr className='flex w-2/6 mt-20 items-center justify-center mb-24 m-auto px-4 py-5'>
-                                                <td className='text-red-500 mb-10' colSpan='7'>{searchText} Not found</td>
-                                            </tr>
+                                            (
+                                                <tr className='flex w-full mt-20 items-center justify-center m-auto px-4 py-5'>
+                                                    <td className='text-red-500 mb-10' colSpan='7'>{searchText} Not found</td>
+                                                </tr>
                                             )
                                     }
                                 </tbody>
