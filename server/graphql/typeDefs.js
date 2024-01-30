@@ -14,6 +14,11 @@ const typeDefs = gql` #graphql
         phoneNo: BigInt!,
         password: String!,
     }
+    type loginAdmins{
+        email: String,
+        password: String,
+    }
+
     type address{
         _id: ID,
         firstName: String,
@@ -63,7 +68,10 @@ const typeDefs = gql` #graphql
         phoneNo:BigInt!,
         password:String!,
     }
-
+    input loginAdminsInput{
+        email: String!,
+        password: String!,
+    }
     input orderProductInput{
         productID: String!,
         productName: String!,
@@ -328,6 +336,7 @@ const typeDefs = gql` #graphql
         registerCustomer(customerInput: customerRegisterInput):customerRegister!
         customerLogin(loginInput: customerLoginInput): loginResponse!
         createAdmins(adminsInput: adminsInput): admins!
+        loginAdmins(adminsLogin: loginAdminsInput!): loginAdmins!
         createProducts(newProducts: productsInput): products!
         deleteProduct(id: ID!) : Boolean!
         updateProduct(id: ID!, input: updateProductInput): products!

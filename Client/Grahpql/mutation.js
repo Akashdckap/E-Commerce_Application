@@ -11,6 +11,15 @@ export const CREATE_ADMINS = gql`
   }
 `;
 
+export const LOGIN_ADMINS = gql`
+  mutation loginAdmins($adminsLogin: loginAdminsInput!){ ##use the function of typeDef
+    loginAdmins(adminsLogin: $adminsLogin) {
+      email
+      password
+    }
+  }
+`
+
 export const LOGIN_CUSTOMER = gql`
   mutation customerLogin($loginInput: customerLoginInput){
     customerLogin(loginInput: $loginInput){
