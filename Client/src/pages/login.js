@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { ApolloError, useMutation } from '@apollo/client'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { CREATE_ADMINS } from '../../Grahpql/mutation'
+import { CREATE_ADMINS, LOGIN_ADMINS } from '../../Grahpql/mutation';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 export default function Login() {
@@ -78,6 +78,7 @@ export default function Login() {
     }
 
     const [createAdmins] = useMutation(CREATE_ADMINS)
+    const [adminsLogin] = useMutation(LOGIN_ADMINS)
     const handleSubmitRegister = async (e) => {
         e.preventDefault()
         try {
@@ -87,36 +88,33 @@ export default function Login() {
                 autoClose: 3000,
             })
         }
-        catch(error){
-            toast.error("Already Registered Email",{
+        catch (error) {
+            toast.error("Already Registered Email", {
                 position: 'top-right',
                 autoClose: 3000,
             })
         }
 
     }
+    // console.log(formData, "-------")
 
     const handleSubmit = async (e) => {
         e.preventDefault()
         if (validate()) {
             try {
-                await (createAdmins({ variables: { input: formData } }))
+                await (adminsLogin({ variables: { adminsLogin: formData } }))
+                toast.success("Successfully logged", {
+                    position: 'top-center',
+                    autoClose: 3000,
+                })
+                router.push('/adminStore')
             }
             catch (error) {
-                if (error.message == "Successfully") {
-                    toast.success("successfully logged", {
-                        position: 'top-right',
-                        autoClose: 3000,
-                    })
-                    router.push("/adminStore")
-                }
-                else {
-                    toast.error("Invalid Email", {
-                        position: 'top-right',
-                        autoClose: 3000,
-                    })
-                    router.push("/login")
-                }
+                toast.error(`${error}`, {
+                    position: 'top-center',
+                    autoClose: 3000
+                })
+                router.push('/')
             }
         }
     }

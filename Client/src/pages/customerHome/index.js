@@ -25,17 +25,35 @@ export default function index() {
     const [customerCartBulkData, setCustomerCartData] = useState([])
 
     const divRef = useRef(null);
+    const divProfileRef = useRef(null);
     const loginData = useSelector(state => state.productDetails.LoginData);
     const getCartData = useSelector(state => state.productDetails.cartData);
     const { data: productData, error: productError, loading: productLoading } = useQuery(GET_ALL_PRODUCTS_DATA);
 
-    // const handleClickOutSide = (e) => {
-    //     if (divRef.current && !divRef.current.contains(e.target)) {
-    //         setCart(false)
-    //     }
-    // }
-    const handleButtonClick = () => {
-        setCart(!openCart)
+    const handleClickOutSide = (e) => {
+        if (divRef.current && !divRef.current.contains(e.target)) {
+            setCart(false)
+            // setOpenProfile(false)
+        }
+    }
+
+    const handleClickOutSideProfile = (e) => {
+        if (divProfileRef.current && !divProfileRef.current.contains(e.target)) {
+            setOpenProfile(false)
+        }
+    }
+    const handleButtonClick = (active) => {
+        if (active === "profileIcon") {
+            setOpenProfile(!openProfile)
+        }
+        if (active === "cartIcon") {
+            setCart(!openCart);
+        }
+    }
+    const handleInsideBulk = (event) => {
+        event.stopPropagation()
+
+        console.log("event Propagation")
     }
 
     const [getSingleCartDatas, { data: getSingleCartData, error: getSingleCartError, loading: getSingleCartLoading }] = useLazyQuery(GET_ADD_TO_CART_SINGLE_PRODUCT_DATA);
@@ -57,7 +75,6 @@ export default function index() {
 
         try {
             const { data } = await storeCartDatas({ variables: { userId: loginData.customerId, productId: getProductId, productCart: cartData } })
-
             if (data.cartItems.quantity > 1) {
                 refetchCustomerCartData();
                 toast.success(`You changed the ${data.cartItems.productName} quantity to ${data.cartItems.quantity}.`, {
@@ -129,10 +146,12 @@ export default function index() {
         if (productLoading && !productError && !productData) {
             console.log("...error");
         }
-        // document.addEventListener('mousedown', handleClickOutSide);
-        // return () => {
-        //     document.removeEventListener('mousedown', handleClickOutSide)
-        // }
+        document.addEventListener('mousedown', handleClickOutSide);
+        document.addEventListener('mousedown', handleClickOutSideProfile);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutSide)
+            document.removeEventListener('mousedown', handleClickOutSideProfile);
+        }
     }, [productData, getSingleCartData, customerCartData, customerCartBulkData]);
 
     const filteredList = getProductData.filter((item) => {
@@ -253,14 +272,14 @@ export default function index() {
                                         loginData.token ? (customerCartData && customerCartData.getCustomerCartData.length || 0) : (getCartData.length)
                                     }
                                 </p>
-                                <FontAwesomeIcon onClick={handleButtonClick} icon={faShoppingCart} className='text-gray-700 hover:text-gray-600 text-2xl cursor-pointer' />
+                                <FontAwesomeIcon onClick={() => handleButtonClick("cartIcon")} icon={faShoppingCart} className='text-gray-700 hover:text-gray-600 text-2xl cursor-pointer' id='cartIcon' />
                             </div>
-                            <div>
-                                <FontAwesomeIcon icon={faUserCircle} className='text-3xl text-gray-500 hover:cursor-pointer ' onClick={() => !openProfile ? setOpenProfile(true) : setOpenProfile(false)} />
+                            <div ref={divRef}>
+                                <FontAwesomeIcon onClick={() => handleButtonClick("profileIcon")} icon={faUserCircle} className='text-3xl text-gray-500 hover:cursor-pointer' id='profileIcon' />
                             </div>
                         </div>
                     </div>
-                    <div style={{ display: openProfile ? 'block' : 'none' }}>
+                    <div className={`${openProfile ? 'block' : 'hidden'}`} ref={divProfileRef} onClick={handleInsideBulk}>
                         <div>{loginData.token ? <div className='grid justify-center items-center gap-3 z-10 bg-gray-200 absolute top-20 right-20 py-3 pl-10 w-56 rounded-md shadow-2xl'>
                             <div className='flex justify-start items-center gap-5 mr-10 bg-white p-2 w-44 pl-4 rounded-md'>
                                 <Image src={"/Images/Balaprofile.png"} alt="Profile Image" width="40" height="40" className='rounded-full' />
@@ -298,12 +317,13 @@ export default function index() {
                                         <FontAwesomeIcon icon={faGreaterThan} className='text-emerald-400 font-mono' />
                                     </div>
                                 </Link>
-                            </div>}
+                            </div>
+                        }
                         </div>
                     </div>
                 </div>
                 <div>
-                    <section className={`py-12 sm:py-16 lg:py-20 absolute bottom-0 top-0 z-10 right-14 ${openCart ? 'block' : 'hidden'}`}>
+                    <section className={`py-12 sm:py-16 lg:py-20 absolute bottom-0 top-0 z-10 right-14 ${openCart ? 'block' : 'hidden'}`} ref={divRef} onClick={handleInsideBulk}>
                         {/* <div className="mx-auto px-4 sm:px-6 lg:px-8">
                         <div className="mx-auto mt-8 max-w-md md:mt-12"> */}
                         <div className="rounded-xl bg-white shadow-2xl">
@@ -501,9 +521,7 @@ export default function index() {
                         }
                     </div>
                 </div>
-
             </div >
         </>
-
     )
 }

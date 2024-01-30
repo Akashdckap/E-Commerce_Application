@@ -343,6 +343,21 @@ const resolvers = {
                 // console.log(error)
             }
         },
+        async loginAdmins(_, { adminsLogin }) {
+            const check = await admins.findOne({ email: adminsLogin.email });
+            if (check == null) {
+                throw new Error("Admin with the provided email not found");
+            }
+            else {
+                if (check.password == adminsLogin.password) {
+                    return true;
+                }
+                else { 
+                    throw new Error("Wrong Password")
+                }
+            }
+        },
+
         async createProducts(_, { newProducts: { productName, category, brand, price, weight, color, description } }) {
             const newProduct = new productDetails({
                 productName: productName,
