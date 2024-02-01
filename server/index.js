@@ -43,7 +43,7 @@ app.addHook("preValidation", async function (request, reply) {
   request.body = await processRequest(request.raw, reply.raw);
 });
 
-async function server(app1) {
+async function server() {
   // app.register(fastifyMultipart);
   const apolloServer = new ApolloServer({
     typeDefs,
@@ -52,8 +52,8 @@ async function server(app1) {
     includeStacktraceInErrorResponses: true,
   });
   await apolloServer.start();
-  app1.register(fastifyApollo(apolloServer)); //If we need to change route use { path: '/users' }
-  app1.register(fastifyCORS, {
+  app.register(fastifyApollo(apolloServer), { path: '/e-commerce' }); //If we need to change route use { path: '/users' }
+  app.register(fastifyCORS, {
     origin: ['http://localhost:3000'],
     methods: ["POST", "GET"],
     credentials: true,

@@ -17,7 +17,7 @@ import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit'
 // })
 
 const client = new ApolloClient({
-  uri: "http://localhost:5000/graphql",
+  uri: "http://localhost:5000/e-commerce",
   cache: new InMemoryCache()
 })
 // const client = new ApolloClient({
