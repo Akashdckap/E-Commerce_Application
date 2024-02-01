@@ -238,8 +238,9 @@ const resolvers = {
 
     Mutation: {
         singleUpload: async (_, { file }) => {
+            // return { file }
             // const { createReadStream, filename, mimetype, encoding } = await file;
-            console.log("filename-----------", file);
+            // console.log("filename-----------", file);
         },
 
         async registerCustomer(_, { customerInput }) {
@@ -356,7 +357,7 @@ const resolvers = {
                 if (check.password == adminsLogin.password) {
                     return true;
                 }
-                else { 
+                else {
                     throw new Error("Wrong Password")
                 }
             }
