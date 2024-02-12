@@ -1,5 +1,5 @@
 import React, { use, useEffect, useState } from "react";
-import { GET_ALL_ORDER_DATA_WITH_PAGE, ORDER_COUNT } from "../../../Grahpql/queries";
+import { GET_ALL_ORDER_DATA_WITH_PAGE } from "../../../Grahpql/queries";
 import { useQuery, useMutation } from "@apollo/client";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faLessThan, faGreaterThan, faStreetView, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
@@ -14,9 +14,7 @@ export default function OrderDetails() {
     const { data: orderedProducts, loading: dataLoading, error: dataError, fetchMore } = useQuery(GET_ALL_ORDER_DATA_WITH_PAGE, {
         variables: { page: currentPage, pageSize: pageSize }
     });
-
-    const { data: orderCount, loading: CountLoading, error: countError } = useQuery(ORDER_COUNT)
-
+    // console.log(orderedProducts && orderedProducts.getAllOrderDatas.orderCount,"----orderedProducts----")
     const nextPage = () => {
         setCurrentPage(currentPage + 1);
         // fetchMore({
@@ -38,21 +36,17 @@ export default function OrderDetails() {
     };
 
     useEffect(() => {
-        if (orderCount && !CountLoading) {
-            const totalItemCount = orderCount.getOrderCount || 0;
-            setTotalPages(Math.ceil(totalItemCount / pageSize));
-        }
         if (orderedProducts && !dataLoading) {
-            setOrderedData(orderedProducts.getAllOrderDatas)
+            setOrderedData(orderedProducts.getAllOrderDatas.formattedOrders)
         }
         if (currentPage > totalPages) {
             setCurrentPage(totalPages)
         }
 
-    }, [orderCount, orderedProducts, orderedData, dataLoading, totalPages]);
+    }, [orderedProducts, orderedData, dataLoading, totalPages]);
 
     const startItem = (currentPage - 1) * pageSize + 1;
-    const endItem = Math.min(currentPage * pageSize, orderCount && orderCount.getOrderCount);
+    const endItem = Math.min(currentPage * pageSize, orderedProducts && orderedProducts.getAllOrderDatas.orderCount);
 
     return (
         <>
@@ -96,7 +90,7 @@ export default function OrderDetails() {
                     </div>
                     <div className='flex justify-between pr-4 items-center pt-5'>
                         <div>
-                            <p className='text-gray-700 text-base pl-4'>Showing {startItem} to {endItem} of {orderCount && orderCount.getOrderCount} results</p>
+                            <p className='text-gray-700 text-base pl-4'>Showing {startItem} to {endItem} of {orderedProducts && orderedProducts.getAllOrderDatas.orderCount} results</p>
                         </div>
                         <div className="flex justify-between items-center gap-8">
                             <div className="border border-solid border-teal-600 rounded-md flex justify-between items-center h-9 w-32 gap-3 p-2">

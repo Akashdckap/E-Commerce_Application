@@ -182,6 +182,9 @@ export default function UserPlaceOrder() {
 
                                 </div>
                             </div>
+                            <div className="grid justify-start items-start mt-4">
+                                <button onClick={() => setSelectBillingAddress(selectShippingId)} type="submit" className="p-2 flex justify-center items-center cursor-pointer text-orange-600 bg-white h-10 w-56 rounded hover:border-orange-400 border hover:bg-orange-50 hover:shadow-lg transition-all duration-300">Same as Shipping Address</button>
+                            </div>
                             {/* <div className=" w-auto border border-solid border-gray-300 hover:border-gray-400 shadow-sm rounded-md mt-3"> */}
                             <div className="border border-solid border-gray-300 hover:border-gray-400 shadow-sm rounded-md flex flex-wrap justify-center py-6 items-start gap-x-4 gap-y-4 mt-3">
                                 {
@@ -199,9 +202,7 @@ export default function UserPlaceOrder() {
                                     })
                                 }
                             </div>
-                            <div className="grid justify-start items-start mt-4">
-                                <button onClick={() => setSelectBillingAddress(selectShippingId)} type="submit" className="p-2 flex justify-center items-center cursor-pointer text-orange-600 bg-white h-10 w-56 rounded hover:border-orange-400 border hover:bg-orange-50 hover:shadow-lg transition-all duration-300">Same as Shipping Address</button>
-                            </div>
+                         
                             {/* </div> */}
                         </div>
                     </div>

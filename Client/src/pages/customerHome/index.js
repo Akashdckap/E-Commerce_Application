@@ -132,7 +132,7 @@ export default function index() {
         dispatch(logOutCustomer());
         router.push('/customerLogin')
         toast.success("User logged out successfully", {
-            position: 'top-right',
+            position: 'top-center',
             autoClose: 3000,
         })
     }

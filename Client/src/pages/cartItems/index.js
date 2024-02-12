@@ -255,7 +255,7 @@ export default function cartItems() {
                     <div className="grid justify-start gap-4 pb-10 pl-10 pr-10 mr-20 bg-white rounded pt-5 shadow-md p-6 mb-6 border-gray-900">
                         <p className="text-green-600 border-b border-gray-400 pb-1">PRICE DETAILS</p>
                         <div className="flex justify-between gap-10">
-                            <label className="text-gray-500">Price ({loginData.token ? customerCartData && customerCartData.getCustomerCartData.length : cartProducts.length} - items) :</label>
+                            <label className="text-gray-500">Price ({loginData.token ? customerCartData && customerCartData.getCustomerCartData.length : cartProducts.length} items) :</label>
                             <p className="text-gray-500">₹{loginData.token ? CustomerTotalAmount : totalExpandedAmount}</p>
                         </div>
                         <div className="flex justify-between gap-10">

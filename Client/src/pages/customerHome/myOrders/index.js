@@ -42,7 +42,7 @@ export default function Myorders() {
 
     const { data: guestOrderCount, loading: guestOrderLoading, error: guestOrderError, refetch: refetchGuestOrderCount } = useQuery(GET_GUEST_PERSONAL_ORDER_COUNT)
 
-
+    
     useEffect(() => {
         if (customerPersonalDetails && !customerPersonalLoading) {
             setCustomerPersonalData(customerPersonalDetails.getCustomerPersonalDetails);

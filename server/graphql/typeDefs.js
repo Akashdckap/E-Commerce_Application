@@ -227,6 +227,12 @@ const typeDefs = gql` #graphql
         OrderTime: Date,
         totalPrice: Int,
     }
+
+    type ordersResponse{
+        formattedOrders:[orders]!,
+        orderCount: Int!,
+    }
+
     type customerOrders {
         _id: ID!,
         shippingAddress: shippingAddress!,
@@ -319,6 +325,7 @@ const typeDefs = gql` #graphql
         getShippingAddress(userId:ID!, editAddressId:ID!): shippingAddress
         getCustomerCartData(userId: ID!): [customerCartData]
         getCustomerOrders(userId:ID!): [customerOrders]
+
         getGuestOrders(page:Int!, pageSize:Int!): [customerPersonalDetails]
         getCustomerPersonalDetails(userId: ID!,page:Int!,pageSize:Int!): [customerPersonalDetails]
         getAllAdmins:[admins]
@@ -334,7 +341,7 @@ const typeDefs = gql` #graphql
         getGuestOrderCount: Int!
 
         getOrderProductDetails(id: ID!): orders!
-        getAllOrderDatas(page:Int!,pageSize:Int!): [orders]!
+        getAllOrderDatas(page:Int!,pageSize:Int!): ordersResponse!
         getAddToCart(userId: ID!):cart!
     }
 

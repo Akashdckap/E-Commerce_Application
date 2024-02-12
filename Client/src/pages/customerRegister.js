@@ -73,14 +73,14 @@ export default function customerRegister() {
             try {
                 await (registerCustomer({ variables: { customerInput: registerForm } }));
                 toast.success("Registered successfully", {
-                    position: 'top-right',
+                    position: 'top-center',
                     autoClose: 3000,
                 })
                 router.push('/customerLogin')
             }
             catch (error) {
                 toast.error(error.message, {
-                    position: 'top-right',
+                    position: 'top-center',
                     autoClose: 3000,
                 });
                 router.push('/customerRegister')
@@ -113,7 +113,7 @@ export default function customerRegister() {
                         </div>
                         <div className='grid justify-start items-center gap-1'>
                             <label className='text-violet-400'>Phone Number</label>
-                            <input onChange={handleChange} value={registerForm.phoneNo} name='phoneNo' placeholder='Enter the contact' className='border border-solid border-gray-400 h-10 w-72 pl-3 rounded-md hover:border-violet-400 focus:border-violet-400 outline-none text-gray-500' />
+                            <input onChange={handleChange} value={registerForm.phoneNo} name='phoneNo' type='password' placeholder='Enter the contact' className='border border-solid border-gray-400 h-10 w-72 pl-3 rounded-md hover:border-violet-400 focus:border-violet-400 outline-none text-gray-500' />
                             {registerError.phoneNo && <span className="text-red-400">{registerError.phoneNo}</span>}
 
                         </div>
