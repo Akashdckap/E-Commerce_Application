@@ -190,6 +190,7 @@ export const ORDER_COUNT = gql`
 export const GET_ALL_ORDER_DATA_WITH_PAGE = gql`
     query getAllOrderDatas($page:Int!, $pageSize:Int!){
         getAllOrderDatas(page:$page,pageSize:$pageSize){
+            formattedOrders{
             _id
             orderedProducts{
             productID,
@@ -232,7 +233,9 @@ export const GET_ALL_ORDER_DATA_WITH_PAGE = gql`
             country,
             }
             OrderTime,
-            totalPrice
+            totalPrice,
+            }
+            orderCount
         }
     }
 `

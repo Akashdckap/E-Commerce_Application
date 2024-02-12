@@ -31,8 +31,8 @@ const resolvers = {
         },
         getShippingAddress: async (_, { userId, editAddressId }) => {
             const getAddress = await (customerInformation.findOne({ "_id": new ObjectId(userId), "Addresses._id": new ObjectId(editAddressId) }));
-            // return getAddress.shippingAddress
-            console.log(getAddress)
+            return getAddress
+            // console.log(getAddress)
         },
         getCustomerCartData: async (_, { userId }) => {
             const cartData = await cartSchema.findOne({ userId: new mongoose.Types.ObjectId(userId) })
@@ -197,9 +197,6 @@ const resolvers = {
         },
         getAllOrderDatas: async (_, { page, pageSize }) => {
             try {
-                // if (page < 1) {
-                //     throw new Error("Invalid pageSize. It must be 1 or greater.");
-                // }
                 const skip = (page - 1) * pageSize;
                 const orderDatas = await newOrders.find({}).skip(skip).limit(pageSize);
                 const formattedOrders = orderDatas.map(order => ({
@@ -213,13 +210,16 @@ const resolvers = {
                     }),
                 }));
                 // console.log("formattedOrders-------------",formattedOrders);
-                return formattedOrders;
+                const orderCount = await newOrders.countDocuments();
+                // console.log(orderCount)
+                return { formattedOrders, orderCount }
             }
             catch (error) {
                 console.error("Error fetching all orders:", error);
                 throw new Error("An error occurred while fetching all orders.");
             }
         },
+
 
         getOrderCount: async () => {
             const orderCount = await newOrders.countDocuments();
@@ -356,7 +356,7 @@ const resolvers = {
                 if (check.password == adminsLogin.password) {
                     return true;
                 }
-                else { 
+                else {
                     throw new Error("Wrong Password")
                 }
             }
@@ -459,9 +459,9 @@ const resolvers = {
         },
 
         async cartItems(_, { userId, productId, productCart }) {
-            console.log("productCart-------", productCart);
-            console.log("userId-------", userId);
-            console.log("productId-------", productId);
+            // console.log("productCart-------", productCart);
+            // console.log("userId-------", userId);
+            // console.log("productId-------", productId);
             try {
                 const cart = await cartSchema.findOne({ userId })
                 if (!cart) {

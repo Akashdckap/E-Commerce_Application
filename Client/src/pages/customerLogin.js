@@ -54,7 +54,7 @@ export default function customerLogin() {
                 const { name, customerId } = Jwt.decode(token)
                 dispatch(customerLoginData({ name, customerId, token }));
                 toast.success("User successfully logged", {
-                    position: 'top-right',
+                    position: 'top-center',
                     autoClose: 3000,
                 })
                 router.push('/customerHome')
@@ -86,7 +86,7 @@ export default function customerLogin() {
                         </div>
                         <div className='grid justify-start items-center gap-1'>
                             <label className='text-violet-400'>Password</label>
-                            <input placeholder='Enter the password' onChange={handleChange} value={loginForm.password} name='password' className='border border-solid border-gray-400 h-10 w-72 pl-3 rounded-md hover:border-violet-400 focus:border-violet-400 outline-none text-gray-500' />
+                            <input placeholder='Enter the password' onChange={handleChange} value={loginForm.password} name='password' type='password' className='border border-solid border-gray-400 h-10 w-72 pl-3 rounded-md hover:border-violet-400 focus:border-violet-400 outline-none text-gray-500' />
                             {loginError.password && <span className="text-red-400">{loginError.password}</span>}
                         </div>
                         <div className='flex gap-3 justify-start items-center pt-3'>

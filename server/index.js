@@ -54,7 +54,7 @@ async function server() {
   await apolloServer.start();
   app.register(fastifyApollo(apolloServer), { path: '/e-commerce' }); //If we need to change route use { path: '/users' }
   app.register(fastifyCORS, {
-    origin: ['http://localhost:3000'],
+    origin: ['http://localhost:3001'],
     methods: ["POST", "GET"],
     credentials: true,
   })

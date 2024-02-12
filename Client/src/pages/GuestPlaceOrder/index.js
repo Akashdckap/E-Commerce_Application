@@ -656,6 +656,13 @@ export default function placeOrder() {
                                         {/* <input type="radio" checked={!showBillingData} className="border-2 h-5 w-5 border-gray-300 checked:border-green-200 checked:bg-green-500 rounded-full focus:outline-none focus:border-green-200 focus:ring-green-200 active:border-green-500" /> */}
                                         <FontAwesomeIcon icon={faShippingFast} className="text-green-400" />
                                         <h4 className="text-gray-700 text-base font-normal">{getBillingData.length === 0 ? 'Add New Billing Address' : 'Change Billing Address'}</h4>
+                                        {
+                                            getShippingData.length !== 0 ?
+                                                <div className="flex justify-end">
+                                                    <button type="submit" onClick={handleSameAsShipping} className="p-3 flex items-center cursor-pointer text-orange-600 bg-white h-10 w-56 rounded hover:border-orange-400 border hover:bg-orange-50 hover:shadow-lg transition-all duration-300">Same as Shipping Address</button>
+                                                </div>
+                                                : ''
+                                        }
                                     </div>
                                     <div className="flex justify-between gap-16">
                                         <div className="grid">
@@ -727,14 +734,6 @@ export default function placeOrder() {
                                             <input type="checkbox" checked={isChecked} onChange={handleCheckboxChange} className="h-5 w-5 bg-slate-600" />
                                             <p>Same as Shipping Address</p>
                                         </div> */}
-
-                                        {
-                                            getShippingData.length !== 0 ?
-                                                <div>
-                                                    <button type="submit" onClick={handleSameAsShipping} className="p-3 flex justify-center items-center cursor-pointer text-orange-600 bg-white h-10 w-56 rounded hover:border-orange-400 border hover:bg-orange-50 hover:shadow-lg transition-all duration-300">Same as Shipping Address</button>
-                                                </div>
-                                                : ''
-                                        }
                                         {/* <div>
                                             {
                                                 getShippingData.length === 0 ?
